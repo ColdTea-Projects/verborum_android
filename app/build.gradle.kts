@@ -5,14 +5,14 @@ plugins {
 
 android {
     namespace = "de.coldtea.verborum.app"
-    compileSdk = libs.versions.compileSdk.get().toInt()
+    compileSdk = Configuration.compileSdk
 
     defaultConfig {
         applicationId = "de.coldtea.verborum.app"
-        minSdk = libs.versions.minSdk.get().toInt()
-        targetSdk = libs.versions.targetSdk.get().toInt()
-        versionCode = Dependencies.versionCode
-        versionName =  Dependencies.versionName
+        minSdk = Configuration.minSdk
+        targetSdk = Configuration.targetSdk
+        versionCode = Configuration.versionCode
+        versionName =  Configuration.versionName
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {

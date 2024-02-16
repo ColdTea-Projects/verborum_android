@@ -1,9 +1,5 @@
 [versions]
 
-minSdk = "21"
-targetSdk = "34"
-compileSdk = "34"
-
 androidx_core_ktx = "1.12.0"
 androidx_lifecycle_runtime_ktx = "2.7.0"
 androidx_activity_compose = "1.8.2"
