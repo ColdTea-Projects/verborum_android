@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Verborum</string>
+    <string name="group_bibliotheca_nav_title">Bibliotheca</string>
+    <string name="group_forum_nav_title">Forum</string>
 </resources>
