@@ -5,7 +5,6 @@ import androidx.room.Query
 import androidx.room.Transaction
 import de.coldtea.verborum.app.common.data.db.DaoBase
 import de.coldtea.verborum.app.dictionary.data.db.entity.DictionaryEntity
-import de.coldtea.verborum.app.word.data.db.entity.WordEntity
 
 @Dao
 interface DaoDictionary: DaoBase<DictionaryEntity> {
@@ -21,4 +20,8 @@ interface DaoDictionary: DaoBase<DictionaryEntity> {
     @Transaction
     @Query("SELECT * FROM dictionary WHERE dictionary_id = :dictionaryId")
     suspend fun getDictionary(dictionaryId: String): DictionaryEntity
+
+    @Transaction
+    @Query("DELETE FROM dictionary WHERE dictionary_id = :dictionaryId")
+    suspend fun deleteDictionary(dictionaryId: String)
 }

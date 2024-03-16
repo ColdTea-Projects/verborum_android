@@ -22,4 +22,8 @@ class WordRepository @Inject constructor(
 
     suspend fun deleteWords(wordIds: List<String>) =
         daoWord.deleteWords(wordIds)
+
+    suspend fun deleteWordsByDictionary(dictionaryId: String) =
+        daoWord.deleteWordsByDictionary(dictionaryId)
+
 }

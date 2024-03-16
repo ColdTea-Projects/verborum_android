@@ -4,11 +4,12 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import de.coldtea.verborum.app.common.utils.getNowInMillis
+import de.coldtea.verborum.app.dictionary.domain.model.Dictionary
 
 @Entity(tableName = "dictionary", primaryKeys = ["dictionary_id"])
 data class DictionaryEntity (
     @ColumnInfo(name = "dictionary_id")
-    val wordId: String,
+    val dictionaryId: String,
     @ColumnInfo(name = "fk_user_id")
     val userId: String = GUEST_USER_ID,
     @ColumnInfo(name = "name")
@@ -23,6 +24,20 @@ data class DictionaryEntity (
     val createdAt: Long = getNowInMillis(),
     @ColumnInfo(name = "updated_at")
     val updatedAt: Long = 0L,
-)
+){
+    fun convertToDictionary() = Dictionary(
+        dictionaryId = dictionaryId,
+        userId = userId,
+        name = name,
+        isPublic = isPublic,
+        fromLang = fromLang,
+        toLang = toLang,
+        createdAt = createdAt,
+        updatedAt = updatedAt,
+    )
 
-const val GUEST_USER_ID = "00000000-0000-0000-0000-000000000000"
+    companion object {
+        const val GUEST_USER_ID = "00000000-0000-0000-0000-000000000000"
+    }
+}
+
