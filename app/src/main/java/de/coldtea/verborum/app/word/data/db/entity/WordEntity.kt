@@ -4,6 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import de.coldtea.verborum.app.common.utils.getNowInMillis
+import de.coldtea.verborum.app.word.domain.model.Word
 
 @Entity(tableName = "word", primaryKeys = ["word_id"])
 data class WordEntity (
@@ -23,4 +24,16 @@ data class WordEntity (
     val createdAt: Long = getNowInMillis(),
     @ColumnInfo(name = "updated_at")
     val updatedAt: Long = 0L,
-)
+){
+    fun convertToWord(): Word =
+        Word(
+            wordId = wordId,
+            dictionaryId = dictionaryId,
+            word = word,
+            wordMeta = wordMeta,
+            translation = translation,
+            translationMeta = translationMeta,
+            createdAt = createdAt,
+            updatedAt = updatedAt,
+        )
+}

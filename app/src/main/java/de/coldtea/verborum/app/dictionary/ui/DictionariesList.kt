@@ -1,12 +1,15 @@
-package de.coldtea.verborum.app.dictionarieslist.ui
+package de.coldtea.verborum.app.dictionary.ui
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import de.coldtea.verborum.app.common.utils.convertToLocalDateTimeStamp
+import de.coldtea.verborum.app.common.utils.getNowInMillis
 
 @Composable
 fun DictionariesListScreen(){
@@ -14,7 +17,11 @@ fun DictionariesListScreen(){
         .fillMaxSize(),
         contentAlignment = Alignment.Center
     ){
-        Text(text = "Dictionaries List Screen")
+        Column {
+            val now = getNowInMillis()
+            Text(text = now.toString())
+            Text(text = now.convertToLocalDateTimeStamp())
+        }
     }
 }
 

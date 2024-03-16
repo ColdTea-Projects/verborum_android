@@ -16,4 +16,8 @@ interface DaoWord: DaoBase<WordEntity> {
     @Transaction
     @Query("SELECT * FROM word WHERE word_id = :wordId")
     suspend fun getWord(wordId: String): WordEntity
+
+    @Transaction
+    @Query("DELETE FROM word WHERE word_id IN (:wordIds)")
+    suspend fun deleteWords(wordIds: List<String>)
 }
