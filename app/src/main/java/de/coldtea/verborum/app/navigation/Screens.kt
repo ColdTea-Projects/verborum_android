@@ -1,4 +1,4 @@
-package de.coldtea.verborum.app.common.ui.navigation
+package de.coldtea.verborum.app.navigation
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes

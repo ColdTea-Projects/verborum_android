@@ -1,4 +1,4 @@
-package de.coldtea.verborum.app.common.ui.theme
+package de.coldtea.verborum.app.theme
 
 import android.app.Activity
 import android.os.Build

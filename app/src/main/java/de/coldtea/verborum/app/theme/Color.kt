@@ -1,4 +1,4 @@
-package de.coldtea.verborum.app.common.ui.theme
+package de.coldtea.verborum.app.theme
 
 import androidx.compose.ui.graphics.Color
 

@@ -1,11 +1,13 @@
-package de.coldtea.verborum.app.common.ui.navigation
+package de.coldtea.verborum.app.navigation
 
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import de.coldtea.verborum.bibliotheca.dictionary.ui.DictionariesListScreen
 
-fun NavGraphBuilder.insertDictionariesList(navController: NavHostController) = composable(SCREEN_DICTIONARIES_LIST) {
+fun NavGraphBuilder.insertDictionariesList(navController: NavHostController) = composable(
+    SCREEN_DICTIONARIES_LIST
+) {
     DictionariesListScreen()
 //                        val contentViewModel = hiltViewModel<ContentViewModel>()
 

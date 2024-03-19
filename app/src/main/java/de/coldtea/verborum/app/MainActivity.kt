@@ -12,8 +12,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.HiltAndroidApp
-import de.coldtea.verborum.app.common.ui.navigation.NavigationCentral
-import de.coldtea.verborum.app.common.ui.theme.VerborumTheme
+import de.coldtea.verborum.app.navigation.NavigationCentral
+import de.coldtea.verborum.app.theme.VerborumTheme
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
