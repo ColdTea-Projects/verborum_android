@@ -3,7 +3,7 @@ package de.coldtea.verborum.app.common.ui.navigation
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
-import de.coldtea.verborum.app.dictionary.ui.DictionariesListScreen
+import de.coldtea.verborum.bibliotheca.dictionary.ui.DictionariesListScreen
 
 fun NavGraphBuilder.insertDictionariesList(navController: NavHostController) = composable(SCREEN_DICTIONARIES_LIST) {
     DictionariesListScreen()

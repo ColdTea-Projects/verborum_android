@@ -15,6 +15,10 @@ room-runtime = "2.6.1"
 room-paging = "2.6.1"
 room-compiler = "2.6.1"
 room-ktx = "2.6.1"
+agp = "8.2.0"
+kotlin = "1.9.0"
+appcompat = "1.6.1"
+material = "1.10.0"
 
 [libraries]
 androidx_core_ktx = { module = "androidx.core:core-ktx", version.ref = "androidx_core_ktx" }
@@ -40,5 +44,9 @@ room_runtime = { module = "androidx.room:room-runtime", version.ref = "room-runt
 room_paging = { module = "androidx.room:room-paging", version.ref = "room-paging" }
 room_compiler = { module = "androidx.room:room-compiler", version.ref = "room-compiler" }
 room_ktx = { module = "androidx.room:room-ktx", version.ref = "room-ktx" }
+appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 
 [plugins]
+androidLibrary = { id = "com.android.library", version.ref = "agp" }
+jetbrainsKotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }

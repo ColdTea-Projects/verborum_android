@@ -13,5 +13,8 @@ dependencyResolutionManagement {
     }
 }
 
+enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 rootProject.name = "Verborum"
 include(":app")
+include(":bibliotheca")
+include(":forum")
