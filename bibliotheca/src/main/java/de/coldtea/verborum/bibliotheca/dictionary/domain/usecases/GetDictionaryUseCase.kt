@@ -1,4 +1,4 @@
-package de.coldtea.verborum.bibliotheca.dictionary.domain
+package de.coldtea.verborum.bibliotheca.dictionary.domain.usecases
 
 import de.coldtea.verborum.bibliotheca.dictionary.data.db.DictionaryRepository
 import de.coldtea.verborum.bibliotheca.dictionary.domain.model.Dictionary

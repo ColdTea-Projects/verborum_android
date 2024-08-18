@@ -72,6 +72,7 @@ dependencies {
     implementation(libs.androidx.compose.material3)
     implementation(libs.navigation.compose)
     implementation(libs.hilt.android)
+    implementation(libs.hilt.navigation.compose)
     kapt(libs.hilt.compiler)
     implementation(libs.room.runtime)
     implementation(libs.room.paging)

@@ -24,9 +24,30 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.1"
+    }
+
+    buildTypes {
+
+        debug {
+            buildConfigField("String", "ROOT_URL_VERBORUM_API", "\"http://localhost:8000//\"")
+
+            isMinifyEnabled = false
+            isJniDebuggable = true
+        }
+
+        release {
+            buildConfigField("String", "ROOT_URL_VERBORUM_API", "\"http://localhost:8000//\"")
+
+            isMinifyEnabled = false
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
+        }
     }
 }
 
@@ -55,6 +76,7 @@ dependencies {
 
     //Hilt
     implementation(libs.hilt.android)
+    implementation(libs.hilt.navigation.compose)
     kapt(libs.hilt.compiler)
 
     //Room
@@ -62,4 +84,12 @@ dependencies {
     implementation(libs.room.paging)
     implementation(libs.room.ktx)
     kapt(libs.room.compiler)
+
+    //Retrofit
+    implementation(libs.retrofit2)
+    implementation(libs.okhttp3.logging.interceptor)
+    implementation(libs.retrofit2.kotlinx.serialization.converter)
+
+    //KotlinX Serialization
+    implementation(libs.kotlinx.serialization.json)
 }
