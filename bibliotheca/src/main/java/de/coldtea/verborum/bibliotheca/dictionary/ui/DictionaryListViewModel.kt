@@ -3,6 +3,7 @@ package de.coldtea.verborum.bibliotheca.dictionary.ui
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import de.coldtea.verborum.bibliotheca.common.domain.SyncService
 import de.coldtea.verborum.bibliotheca.dictionary.domain.DictionaryService
 import de.coldtea.verborum.bibliotheca.dictionary.ui.model.DictionaryUi
 import de.coldtea.verborum.core.ui.BaseViewModel
@@ -16,6 +17,7 @@ import javax.inject.Inject
 @HiltViewModel
 class DictionaryListViewModel @Inject constructor(
     private val dictionaryService: DictionaryService,
+    private val syncService: SyncService,
 ) : BaseViewModel() {
 
     private val _dictionariesState = MutableStateFlow(listOf<DictionaryUi>())
@@ -28,6 +30,7 @@ class DictionaryListViewModel @Inject constructor(
                     _dictionariesState.emit(dictionary)
                 }
             )
+            syncService.syncDictionaries()
         }
     }
 
@@ -36,6 +39,6 @@ class DictionaryListViewModel @Inject constructor(
     }
 
     fun cleanDictionaries() = viewModelScope.launch {
-        dictionaryService.removeAllDictionaries()
+        //dictionaryService.removeAllDictionaries()
     }
 }

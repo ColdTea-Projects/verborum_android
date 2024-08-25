@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.jetbrainsKotlinAndroid)
     kotlin("kapt") version "1.9.0"
+    kotlin("plugin.serialization")
 }
 
 android {

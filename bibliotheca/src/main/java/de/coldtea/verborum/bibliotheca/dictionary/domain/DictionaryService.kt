@@ -1,5 +1,7 @@
 package de.coldtea.verborum.bibliotheca.dictionary.domain
 
+import de.coldtea.verborum.bibliotheca.common.domain.SyncService
+import de.coldtea.verborum.bibliotheca.common.domain.SyncUserDictionariesUseCase
 import de.coldtea.verborum.bibliotheca.common.utils.getNowInMillis
 import de.coldtea.verborum.bibliotheca.dictionary.data.db.entity.DictionaryEntity.Companion.GUEST_USER_ID
 import de.coldtea.verborum.bibliotheca.dictionary.domain.model.Dictionary
@@ -17,7 +19,7 @@ import javax.inject.Inject
 
 class DictionaryService @Inject constructor(
     private val observeAllDictionariesUseCase: ObserveAllDictionariesUseCase,
-    private val saveDictionaryUseCase: SaveDictionaryUseCase,
+    private val syncService: SyncService,
     private val cleanDictionariesUseCase: CleanDictionariesUseCase,
 ) {
 
@@ -27,7 +29,7 @@ class DictionaryService @Inject constructor(
         .flowOn(Dispatchers.IO)
 
     suspend fun crateDummyDictionary() {
-        saveDictionaryUseCase.invoke(
+        syncService.uploadDictionary(
             Dictionary(
                 dictionaryId = "",
                 userId = GUEST_USER_ID,
@@ -39,6 +41,8 @@ class DictionaryService @Inject constructor(
                 updatedAt = getNowInMillis(),
             )
         )
+
+        syncService.syncDictionaries()
     }
 
     suspend fun removeAllDictionaries() = cleanDictionariesUseCase.invoke()
