@@ -7,6 +7,7 @@ import de.coldtea.verborum.bibliotheca.dictionary.domain.DictionaryService
 import de.coldtea.verborum.bibliotheca.dictionary.ui.model.DictionaryUi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -21,10 +22,9 @@ class DictionaryListViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            dictionaryService.observeDictionaries().onEach { dictionary ->
+            dictionaryService.observeDictionaries().collect { dictionary ->
                 _dictionariesState.emit(dictionary)
             }
-
         }
     }
 

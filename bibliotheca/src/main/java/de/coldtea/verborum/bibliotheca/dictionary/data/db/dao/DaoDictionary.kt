@@ -5,6 +5,7 @@ import androidx.room.Query
 import androidx.room.Transaction
 import de.coldtea.verborum.bibliotheca.common.data.db.DaoBase
 import de.coldtea.verborum.bibliotheca.dictionary.data.db.entity.DictionaryEntity
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface DaoDictionary: DaoBase<DictionaryEntity> {
@@ -12,6 +13,9 @@ interface DaoDictionary: DaoBase<DictionaryEntity> {
     @Transaction
     @Query("SELECT * FROM dictionary")
     suspend fun getAllDictionaries(): List<DictionaryEntity>
+
+    @Query("SELECT * FROM dictionary")
+    fun observeAllDictionaries(): Flow<List<DictionaryEntity>>
 
     @Transaction
     @Query("SELECT * FROM dictionary WHERE fk_user_id = :userId")

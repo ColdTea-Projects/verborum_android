@@ -3,6 +3,7 @@ package de.coldtea.verborum.bibliotheca.dictionary.data.db
 import de.coldtea.verborum.bibliotheca.common.data.db.BibliothecaDatabase
 import de.coldtea.verborum.bibliotheca.dictionary.data.db.dao.DaoDictionary
 import de.coldtea.verborum.bibliotheca.dictionary.data.db.entity.DictionaryEntity
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class DictionaryRepository @Inject constructor(
@@ -10,6 +11,9 @@ class DictionaryRepository @Inject constructor(
 ) {
     suspend fun getAllDictionaries(): List<DictionaryEntity> =
         bibliothecaDatabase.daoDictionary.getAllDictionaries()
+
+    fun observeAllDictionaries(): Flow<List<DictionaryEntity>> =
+        bibliothecaDatabase.daoDictionary.observeAllDictionaries()
 
     suspend fun getAllDictionariesByUser(userId: String): List<DictionaryEntity> =
         bibliothecaDatabase.daoDictionary.getDictionariesByUser(userId)
