@@ -3,6 +3,9 @@ package de.coldtea.verborum.bibliotheca.dictionary.domain
 import de.coldtea.verborum.bibliotheca.common.utils.getNowInMillis
 import de.coldtea.verborum.bibliotheca.dictionary.data.db.entity.DictionaryEntity.Companion.GUEST_USER_ID
 import de.coldtea.verborum.bibliotheca.dictionary.domain.model.Dictionary
+import de.coldtea.verborum.bibliotheca.dictionary.domain.usecases.CleanDictionariesUseCase
+import de.coldtea.verborum.bibliotheca.dictionary.domain.usecases.DeleteDictionaryUseCase
+import de.coldtea.verborum.bibliotheca.dictionary.domain.usecases.GetAllDictionariesUseCase
 import de.coldtea.verborum.bibliotheca.dictionary.domain.usecases.ObserveAllDictionariesUseCase
 import de.coldtea.verborum.bibliotheca.dictionary.domain.usecases.SaveDictionaryUseCase
 import de.coldtea.verborum.bibliotheca.dictionary.ui.model.DictionaryUi
@@ -15,6 +18,7 @@ import javax.inject.Inject
 class DictionaryService @Inject constructor(
     private val observeAllDictionariesUseCase: ObserveAllDictionariesUseCase,
     private val saveDictionaryUseCase: SaveDictionaryUseCase,
+    private val cleanDictionariesUseCase: CleanDictionariesUseCase,
 ) {
 
     fun observeDictionaries(): Flow<List<DictionaryUi>> = observeAllDictionariesUseCase
@@ -36,6 +40,8 @@ class DictionaryService @Inject constructor(
             )
         )
     }
+
+    suspend fun removeAllDictionaries() = cleanDictionariesUseCase.invoke()
 
     fun generateRandomString(len: Int = 15): String {
         val alphanumerics = CharArray(26) { it -> (it + 97).toChar() }.toSet()

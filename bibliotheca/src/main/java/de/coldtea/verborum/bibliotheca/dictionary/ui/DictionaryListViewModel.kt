@@ -34,4 +34,8 @@ class DictionaryListViewModel @Inject constructor(
     fun addDummyDictionary() = viewModelScope.launch {
         dictionaryService.crateDummyDictionary()
     }
+
+    fun cleanDictionaries() = viewModelScope.launch {
+        dictionaryService.removeAllDictionaries()
+    }
 }

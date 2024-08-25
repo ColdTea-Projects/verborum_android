@@ -3,6 +3,8 @@ package de.coldtea.verborum.bibliotheca.dictionary.ui
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -25,11 +27,16 @@ fun DictionaryListScreen(
         .fillMaxSize(),
         contentAlignment = Alignment.Center
     ){
-        Column {
+        Column(
+            modifier = Modifier.verticalScroll(rememberScrollState())
+        ) {
             val now = getNowInMillis()
             Text(text = dicList.toString())
             Button(onClick = viewModel::addDummyDictionary) {
-                
+                Text(text = "Add")
+            }
+            Button(onClick = viewModel::cleanDictionaries) {
+                Text(text = "Delete")
             }
         }
     }
