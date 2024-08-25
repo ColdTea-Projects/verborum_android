@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import de.coldtea.verborum.bibliotheca.dictionary.domain.DictionaryService
 import de.coldtea.verborum.bibliotheca.dictionary.ui.model.DictionaryUi
+import de.coldtea.verborum.core.ui.BaseViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -15,16 +16,18 @@ import javax.inject.Inject
 @HiltViewModel
 class DictionaryListViewModel @Inject constructor(
     private val dictionaryService: DictionaryService,
-) : ViewModel() {
+) : BaseViewModel() {
 
     private val _dictionariesState = MutableStateFlow(listOf<DictionaryUi>())
     val dictionariesState = _dictionariesState.asStateFlow()
 
     init {
         viewModelScope.launch {
-            dictionaryService.observeDictionaries().collect { dictionary ->
-                _dictionariesState.emit(dictionary)
-            }
+            dictionaryService.observeDictionaries().observe(
+                onSuccess = { dictionary ->
+                    _dictionariesState.emit(dictionary)
+                }
+            )
         }
     }
 
