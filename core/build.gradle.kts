@@ -69,4 +69,18 @@ dependencies {
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
+
+    //Hilt
+    implementation(libs.hilt.android)
+    implementation(libs.hilt.navigation.compose)
+    kapt(libs.hilt.compiler)
+
+    //Retrofit
+    implementation(libs.retrofit2)
+    implementation(libs.okHttp3)
+    implementation(libs.okhttp3.logging.interceptor)
+    implementation(libs.retrofit2.kotlinx.serialization.converter)
+
+    //KotlinX Serialization
+    implementation(libs.kotlinx.serialization.json)
 }

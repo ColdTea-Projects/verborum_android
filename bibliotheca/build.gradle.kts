@@ -33,16 +33,11 @@ android {
     buildTypes {
 
         debug {
-            buildConfigField("String", "ROOT_URL_VERBORUM_API", "\"http://localhost:8000//\"")
-
             isMinifyEnabled = false
             isJniDebuggable = true
         }
 
-        release {
-            buildConfigField("String", "ROOT_URL_VERBORUM_API", "\"http://localhost:8000//\"")
-
-            isMinifyEnabled = false
+        release {isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"

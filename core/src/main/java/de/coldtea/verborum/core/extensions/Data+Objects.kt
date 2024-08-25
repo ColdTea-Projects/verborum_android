@@ -1,4 +1,4 @@
-package de.coldtea.anidex.data
+package de.coldtea.verborum.core.extensions
 
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
