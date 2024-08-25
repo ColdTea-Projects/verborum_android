@@ -2,6 +2,7 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     kotlin("kapt") version "1.9.0"
+    id("com.google.dagger.hilt.android")
 }
 
 android {
@@ -60,10 +61,16 @@ android {
 }
 
 dependencies {
+    api(projects.core)
     implementation(projects.bibliotheca)
     implementation(projects.forum)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
+    testImplementation(libs.junit)
+    androidTestImplementation(libs.androidx.test.ext.junit)
+    androidTestImplementation(libs.androidx.test.espresso.core)
+
+    //Compose
     implementation(libs.androidx.activity.compose)
     implementation(platform(libs.androidx.activity.compose.bom))
     implementation(libs.androidx.compose.ui)
@@ -71,24 +78,30 @@ dependencies {
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.material3)
     implementation(libs.navigation.compose)
+    androidTestImplementation(platform(libs.androidx.activity.compose.bom))
+    androidTestImplementation(libs.androidx.compose.ui.test.junit4)
+    debugImplementation(libs.androidx.compose.ui.tooling)
+    debugImplementation(libs.androidx.compose.ui.test.manifest)
+
+    //Hilt
     implementation(libs.hilt.android)
     implementation(libs.hilt.navigation.compose)
     kapt(libs.hilt.compiler)
+
+    //Room
     implementation(libs.room.runtime)
     implementation(libs.room.paging)
     implementation(libs.room.ktx)
     kapt(libs.room.compiler)
-    testImplementation(libs.junit)
-    testImplementation(libs.hilt.android.test)
-    kaptTest(libs.hilt.compiler.test)
-    androidTestImplementation(libs.androidx.test.ext.junit)
-    androidTestImplementation(libs.androidx.test.espresso.core)
-    androidTestImplementation(platform(libs.androidx.activity.compose.bom))
-    androidTestImplementation(libs.androidx.compose.ui.test.junit4)
-    androidTestImplementation(libs.hilt.android.test)
-    kaptAndroidTest(libs.hilt.compiler.test)
-    debugImplementation(libs.androidx.compose.ui.tooling)
-    debugImplementation(libs.androidx.compose.ui.test.manifest)
+
+    //Retrofit
+    implementation(libs.retrofit2)
+    implementation(libs.okHttp3)
+    implementation(libs.okhttp3.logging.interceptor)
+    implementation(libs.retrofit2.kotlinx.serialization.converter)
+
+    //KotlinX Serialization
+    implementation(libs.kotlinx.serialization.json)
 }
 
 kapt {

@@ -18,3 +18,4 @@ rootProject.name = "Verborum"
 include(":app")
 include(":bibliotheca")
 include(":forum")
+include(":core")

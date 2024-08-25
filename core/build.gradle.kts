@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "de.coldtea.verborum.bibliotheca"
+    namespace = "de.coldtea.verborum.core"
     compileSdk = Configuration.compileSdk
 
     defaultConfig {
@@ -52,15 +52,10 @@ android {
 }
 
 dependencies {
-    api(projects.core)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.appcompat)
     implementation(libs.material)
-    implementation(libs.androidx.lifecycle.runtime.ktx)
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.test.ext.junit)
-    androidTestImplementation(libs.androidx.test.espresso.core)
 
     //Compose
     implementation(libs.androidx.activity.compose)
@@ -74,24 +69,4 @@ dependencies {
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
-
-    //Hilt
-    implementation(libs.hilt.android)
-    implementation(libs.hilt.navigation.compose)
-    kapt(libs.hilt.compiler)
-
-    //Room
-    implementation(libs.room.runtime)
-    implementation(libs.room.paging)
-    implementation(libs.room.ktx)
-    kapt(libs.room.compiler)
-
-    //Retrofit
-    implementation(libs.retrofit2)
-    implementation(libs.okHttp3)
-    implementation(libs.okhttp3.logging.interceptor)
-    implementation(libs.retrofit2.kotlinx.serialization.converter)
-
-    //KotlinX Serialization
-    implementation(libs.kotlinx.serialization.json)
 }

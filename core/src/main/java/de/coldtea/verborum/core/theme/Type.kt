@@ -1,4 +1,4 @@
-package de.coldtea.verborum.app.theme
+package de.coldtea.verborum.core.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
