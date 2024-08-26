@@ -1,4 +1,4 @@
-package de.coldtea.verborum.bibliotheca.common.domain
+package de.coldtea.verborum.bibliotheca.common.domain.usecases
 
 import de.coldtea.verborum.bibliotheca.dictionary.data.api.DictionaryApi
 import de.coldtea.verborum.bibliotheca.dictionary.data.db.entity.DictionaryEntity.Companion.GUEST_USER_ID

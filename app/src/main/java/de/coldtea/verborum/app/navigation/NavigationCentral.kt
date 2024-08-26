@@ -33,6 +33,7 @@ fun NavigationCentral() {
             NavHost(navController = navController, startDestination = GROUP_BIBLIOTHECA) {
                 navigation(startDestination = SCREEN_DICTIONARIES_LIST, route = GROUP_BIBLIOTHECA) {
                     insertDictionariesList(navController)
+                    insertDictionariesDetails(navController)
                 }
                 navigation(startDestination = SCREEN_FORUM_MAIN_SCREEN, route = GROUP_FORUM) {
                     insertForumMain(navController)

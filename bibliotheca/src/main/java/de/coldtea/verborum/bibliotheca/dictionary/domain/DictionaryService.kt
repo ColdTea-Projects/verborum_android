@@ -6,6 +6,7 @@ import de.coldtea.verborum.bibliotheca.common.utils.getNowInMillis
 import de.coldtea.verborum.bibliotheca.dictionary.data.db.entity.DictionaryEntity.Companion.GUEST_USER_ID
 import de.coldtea.verborum.bibliotheca.dictionary.domain.model.Dictionary
 import de.coldtea.verborum.bibliotheca.dictionary.domain.usecases.local.CleanDictionariesUseCase
+import de.coldtea.verborum.bibliotheca.dictionary.domain.usecases.local.GetDictionaryUseCase
 import de.coldtea.verborum.bibliotheca.dictionary.domain.usecases.local.ObserveAllDictionariesUseCase
 import de.coldtea.verborum.bibliotheca.dictionary.ui.model.DictionaryUi
 import kotlinx.coroutines.Dispatchers
@@ -16,6 +17,7 @@ import javax.inject.Inject
 
 class DictionaryService @Inject constructor(
     private val observeAllDictionariesUseCase: ObserveAllDictionariesUseCase,
+    private val getDictionaryUseCase: GetDictionaryUseCase,
     private val syncService: SyncService,
     private val uploadService: UploadService,
 ) {
@@ -24,6 +26,10 @@ class DictionaryService @Inject constructor(
         .invoke()
         .map { it.map { it.convertToUi() } }
         .flowOn(Dispatchers.IO)
+
+    suspend fun getDictionary(dictionaryId: String): DictionaryUi = getDictionaryUseCase
+        .invoke(dictionaryId)
+        .convertToUi()
 
     suspend fun crateDummyDictionary() {
         uploadService.createDictionary(
