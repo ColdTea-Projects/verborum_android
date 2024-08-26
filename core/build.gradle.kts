@@ -33,14 +33,14 @@ android {
     buildTypes {
 
         debug {
-            buildConfigField("String", "ROOT_URL_VERBORUM_API", "\"http://localhost:8000//\"")
+            buildConfigField("String", "ROOT_URL_VERBORUM_API", "\"http://192.168.0.241:8085/\"")
 
             isMinifyEnabled = false
             isJniDebuggable = true
         }
 
         release {
-            buildConfigField("String", "ROOT_URL_VERBORUM_API", "\"http://localhost:8000//\"")
+            buildConfigField("String", "ROOT_URL_VERBORUM_API", "\"http://192.168.0.241:8085/\"")
 
             isMinifyEnabled = false
             proguardFiles(

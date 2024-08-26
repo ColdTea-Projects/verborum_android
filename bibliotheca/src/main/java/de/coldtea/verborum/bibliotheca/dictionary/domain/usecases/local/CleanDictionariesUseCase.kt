@@ -1,7 +1,5 @@
-package de.coldtea.verborum.bibliotheca.dictionary.domain.usecases
+package de.coldtea.verborum.bibliotheca.dictionary.domain.usecases.local
 
-import de.coldtea.verborum.bibliotheca.dictionary.data.db.DictionaryRepository
-import de.coldtea.verborum.bibliotheca.word.data.WordRepository
 import javax.inject.Inject
 
 class CleanDictionariesUseCase @Inject constructor(

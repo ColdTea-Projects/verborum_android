@@ -3,8 +3,8 @@ package de.coldtea.verborum.bibliotheca.common.domain
 import de.coldtea.verborum.bibliotheca.dictionary.data.api.DictionaryApi
 import de.coldtea.verborum.bibliotheca.dictionary.data.db.entity.DictionaryEntity.Companion.GUEST_USER_ID
 import de.coldtea.verborum.bibliotheca.dictionary.domain.model.Dictionary
-import de.coldtea.verborum.bibliotheca.dictionary.domain.usecases.GetAllDictionariesUseCase
-import de.coldtea.verborum.bibliotheca.dictionary.domain.usecases.SaveDictionaryUseCase
+import de.coldtea.verborum.bibliotheca.dictionary.domain.usecases.local.GetAllDictionariesUseCase
+import de.coldtea.verborum.bibliotheca.dictionary.domain.usecases.local.SaveDictionaryUseCase
 import de.coldtea.verborum.bibliotheca.word.data.api.WordApi
 import de.coldtea.verborum.bibliotheca.word.domain.SaveWordUseCase
 import de.coldtea.verborum.bibliotheca.word.domain.model.Word

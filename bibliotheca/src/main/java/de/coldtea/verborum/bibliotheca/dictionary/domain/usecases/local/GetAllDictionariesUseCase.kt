@@ -1,16 +1,15 @@
-package de.coldtea.verborum.bibliotheca.dictionary.domain.usecases
+package de.coldtea.verborum.bibliotheca.dictionary.domain.usecases.local
 
 import de.coldtea.verborum.bibliotheca.dictionary.data.db.DictionaryRepository
 import de.coldtea.verborum.bibliotheca.dictionary.data.db.entity.DictionaryEntity
 import de.coldtea.verborum.bibliotheca.dictionary.domain.model.Dictionary
 import javax.inject.Inject
 
-class GetDictionariesByUserUseCase @Inject constructor(
+class GetAllDictionariesUseCase @Inject constructor(
     private val dictionaryRepository: DictionaryRepository,
 ) {
-
-    suspend fun invoke(userId: String): List<Dictionary> =
+    suspend fun invoke(): List<Dictionary> =
         dictionaryRepository
-            .getAllDictionariesByUser(userId)
+            .getAllDictionaries()
             .map(DictionaryEntity::convertToDictionary)
 }

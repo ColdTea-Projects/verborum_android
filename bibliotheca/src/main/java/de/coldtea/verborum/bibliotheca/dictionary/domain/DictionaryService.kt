@@ -1,15 +1,12 @@
 package de.coldtea.verborum.bibliotheca.dictionary.domain
 
 import de.coldtea.verborum.bibliotheca.common.domain.SyncService
-import de.coldtea.verborum.bibliotheca.common.domain.SyncUserDictionariesUseCase
+import de.coldtea.verborum.bibliotheca.common.domain.UploadService
 import de.coldtea.verborum.bibliotheca.common.utils.getNowInMillis
 import de.coldtea.verborum.bibliotheca.dictionary.data.db.entity.DictionaryEntity.Companion.GUEST_USER_ID
 import de.coldtea.verborum.bibliotheca.dictionary.domain.model.Dictionary
-import de.coldtea.verborum.bibliotheca.dictionary.domain.usecases.CleanDictionariesUseCase
-import de.coldtea.verborum.bibliotheca.dictionary.domain.usecases.DeleteDictionaryUseCase
-import de.coldtea.verborum.bibliotheca.dictionary.domain.usecases.GetAllDictionariesUseCase
-import de.coldtea.verborum.bibliotheca.dictionary.domain.usecases.ObserveAllDictionariesUseCase
-import de.coldtea.verborum.bibliotheca.dictionary.domain.usecases.SaveDictionaryUseCase
+import de.coldtea.verborum.bibliotheca.dictionary.domain.usecases.local.CleanDictionariesUseCase
+import de.coldtea.verborum.bibliotheca.dictionary.domain.usecases.local.ObserveAllDictionariesUseCase
 import de.coldtea.verborum.bibliotheca.dictionary.ui.model.DictionaryUi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -20,7 +17,7 @@ import javax.inject.Inject
 class DictionaryService @Inject constructor(
     private val observeAllDictionariesUseCase: ObserveAllDictionariesUseCase,
     private val syncService: SyncService,
-    private val cleanDictionariesUseCase: CleanDictionariesUseCase,
+    private val uploadService: UploadService,
 ) {
 
     fun observeDictionaries(): Flow<List<DictionaryUi>> = observeAllDictionariesUseCase
@@ -29,7 +26,7 @@ class DictionaryService @Inject constructor(
         .flowOn(Dispatchers.IO)
 
     suspend fun crateDummyDictionary() {
-        syncService.uploadDictionary(
+        uploadService.createDictionary(
             Dictionary(
                 dictionaryId = "",
                 userId = GUEST_USER_ID,
@@ -45,7 +42,7 @@ class DictionaryService @Inject constructor(
         syncService.syncDictionaries()
     }
 
-    suspend fun removeAllDictionaries() = cleanDictionariesUseCase.invoke()
+    suspend fun deleteDictionary(dictionaryId: String) = uploadService.deleteDictionary(dictionaryId)
 
     fun generateRandomString(len: Int = 15): String {
         val alphanumerics = CharArray(26) { it -> (it + 97).toChar() }.toSet()
