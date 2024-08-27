@@ -1,43 +1,65 @@
 package de.coldtea.verborum.bibliotheca.word.ui
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import de.coldtea.verborum.bibliotheca.common.domain.SyncService
 import de.coldtea.verborum.bibliotheca.dictionary.domain.DictionaryService
-import de.coldtea.verborum.bibliotheca.dictionary.domain.usecases.local.CleanDictionariesUseCase
-import de.coldtea.verborum.bibliotheca.dictionary.ui.model.DictionaryUi
+import de.coldtea.verborum.bibliotheca.word.domain.WordService
 import de.coldtea.verborum.bibliotheca.word.ui.model.DictionaryState
-import de.coldtea.verborum.bibliotheca.word.ui.model.Failed
-import de.coldtea.verborum.bibliotheca.word.ui.model.Loading
-import de.coldtea.verborum.bibliotheca.word.ui.model.Success
+import de.coldtea.verborum.bibliotheca.word.ui.model.WordState
 import de.coldtea.verborum.core.ui.BaseViewModel
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class DictionaryDetailsViewModel @Inject constructor(
-    private val dictionaryService: DictionaryService
+    private val dictionaryService: DictionaryService,
+    private val wordService: WordService,
 ) : BaseViewModel() {
 
-    private val _dictionariesState = MutableStateFlow<DictionaryState>(Loading)
-    val dictionariesState = _dictionariesState.asSharedFlow()
+    private val _dictionaryState = MutableStateFlow<DictionaryState>(DictionaryState.Loading)
+    val dictionaryState = _dictionaryState.asSharedFlow()
+
+    private val _wordsState = MutableStateFlow<WordState>(WordState.Loading)
+    val wordsState = _wordsState.asSharedFlow()
 
     fun init(dictionaryId: String) = viewModelScope.launch {
         try {
-            _dictionariesState.emit(
-                Success(dictionaryService.getDictionary(dictionaryId))
+            _dictionaryState.emit(
+                DictionaryState.Success(dictionaryService.getDictionary(dictionaryId))
             )
-        }catch (_: Exception){
-            _dictionariesState.emit(Failed)
+        } catch (_: Exception) {
+            _dictionaryState.emit(DictionaryState.Failed)
         }
+
+
+        if (_dictionaryState.value !is DictionaryState.Success || (_dictionaryState.value as DictionaryState.Success).dictionaryUi.dictionaryId != dictionaryId) {
+            return@launch
+        }
+
+        try {
+            wordService.observeWordsByDictionary(dictionaryId).observe(
+                onSuccess = { _wordsState.emit(WordState.Success(it)) }
+            )
+        } catch (_: Exception) {
+            _wordsState.emit(WordState.Failed)
+        }
+    }
+
+    fun addDummyDictionary() = viewModelScope.launch {
+        if (_dictionaryState.value !is DictionaryState.Success) {
+            return@launch
+        }
+
+        wordService.addDummyDictionary((_dictionaryState.value as DictionaryState.Success).dictionaryUi.dictionaryId)
+    }
+
+    fun cleanWords() = viewModelScope.launch {
+        if (_dictionaryState.value !is DictionaryState.Success) {
+            return@launch
+        }
+
+        wordService.cleanWordsInDictionary((_dictionaryState.value as DictionaryState.Success).dictionaryUi.dictionaryId)
     }
 }

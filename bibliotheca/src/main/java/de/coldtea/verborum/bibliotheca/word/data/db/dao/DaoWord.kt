@@ -5,6 +5,7 @@ import androidx.room.Query
 import androidx.room.Transaction
 import de.coldtea.verborum.bibliotheca.common.data.db.DaoBase
 import de.coldtea.verborum.bibliotheca.word.data.db.entity.WordEntity
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface DaoWord: DaoBase<WordEntity> {
@@ -12,6 +13,10 @@ interface DaoWord: DaoBase<WordEntity> {
     @Transaction
     @Query("SELECT * FROM word WHERE fk_dictionary_id = :dictionaryId")
     suspend fun getWordsByDictionary(dictionaryId: String): List<WordEntity>
+
+    @Transaction
+    @Query("SELECT * FROM word WHERE fk_dictionary_id = :dictionaryId")
+    fun observeWordsByDictionary(dictionaryId: String): Flow<List<WordEntity>>
 
     @Transaction
     @Query("SELECT * FROM word WHERE word_id = :wordId")

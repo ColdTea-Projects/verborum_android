@@ -1,4 +1,4 @@
-package de.coldtea.verborum.bibliotheca.dictionary.domain.usecases.local
+package de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.local
 
 import javax.inject.Inject
 

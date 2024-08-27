@@ -1,11 +1,11 @@
-package de.coldtea.verborum.bibliotheca.dictionary.domain.usecases.api
+package de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.api
 
 import de.coldtea.verborum.bibliotheca.common.utils.generateUUIDV4
 import de.coldtea.verborum.bibliotheca.dictionary.data.api.DictionaryApi
 import de.coldtea.verborum.bibliotheca.dictionary.domain.model.Dictionary
 import javax.inject.Inject
 
-class CreateDictionaryUserCase @Inject constructor(
+class SaveDictionaryApiUserCase @Inject constructor(
     private val dictionaryApi: DictionaryApi,
 ) {
 

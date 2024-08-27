@@ -1,4 +1,4 @@
-package de.coldtea.verborum.bibliotheca.word.domain
+package de.coldtea.verborum.bibliotheca.word.domain.usecase.local
 
 import de.coldtea.verborum.bibliotheca.common.utils.generateUUIDV4
 import de.coldtea.verborum.bibliotheca.word.data.WordRepository

@@ -1,7 +1,6 @@
 package de.coldtea.verborum.bibliotheca.word.domain.model
 
-import de.coldtea.verborum.bibliotheca.word.data.WordRepository
-import de.coldtea.verborum.bibliotheca.word.data.db.dao.DaoWord
+import de.coldtea.verborum.bibliotheca.word.data.api.model.WordRequest
 import de.coldtea.verborum.bibliotheca.word.data.db.entity.WordEntity
 import de.coldtea.verborum.bibliotheca.word.ui.model.WordUi
 
@@ -37,5 +36,15 @@ data class Word(
             translationMeta = translationMeta,
             createdAt = createdAt,
             updatedAt = updatedAt,
+        )
+
+    fun convertToWordRequest(): WordRequest =
+        WordRequest(
+            wordId = wordId,
+            dictionaryId = dictionaryId,
+            word = word,
+            wordMeta = wordMeta,
+            translation = translation,
+            translationMeta = translationMeta
         )
 }

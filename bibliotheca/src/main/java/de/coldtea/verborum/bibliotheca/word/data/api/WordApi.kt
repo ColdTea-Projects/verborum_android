@@ -24,11 +24,11 @@ interface WordApi {
     @GET("words/language/to/{language}")
     suspend fun getWordsByLanguageTo(@Path("language") language: String): List<WordResponse>?
 
-    @POST("words/")
-    suspend fun createWords(@Body body: WordBundleRequest): Response<Unit>
+    @POST("words")
+    suspend fun createWords(@Body body: List<WordBundleRequest>): Response<Unit>
 
-    @PUT("words/")
-    suspend fun updateWords(@Body body: WordBundleRequest): Response<Unit>
+    @PUT("words")
+    suspend fun updateWords(@Body body: List<WordBundleRequest>): Response<Unit>
 
     @DELETE("words/{wordId}")
     suspend fun deleteWord(@Path("wordId") wordId: String): Response<Unit>

@@ -17,17 +17,6 @@ fun NavGraphBuilder.insertDictionariesList(navController: NavHostController) = c
             navController.navigate("$SCREEN_DICTIONARIES_DETAIL/$dictionaryId")
         }
     )
-//                        val contentViewModel = hiltViewModel<ContentViewModel>()
-
-//                        ContentScreen(
-//                            viewModel = contentViewModel,
-//                            onItemClicked = { id ->
-//                                navController.navigate("$SCREEN_CONTENT_DETAIL/$id")
-//                            },
-//                            onSearchClicked = {
-//                                navController.navigate(SCREEN_SEARCH)
-//                            }
-//                        )
 }
 
 fun NavGraphBuilder.insertDictionariesDetails(navController: NavHostController) = composable(

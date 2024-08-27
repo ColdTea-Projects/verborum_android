@@ -1,15 +1,18 @@
-package de.coldtea.verborum.bibliotheca.dictionary.domain.usecases.local
+package de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.local
 
 import de.coldtea.verborum.bibliotheca.dictionary.data.db.DictionaryRepository
 import de.coldtea.verborum.bibliotheca.dictionary.data.db.entity.DictionaryEntity
 import de.coldtea.verborum.bibliotheca.dictionary.domain.model.Dictionary
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
-class GetAllDictionariesUseCase @Inject constructor(
+class ObserveAllDictionariesUseCase @Inject constructor(
     private val dictionaryRepository: DictionaryRepository,
 ) {
-    suspend fun invoke(): List<Dictionary> =
+
+    fun invoke(): Flow<List<Dictionary>> =
         dictionaryRepository
-            .getAllDictionaries()
-            .map(DictionaryEntity::convertToDictionary)
+            .observeAllDictionaries()
+            .map { it.map(DictionaryEntity::convertToDictionary) }
 }

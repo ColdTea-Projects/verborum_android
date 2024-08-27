@@ -5,12 +5,12 @@ import de.coldtea.verborum.bibliotheca.common.domain.UploadService
 import de.coldtea.verborum.bibliotheca.common.utils.getNowInMillis
 import de.coldtea.verborum.bibliotheca.dictionary.data.db.entity.DictionaryEntity.Companion.GUEST_USER_ID
 import de.coldtea.verborum.bibliotheca.dictionary.domain.model.Dictionary
-import de.coldtea.verborum.bibliotheca.dictionary.domain.usecases.local.CleanDictionariesUseCase
-import de.coldtea.verborum.bibliotheca.dictionary.domain.usecases.local.GetDictionaryUseCase
-import de.coldtea.verborum.bibliotheca.dictionary.domain.usecases.local.ObserveAllDictionariesUseCase
+import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.local.GetDictionaryUseCase
+import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.local.ObserveAllDictionariesUseCase
 import de.coldtea.verborum.bibliotheca.dictionary.ui.model.DictionaryUi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
@@ -24,7 +24,8 @@ class DictionaryService @Inject constructor(
 
     fun observeDictionaries(): Flow<List<DictionaryUi>> = observeAllDictionariesUseCase
         .invoke()
-        .map { it.map { it.convertToUi() } }
+        .distinctUntilChanged()
+        .map { it.map(Dictionary::convertToUi) }
         .flowOn(Dispatchers.IO)
 
     suspend fun getDictionary(dictionaryId: String): DictionaryUi = getDictionaryUseCase

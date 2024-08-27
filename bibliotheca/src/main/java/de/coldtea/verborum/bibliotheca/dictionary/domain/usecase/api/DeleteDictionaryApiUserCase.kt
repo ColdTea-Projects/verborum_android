@@ -1,9 +1,9 @@
-package de.coldtea.verborum.bibliotheca.dictionary.domain.usecases.api
+package de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.api
 
 import de.coldtea.verborum.bibliotheca.dictionary.data.api.DictionaryApi
 import javax.inject.Inject
 
-class DeleteDictionaryUserCase @Inject constructor(
+class DeleteDictionaryApiUserCase @Inject constructor(
     private val dictionaryApi: DictionaryApi,
 ) {
 

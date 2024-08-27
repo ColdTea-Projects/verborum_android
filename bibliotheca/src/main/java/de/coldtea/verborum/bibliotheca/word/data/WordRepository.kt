@@ -4,6 +4,7 @@ import de.coldtea.verborum.bibliotheca.common.data.db.BibliothecaDatabase
 import de.coldtea.verborum.bibliotheca.common.data.db.insertOrUpdate
 import de.coldtea.verborum.bibliotheca.word.data.db.dao.DaoWord
 import de.coldtea.verborum.bibliotheca.word.data.db.entity.WordEntity
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class WordRepository @Inject constructor(
@@ -11,6 +12,9 @@ class WordRepository @Inject constructor(
 ) {
     suspend fun getWordsByDictionary(dictionaryId: String): List<WordEntity> =
         bibliothecaDatabase.daoWord.getWordsByDictionary(dictionaryId)
+
+    fun observeWordsByDictionary(dictionaryId: String): Flow<List<WordEntity>> =
+        bibliothecaDatabase.daoWord.observeWordsByDictionary(dictionaryId)
 
     suspend fun getWord(wordId: String): WordEntity =
         bibliothecaDatabase.daoWord.getWord(wordId)
