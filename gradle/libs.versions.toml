@@ -1,25 +1,26 @@
 [versions]
 
-androidx_core_ktx = "1.12.0"
-androidx_lifecycle_runtime_ktx = "2.7.0"
-androidx_activity_compose = "1.8.2"
-androidx_compose_bom = "2024.02.00"
+androidx_core_ktx = "1.13.1"
+androidx_lifecycle_runtime_ktx = "2.8.4"
+androidx_activity_compose = "1.9.1"
+androidx_compose_bom = "2024.08.00"
 junit = "4.13.2"
-androidx-test-ext-junit = "1.1.5"
-androidx-test-espresso-core = "3.5.1"
+androidx-test-ext-junit = "1.2.1"
+androidx-test-espresso-core = "3.6.1"
 navigation-compose = "2.7.7"
 hilt-android = "2.51.1"
-hilt-compiler = "2.51.1"
+hilt-compiler = "2.52"
+hilt-plugin = "2.52"
 hilt-android-testing = "2.51.1"
 hilt-navigation-compose = "1.2.0"
 room-runtime = "2.6.1"
 room-paging = "2.6.1"
 room-compiler = "2.6.1"
 room-ktx = "2.6.1"
-agp = "8.2.0"
+agp = "8.2.2"
 kotlin = "1.9.0"
-appcompat = "1.6.1"
-material = "1.10.0"
+appcompat = "1.7.0"
+material = "1.12.0"
 retrofit = "2.11.0"
 okhttp = "4.12.0"
 retrofit2-kotlinx-serialization-converter = "0.8.0"
@@ -62,3 +63,5 @@ kotlinx_serialization_json = { module = "org.jetbrains.kotlinx:kotlinx-serializa
 [plugins]
 androidLibrary = { id = "com.android.library", version.ref = "agp" }
 jetbrainsKotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+androidApplication = { id = "com.android.application", version.ref = "agp" }
+hiltAndroid = { id = "com.google.dagger.hilt.android", version.ref = "hilt-plugin" }
