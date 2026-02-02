@@ -1,32 +1,35 @@
 package de.coldtea.verborum.bibliotheca.dictionary.data.api.model
 
+import android.annotation.SuppressLint
 import androidx.annotation.Keep
 import de.coldtea.verborum.bibliotheca.dictionary.domain.model.Dictionary
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
+@SuppressLint("UnsafeOptInUsageError")
 @Keep
 @Serializable
 data class DictionaryResponse(
     @SerialName("dictionaryId")
-    var dictionaryId: String?,
+    val dictionaryId: String,
     @SerialName("userId")
-    var userId: String?,
+    val userId: String,
     @SerialName("name")
-    var name: String?,
+    val name: String,
     @SerialName("isPublic")
-    var isPublic: Boolean?,
+    val isPublic: Boolean,
     @SerialName("fromLang")
-    var fromLang: String?,
+    val fromLang: String,
     @SerialName("toLang")
-    var toLang: String?,
+    val toLang: String,
 ) {
     fun convertToDictionary() = Dictionary(
-        dictionaryId = dictionaryId.orEmpty(),
-        userId = userId.orEmpty(),
-        name = name.orEmpty(),
-        isPublic = isPublic?:false,
-        fromLang = fromLang.orEmpty(),
+        dictionaryId = dictionaryId,
+        userId = userId,
+        name = name,
+        isPublic = isPublic,
+        isSynced = true,
+        fromLang = fromLang,
         toLang = toLang.orEmpty(),
         createdAt = 1724102088L,
         updatedAt = 1724102088L,

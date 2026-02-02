@@ -15,6 +15,8 @@ data class DictionaryEntity (
     val name: String,
     @ColumnInfo(name = "is_public")
     val isPublic: Boolean = false,
+    @ColumnInfo(name = "isSynced")
+    val isSynced: Boolean = false,
     @ColumnInfo(name = "from_lang")
     val fromLang: String,
     @ColumnInfo(name = "to_lang")
@@ -29,6 +31,7 @@ data class DictionaryEntity (
         userId = userId,
         name = name,
         isPublic = isPublic,
+        isSynced = isSynced,
         fromLang = fromLang,
         toLang = toLang,
         createdAt = createdAt,

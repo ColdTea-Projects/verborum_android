@@ -1,22 +1,24 @@
 package de.coldtea.verborum.bibliotheca.dictionary.data.api.model
 
+import android.annotation.SuppressLint
 import androidx.annotation.Keep
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
+@SuppressLint("UnsafeOptInUsageError")
 @Keep
 @Serializable
 data class DictionaryRequest(
     @SerialName("dictionaryId")
-    var dictionaryId: String?,
+    val dictionaryId: String,
     @SerialName("userId")
-    var userId: String?,
+    val userId: String,
     @SerialName("name")
-    var name: String?,
+    val name: String,
     @SerialName("isPublic")
-    var isPublic: Boolean?,
+    val isPublic: Boolean,
     @SerialName("fromLang")
-    var fromLang: String?,
+    val fromLang: String,
     @SerialName("toLang")
-    var toLang: String?,
+    val toLang: String,
 )

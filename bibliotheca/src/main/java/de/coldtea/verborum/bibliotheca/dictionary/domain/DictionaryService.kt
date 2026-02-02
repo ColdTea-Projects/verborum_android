@@ -1,5 +1,6 @@
 package de.coldtea.verborum.bibliotheca.dictionary.domain
 
+import android.util.Log
 import de.coldtea.verborum.bibliotheca.common.domain.SyncService
 import de.coldtea.verborum.bibliotheca.common.domain.UploadService
 import de.coldtea.verborum.bibliotheca.common.utils.getNowInMillis
@@ -7,17 +8,20 @@ import de.coldtea.verborum.bibliotheca.dictionary.data.db.entity.DictionaryEntit
 import de.coldtea.verborum.bibliotheca.dictionary.domain.model.Dictionary
 import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.local.GetDictionaryUseCase
 import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.local.ObserveAllDictionariesUseCase
+import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.local.SaveDictionaryUseCase
 import de.coldtea.verborum.bibliotheca.dictionary.ui.model.DictionaryUi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
+import java.io.IOException
 import javax.inject.Inject
 
 class DictionaryService @Inject constructor(
     private val observeAllDictionariesUseCase: ObserveAllDictionariesUseCase,
     private val getDictionaryUseCase: GetDictionaryUseCase,
+    private val saveDictionaryUseCase: SaveDictionaryUseCase,
     private val syncService: SyncService,
     private val uploadService: UploadService,
 ) {
@@ -33,23 +37,31 @@ class DictionaryService @Inject constructor(
         .convertToUi()
 
     suspend fun crateDummyDictionary() {
-        uploadService.createDictionary(
+        val dictionary =
             Dictionary(
                 dictionaryId = "",
                 userId = GUEST_USER_ID,
                 name = generateRandomString(),
                 isPublic = false,
+                isSynced = false,
                 fromLang = "DE",
                 toLang = "EN",
                 createdAt = getNowInMillis(),
                 updatedAt = getNowInMillis(),
             )
-        )
 
-        syncService.syncDictionaries()
+        val dictionaryId = saveDictionaryUseCase.invoke(dictionary)
+        try {
+            uploadService.createDictionary(dictionary.copy(dictionaryId = dictionaryId))
+            syncService.syncDictionaries()
+        } catch (e: Exception) {
+            // Other errors
+            Log.e("Sync", "Unexpected error", e)
+        }
     }
 
-    suspend fun deleteDictionary(dictionaryId: String) = uploadService.deleteDictionary(dictionaryId)
+    suspend fun deleteDictionary(dictionaryId: String) =
+        uploadService.deleteDictionary(dictionaryId)
 
     fun generateRandomString(len: Int = 15): String {
         val alphanumerics = CharArray(26) { it -> (it + 97).toChar() }.toSet()

@@ -8,6 +8,8 @@ import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.local.SaveDicti
 import de.coldtea.verborum.bibliotheca.word.data.api.WordApi
 import de.coldtea.verborum.bibliotheca.word.domain.usecase.local.SaveWordUseCase
 import de.coldtea.verborum.bibliotheca.word.domain.model.Word
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class SyncUserDictionariesUseCase @Inject constructor(
@@ -19,18 +21,19 @@ class SyncUserDictionariesUseCase @Inject constructor(
     //TODO: getActiveUserUseCase
 ) {
 
-    suspend fun invoke() {
+    suspend fun invoke() = withContext(Dispatchers.IO) {
         val activeUser = GUEST_USER_ID // TODO: getActiveUserUseCase.invoke()
         removeAllDictionariesUseCase.invoke() // TODO: make it update time base
         dictionaryApi.getAllDictionariesByUser(activeUser)?.map { dictResponse ->
-            val words = wordApi.getWordsByDictionary(dictResponse.dictionaryId.orEmpty())?.map { wordResponse ->
-                wordResponse.convertToWord(dictResponse.dictionaryId.orEmpty())
-            }
+            val words =
+                wordApi.getWordsByDictionary(dictResponse.dictionaryId)?.map { wordResponse ->
+                    wordResponse.convertToWord(dictResponse.dictionaryId)
+                }
             save(dictResponse.convertToDictionary(), words)
         }
     }
 
-    private suspend fun save(dictionary: Dictionary, word: List<Word>?){
+    private suspend fun save(dictionary: Dictionary, word: List<Word>?) {
         saveDictionaryUseCase.invoke(dictionary)
         word?.map { saveWordUseCase.invoke(it) }
     }

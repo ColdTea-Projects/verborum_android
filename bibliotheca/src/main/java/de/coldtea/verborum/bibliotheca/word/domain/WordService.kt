@@ -1,5 +1,6 @@
 package de.coldtea.verborum.bibliotheca.word.domain
 
+import android.util.Log
 import de.coldtea.verborum.bibliotheca.common.domain.SyncService
 import de.coldtea.verborum.bibliotheca.common.domain.UploadService
 import de.coldtea.verborum.bibliotheca.common.utils.getNowInMillis
@@ -16,12 +17,14 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
+import java.io.IOException
 import javax.inject.Inject
 
 class WordService @Inject constructor(
     private val observeWordsByDictionaryUseCase: ObserveWordsByDictionaryUseCase,
     private val deleteWordByDictionaryIdApiUseCase: DeleteWordByDictionaryIdApiUseCase,
     private val deleteWordByDictionaryIdUseCase: DeleteWordByDictionaryIdUseCase,
+    private val saveWordUseCase: SaveWordUseCase,
     private val syncService: SyncService,
     private val uploadService: UploadService,
 ) {
@@ -34,17 +37,16 @@ class WordService @Inject constructor(
             .flowOn(Dispatchers.IO)
 
     suspend fun addDummyDictionary(dictionaryId: String) {
-        uploadService.createWord(
-            Word(
-                wordId = "",
-                dictionaryId = dictionaryId,
-                word = generateRandomString(),
-                wordMeta = "{en}",
-                translation = generateRandomString(),
-                translationMeta = "{de}",
-                createdAt = getNowInMillis(),
-                updatedAt = getNowInMillis(),
-            )
+        val word = Word(
+            wordId = "",
+            dictionaryId = dictionaryId,
+            word = generateRandomString(),
+            wordMeta = "{en}",
+            translation = generateRandomString(),
+            translationMeta = "{de}",
+            isSynced = false,
+            createdAt = getNowInMillis(),
+            updatedAt = getNowInMillis(),
         )
 
         syncService.syncDictionaries()

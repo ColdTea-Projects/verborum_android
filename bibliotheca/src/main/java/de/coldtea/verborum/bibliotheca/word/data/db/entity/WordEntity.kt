@@ -2,7 +2,6 @@ package de.coldtea.verborum.bibliotheca.word.data.db.entity
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
-import androidx.room.PrimaryKey
 import de.coldtea.verborum.bibliotheca.common.utils.getNowInMillis
 import de.coldtea.verborum.bibliotheca.word.domain.model.Word
 
@@ -20,6 +19,8 @@ data class WordEntity (
     val translation: String,
     @ColumnInfo(name = "translation_meta")
     val translationMeta: String,
+    @ColumnInfo(name = "isSynced")
+    val isSynced: Boolean = false,
     @ColumnInfo(name = "created_at")
     val createdAt: Long = getNowInMillis(),
     @ColumnInfo(name = "updated_at")
@@ -33,6 +34,7 @@ data class WordEntity (
             wordMeta = wordMeta,
             translation = translation,
             translationMeta = translationMeta,
+            isSynced = isSynced,
             createdAt = createdAt,
             updatedAt = updatedAt,
         )

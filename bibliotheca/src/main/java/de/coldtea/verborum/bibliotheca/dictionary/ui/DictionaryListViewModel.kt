@@ -8,6 +8,7 @@ import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.local.CleanDict
 import de.coldtea.verborum.bibliotheca.dictionary.ui.model.DictionaryUi
 import de.coldtea.verborum.bibliotheca.word.domain.WordService
 import de.coldtea.verborum.core.ui.BaseViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -33,15 +34,15 @@ class DictionaryListViewModel @Inject constructor(
                     _dictionariesState.emit(dictionary)
                 }
             )
-            syncService.syncDictionaries()
+             syncService.syncDictionaries()
         }
     }
 
-    fun addDummyDictionary() = viewModelScope.launch {
+    fun addDummyDictionary() = viewModelScope.launch(Dispatchers.IO) {
         dictionaryService.crateDummyDictionary()
     }
 
-    fun cleanDictionaries() = viewModelScope.launch {
+    fun cleanDictionaries() = viewModelScope.launch(Dispatchers.IO) {
         dictionariesState.value.map {
             async {
                 wordService.cleanWordsInDictionary(it.dictionaryId)

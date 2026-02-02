@@ -17,6 +17,7 @@ data class DictionaryUi(
         userId = userId,
         name = name,
         isPublic = isPublic,
+        isSynced = false,
         fromLang = fromLang,
         toLang = toLang,
         createdAt = createdAt,

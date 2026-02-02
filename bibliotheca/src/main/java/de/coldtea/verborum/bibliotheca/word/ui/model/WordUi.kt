@@ -23,6 +23,7 @@ data class WordUi(
             wordMeta = wordMeta,
             translation = translation,
             translationMeta = translationMeta,
+            isSynced = false,
             createdAt = createdAt,
             updatedAt = updatedAt,
         )

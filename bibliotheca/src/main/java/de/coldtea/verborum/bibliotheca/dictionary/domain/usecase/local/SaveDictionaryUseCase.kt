@@ -1,7 +1,9 @@
 package de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.local
 
+import de.coldtea.verborum.bibliotheca.common.utils.generateUUIDV4
 import de.coldtea.verborum.bibliotheca.dictionary.data.db.DictionaryRepository
 import de.coldtea.verborum.bibliotheca.dictionary.domain.model.Dictionary
+import java.util.UUID
 import javax.inject.Inject
 
 class SaveDictionaryUseCase @Inject constructor(
@@ -9,10 +11,12 @@ class SaveDictionaryUseCase @Inject constructor(
 ) {
 
     suspend fun invoke(dictionary: Dictionary): String {
+        val dictionaryId =
+            if (dictionary.dictionaryId.isEmpty()) generateUUIDV4() else dictionary.dictionaryId
         dictionaryRepository.saveDictionary(
-            dictionary.convertToEntity()
+            dictionary.copy(dictionaryId = dictionaryId).convertToEntity()
         )
 
-        return dictionary.dictionaryId
+        return dictionaryId
     }
 }

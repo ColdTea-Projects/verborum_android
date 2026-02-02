@@ -1,22 +1,24 @@
 package de.coldtea.verborum.bibliotheca.word.data.api.model
 
+import android.annotation.SuppressLint
 import androidx.annotation.Keep
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
+@SuppressLint("UnsafeOptInUsageError")
 @Keep
 @Serializable
 data class WordRequest(
     @SerialName("wordId")
-    var wordId: String?,
+    val wordId: String,
     @SerialName("dictionaryId")
-    var dictionaryId: String?,
+    val dictionaryId: String,
     @SerialName("word")
-    var word: String?,
+    val word: String,
     @SerialName("wordMeta")
-    var wordMeta: String?,
+    val wordMeta: String,
     @SerialName("translation")
-    var translation: String?,
+    val translation: String,
     @SerialName("translationMeta")
-    var translationMeta: String?,
+    val translationMeta: String,
 )

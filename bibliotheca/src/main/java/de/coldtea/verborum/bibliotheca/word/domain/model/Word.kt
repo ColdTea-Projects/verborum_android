@@ -1,5 +1,6 @@
 package de.coldtea.verborum.bibliotheca.word.domain.model
 
+import androidx.room.ColumnInfo
 import de.coldtea.verborum.bibliotheca.word.data.api.model.WordRequest
 import de.coldtea.verborum.bibliotheca.word.data.db.entity.WordEntity
 import de.coldtea.verborum.bibliotheca.word.ui.model.WordUi
@@ -11,6 +12,7 @@ data class Word(
     val wordMeta: String,
     val translation: String,
     val translationMeta: String,
+    val isSynced: Boolean,
     val createdAt: Long,
     val updatedAt: Long,
 ) {
@@ -22,6 +24,7 @@ data class Word(
             wordMeta = wordMeta,
             translation = translation,
             translationMeta = translationMeta,
+            isSynced = isSynced,
             createdAt = createdAt,
             updatedAt = updatedAt,
         )

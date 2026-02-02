@@ -1,5 +1,6 @@
 package de.coldtea.verborum.core.ui
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineExceptionHandler
@@ -13,8 +14,8 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 
 abstract class BaseViewModel: ViewModel() {
-    protected val exceptionHandler = CoroutineExceptionHandler { _, error ->
-        //TODO
+    protected val exceptionHandler = CoroutineExceptionHandler { _, exception ->
+        Log.e("ViewModel", "Uncaught exception", exception)
     }
 
     protected fun <T> Flow<T>.observe(
