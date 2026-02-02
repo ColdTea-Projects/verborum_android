@@ -10,31 +10,74 @@ import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 
 private val DarkColorScheme = darkColorScheme(
-    primary = Crimson,
-    secondary = CrimsonGrey,
-    tertiary = LightGold
+    background = VerborumColors.DarkBackground,
+    surface = VerborumColors.DarkSurface,
+    surfaceVariant = VerborumColors.DarkSurfaceAlt,
+    onBackground = VerborumColors.DarkText,
+    onSurface = VerborumColors.DarkText,
+    primary = VerborumColors.DarkAccent,
+    secondary = VerborumColors.DarkGold,
+    onPrimary = Color.White,
+    onSecondary = Color.White,
+    outline = VerborumColors.DarkBorder,
+    onSurfaceVariant = VerborumColors.DarkTextSecondary,
+    tertiary = VerborumColors.DarkTextTertiary,
+    // Required Material3 colors
+    primaryContainer = VerborumColors.DarkSurface,
+    onPrimaryContainer = VerborumColors.DarkText,
+    secondaryContainer = VerborumColors.DarkSurface,
+    onSecondaryContainer = VerborumColors.DarkText,
+    tertiaryContainer = VerborumColors.DarkSurface,
+    onTertiaryContainer = VerborumColors.DarkText,
+    error = Color(0xFFCF6679),
+    onError = Color.White,
+    errorContainer = Color(0xFF93000A),
+    onErrorContainer = Color(0xFFFFDAD6),
+    inversePrimary = VerborumColors.LightAccent,
+    inverseSurface = VerborumColors.LightSurface,
+    inverseOnSurface = VerborumColors.LightText,
+    surfaceTint = VerborumColors.DarkAccent,
+    outlineVariant = VerborumColors.DarkBorder,
+    scrim = Color.Black
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = DarkRed,
-    secondary = DarkGrey,
-    tertiary = DarkGold
-
-    /* Other default colors to override
-    background = Color(0xFFFFFBFE),
-    surface = Color(0xFFFFFBFE),
+    background = VerborumColors.LightBackground,
+    surface = VerborumColors.LightSurface,
+    surfaceVariant = VerborumColors.LightSurfaceAlt,
+    onBackground = VerborumColors.LightText,
+    onSurface = VerborumColors.LightText,
+    primary = VerborumColors.LightAccent,
+    secondary = VerborumColors.LightGold,
     onPrimary = Color.White,
     onSecondary = Color.White,
-    onTertiary = Color.White,
-    onBackground = Color(0xFF1C1B1F),
-    onSurface = Color(0xFF1C1B1F),
-    */
+    outline = VerborumColors.LightBorder,
+    onSurfaceVariant = VerborumColors.LightTextSecondary,
+    tertiary = VerborumColors.LightTextTertiary,
+    // Required Material3 colors
+    primaryContainer = VerborumColors.LightSurface,
+    onPrimaryContainer = VerborumColors.LightText,
+    secondaryContainer = VerborumColors.LightSurface,
+    onSecondaryContainer = VerborumColors.LightText,
+    tertiaryContainer = VerborumColors.LightSurface,
+    onTertiaryContainer = VerborumColors.LightText,
+    error = Color(0xFFB3261E),
+    onError = Color.White,
+    errorContainer = Color(0xFFF9DEDC),
+    onErrorContainer = Color(0xFF410E0B),
+    inversePrimary = VerborumColors.DarkAccent,
+    inverseSurface = VerborumColors.DarkSurface,
+    inverseOnSurface = VerborumColors.DarkText,
+    surfaceTint = VerborumColors.LightAccent,
+    outlineVariant = VerborumColors.LightBorder,
+    scrim = Color.Black
 )
 
 @Composable
