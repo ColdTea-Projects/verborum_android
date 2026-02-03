@@ -13,7 +13,7 @@ fun NavGraphBuilder.insertDictionariesList(navController: NavHostController) = c
     SCREEN_DICTIONARIES_LIST
 ) {
     DictionaryListScreen(
-        onItemClicked = { dictionaryId ->
+        onDictionaryClick = { dictionaryId ->
             navController.navigate("$SCREEN_DICTIONARIES_DETAIL/$dictionaryId")
         }
     )

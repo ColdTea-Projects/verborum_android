@@ -44,7 +44,7 @@ import de.coldtea.verborum.core.theme.VerborumTheme
 fun DictionaryCard(
     dictionary: DictionaryUi,
     index: Int,
-    onClick: () -> Unit
+    onClick: (String) -> Unit
 ) {
     var isPressed by remember { mutableStateOf(false) }
 
@@ -62,7 +62,7 @@ fun DictionaryCard(
             .offset(y = animatedOffset)
             .clickable {
                 isPressed = !isPressed
-                onClick()
+                onClick(dictionary.dictionaryId)
             },
         shape = RoundedCornerShape(16.dp),
         color = MaterialTheme.colorScheme.surfaceVariant,
