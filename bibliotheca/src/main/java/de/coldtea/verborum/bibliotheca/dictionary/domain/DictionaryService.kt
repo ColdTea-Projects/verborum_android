@@ -8,6 +8,7 @@ import de.coldtea.verborum.bibliotheca.dictionary.data.db.entity.DictionaryEntit
 import de.coldtea.verborum.bibliotheca.dictionary.domain.model.Dictionary
 import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.local.GetDictionaryUseCase
 import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.local.ObserveAllDictionariesUseCase
+import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.local.ObserveDictionaryUseCase
 import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.local.SaveDictionaryUseCase
 import de.coldtea.verborum.bibliotheca.dictionary.ui.model.DictionaryUi
 import kotlinx.coroutines.Dispatchers
@@ -17,10 +18,11 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import java.io.IOException
 import javax.inject.Inject
+import kotlin.collections.map
 
 class DictionaryService @Inject constructor(
     private val observeAllDictionariesUseCase: ObserveAllDictionariesUseCase,
-    private val getDictionaryUseCase: GetDictionaryUseCase,
+    private val observeDictionaryUseCase: ObserveDictionaryUseCase,
     private val saveDictionaryUseCase: SaveDictionaryUseCase,
     private val syncService: SyncService,
     private val uploadService: UploadService,
@@ -32,9 +34,11 @@ class DictionaryService @Inject constructor(
         .map { it.map(Dictionary::convertToUi) }
         .flowOn(Dispatchers.IO)
 
-    suspend fun getDictionary(dictionaryId: String): DictionaryUi = getDictionaryUseCase
+    fun observeDictionary(dictionaryId: String): Flow<DictionaryUi> = observeDictionaryUseCase
         .invoke(dictionaryId)
-        .convertToUi()
+        .distinctUntilChanged()
+        .map(Dictionary::convertToUi)
+        .flowOn(Dispatchers.IO)
 
     suspend fun crateDummyDictionary() {
         val dictionary =

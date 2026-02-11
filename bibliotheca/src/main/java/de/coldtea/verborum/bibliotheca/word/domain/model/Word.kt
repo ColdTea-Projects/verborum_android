@@ -1,9 +1,8 @@
 package de.coldtea.verborum.bibliotheca.word.domain.model
 
-import androidx.room.ColumnInfo
 import de.coldtea.verborum.bibliotheca.word.data.api.model.WordRequest
 import de.coldtea.verborum.bibliotheca.word.data.db.entity.WordEntity
-import de.coldtea.verborum.bibliotheca.word.ui.model.WordUi
+import de.coldtea.verborum.bibliotheca.word.ui.dictionarydetails.model.WordUi
 
 data class Word(
     val wordId: String,

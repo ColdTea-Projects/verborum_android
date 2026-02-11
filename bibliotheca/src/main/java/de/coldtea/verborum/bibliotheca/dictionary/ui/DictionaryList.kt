@@ -33,7 +33,6 @@ fun DictionaryListScreen(
     onDictionaryClick: (String) -> Unit
 ) {
     val dictionaries = viewModel.dictionariesState.collectAsState().value
-    val lazyListState = rememberLazyListState()
 
     Column(
         modifier = Modifier

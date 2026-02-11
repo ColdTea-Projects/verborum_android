@@ -42,6 +42,7 @@ import de.coldtea.verborum.core.theme.VerborumTheme
 
 @Composable
 fun DictionaryCard(
+    modifier: Modifier = Modifier,
     dictionary: DictionaryUi,
     index: Int,
     onClick: (String) -> Unit
@@ -57,7 +58,7 @@ fun DictionaryCard(
     )
 
     Surface(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .offset(y = animatedOffset)
             .clickable {

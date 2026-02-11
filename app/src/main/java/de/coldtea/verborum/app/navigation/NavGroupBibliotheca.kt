@@ -4,10 +4,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
-import de.coldtea.verborum.bibliotheca.dictionary.domain.model.Dictionary
 import de.coldtea.verborum.bibliotheca.dictionary.ui.DictionaryListScreen
-import de.coldtea.verborum.bibliotheca.word.ui.DictionaryDetailsScreen
-import de.coldtea.verborum.bibliotheca.word.ui.DictionaryDetailsViewModel
+import de.coldtea.verborum.bibliotheca.word.ui.dictionarydetails.DictionaryDetailsScreen
+import de.coldtea.verborum.bibliotheca.word.ui.dictionarydetails.DictionaryDetailsViewModel
 
 fun NavGraphBuilder.insertDictionariesList(navController: NavHostController) = composable(
     SCREEN_DICTIONARIES_LIST

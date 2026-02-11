@@ -1,8 +1,5 @@
-package de.coldtea.verborum.bibliotheca.word.ui.model
+package de.coldtea.verborum.bibliotheca.word.ui.dictionarydetails.model
 
-import de.coldtea.verborum.bibliotheca.word.data.WordRepository
-import de.coldtea.verborum.bibliotheca.word.data.db.dao.DaoWord
-import de.coldtea.verborum.bibliotheca.word.data.db.entity.WordEntity
 import de.coldtea.verborum.bibliotheca.word.domain.model.Word
 
 data class WordUi(
