@@ -30,10 +30,10 @@ class DictionaryDetailsViewModel @Inject constructor(
             DictionaryDetailState.Success(dictionary, words)
         }.observe (
             onSuccess = { state ->
-                _dictionaryDetailState.value = state
+                _dictionaryDetailState.emit(state)
             },
             onError = {
-                _dictionaryDetailState.value = DictionaryDetailState.Failed
+                _dictionaryDetailState.emit(DictionaryDetailState.Failed)
             }
         )
     }

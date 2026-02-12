@@ -37,6 +37,8 @@ import de.coldtea.verborum.core.theme.VerborumTheme
 @Composable
 fun DictionaryDetailsScreen(
     viewModel: DictionaryDetailsViewModel = hiltViewModel(),
+    onTestClicked: () -> Unit,
+    onSelfPracticeClicked: () -> Unit,
 ) {
     val dictionaryDetailState =
         viewModel.dictionaryDetailState.collectAsState(initial = DictionaryDetailState.Loading).value
@@ -101,7 +103,7 @@ fun DictionaryDetailsScreen(
                         iconRes = ResDrawables.ic_check_square_24,
                         backgroundColor = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.weight(1f),
-                        onClick = { }
+                        onClick = onTestClicked
                     )
 
                     PracticeModeButton(
@@ -109,7 +111,7 @@ fun DictionaryDetailsScreen(
                         iconRes = ResDrawables.ic_play_24,
                         backgroundColor = MaterialTheme.colorScheme.secondary,
                         modifier = Modifier.weight(1f),
-                        onClick = { }
+                        onClick = onSelfPracticeClicked
                     )
                 }
 
@@ -165,6 +167,9 @@ fun DictionaryDetailsScreen(
 @Composable
 fun DictionaryListScreenPreview() {
     VerborumTheme {
-        DictionaryDetailsScreen()
+        DictionaryDetailsScreen(
+            onTestClicked = {},
+            onSelfPracticeClicked = {},
+        )
     }
 }

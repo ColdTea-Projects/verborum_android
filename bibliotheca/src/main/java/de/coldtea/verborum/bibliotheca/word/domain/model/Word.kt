@@ -2,7 +2,7 @@ package de.coldtea.verborum.bibliotheca.word.domain.model
 
 import de.coldtea.verborum.bibliotheca.word.data.api.model.WordRequest
 import de.coldtea.verborum.bibliotheca.word.data.db.entity.WordEntity
-import de.coldtea.verborum.bibliotheca.word.ui.dictionarydetails.model.WordUi
+import de.coldtea.verborum.bibliotheca.word.ui.model.WordUi
 
 data class Word(
     val wordId: String,

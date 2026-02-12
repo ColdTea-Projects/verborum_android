@@ -13,15 +13,15 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 
-abstract class BaseViewModel: ViewModel() {
+abstract class BaseViewModel : ViewModel() {
     protected val exceptionHandler = CoroutineExceptionHandler { _, exception ->
         Log.e("ViewModel", "Uncaught exception", exception)
     }
 
     protected fun <T> Flow<T>.observe(
         onSuccess: suspend (T) -> Unit = {},
-        onCompleted: (() -> Unit)? = null,
-        onError: ((Throwable) -> Unit)? = null,
+        onCompleted: (suspend () -> Unit)? = null,
+        onError: (suspend (Throwable) -> Unit)? = null,
     ): Job = viewModelScope.launch(exceptionHandler) {
         this@observe
             .onCompletion {

@@ -34,6 +34,7 @@ fun NavigationCentral() {
                 navigation(startDestination = SCREEN_DICTIONARIES_LIST, route = GROUP_BIBLIOTHECA) {
                     insertDictionariesList(navController)
                     insertDictionariesDetails(navController)
+                    insertSelfPractice(navController)
                 }
                 navigation(startDestination = SCREEN_FORUM_MAIN_SCREEN, route = GROUP_FORUM) {
                     insertForumMain(navController)

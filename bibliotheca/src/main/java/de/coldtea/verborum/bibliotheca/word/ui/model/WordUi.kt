@@ -1,4 +1,4 @@
-package de.coldtea.verborum.bibliotheca.word.ui.dictionarydetails.model
+package de.coldtea.verborum.bibliotheca.word.ui.model
 
 import de.coldtea.verborum.bibliotheca.word.domain.model.Word
 

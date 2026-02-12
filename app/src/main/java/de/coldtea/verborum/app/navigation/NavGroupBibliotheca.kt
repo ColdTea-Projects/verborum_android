@@ -7,6 +7,8 @@ import androidx.navigation.compose.composable
 import de.coldtea.verborum.bibliotheca.dictionary.ui.DictionaryListScreen
 import de.coldtea.verborum.bibliotheca.word.ui.dictionarydetails.DictionaryDetailsScreen
 import de.coldtea.verborum.bibliotheca.word.ui.dictionarydetails.DictionaryDetailsViewModel
+import de.coldtea.verborum.bibliotheca.word.ui.selfpractice.SelfPracticeScreen
+import de.coldtea.verborum.bibliotheca.word.ui.selfpractice.SelfPracticeViewModel
 
 fun NavGraphBuilder.insertDictionariesList(navController: NavHostController) = composable(
     SCREEN_DICTIONARIES_LIST
@@ -26,5 +28,22 @@ fun NavGraphBuilder.insertDictionariesDetails(navController: NavHostController) 
 
     viewModel.init(dictionaryId)
 
-    DictionaryDetailsScreen(viewModel)
+    DictionaryDetailsScreen(
+        viewModel = viewModel,
+        onTestClicked = {},
+        onSelfPracticeClicked = {
+            navController.navigate("$SCREEN_SELF_PRACTICE/$dictionaryId")
+        }
+    )
+}
+
+fun NavGraphBuilder.insertSelfPractice(navController: NavHostController) = composable(
+    "$SCREEN_SELF_PRACTICE/{dictionaryId}"
+){ navBackStackEntry ->
+    val viewModel = hiltViewModel<SelfPracticeViewModel>()
+    val dictionaryId: String = navBackStackEntry.arguments?.getString("dictionaryId").orEmpty()
+
+    viewModel.init(dictionaryId)
+
+    SelfPracticeScreen(viewModel)
 }

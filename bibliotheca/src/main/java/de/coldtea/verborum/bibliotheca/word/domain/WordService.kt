@@ -9,7 +9,7 @@ import de.coldtea.verborum.bibliotheca.word.domain.usecase.api.DeleteWordByDicti
 import de.coldtea.verborum.bibliotheca.word.domain.usecase.local.DeleteWordByDictionaryIdUseCase
 import de.coldtea.verborum.bibliotheca.word.domain.usecase.local.ObserveWordsByDictionaryUseCase
 import de.coldtea.verborum.bibliotheca.word.domain.usecase.local.SaveWordUseCase
-import de.coldtea.verborum.bibliotheca.word.ui.dictionarydetails.model.WordUi
+import de.coldtea.verborum.bibliotheca.word.ui.model.WordUi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
