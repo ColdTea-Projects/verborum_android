@@ -1,7 +1,6 @@
 package de.coldtea.verborum.bibliotheca.word.ui.dictionarydetails
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.R
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -12,7 +11,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
@@ -21,15 +19,20 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.pluralStringResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import de.coldtea.verborum.bibliotheca.common.utils.ResDrawables
+import de.coldtea.verborum.bibliotheca.common.utils.ResPlurals
+import de.coldtea.verborum.bibliotheca.common.utils.ResStrings
 import de.coldtea.verborum.bibliotheca.word.ui.dictionarydetails.composables.PracticeModeButton
 import de.coldtea.verborum.bibliotheca.word.ui.dictionarydetails.composables.WordListItem
 import de.coldtea.verborum.bibliotheca.word.ui.dictionarydetails.model.DictionaryDetailState
+import de.coldtea.verborum.core.theme.VerborumTheme
 
 @Composable
 fun DictionaryDetailsScreen(
@@ -37,7 +40,6 @@ fun DictionaryDetailsScreen(
 ) {
     val dictionaryDetailState =
         viewModel.dictionaryDetailState.collectAsState(initial = DictionaryDetailState.Loading).value
-    val lazyListState = rememberLazyListState()
 
     LazyColumn(
         modifier = Modifier
@@ -55,7 +57,7 @@ fun DictionaryDetailsScreen(
                 }
             }
         }
-        if (dictionaryDetailState is DictionaryDetailState.Success){
+        if (dictionaryDetailState is DictionaryDetailState.Success) {
             val dictionary = dictionaryDetailState.dictionaryUi
             val words = dictionaryDetailState.wordsUi
 
@@ -70,9 +72,16 @@ fun DictionaryDetailsScreen(
                     color = MaterialTheme.colorScheme.onBackground,
                     letterSpacing = 0.5.sp
                 )
+                val headerSubtext =
+                    if (words.isEmpty()) stringResource(ResStrings.dictionaryDetailsScreenWordListZeroItem)
+                    else pluralStringResource(
+                        ResPlurals.dictionaryDetailsScreenWordListCount,
+                        words.size,
+                        words.size,
+                    )
 
                 Text(
-                    text = "${words.size} words",
+                    text = headerSubtext,
                     fontSize = 14.sp,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.padding(top = 4.dp)
@@ -88,7 +97,7 @@ fun DictionaryDetailsScreen(
                     horizontalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
                     PracticeModeButton(
-                        text = "Test",
+                        text = stringResource(ResStrings.dictionaryDetailsScreenTest),
                         iconRes = ResDrawables.ic_check_square_24,
                         backgroundColor = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.weight(1f),
@@ -96,7 +105,7 @@ fun DictionaryDetailsScreen(
                     )
 
                     PracticeModeButton(
-                        text = "Slider",
+                        text = stringResource(ResStrings.dictionaryDetailsScreenSelf),
                         iconRes = ResDrawables.ic_play_24,
                         backgroundColor = MaterialTheme.colorScheme.secondary,
                         modifier = Modifier.weight(1f),
@@ -124,7 +133,7 @@ fun DictionaryDetailsScreen(
                         modifier = Modifier.padding(20.dp)
                     ) {
                         Text(
-                            text = "WORD LIST",
+                            text = stringResource(ResStrings.dictionaryDetailsScreenWordListHeader),
                             fontSize = 12.sp,
                             fontWeight = FontWeight.SemiBold,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -149,11 +158,13 @@ fun DictionaryDetailsScreen(
                 Spacer(modifier = Modifier.height(24.dp))
             }
         }
-        }
+    }
 }
 
 @Preview
 @Composable
 fun DictionaryListScreenPreview() {
-    DictionaryDetailsScreen()
+    VerborumTheme {
+        DictionaryDetailsScreen()
+    }
 }

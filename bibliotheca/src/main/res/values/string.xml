@@ -2,4 +2,12 @@
 <resources>
     <string name="dictionaryListScreenHeader">Bibliotheca</string>
     <string name="dictionaryListScreenSubtitle">Your dictionaries</string>
+    <string name="dictionaryDetailsScreenTest">Test</string>
+    <string name="dictionaryDetailsScreenSelf">Self Practice</string>
+    <string name="dictionaryDetailsScreenWordListHeader">Word List</string>
+    <string name="dictionaryDetailsScreenWordListZeroItem">No words added yet into the dictionary</string>
+    <plurals name="dictionaryDetailsScreenWordListCount">
+        <item quantity="one">%1$d word in the dictionary</item>
+        <item quantity="other">%1$d words in the dictionary</item>
+    </plurals>
 </resources>
