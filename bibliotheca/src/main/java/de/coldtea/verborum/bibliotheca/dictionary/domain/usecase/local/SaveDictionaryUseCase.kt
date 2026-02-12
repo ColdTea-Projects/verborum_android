@@ -11,11 +11,9 @@ class SaveDictionaryUseCase @Inject constructor(
 ) {
 
     suspend fun invoke(dictionary: Dictionary): String {
-        val dictionaryId =
-            if (dictionary.dictionaryId.isEmpty()) generateUUIDV4() else dictionary.dictionaryId
-        dictionaryRepository.saveDictionary(
-            dictionary.copy(dictionaryId = dictionaryId).convertToEntity()
-        )
+        val dictionaryId = dictionary.dictionaryId.ifEmpty { generateUUIDV4() }
+        val dictionaryWithId = dictionary.copy(dictionaryId = dictionaryId).convertToEntity()
+        dictionaryRepository.saveDictionary(dictionaryWithId)
 
         return dictionaryId
     }

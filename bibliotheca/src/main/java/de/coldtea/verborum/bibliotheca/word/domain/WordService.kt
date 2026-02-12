@@ -1,5 +1,6 @@
 package de.coldtea.verborum.bibliotheca.word.domain
 
+import android.util.Log
 import de.coldtea.verborum.bibliotheca.common.domain.SyncService
 import de.coldtea.verborum.bibliotheca.common.domain.UploadService
 import de.coldtea.verborum.bibliotheca.common.utils.getNowInMillis
@@ -45,7 +46,14 @@ class WordService @Inject constructor(
             updatedAt = getNowInMillis(),
         )
 
-        syncService.syncDictionaries()
+        saveWordUseCase.invoke(word)
+        try {
+            uploadService.createWord(word)
+            syncService.syncDictionaries()
+        } catch (e: Exception) {
+            // Other errors
+            Log.e("Sync", "Unexpected error", e)
+        }
     }
 
     suspend fun cleanWordsInDictionary(dictionaryId: String) {
@@ -54,9 +62,9 @@ class WordService @Inject constructor(
     }
 
     fun generateRandomString(len: Int = 15): String {
-        val alphanumerics = CharArray(26) { it -> (it + 97).toChar() }.toSet()
-            .union(CharArray(9) { it -> (it + 48).toChar() }.toSet())
-        return (0..len - 1).map {
+        val alphanumerics = CharArray(26) { (it + 97).toChar() }.toSet()
+            .union(CharArray(9) { (it + 48).toChar() }.toSet())
+        return (0..<len).map {
             alphanumerics.toList().random()
         }.joinToString("")
     }
