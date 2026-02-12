@@ -4,7 +4,7 @@ object Configuration {
     val versionCode = VersionInfo.version.code
     val versionName = VersionInfo.version.name
 
-    val minSdk = 21
-    val targetSdk = 34
-    val compileSdk = 34
+    val minSdk = 23
+    val targetSdk = 35
+    val compileSdk = 35
 }

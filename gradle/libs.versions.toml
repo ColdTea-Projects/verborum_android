@@ -25,6 +25,8 @@ retrofit = "2.11.0"
 okhttp = "4.12.0"
 retrofit2-kotlinx-serialization-converter = "0.8.0"
 kotlinx-serialization-json = "1.6.3"
+animation = "1.10.2"
+material3 = "1.4.0"
 
 [libraries]
 androidx_core_ktx = { module = "androidx.core:core-ktx", version.ref = "androidx_core_ktx" }
@@ -58,6 +60,8 @@ okHttp3 = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp" }
 okhttp3_logging_interceptor = { module = "com.squareup.okhttp3:logging-interceptor", version.ref = "okhttp" }
 retrofit2_kotlinx_serialization_converter = { module = "com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter", version.ref = "retrofit2-kotlinx-serialization-converter" }
 kotlinx_serialization_json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization-json" }
+animation = { group = "androidx.compose.animation", name = "animation", version.ref = "animation" }
+material3 = { group = "androidx.compose.material3", name = "material3", version.ref = "material3" }
 
 
 [plugins]
