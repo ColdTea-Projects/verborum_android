@@ -26,7 +26,7 @@ class SelfPracticeViewModel @Inject constructor(
             dictionaryService.observeDictionary(dictionaryId),
             wordService.observeWordsByDictionary(dictionaryId)
         ) { dictionary, words ->
-            SelfPracticeState.Success(dictionary, words)
+            SelfPracticeState.Success(dictionary.name, words)
         }.observe (
             onSuccess = { state ->
                 _selfPracticeState.emit(state)

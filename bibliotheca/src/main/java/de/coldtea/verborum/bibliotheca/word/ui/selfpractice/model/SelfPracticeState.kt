@@ -7,5 +7,5 @@ sealed class SelfPracticeState{
     data object Failed: SelfPracticeState()
     data object Loading: SelfPracticeState()
 
-    data class Success(val dictionaryUi: DictionaryUi, val wordsUi: List<WordUi>) : SelfPracticeState()
+    data class Success(val dictionaryName: String, val wordsUi: List<WordUi>) : SelfPracticeState()
 }

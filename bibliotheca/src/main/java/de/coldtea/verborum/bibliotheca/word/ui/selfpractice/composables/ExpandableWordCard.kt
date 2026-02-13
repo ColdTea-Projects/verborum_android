@@ -46,6 +46,7 @@ fun ExpandableWordCard(
     modifier: Modifier = Modifier,
     word: WordUi,
     isRevealed: Boolean,
+    isReversed: Boolean,
     onToggleReveal: () -> Unit
 ) {
     var dragOffset by remember { mutableStateOf(0f) }
@@ -59,6 +60,8 @@ fun ExpandableWordCard(
         },
         animationSpec = tween(200)
     )
+
+    val (shownText, hiddenText) = if (!isReversed) { word.word to word.translation} else { word.translation to word.word}
 
     Surface(
         modifier = modifier
@@ -98,7 +101,7 @@ fun ExpandableWordCard(
         ) {
             // Word (always visible)
             Text(
-                text = word.word,
+                text = shownText,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.SemiBold,
                 color = MaterialTheme.colorScheme.onSurface,
@@ -129,7 +132,7 @@ fun ExpandableWordCard(
                     )
 
                     Text(
-                        text = word.translation,
+                        text = hiddenText,
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Normal,
                         color = MaterialTheme.colorScheme.primary,
@@ -170,6 +173,7 @@ fun PreviewExpandableWordCard() {
                     updatedAt = 0L,
                 ),
                 isRevealed = false,
+                isReversed = false,
                 onToggleReveal = {}
             )
 
@@ -193,6 +197,7 @@ fun PreviewExpandableWordCard() {
                     updatedAt = 0L,
                 ),
                 isRevealed = true,
+                isReversed = false,
                 onToggleReveal = {}
             )
         }
