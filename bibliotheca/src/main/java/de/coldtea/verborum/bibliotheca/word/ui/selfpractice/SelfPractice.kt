@@ -83,7 +83,7 @@ fun SelfPracticeScreen(
             }
 
             // Word Cards
-            itemsIndexed(selfPracticeState.wordsUi) { index, word ->
+            itemsIndexed(selfPracticeState.wordsUi.shuffled()) { index, word ->
                 val isRevealed = revealedStates[word.wordId] ?: false
 
                 ExpandableWordCard(
