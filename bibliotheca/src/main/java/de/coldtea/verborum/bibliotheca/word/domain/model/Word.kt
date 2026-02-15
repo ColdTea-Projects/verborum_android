@@ -12,6 +12,7 @@ data class Word(
     val translation: String,
     val translationMeta: String,
     val isSynced: Boolean,
+    val level: Int = 0,
     val createdAt: Long,
     val updatedAt: Long,
 ) {
@@ -26,6 +27,7 @@ data class Word(
             isSynced = isSynced,
             createdAt = createdAt,
             updatedAt = updatedAt,
+            level = level,
         )
 
     fun convertToUi(): WordUi =
@@ -38,6 +40,7 @@ data class Word(
             translationMeta = translationMeta,
             createdAt = createdAt,
             updatedAt = updatedAt,
+            level = level,
         )
 
     fun convertToWordRequest(): WordRequest =

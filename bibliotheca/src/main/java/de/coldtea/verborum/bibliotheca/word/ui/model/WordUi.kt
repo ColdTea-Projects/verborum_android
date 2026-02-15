@@ -9,6 +9,7 @@ data class WordUi(
     val wordMeta: String,
     val translation: String,
     val translationMeta: String,
+    val level: Int,
     val createdAt: Long,
     val updatedAt: Long,
 ) {
@@ -23,5 +24,6 @@ data class WordUi(
             isSynced = false,
             createdAt = createdAt,
             updatedAt = updatedAt,
+            level = level,
         )
 }

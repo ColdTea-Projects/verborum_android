@@ -29,17 +29,18 @@ class WordService @Inject constructor(
     fun observeWordsByDictionary(dictionaryId: String): Flow<List<WordUi>> =
         observeWordsByDictionaryUseCase
             .invoke(dictionaryId)
-            .distinctUntilChanged()
             .map { it.map(Word::convertToUi) }
+            .distinctUntilChanged()
             .flowOn(Dispatchers.IO)
 
     suspend fun addDummyDictionary(dictionaryId: String) {
+        val randomPair = generateRandomPair()
         val word = Word(
             wordId = "",
             dictionaryId = dictionaryId,
-            word = generateRandomString(),
+            word = randomPair.first,
             wordMeta = "{en}",
-            translation = generateRandomString(),
+            translation = randomPair.second,
             translationMeta = "{de}",
             isSynced = false,
             createdAt = getNowInMillis(),
@@ -61,11 +62,22 @@ class WordService @Inject constructor(
         deleteWordByDictionaryIdUseCase.invoke(dictionaryId)//TODO: replace with update diff delete
     }
 
-    fun generateRandomString(len: Int = 15): String {
-        val alphanumerics = CharArray(26) { (it + 97).toChar() }.toSet()
-            .union(CharArray(9) { (it + 48).toChar() }.toSet())
-        return (0..<len).map {
-            alphanumerics.toList().random()
-        }.joinToString("")
+    fun generateRandomPair(len: Int = 15): Pair<String, String> =
+        listOfWords.shuffled().first()
+
+    companion object {
+        private val listOfWords = listOf(
+            "apple" to "der Apfel",
+            "travel" to "reisen",
+            "on" to "auf",
+            "the heath" to "der Heide",
+            "flowers" to "blühmt",
+            "one" to "ein",
+            "little" to "kleines",
+            "little flower" to "blümerei",
+            "and" to "und",
+            "the" to "das",
+            "name" to "heisst",
+        )
     }
 }

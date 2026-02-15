@@ -21,6 +21,8 @@ data class WordEntity (
     val translationMeta: String,
     @ColumnInfo(name = "isSynced")
     val isSynced: Boolean = false,
+    @ColumnInfo(name = "level")
+    val level: Int = 0,
     @ColumnInfo(name = "created_at")
     val createdAt: Long = getNowInMillis(),
     @ColumnInfo(name = "updated_at")
@@ -37,5 +39,6 @@ data class WordEntity (
             isSynced = isSynced,
             createdAt = createdAt,
             updatedAt = updatedAt,
+            level = 0,
         )
 }

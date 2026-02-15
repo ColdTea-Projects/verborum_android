@@ -35,6 +35,7 @@ fun NavigationCentral() {
                     insertDictionariesList(navController)
                     insertDictionariesDetails(navController)
                     insertSelfPractice(navController)
+                    insertMultipleChoiceScreen(navController)
                 }
                 navigation(startDestination = SCREEN_FORUM_MAIN_SCREEN, route = GROUP_FORUM) {
                     insertForumMain(navController)

@@ -7,6 +7,8 @@ import androidx.navigation.compose.composable
 import de.coldtea.verborum.bibliotheca.dictionary.ui.DictionaryListScreen
 import de.coldtea.verborum.bibliotheca.word.ui.dictionarydetails.DictionaryDetailsScreen
 import de.coldtea.verborum.bibliotheca.word.ui.dictionarydetails.DictionaryDetailsViewModel
+import de.coldtea.verborum.bibliotheca.word.ui.multiplechoice.MultipleChoiceQuestionScreen
+import de.coldtea.verborum.bibliotheca.word.ui.multiplechoice.MultipleChoiceViewModel
 import de.coldtea.verborum.bibliotheca.word.ui.selfpractice.SelfPracticeScreen
 import de.coldtea.verborum.bibliotheca.word.ui.selfpractice.SelfPracticeViewModel
 
@@ -30,7 +32,9 @@ fun NavGraphBuilder.insertDictionariesDetails(navController: NavHostController) 
 
     DictionaryDetailsScreen(
         viewModel = viewModel,
-        onTestClicked = {},
+        onTestClicked = {
+            navController.navigate("$SCREEN_MULTIPLE_CHOCIE/$dictionaryId")
+        },
         onSelfPracticeClicked = {
             navController.navigate("$SCREEN_SELF_PRACTICE/$dictionaryId")
         }
@@ -46,4 +50,15 @@ fun NavGraphBuilder.insertSelfPractice(navController: NavHostController) = compo
     viewModel.init(dictionaryId)
 
     SelfPracticeScreen(viewModel)
+}
+
+fun NavGraphBuilder.insertMultipleChoiceScreen(navController: NavHostController) = composable(
+    "$SCREEN_MULTIPLE_CHOCIE/{dictionaryId}"
+){ navBackStackEntry ->
+    val viewModel = hiltViewModel<MultipleChoiceViewModel>()
+    val dictionaryId: String = navBackStackEntry.arguments?.getString("dictionaryId").orEmpty()
+
+    viewModel.init(dictionaryId)
+
+    MultipleChoiceQuestionScreen(viewModel)
 }

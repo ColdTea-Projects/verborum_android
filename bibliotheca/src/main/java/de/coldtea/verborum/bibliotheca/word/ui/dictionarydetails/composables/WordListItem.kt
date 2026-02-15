@@ -74,6 +74,7 @@ fun PreviewWordListItem() {
                 wordMeta = "wordMeta",
                 translation = "translation",
                 translationMeta = "translationMeta",
+                level = 0,
                 createdAt = 0L,
                 updatedAt = 0L,
             )
