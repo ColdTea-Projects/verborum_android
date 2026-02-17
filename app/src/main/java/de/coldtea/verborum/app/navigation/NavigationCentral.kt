@@ -6,9 +6,12 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -23,9 +26,11 @@ import androidx.navigation.compose.rememberNavController
 @Composable
 fun NavigationCentral() {
     val navController = rememberNavController()
+    val snackbarHostState = remember { SnackbarHostState() }
 
     Scaffold(
-        bottomBar = { VerborumNavigationBar(navController) }
+        bottomBar = { VerborumNavigationBar(navController) },
+        snackbarHost = { SnackbarHost(snackbarHostState) },
     ) { innerPadding ->
 //        val context = LocalContext.current
         // Apply the padding globally to the whole BottomNavScreensController
@@ -35,7 +40,7 @@ fun NavigationCentral() {
                     insertDictionariesList(navController)
                     insertDictionariesDetails(navController)
                     insertSelfPractice(navController)
-                    insertMultipleChoiceScreen(navController)
+                    insertMultipleChoiceScreen(navController, snackbarHostState)
                 }
                 navigation(startDestination = SCREEN_FORUM_MAIN_SCREEN, route = GROUP_FORUM) {
                     insertForumMain(navController)
@@ -46,7 +51,7 @@ fun NavigationCentral() {
 }
 
 @Composable
-fun VerborumNavigationBar(navController: NavHostController){
+fun VerborumNavigationBar(navController: NavHostController) {
     NavigationBar {
         val navBackStackEntry by navController.currentBackStackEntryAsState()
         val currentDestination = navBackStackEntry?.destination

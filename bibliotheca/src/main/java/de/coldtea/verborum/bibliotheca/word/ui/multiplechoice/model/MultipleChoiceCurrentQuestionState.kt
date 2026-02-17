@@ -10,5 +10,10 @@ sealed class MultipleChoiceCurrentQuestionState {
         val size: Int,
     ) : MultipleChoiceCurrentQuestionState()
 
-    data class Completed(val score: Int) : MultipleChoiceCurrentQuestionState()
+    data class Completed(
+        val passed: Boolean,
+        val percentage: Int,
+        val correctAnswers: Int,
+        val totalQuestions: Int,
+    ) : MultipleChoiceCurrentQuestionState()
 }

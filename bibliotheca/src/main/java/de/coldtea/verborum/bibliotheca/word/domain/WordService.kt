@@ -70,14 +70,16 @@ class WordService @Inject constructor(
             "apple" to "der Apfel",
             "travel" to "reisen",
             "on" to "auf",
-            "the heath" to "der Heide",
-            "flowers" to "blühmt",
-            "one" to "ein",
-            "little" to "kleines",
-            "little flower" to "blümerei",
+            "bread" to "das Brot",
             "and" to "und",
-            "the" to "das",
-            "name" to "heisst",
+            "coffee" to "der Kaffee",
+            "tea" to "der Tea",
+            "jump" to "springen",
+            "now" to "jetzt",
+            "later" to "später",
+            "mother" to "die Mutter",
+            "father" to "der Vater",
+            "sister" to "die Schwester",
         )
     }
 }

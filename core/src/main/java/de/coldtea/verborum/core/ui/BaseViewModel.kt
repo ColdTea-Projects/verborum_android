@@ -6,6 +6,8 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.onCompletion
@@ -14,6 +16,10 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 
 abstract class BaseViewModel : ViewModel() {
+
+    protected val _snackbarMessages = MutableSharedFlow<String>()
+    val snackbarMessages = _snackbarMessages.asSharedFlow()
+
     protected val exceptionHandler = CoroutineExceptionHandler { _, exception ->
         Log.e("ViewModel", "Uncaught exception", exception)
     }

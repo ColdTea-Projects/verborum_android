@@ -30,9 +30,11 @@ import de.coldtea.verborum.core.theme.VerborumTheme
 fun QuestionCard(
     question: MultipleChoiceCurrentQuestion,
     progress: Float,
-    onAnswerSelected: (String) -> Unit
+    selectedAnswer: String,
+    isActive: Boolean,
+    onAnswerSelected: (String) -> Unit,
 ) {
-    val selectedAnswer = remember { mutableStateOf("") }
+
     Surface(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(20.dp),
@@ -91,10 +93,9 @@ fun QuestionCard(
                     AnswerOption(
                         letter = ('A' + index).toString(),
                         text = option,
-                        isSelected = selectedAnswer.value == option,
+                        isSelected = selectedAnswer == option,
                         onClick = {
-                            selectedAnswer.value = option
-                            onAnswerSelected(option)
+                            if(isActive) onAnswerSelected(option)
                         }
                     )
                 }
@@ -112,6 +113,8 @@ fun PreviewQuestionCard_notSelected() {
                 question = MultipleChoiceQuestion("","Question", "Anseer"),
                 choices = listOf("Wrong answer 1", "Answer", "Wrong answer 2", "Wrong answer 3"),
             ),
+            selectedAnswer = "Answer",
+            isActive = true,
             progress = 0.4f,
         ) { }
     }

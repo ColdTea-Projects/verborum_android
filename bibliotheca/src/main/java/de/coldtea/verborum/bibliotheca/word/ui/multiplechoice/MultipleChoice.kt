@@ -13,8 +13,11 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,16 +27,30 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import de.coldtea.verborum.bibliotheca.word.ui.multiplechoice.composables.QuestionCard
+import de.coldtea.verborum.bibliotheca.word.ui.multiplechoice.composables.ResultScreen
 import de.coldtea.verborum.bibliotheca.word.ui.multiplechoice.model.MultipleChoiceCurrentQuestionState
+import de.coldtea.verborum.core.extensions.debounce
 
 @Composable
 fun MultipleChoiceQuestionScreen(
-    viewModel: MultipleChoiceViewModel = hiltViewModel()
+    viewModel: MultipleChoiceViewModel = hiltViewModel(),
+    snackbarHostState: SnackbarHostState,
+    onBackClick: () -> Unit,
 ) {
-    val currentQuestionState = viewModel.currentQuestion.collectAsState(MultipleChoiceCurrentQuestionState.Loading).value
-    val feedback = viewModel.feedback.collectAsState("").value
+    val currentQuestionState =
+        viewModel.currentQuestion.collectAsState(MultipleChoiceCurrentQuestionState.Loading).value
+    val answered = viewModel.answered.collectAsState(false).value
+    val selectedAnswer = viewModel.selectedAnswer.collectAsState("").value
+    LaunchedEffect(Unit) {
+        viewModel.snackbarMessages.collect { message ->
+            snackbarHostState.showSnackbar(
+                message = message,
+                duration = SnackbarDuration.Short,
+            )
+        }
+    }
 
-    when(currentQuestionState){
+    when (currentQuestionState) {
         is MultipleChoiceCurrentQuestionState.Success -> {
             Column(
                 modifier = Modifier
@@ -73,37 +90,72 @@ fun MultipleChoiceQuestionScreen(
 
                 QuestionCard(
                     question = currentQuestionState.multipleChoiceCurrentQuestion,
-                    progress = (currentQuestionState.index / currentQuestionState.size).toFloat(),
+                    progress = currentQuestionState.index.toFloat() / currentQuestionState.size.toFloat(),
+                    selectedAnswer = selectedAnswer,
+                    isActive = !answered,
                     onAnswerSelected = viewModel::onAnswerReceived
                 )
-
 
                 Spacer(modifier = Modifier.weight(1f))
 
                 // Next Button (if answer selected)
-                if (!feedback.isEmpty()) {
-                    Button(
-                        onClick = viewModel::onNextQuestionRequested,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(56.dp),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = MaterialTheme.colorScheme.primary,
-                            contentColor = Color.White
-                        ),
-                        shape = RoundedCornerShape(12.dp)
-                    ) {
-                        Text(
-                            text = "Next Question",
-                            fontSize = 16.sp,
-                            fontWeight = FontWeight.SemiBold
-                        )
-                    }
+                Button(
+                    onClick = debounce(viewModel::onNextQuestionRequested),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(56.dp),
+                    enabled = answered,
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.primary,
+                        contentColor = Color.White,
+                        disabledContainerColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                        disabledContentColor = Color.White,
+                    ),
+                    shape = RoundedCornerShape(12.dp)
+                ) {
+                    Text(
+                        text = "Next Question",
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                // Check answer Button (if answer selected)
+                Button(
+                    onClick = debounce(viewModel::onAnswerGiven),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(56.dp),
+                    enabled = !selectedAnswer.isEmpty() && !answered,
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.primary,
+                        contentColor = Color.White,
+                        disabledContainerColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                        disabledContentColor = Color.White,
+                    ),
+                    shape = RoundedCornerShape(12.dp)
+                ) {
+                    Text(
+                        text = "Check",
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.SemiBold
+                    )
                 }
 
                 Spacer(modifier = Modifier.height(24.dp))
             }
         }
+
+        is MultipleChoiceCurrentQuestionState.Completed -> {
+            ResultScreen(
+                resultState = currentQuestionState,
+                onBackClick = onBackClick,
+                onRetryClick = viewModel::onRetryClicked,
+            )
+        }
+
         else -> {}
     }
 }

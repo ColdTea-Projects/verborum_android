@@ -1,5 +1,6 @@
 package de.coldtea.verborum.app.navigation
 
+import androidx.compose.material3.SnackbarHostState
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
@@ -52,7 +53,7 @@ fun NavGraphBuilder.insertSelfPractice(navController: NavHostController) = compo
     SelfPracticeScreen(viewModel)
 }
 
-fun NavGraphBuilder.insertMultipleChoiceScreen(navController: NavHostController) = composable(
+fun NavGraphBuilder.insertMultipleChoiceScreen(navController: NavHostController, snackbarHostState: SnackbarHostState) = composable(
     "$SCREEN_MULTIPLE_CHOCIE/{dictionaryId}"
 ){ navBackStackEntry ->
     val viewModel = hiltViewModel<MultipleChoiceViewModel>()
@@ -60,5 +61,7 @@ fun NavGraphBuilder.insertMultipleChoiceScreen(navController: NavHostController)
 
     viewModel.init(dictionaryId)
 
-    MultipleChoiceQuestionScreen(viewModel)
+    MultipleChoiceQuestionScreen(viewModel, snackbarHostState){
+        navController.popBackStack()
+    }
 }
