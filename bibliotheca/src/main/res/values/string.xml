@@ -7,7 +7,7 @@
     <string name="dictionaryDetailsScreenSelf">Self Practice</string>
     <string name="dictionaryDetailsScreenWordListHeader">Word List</string>
     <string name="dictionaryDetailsScreenWordListZeroItem">No words added yet into the dictionary</string>
-    <string name="selfPracticeScreenSubtitle">Tap to reveal the translation</string>
+    <string name="selfPracticeScreenSubtitle">Tap to reveal the translation, slide left or right to change your progress</string>
     <!--Plurals-->
     <plurals name="dictionaryDetailsScreenWordListCount">
         <item quantity="one">%1$d word in the dictionary</item>

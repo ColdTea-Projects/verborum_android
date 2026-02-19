@@ -57,6 +57,10 @@ class WordService @Inject constructor(
         }
     }
 
+    suspend fun saveWord(word: Word){
+        saveWordUseCase.invoke(word)
+    }
+
     suspend fun cleanWordsInDictionary(dictionaryId: String) {
         deleteWordByDictionaryIdApiUseCase.invoke(dictionaryId)
         deleteWordByDictionaryIdUseCase.invoke(dictionaryId)//TODO: replace with update diff delete

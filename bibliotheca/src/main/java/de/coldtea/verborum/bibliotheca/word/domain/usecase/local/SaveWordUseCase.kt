@@ -16,12 +16,12 @@ class SaveWordUseCase @Inject constructor(
         }
 
     private suspend fun createNewWord(word: Word){
-        val entity = word.copy(wordId = generateUUIDV4()).convertToEntity()
+        val entity = word.copy(wordId = generateUUIDV4(), isSynced = false).convertToEntity()
         wordRepository.saveWord(entity)
     }
 
     private suspend fun updateWord(word: Word){
-        val entity = word.convertToEntity()
-        wordRepository.saveWord(entity)
+        val entity = word.convertToEntity().copy(isSynced = false)
+        wordRepository.updateWord(entity)
     }
 }

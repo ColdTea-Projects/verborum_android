@@ -39,6 +39,6 @@ data class WordEntity (
             isSynced = isSynced,
             createdAt = createdAt,
             updatedAt = updatedAt,
-            level = 0,
+            level = level,
         )
 }

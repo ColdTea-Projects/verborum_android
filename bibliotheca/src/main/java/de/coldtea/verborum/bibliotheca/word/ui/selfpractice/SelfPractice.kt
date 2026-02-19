@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -40,9 +41,14 @@ fun SelfPracticeScreen(
         viewModel.selfPracticeState.collectAsState(initial = SelfPracticeState.Loading).value
 
     val revealedStates = remember { mutableStateMapOf<String, Boolean>() }
-    val reverseMode = remember { mutableStateOf<Boolean>(false) }
+    val reverseMode = remember { mutableStateOf(false) }
+    val wordIdOrder = remember { mutableStateOf<List<String>>(listOf()) }
 
     if (selfPracticeState is SelfPracticeState.Success) {
+        if (wordIdOrder.value.isEmpty()) {
+            wordIdOrder.value = selfPracticeState.wordsUi.map { it.wordId }.shuffled()
+        }
+
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
@@ -56,7 +62,7 @@ fun SelfPracticeScreen(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Column {
+                    Column(modifier = Modifier.weight(0.85f)) {
                         // Header
                         Text(
                             text = selfPracticeState.dictionaryName,
@@ -74,7 +80,7 @@ fun SelfPracticeScreen(
                         )
                     }
 
-                    SwitchWordsButton {
+                    SwitchWordsButton(modifier = Modifier.weight(0.15f)) {
                         reverseMode.value = !reverseMode.value
                     }
                 }
@@ -83,7 +89,8 @@ fun SelfPracticeScreen(
             }
 
             // Word Cards
-            itemsIndexed(selfPracticeState.wordsUi.shuffled()) { index, word ->
+            items(wordIdOrder.value) { wordId ->
+                val word = selfPracticeState.wordsUi.first { it.wordId == wordId }
                 val isRevealed = revealedStates[word.wordId] ?: false
 
                 ExpandableWordCard(
@@ -92,7 +99,8 @@ fun SelfPracticeScreen(
                     isReversed = reverseMode.value,
                     onToggleReveal = {
                         revealedStates[word.wordId] = !isRevealed
-                    }
+                    },
+                    onProgressChange = viewModel::onProgressUpdated
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
