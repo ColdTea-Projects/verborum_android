@@ -216,7 +216,7 @@ fun ResultScreen(
 
 @PreviewLightDark
 @Composable
-fun ResultScreen_notSelected() {
+fun ResultScreenPreview_notSelected() {
     VerborumTheme {
         ResultScreen(
             resultState = MultipleChoiceCurrentQuestionState.Completed(

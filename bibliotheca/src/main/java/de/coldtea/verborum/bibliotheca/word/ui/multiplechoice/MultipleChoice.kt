@@ -26,6 +26,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import de.coldtea.verborum.bibliotheca.word.ui.multiplechoice.composables.MultipleChoiceContent
 import de.coldtea.verborum.bibliotheca.word.ui.multiplechoice.composables.QuestionCard
 import de.coldtea.verborum.bibliotheca.word.ui.multiplechoice.composables.ResultScreen
 import de.coldtea.verborum.bibliotheca.word.ui.multiplechoice.model.MultipleChoiceCurrentQuestionState
@@ -52,100 +53,14 @@ fun MultipleChoiceQuestionScreen(
 
     when (currentQuestionState) {
         is MultipleChoiceCurrentQuestionState.Success -> {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(MaterialTheme.colorScheme.background)
-                    .padding(horizontal = 24.dp)
-            ) {
-                Spacer(modifier = Modifier.height(8.dp))
-
-                // Header
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Column {
-                        Text(
-                            text = "Test Mode",
-                            fontSize = 28.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.onBackground,
-                            letterSpacing = 0.5.sp
-                        )
-
-                        Text(
-                            text = "Question ${currentQuestionState.index} of ${currentQuestionState.size}",
-                            fontSize = 14.sp,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            modifier = Modifier.padding(top = 4.dp)
-                        )
-                    }
-                }
-
-                Spacer(modifier = Modifier.height(32.dp))
-
-                // Question Card
-
-                QuestionCard(
-                    question = currentQuestionState.multipleChoiceCurrentQuestion,
-                    progress = currentQuestionState.index.toFloat() / currentQuestionState.size.toFloat(),
-                    selectedAnswer = selectedAnswer,
-                    isActive = !answered,
-                    onAnswerSelected = viewModel::onAnswerReceived
-                )
-
-                Spacer(modifier = Modifier.weight(1f))
-
-                // Next Button (if answer selected)
-                Button(
-                    onClick = debounce(viewModel::onNextQuestionRequested),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(56.dp),
-                    enabled = answered,
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.primary,
-                        contentColor = Color.White,
-                        disabledContainerColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                        disabledContentColor = Color.White,
-                    ),
-                    shape = RoundedCornerShape(12.dp)
-                ) {
-                    Text(
-                        text = "Next Question",
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.SemiBold
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(12.dp))
-
-                // Check answer Button (if answer selected)
-                Button(
-                    onClick = debounce(viewModel::onAnswerGiven),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(56.dp),
-                    enabled = !selectedAnswer.isEmpty() && !answered,
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.primary,
-                        contentColor = Color.White,
-                        disabledContainerColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                        disabledContentColor = Color.White,
-                    ),
-                    shape = RoundedCornerShape(12.dp)
-                ) {
-                    Text(
-                        text = "Check",
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.SemiBold
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(24.dp))
-            }
+            MultipleChoiceContent(
+                currentQuestionState = currentQuestionState,
+                answered = answered,
+                selectedAnswer = selectedAnswer,
+                onAnswerSelected = viewModel::onAnswerReceived,
+                onNextQuestionRequested = viewModel::onNextQuestionRequested,
+                onAnswerGiven = viewModel::onAnswerGiven,
+            )
         }
 
         is MultipleChoiceCurrentQuestionState.Completed -> {
