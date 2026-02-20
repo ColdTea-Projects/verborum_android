@@ -3,6 +3,7 @@ package de.coldtea.verborum.bibliotheca.word.ui.multiplechoice
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import de.coldtea.verborum.bibliotheca.word.domain.WordService
+import de.coldtea.verborum.bibliotheca.word.ui.model.WordUi
 import de.coldtea.verborum.bibliotheca.word.ui.multiplechoice.model.MultipleChoiceCurrentQuestion
 import de.coldtea.verborum.bibliotheca.word.ui.multiplechoice.model.MultipleChoiceCurrentQuestionState
 import de.coldtea.verborum.bibliotheca.word.ui.multiplechoice.model.MultipleChoiceQuestion
@@ -19,7 +20,7 @@ class MultipleChoiceViewModel @Inject constructor(
 
     private var currentQuestionIndex = 0
     private var score: Int = 0
-    private var questions: List<MultipleChoiceQuestion> = listOf()
+    private var questions: List<WordUi> = listOf()
 
     private var _answered = MutableStateFlow(false)
     val answered = _answered.asSharedFlow()
@@ -40,9 +41,7 @@ class MultipleChoiceViewModel @Inject constructor(
                     )
 
                     if (questions.isEmpty()) {
-                        questions = words.map { word ->
-                            MultipleChoiceQuestion(word.wordId, word.word, word.translation)
-                        }.shuffled()
+                        questions = words.shuffled()
                         initNextQuestion()
                     }
                 },
@@ -59,11 +58,14 @@ class MultipleChoiceViewModel @Inject constructor(
     fun onAnswerGiven() = viewModelScope.launch {
         val question = _currentQuestion.value
         if (question is MultipleChoiceCurrentQuestionState.Success) {
+            val currentQuestionWordUiId = question.multipleChoiceCurrentQuestion.question.wordId
             val correctAnswer = question.multipleChoiceCurrentQuestion.question.answer
             if (correctAnswer == _selectedAnswer.value) {
                 score += 1
+                updateLevel(currentQuestionWordUiId, true)
                 _snackbarMessages.emit("Correct answer!")
             } else {
+                updateLevel(currentQuestionWordUiId, false)
                 _snackbarMessages.emit("Incorrect, correct answer was $correctAnswer")
             }
             _answered.emit(true)
@@ -94,34 +96,41 @@ class MultipleChoiceViewModel @Inject constructor(
                 totalQuestions = questions.size
             )
         } else {
-            val question = questions[currentQuestionIndex]
+            val word = questions[currentQuestionIndex]
+            val question = MultipleChoiceQuestion(word.wordId, word.word, word.translation)
             val currentQuestion = MultipleChoiceCurrentQuestion(
                 question = question,
                 choices = questions.prepareChoices(question.answer)
             )
 
-                MultipleChoiceCurrentQuestionState.Success(
-                    multipleChoiceCurrentQuestion = currentQuestion,
-                    index = currentQuestionIndex + 1,
-                    size = questions.size
-                )
-
+            MultipleChoiceCurrentQuestionState.Success(
+                multipleChoiceCurrentQuestion = currentQuestion,
+                index = currentQuestionIndex + 1,
+                size = questions.size
+            )
         }
 
         _currentQuestion.emit(nextQuestionState)
     }
 
-    private fun List<MultipleChoiceQuestion>.prepareChoices(
+    private fun List<WordUi>.prepareChoices(
         exclude: String,
         count: Int = 3
     ): List<String> {
         return this
-            .map { it.answer }
+            .map { it.translation }
             .distinct()
             .filter { it != exclude }
             .shuffled()
             .take(count)
             .plus(exclude)
             .shuffled()
+    }
+
+    private fun updateLevel(wordId: String, isCorrect: Boolean) = viewModelScope.launch {
+        val wordUi = questions.first { it.wordId == wordId }
+        val newLevel = if (isCorrect) minOf(7, wordUi.level + 1) else maxOf(0, wordUi.level - 1)
+
+        wordService.saveWord(wordUi.convertToWord().copy(level = newLevel))
     }
 }

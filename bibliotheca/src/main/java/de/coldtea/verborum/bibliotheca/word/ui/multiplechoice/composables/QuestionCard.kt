@@ -110,7 +110,7 @@ fun PreviewQuestionCard_notSelected() {
     VerborumTheme {
         QuestionCard(
             question = MultipleChoiceCurrentQuestion(
-                question = MultipleChoiceQuestion("","Question", "Anseer"),
+                question = MultipleChoiceQuestion("","Question", "Answer"),
                 choices = listOf("Wrong answer 1", "Answer", "Wrong answer 2", "Wrong answer 3"),
             ),
             selectedAnswer = "Answer",
