@@ -2,7 +2,7 @@ plugins {
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.jetbrainsKotlinAndroid)
     alias(libs.plugins.kotlinCompose)
-    kotlin("kapt") version "2.0.0"
+    alias(libs.plugins.ksp)
     kotlin("plugin.serialization")
 }
 
@@ -59,6 +59,9 @@ dependencies {
     implementation(libs.material3)
     implementation(libs.foundationLayout)
     testImplementation(libs.junit)
+    testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.mockk)
+    testImplementation(testFixtures(projects.core))
     androidTestImplementation(libs.androidx.test.ext.junit)
     androidTestImplementation(libs.androidx.test.espresso.core)
 
@@ -78,13 +81,13 @@ dependencies {
     //Hilt
     implementation(libs.hilt.android)
     implementation(libs.hilt.navigation.compose)
-    kapt(libs.hilt.compiler)
+    ksp(libs.hilt.compiler)
 
     //Room
     implementation(libs.room.runtime)
     implementation(libs.room.paging)
     implementation(libs.room.ktx)
-    kapt(libs.room.compiler)
+    ksp(libs.room.compiler)
 
     //Retrofit
     implementation(libs.retrofit2)

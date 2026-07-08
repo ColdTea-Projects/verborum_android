@@ -4,8 +4,6 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import de.coldtea.verborum.bibliotheca.dictionary.domain.DictionaryService
 import de.coldtea.verborum.bibliotheca.word.domain.WordService
-import de.coldtea.verborum.bibliotheca.word.ui.dictionarydetails.model.DictionaryDetailState
-import de.coldtea.verborum.bibliotheca.word.ui.model.WordUi
 import de.coldtea.verborum.bibliotheca.word.ui.selfpractice.model.SelfPracticeState
 import de.coldtea.verborum.core.ui.BaseViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

@@ -8,17 +8,18 @@ junit = "4.13.2"
 androidx-test-ext-junit = "1.2.1"
 androidx-test-espresso-core = "3.6.1"
 navigation-compose = "2.7.7"
-hilt-android = "2.51.1"
+hilt-android = "2.52"
 hilt-compiler = "2.52"
 hilt-plugin = "2.52"
-hilt-android-testing = "2.51.1"
+hilt-android-testing = "2.52"
 hilt-navigation-compose = "1.2.0"
 room-runtime = "2.6.1"
 room-paging = "2.6.1"
 room-compiler = "2.6.1"
 room-ktx = "2.6.1"
 agp = "8.7.0"
-kotlin = "2.0.0"
+kotlin = "2.1.0"
+ksp = "2.1.0-1.0.29"
 appcompat = "1.7.0"
 material = "1.12.0"
 retrofit = "2.11.0"
@@ -28,6 +29,8 @@ kotlinx-serialization-json = "1.6.3"
 animation = "1.10.2"
 material3 = "1.4.0"
 foundation-layout = "1.10.3"
+mockk = "1.13.12"
+kotlinx-coroutines-test = "1.8.1"
 
 [libraries]
 androidx_core_ktx = { module = "androidx.core:core-ktx", version.ref = "androidx_core_ktx" }
@@ -64,6 +67,8 @@ kotlinx_serialization_json = { module = "org.jetbrains.kotlinx:kotlinx-serializa
 animation = { group = "androidx.compose.animation", name = "animation", version.ref = "animation" }
 material3 = { group = "androidx.compose.material3", name = "material3", version.ref = "material3" }
 foundationLayout = { group = "androidx.compose.foundation", name = "foundation-layout", version.ref = "foundation-layout" }
+mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
+kotlinx_coroutines_test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinx-coroutines-test" }
 
 
 [plugins]
@@ -72,3 +77,4 @@ jetbrainsKotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "k
 androidApplication = { id = "com.android.application", version.ref = "agp" }
 hiltAndroid = { id = "com.google.dagger.hilt.android", version.ref = "hilt-plugin" }
 kotlinCompose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }

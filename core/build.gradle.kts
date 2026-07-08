@@ -2,7 +2,7 @@ plugins {
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.jetbrainsKotlinAndroid)
     alias(libs.plugins.kotlinCompose)
-    kotlin("kapt") version "2.0.0"
+    alias(libs.plugins.ksp)
 }
 
 android {
@@ -29,6 +29,9 @@ android {
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.1"
+    }
+    testFixtures {
+        enable = true
     }
 
     buildTypes {
@@ -74,7 +77,18 @@ dependencies {
     //Hilt
     implementation(libs.hilt.android)
     implementation(libs.hilt.navigation.compose)
-    kapt(libs.hilt.compiler)
+    ksp(libs.hilt.compiler)
+
+    //Test
+    testImplementation(libs.junit)
+    testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.mockk)
+    testFixturesImplementation(libs.junit)
+    testFixturesImplementation(libs.kotlinx.coroutines.test)
+    testFixturesImplementation(libs.mockk)
+    // Compose compiler is applied module-wide; testFixtures needs the Compose runtime on its classpath.
+    testFixturesImplementation(platform(libs.androidx.activity.compose.bom))
+    testFixturesImplementation(libs.androidx.compose.ui)
 
     //Retrofit
     implementation(libs.retrofit2)

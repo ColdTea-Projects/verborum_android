@@ -5,6 +5,6 @@ plugins {
     alias(libs.plugins.jetbrainsKotlinAndroid) apply false
     alias(libs.plugins.hiltAndroid) apply false
     alias(libs.plugins.kotlinCompose) apply false
-    kotlin("kapt") version "2.0.0"
-    kotlin("plugin.serialization") version "2.0.0"
+    alias(libs.plugins.ksp) apply false
+    kotlin("plugin.serialization") version "2.1.0"
 }

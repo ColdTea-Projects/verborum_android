@@ -3,7 +3,7 @@ plugins {
     alias(libs.plugins.jetbrainsKotlinAndroid)
     alias(libs.plugins.hiltAndroid)
     alias(libs.plugins.kotlinCompose)
-    kotlin("kapt") version "2.0.0"
+    alias(libs.plugins.ksp)
 }
 
 android {
@@ -87,13 +87,13 @@ dependencies {
     //Hilt
     implementation(libs.hilt.android)
     implementation(libs.hilt.navigation.compose)
-    kapt(libs.hilt.compiler)
+    ksp(libs.hilt.compiler)
 
     //Room
     implementation(libs.room.runtime)
     implementation(libs.room.paging)
     implementation(libs.room.ktx)
-    kapt(libs.room.compiler)
+    ksp(libs.room.compiler)
 
     //Retrofit
     implementation(libs.retrofit2)
@@ -105,9 +105,6 @@ dependencies {
     implementation(libs.kotlinx.serialization.json)
 }
 
-kapt {
-    correctErrorTypes = true
-    javacOptions {
-        option("-Adagger.hilt.android.internal.disableAndroidSuperclassValidation=true")
-    }
+ksp {
+    arg("dagger.hilt.android.internal.disableAndroidSuperclassValidation", "true")
 }
