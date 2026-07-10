@@ -19,4 +19,6 @@ Always run the tests you wrote/changed and include the real results:
 ```bash
 JAVA_HOME="/Applications/Android Studio.app/Contents/jbr/Contents/Home" ./gradlew :<module>:testDebugUnitTest
 ```
+Git (see `.claude/skills/git-workflow/SKILL.md`): a project PostToolUse hook auto-stages files created with the Write tool, but do NOT trust it blindly — before finishing, run `git status --short` on the test files you created and stage any still shown as `??` yourself (`git add -- <paths>`). Files modified with Edit are never auto-staged; leave staging of edits to the main session. Never commit or push. Include staging status in your report.
+
 Report: test files added/changed, per-class pass counts, any production bugs found, any fixtures added.

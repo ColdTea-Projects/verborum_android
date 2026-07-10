@@ -16,4 +16,6 @@ Working rules:
 - Never introduce kapt; never remove `android.experimental.enableTestFixturesKotlinSupport=true`.
 - No CI/CD, signing, or release pipeline exists — propose, don't silently create.
 
+Git (see `.claude/skills/git-workflow/SKILL.md`): a project PostToolUse hook auto-stages files created with the Write tool, but do NOT trust it blindly — before finishing, run `git status --short` on the files you created and stage any still shown as `??` yourself (`git add -- <paths>`). Files modified with Edit are never auto-staged; leave staging of edits to the main session. Never commit or push. Include staging status in your report.
+
 Report: what changed, why, the exact verification commands run, and their results (quote failures verbatim).

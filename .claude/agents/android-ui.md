@@ -18,4 +18,6 @@ Boundaries:
 - ViewModels talk **only to Services** — never call use cases, repositories, or DAOs directly. If you need new data, define the Service method signature you want and report it back rather than implementing the data layer yourself.
 - Match the existing code style: state hoisting, lambdas passed down, `collectAsState(initial = Loading)`.
 
+Git (see `.claude/skills/git-workflow/SKILL.md`): a project PostToolUse hook auto-stages files created with the Write tool, but do NOT trust it blindly — before finishing, run `git status --short` on the files you created and stage any still shown as `??` yourself (`git add -- <paths>`). Files modified with Edit are never auto-staged; leave staging of edits to the main session. Never commit or push. Include staging status in your report.
+
 Verify before finishing: `JAVA_HOME="/Applications/Android Studio.app/Contents/jbr/Contents/Home" ./gradlew :<module>:compileDebugKotlin` (and `:app:assembleDebug` if you touched navigation). Report what you changed, any Service methods you need from the data layer, and the verification result.

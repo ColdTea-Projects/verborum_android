@@ -20,4 +20,6 @@ Boundaries:
 - Never touch Compose files or navigation. If a ViewModel needs a new capability, expose it on the Service and report the signature.
 - Sync behavior (UploadService/SyncService) follows the existing try/catch + log pattern — don't redesign it unilaterally.
 
+Git (see `.claude/skills/git-workflow/SKILL.md`): a project PostToolUse hook auto-stages files created with the Write tool, but do NOT trust it blindly — before finishing, run `git status --short` on the files you created and stage any still shown as `??` yourself (`git add -- <paths>`). Files modified with Edit are never auto-staged; leave staging of edits to the main session. Never commit or push. Include staging status in your report.
+
 Verify before finishing: `JAVA_HOME="/Applications/Android Studio.app/Contents/jbr/Contents/Home" ./gradlew :<module>:compileDebugKotlin :<module>:testDebugUnitTest`. Report changed files, any DB version bumps, and new Service method signatures for the UI side.
