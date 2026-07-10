@@ -48,9 +48,9 @@ class CreateWordViewModel @Inject constructor(
         val word = Word(
             wordId = "",
             dictionaryId = dictionary.dictionaryId,
-            word = composeWordText(sourceInput),
+            word = composeWordText(dictionary.fromLang, sourceInput),
             wordMeta = composeWordMeta(dictionary.fromLang, wordType, sourceInput),
-            translation = composeWordText(targetInput),
+            translation = composeWordText(dictionary.toLang, targetInput),
             translationMeta = composeWordMeta(dictionary.toLang, wordType, targetInput),
             isSynced = false,
             level = 0,

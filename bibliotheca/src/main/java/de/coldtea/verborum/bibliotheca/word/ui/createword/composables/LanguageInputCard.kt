@@ -25,6 +25,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import de.coldtea.verborum.bibliotheca.common.utils.ResStrings
+import de.coldtea.verborum.bibliotheca.word.ui.createword.model.FieldKey
+import de.coldtea.verborum.bibliotheca.word.ui.createword.model.FormField
+import de.coldtea.verborum.bibliotheca.word.ui.createword.model.Gender
+import de.coldtea.verborum.bibliotheca.word.ui.createword.model.LanguageFormSpec
+import de.coldtea.verborum.bibliotheca.word.ui.createword.model.LanguageGrammar
 import de.coldtea.verborum.bibliotheca.word.ui.createword.model.WordFormInput
 import de.coldtea.verborum.core.theme.VerborumTheme
 
@@ -32,11 +37,10 @@ import de.coldtea.verborum.core.theme.VerborumTheme
 fun LanguageInputCard(
     modifier: Modifier = Modifier,
     languageName: String,
+    languageCode: String,
     barColor: Color,
+    spec: LanguageFormSpec,
     input: WordFormInput,
-    articleOptions: List<String>,
-    showPlural: Boolean,
-    showFeminine: Boolean,
     onInputChange: (WordFormInput) -> Unit,
 ) {
     Surface(
@@ -68,6 +72,19 @@ fun LanguageInputCard(
                     color = MaterialTheme.colorScheme.onSurface
                 )
 
+                if (spec.genderOptions.isNotEmpty()) {
+                    Spacer(modifier = Modifier.height(16.dp))
+                    FieldLabel(text = stringResource(ResStrings.createWordScreenGenderLabel))
+                    Spacer(modifier = Modifier.height(8.dp))
+                    GenderChips(
+                        languageCode = languageCode,
+                        options = spec.genderOptions,
+                        selected = input.gender,
+                        onSelected = { onInputChange(input.copy(gender = it)) },
+                        modifier = Modifier.fillMaxWidth(),
+                    )
+                }
+
                 Spacer(modifier = Modifier.height(16.dp))
 
                 OutlinedTextField(
@@ -78,43 +95,62 @@ fun LanguageInputCard(
                     modifier = Modifier.fillMaxWidth()
                 )
 
-                if (articleOptions.isNotEmpty()) {
+                spec.fields.forEach { field ->
                     Spacer(modifier = Modifier.height(12.dp))
+                    when (field) {
+                        is FormField.TextForm -> OutlinedTextField(
+                            value = input.field(field.key),
+                            onValueChange = { onInputChange(input.withField(field.key, it)) },
+                            label = { Text(text = stringResource(field.labelRes)) },
+                            placeholder = field.hintRes?.let { { Text(text = stringResource(it)) } },
+                            singleLine = true,
+                            modifier = Modifier.fillMaxWidth()
+                        )
 
-                    ArticleDropdown(
-                        options = articleOptions,
-                        selectedArticle = input.article,
-                        onArticleSelected = { onInputChange(input.copy(article = it)) },
-                        modifier = Modifier.fillMaxWidth()
-                    )
+                        is FormField.ChoiceForm -> {
+                            FieldLabel(text = stringResource(field.labelRes))
+                            Spacer(modifier = Modifier.height(8.dp))
+                            ChoiceChips(
+                                options = field.options,
+                                selected = input.field(field.key).takeIf { it.isNotBlank() },
+                                onSelected = { onInputChange(input.withField(field.key, it)) },
+                                modifier = Modifier.fillMaxWidth(),
+                            )
+                        }
+                    }
                 }
 
-                if (showPlural) {
-                    Spacer(modifier = Modifier.height(12.dp))
-
-                    OutlinedTextField(
-                        value = input.plural,
-                        onValueChange = { onInputChange(input.copy(plural = it)) },
-                        label = { Text(text = stringResource(ResStrings.createWordScreenPluralLabel)) },
-                        singleLine = true,
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                }
-
-                if (showFeminine) {
-                    Spacer(modifier = Modifier.height(12.dp))
-
-                    OutlinedTextField(
-                        value = input.feminine,
-                        onValueChange = { onInputChange(input.copy(feminine = it)) },
-                        label = { Text(text = stringResource(ResStrings.createWordScreenFeminineLabel)) },
-                        singleLine = true,
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                }
+                PreviewLine(languageCode = languageCode, input = input)
             }
         }
     }
+}
+
+@Composable
+private fun FieldLabel(text: String) {
+    Text(
+        text = text,
+        fontSize = 12.sp,
+        fontWeight = FontWeight.Medium,
+        color = MaterialTheme.colorScheme.onSurfaceVariant,
+    )
+}
+
+@Composable
+private fun PreviewLine(languageCode: String, input: WordFormInput) {
+    val surface = LanguageGrammar.composeSurface(languageCode, input.gender, input.text)
+    if (surface.isBlank()) return
+
+    val plural = input.field(FieldKey.PLURAL).trim()
+    val preview = if (plural.isNotBlank()) "$surface · $plural" else surface
+
+    Spacer(modifier = Modifier.height(12.dp))
+    Text(
+        text = preview,
+        fontSize = 14.sp,
+        fontWeight = FontWeight.Medium,
+        color = MaterialTheme.colorScheme.primary,
+    )
 }
 
 @Preview
@@ -123,11 +159,17 @@ fun LanguageInputCardPreview() {
     VerborumTheme {
         LanguageInputCard(
             languageName = "German",
+            languageCode = "de",
             barColor = Color(0xFFC41E3A),
-            input = WordFormInput(text = "Apfel", article = "der", plural = "Äpfel"),
-            articleOptions = listOf("der", "die", "das"),
-            showPlural = true,
-            showFeminine = false,
+            spec = LanguageGrammar.formSpec(
+                "de",
+                de.coldtea.verborum.bibliotheca.word.ui.createword.model.WordType.NOUN,
+            ),
+            input = WordFormInput(
+                text = "Apfel",
+                gender = Gender.MASCULINE,
+                fields = mapOf(FieldKey.PLURAL to "Äpfel"),
+            ),
             onInputChange = {},
         )
     }

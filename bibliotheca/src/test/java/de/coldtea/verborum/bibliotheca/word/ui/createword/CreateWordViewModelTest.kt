@@ -5,6 +5,8 @@ import de.coldtea.verborum.bibliotheca.testDictionaryUi
 import de.coldtea.verborum.bibliotheca.word.domain.WordService
 import de.coldtea.verborum.bibliotheca.word.domain.model.Word
 import de.coldtea.verborum.bibliotheca.word.ui.createword.model.CreateWordState
+import de.coldtea.verborum.bibliotheca.word.ui.createword.model.FieldKey
+import de.coldtea.verborum.bibliotheca.word.ui.createword.model.Gender
 import de.coldtea.verborum.bibliotheca.word.ui.createword.model.WordFormInput
 import de.coldtea.verborum.bibliotheca.word.ui.createword.model.WordType
 import de.coldtea.verborum.core.BaseTest
@@ -83,8 +85,12 @@ class CreateWordViewModelTest : BaseTest() {
 
         viewModel.saveWord(
             wordType = WordType.NOUN,
-            sourceInput = WordFormInput(text = " Haus ", article = "das", plural = "Häuser"),
-            targetInput = WordFormInput(text = "house", plural = "houses"),
+            sourceInput = WordFormInput(
+                text = " Haus ",
+                gender = Gender.NEUTER,
+                fields = mapOf(FieldKey.PLURAL to "Häuser"),
+            ),
+            targetInput = WordFormInput(text = "house", fields = mapOf(FieldKey.PLURAL to "houses")),
         )
 
         coVerify(exactly = 1) { wordService.saveWord(capture(wordSlot)) }
@@ -92,7 +98,7 @@ class CreateWordViewModelTest : BaseTest() {
         assertEquals("", saved.wordId)
         assertEquals("dict-1", saved.dictionaryId)
         assertEquals("das Haus", saved.word)
-        assertEquals("{de;type=noun;plural=Häuser}", saved.wordMeta)
+        assertEquals("{de;type=noun;gender=n;plural=Häuser}", saved.wordMeta)
         assertEquals("house", saved.translation)
         assertEquals("{en;type=noun;plural=houses}", saved.translationMeta)
         assertEquals(0, saved.level)

@@ -32,11 +32,9 @@ import de.coldtea.verborum.bibliotheca.common.utils.ResStrings
 import de.coldtea.verborum.bibliotheca.word.ui.createword.composables.LanguageInputCard
 import de.coldtea.verborum.bibliotheca.word.ui.createword.composables.WordTypeChips
 import de.coldtea.verborum.bibliotheca.word.ui.createword.model.CreateWordState
+import de.coldtea.verborum.bibliotheca.word.ui.createword.model.LanguageGrammar
 import de.coldtea.verborum.bibliotheca.word.ui.createword.model.WordFormInput
 import de.coldtea.verborum.bibliotheca.word.ui.createword.model.WordType
-import de.coldtea.verborum.bibliotheca.word.ui.createword.model.articleOptions
-import de.coldtea.verborum.bibliotheca.word.ui.createword.model.showsFeminineField
-import de.coldtea.verborum.bibliotheca.word.ui.createword.model.showsPluralField
 import de.coldtea.verborum.core.theme.VerborumTheme
 
 @Composable
@@ -96,8 +94,9 @@ fun CreateWordScreen(
                 onTypeSelected = { wordType ->
                     if (wordType != selectedType) {
                         selectedType = wordType
-                        sourceInput = WordFormInput()
-                        targetInput = WordFormInput()
+                        // Keep the typed words; clear only the type-specific grammatical fields.
+                        sourceInput = WordFormInput(text = sourceInput.text)
+                        targetInput = WordFormInput(text = targetInput.text)
                     }
                 },
                 modifier = Modifier.fillMaxWidth()
@@ -108,11 +107,10 @@ fun CreateWordScreen(
 
                 LanguageInputCard(
                     languageName = languageDisplayName(dictionary.fromLang),
+                    languageCode = dictionary.fromLang,
                     barColor = MaterialTheme.colorScheme.primary,
+                    spec = LanguageGrammar.formSpec(dictionary.fromLang, wordType),
                     input = sourceInput,
-                    articleOptions = articleOptions(dictionary.fromLang, wordType),
-                    showPlural = showsPluralField(wordType),
-                    showFeminine = showsFeminineField(dictionary.fromLang, wordType),
                     onInputChange = { sourceInput = it }
                 )
 
@@ -120,11 +118,10 @@ fun CreateWordScreen(
 
                 LanguageInputCard(
                     languageName = languageDisplayName(dictionary.toLang),
+                    languageCode = dictionary.toLang,
                     barColor = MaterialTheme.colorScheme.secondary,
+                    spec = LanguageGrammar.formSpec(dictionary.toLang, wordType),
                     input = targetInput,
-                    articleOptions = articleOptions(dictionary.toLang, wordType),
-                    showPlural = showsPluralField(wordType),
-                    showFeminine = showsFeminineField(dictionary.toLang, wordType),
                     onInputChange = { targetInput = it }
                 )
 
