@@ -11,18 +11,25 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import de.coldtea.verborum.bibliotheca.common.utils.ResDrawables
 import de.coldtea.verborum.bibliotheca.common.utils.ResStrings
 import de.coldtea.verborum.bibliotheca.dictionary.ui.composables.DictionaryCard
 import de.coldtea.verborum.core.theme.VerborumTheme
@@ -30,7 +37,8 @@ import de.coldtea.verborum.core.theme.VerborumTheme
 @Composable
 fun DictionaryListScreen(
     viewModel: DictionaryListViewModel = hiltViewModel(),
-    onDictionaryClick: (String) -> Unit
+    onDictionaryClick: (String) -> Unit,
+    onCreateDictionaryClick: () -> Unit,
 ) {
     val dictionaries = viewModel.dictionariesState.collectAsState().value
 
@@ -40,9 +48,24 @@ fun DictionaryListScreen(
             .background(MaterialTheme.colorScheme.background)
             .padding(horizontal = 24.dp)
     ) {
-        Row {
-            Button(onClick = viewModel::addDummyDictionary) {
-                Text(text = "Add")
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            Button(
+                onClick = onCreateDictionaryClick,
+                shape = RoundedCornerShape(12.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = MaterialTheme.colorScheme.onPrimary,
+                )
+            ) {
+                Icon(
+                    painter = painterResource(ResDrawables.ic_plus_24),
+                    contentDescription = null,
+                    modifier = Modifier.size(18.dp)
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(text = stringResource(ResStrings.dictionaryListScreenCreate))
             }
             Button(onClick = viewModel::cleanDictionaries) {
                 Text(text = "Delete")
@@ -89,7 +112,8 @@ fun DictionaryListScreen(
 fun DictionaryListScreenPreview() {
     VerborumTheme {
         DictionaryListScreen(
-            onDictionaryClick = { _ -> }
+            onDictionaryClick = { _ -> },
+            onCreateDictionaryClick = {}
         )
     }
 }

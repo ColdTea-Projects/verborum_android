@@ -1,6 +1,5 @@
 package de.coldtea.verborum.bibliotheca.dictionary.domain
 
-import android.util.Log
 import de.coldtea.verborum.bibliotheca.common.domain.SyncService
 import de.coldtea.verborum.bibliotheca.common.domain.UploadService
 import de.coldtea.verborum.bibliotheca.common.utils.getNowInMillis
@@ -16,7 +15,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
-import java.io.IOException
 import javax.inject.Inject
 import kotlin.collections.map
 
@@ -40,38 +38,23 @@ class DictionaryService @Inject constructor(
         .map(Dictionary::convertToUi)
         .flowOn(Dispatchers.IO)
 
-    suspend fun crateDummyDictionary() {
+    suspend fun createDictionary(name: String, fromLang: String, toLang: String): String {
         val dictionary =
             Dictionary(
                 dictionaryId = "",
                 userId = GUEST_USER_ID,
-                name = generateRandomString(),
+                name = name,
                 isPublic = false,
                 isSynced = false,
-                fromLang = "DE",
-                toLang = "EN",
+                fromLang = fromLang,
+                toLang = toLang,
                 createdAt = getNowInMillis(),
                 updatedAt = getNowInMillis(),
             )
 
-        val dictionaryId = saveDictionaryUseCase.invoke(dictionary)
-        try {
-            uploadService.createDictionary(dictionary.copy(dictionaryId = dictionaryId))
-            syncService.syncDictionaries()
-        } catch (e: Exception) {
-            // Other errors
-            Log.e("Sync", "Unexpected error", e)
-        }
+        return saveDictionaryUseCase.invoke(dictionary)
     }
 
     suspend fun deleteDictionary(dictionaryId: String) =
         uploadService.deleteDictionary(dictionaryId)
-
-    fun generateRandomString(len: Int = 15): String {
-        val alphanumerics = CharArray(26) { it -> (it + 97).toChar() }.toSet()
-            .union(CharArray(9) { it -> (it + 48).toChar() }.toSet())
-        return (0..len - 1).map {
-            alphanumerics.toList().random()
-        }.joinToString("")
-    }
 }

@@ -38,7 +38,9 @@ fun NavigationCentral() {
             NavHost(navController = navController, startDestination = GROUP_BIBLIOTHECA) {
                 navigation(startDestination = SCREEN_DICTIONARIES_LIST, route = GROUP_BIBLIOTHECA) {
                     insertDictionariesList(navController)
+                    insertCreateDictionary(navController)
                     insertDictionariesDetails(navController)
+                    insertCreateWord(navController)
                     insertSelfPractice(navController)
                     insertMultipleChoiceScreen(navController, snackbarHostState)
                 }

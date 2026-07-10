@@ -38,14 +38,6 @@ class DictionaryDetailsViewModel @Inject constructor(
         )
     }
 
-    fun addDummyDictionary() = viewModelScope.launch {
-        if (_dictionaryDetailState.value !is DictionaryDetailState.Success) {
-            return@launch
-        }
-
-        wordService.addDummyDictionary((_dictionaryDetailState.value as DictionaryDetailState.Success).dictionaryUi.dictionaryId)
-    }
-
     fun cleanWords() = viewModelScope.launch {
         if (_dictionaryDetailState.value !is DictionaryDetailState.Success) {
             return@launch

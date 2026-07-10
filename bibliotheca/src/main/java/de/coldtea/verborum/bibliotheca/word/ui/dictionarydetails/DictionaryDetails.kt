@@ -11,14 +11,21 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -39,6 +46,7 @@ fun DictionaryDetailsScreen(
     viewModel: DictionaryDetailsViewModel = hiltViewModel(),
     onTestClicked: () -> Unit,
     onSelfPracticeClicked: () -> Unit,
+    onCreateWordClicked: () -> Unit,
 ) {
     val dictionaryDetailState =
         viewModel.dictionaryDetailState.collectAsState(initial = DictionaryDetailState.Loading).value
@@ -51,9 +59,6 @@ fun DictionaryDetailsScreen(
     ) {
         item {
             Row {
-                Button(onClick = viewModel::addDummyDictionary) {
-                    Text(text = "Add")
-                }
                 Button(onClick = viewModel::cleanWords) {
                     Text(text = "Delete")
                 }
@@ -159,6 +164,37 @@ fun DictionaryDetailsScreen(
 
                 Spacer(modifier = Modifier.height(24.dp))
             }
+
+            // Create Word Button
+            item {
+                OutlinedButton(
+                    onClick = onCreateWordClicked,
+                    shape = RoundedCornerShape(16.dp),
+                    border = BorderStroke(2.dp, MaterialTheme.colorScheme.primary),
+                    colors = ButtonDefaults.outlinedButtonColors(
+                        containerColor = Color.Transparent,
+                        contentColor = MaterialTheme.colorScheme.primary,
+                    ),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(56.dp)
+                ) {
+                    Icon(
+                        painter = painterResource(ResDrawables.ic_plus_24),
+                        contentDescription = null,
+                        modifier = Modifier.size(18.dp)
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = stringResource(ResStrings.dictionaryDetailsScreenCreateWord),
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        letterSpacing = 0.5.sp
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(24.dp))
+            }
         }
     }
 }
@@ -170,6 +206,7 @@ fun DictionaryListScreenPreview() {
         DictionaryDetailsScreen(
             onTestClicked = {},
             onSelfPracticeClicked = {},
+            onCreateWordClicked = {},
         )
     }
 }

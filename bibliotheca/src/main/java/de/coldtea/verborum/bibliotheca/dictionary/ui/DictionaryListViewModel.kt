@@ -38,10 +38,6 @@ class DictionaryListViewModel @Inject constructor(
         }
     }
 
-    fun addDummyDictionary() = viewModelScope.launch(Dispatchers.IO) {
-        dictionaryService.crateDummyDictionary()
-    }
-
     fun cleanDictionaries() = viewModelScope.launch(Dispatchers.IO) {
         dictionariesState.value.map {
             async {
