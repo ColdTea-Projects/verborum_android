@@ -22,6 +22,9 @@ class WordRepository @Inject constructor(
     suspend fun saveWord(wordEntity: WordEntity) =
         bibliothecaDatabase.daoWord.insert(wordEntity)
 
+    suspend fun saveWords(wordEntities: List<WordEntity>) =
+        bibliothecaDatabase.daoWord.insertAll(wordEntities)
+
     suspend fun updateWord(wordEntity: WordEntity) =
         bibliothecaDatabase.daoWord.update(wordEntity)
 

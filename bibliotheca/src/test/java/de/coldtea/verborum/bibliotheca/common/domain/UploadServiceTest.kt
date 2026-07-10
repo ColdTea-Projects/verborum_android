@@ -25,6 +25,7 @@ class UploadServiceTest : BaseTest() {
     @MockK
     private lateinit var deleteDictionaryApiUseCase: DeleteDictionaryApiUseCase
 
+    // invoke returns Response<Unit> — stubbed per test with coEvery.
     @MockK
     private lateinit var saveWordApiUseCase: SaveWordApiUseCase
 
@@ -73,11 +74,14 @@ class UploadServiceTest : BaseTest() {
     // region createWord
 
     @Test
-    fun `createWord delegates the word to SaveWordApiUseCase`() = runTest {
+    fun `createWord delegates the word and returns the api response`() = runTest {
         val word = testWord()
+        val response = mockk<Response<Unit>>()
+        coEvery { saveWordApiUseCase.invoke(word) } returns response
 
-        uploadService.createWord(word)
+        val result = uploadService.createWord(word)
 
+        assertSame(response, result)
         coVerify(exactly = 1) { saveWordApiUseCase.invoke(word) }
     }
 

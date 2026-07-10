@@ -2,9 +2,11 @@ package de.coldtea.verborum.bibliotheca.common.domain
 
 import android.util.Log
 import de.coldtea.verborum.bibliotheca.common.domain.usecases.SyncUserDictionariesUseCase
+import de.coldtea.verborum.bibliotheca.common.domain.usecases.UploadPendingChangesUseCase
 import de.coldtea.verborum.core.BaseTest
 import io.mockk.coEvery
 import io.mockk.coVerify
+import io.mockk.coVerifyOrder
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.mockkStatic
@@ -14,7 +16,11 @@ import org.junit.Test
 
 class SyncServiceTest : BaseTest() {
 
-    // invoke returns a non-Unit value — stubbed per test with coEvery.
+    // invoke returns Unit — covered by relaxUnitFun.
+    @MockK
+    private lateinit var uploadPendingChangesUseCase: UploadPendingChangesUseCase
+
+    // invoke returns Unit — covered by relaxUnitFun.
     @MockK
     private lateinit var syncUserDictionariesUseCase: SyncUserDictionariesUseCase
 
@@ -22,22 +28,35 @@ class SyncServiceTest : BaseTest() {
 
     override fun setUp() {
         super.setUp()
-        syncService = SyncService(syncUserDictionariesUseCase)
+        syncService = SyncService(uploadPendingChangesUseCase, syncUserDictionariesUseCase)
     }
 
     // region syncDictionaries
 
     @Test
-    fun `syncDictionaries delegates to SyncUserDictionariesUseCase`() = runTest {
-        coEvery { syncUserDictionariesUseCase.invoke() } returns null
-
+    fun `syncDictionaries uploads pending changes before downloading`() = runTest {
         syncService.syncDictionaries()
 
-        coVerify(exactly = 1) { syncUserDictionariesUseCase.invoke() }
+        coVerifyOrder {
+            uploadPendingChangesUseCase.invoke()
+            syncUserDictionariesUseCase.invoke()
+        }
     }
 
     @Test
-    fun `syncDictionaries swallows use case failures and logs them`() = runTest {
+    fun `syncDictionaries still downloads when the upload phase fails`() = runTest {
+        mockkStatic(Log::class)
+        every { Log.e(any(), any()) } returns 0
+        coEvery { uploadPendingChangesUseCase.invoke() } throws RuntimeException("upload down")
+
+        syncService.syncDictionaries() // must not throw
+
+        coVerify(exactly = 1) { syncUserDictionariesUseCase.invoke() }
+        verify(exactly = 1) { Log.e("Upload error", "upload down") }
+    }
+
+    @Test
+    fun `syncDictionaries swallows sync failures and logs them`() = runTest {
         mockkStatic(Log::class)
         every { Log.e(any(), any()) } returns 0
         coEvery { syncUserDictionariesUseCase.invoke() } throws RuntimeException("network down")
