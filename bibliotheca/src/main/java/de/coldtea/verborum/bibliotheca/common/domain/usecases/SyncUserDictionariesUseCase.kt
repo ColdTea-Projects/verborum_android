@@ -3,7 +3,7 @@ package de.coldtea.verborum.bibliotheca.common.domain.usecases
 import de.coldtea.verborum.bibliotheca.dictionary.data.api.DictionaryApi
 import de.coldtea.verborum.bibliotheca.dictionary.data.db.entity.DictionaryEntity.Companion.GUEST_USER_ID
 import de.coldtea.verborum.bibliotheca.dictionary.domain.model.Dictionary
-import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.local.GetAllDictionariesUseCase
+import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.local.CleanDictionariesUseCase
 import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.local.SaveDictionaryUseCase
 import de.coldtea.verborum.bibliotheca.word.data.api.WordApi
 import de.coldtea.verborum.bibliotheca.word.domain.usecase.local.SaveWordUseCase
@@ -17,7 +17,7 @@ class SyncUserDictionariesUseCase @Inject constructor(
     private val wordApi: WordApi,
     private val saveDictionaryUseCase: SaveDictionaryUseCase,
     private val saveWordUseCase: SaveWordUseCase,
-    private val removeAllDictionariesUseCase: GetAllDictionariesUseCase,
+    private val removeAllDictionariesUseCase: CleanDictionariesUseCase,
     //TODO: getActiveUserUseCase
 ) {
 

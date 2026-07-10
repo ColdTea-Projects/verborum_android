@@ -16,10 +16,14 @@ import de.coldtea.verborum.bibliotheca.word.ui.multiplechoice.MultipleChoiceView
 import de.coldtea.verborum.bibliotheca.word.ui.selfpractice.SelfPracticeScreen
 import de.coldtea.verborum.bibliotheca.word.ui.selfpractice.SelfPracticeViewModel
 
-fun NavGraphBuilder.insertDictionariesList(navController: NavHostController) = composable(
+fun NavGraphBuilder.insertDictionariesList(
+    navController: NavHostController,
+    snackbarHostState: SnackbarHostState,
+) = composable(
     SCREEN_DICTIONARIES_LIST
 ) {
     DictionaryListScreen(
+        snackbarHostState = snackbarHostState,
         onDictionaryClick = { dictionaryId ->
             navController.navigate("$SCREEN_DICTIONARIES_DETAIL/$dictionaryId")
         },

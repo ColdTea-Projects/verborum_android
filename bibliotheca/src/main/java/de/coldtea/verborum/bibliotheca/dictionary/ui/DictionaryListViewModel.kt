@@ -32,6 +32,9 @@ class DictionaryListViewModel @Inject constructor(
             dictionaryService.observeDictionaries().observe(
                 onSuccess = { dictionary ->
                     _dictionariesState.emit(dictionary)
+                },
+                onError = {
+                    _snackbarMessages.emit("Dictionaries could not be loaded")
                 }
             )
              syncService.syncDictionaries()

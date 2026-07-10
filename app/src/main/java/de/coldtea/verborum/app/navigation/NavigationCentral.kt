@@ -37,7 +37,7 @@ fun NavigationCentral() {
         Box(modifier = Modifier.padding(innerPadding)) {
             NavHost(navController = navController, startDestination = GROUP_BIBLIOTHECA) {
                 navigation(startDestination = SCREEN_DICTIONARIES_LIST, route = GROUP_BIBLIOTHECA) {
-                    insertDictionariesList(navController)
+                    insertDictionariesList(navController, snackbarHostState)
                     insertCreateDictionary(navController)
                     insertDictionariesDetails(navController)
                     insertCreateWord(navController)

@@ -36,11 +36,9 @@ class MultipleChoiceViewModel @Inject constructor(
             .observeWordsByDictionary(dictionaryId)
             .observe(
                 onSuccess = { words ->
-                    if (words.distinctBy { it.word + it.translation }.size < 4) _currentQuestion.emit(
-                        MultipleChoiceCurrentQuestionState.NotEnoughWords
-                    )
-
-                    if (questions.isEmpty()) {
+                    if (words.distinctBy { it.word + it.translation }.size < 4) {
+                        _currentQuestion.emit(MultipleChoiceCurrentQuestionState.NotEnoughWords)
+                    } else if (questions.isEmpty()) {
                         questions = words.shuffled()
                         initNextQuestion()
                     }
@@ -73,6 +71,9 @@ class MultipleChoiceViewModel @Inject constructor(
     }
 
     fun onNextQuestionRequested() = viewModelScope.launch {
+        // Already past the last question (Completed is showing) — ignore further requests.
+        if (currentQuestionIndex >= questions.size) return@launch
+
         _selectedAnswer.emit("")
         _answered.emit(false)
         currentQuestionIndex += 1

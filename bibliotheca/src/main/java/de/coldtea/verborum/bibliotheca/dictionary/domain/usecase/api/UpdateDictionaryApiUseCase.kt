@@ -8,7 +8,7 @@ class UpdateDictionaryApiUseCase @Inject constructor(
     private val dictionaryApi: DictionaryApi,
 ) {
 
-    suspend fun invoke(dictionary: Dictionary) = dictionaryApi.createDictionary(
+    suspend fun invoke(dictionary: Dictionary) = dictionaryApi.updateDictionary(
         dictionary.convertToRequest()
     )
 }

@@ -18,8 +18,11 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -37,10 +40,20 @@ import de.coldtea.verborum.core.theme.VerborumTheme
 @Composable
 fun DictionaryListScreen(
     viewModel: DictionaryListViewModel = hiltViewModel(),
+    snackbarHostState: SnackbarHostState,
     onDictionaryClick: (String) -> Unit,
     onCreateDictionaryClick: () -> Unit,
 ) {
     val dictionaries = viewModel.dictionariesState.collectAsState().value
+
+    LaunchedEffect(Unit) {
+        viewModel.snackbarMessages.collect { message ->
+            snackbarHostState.showSnackbar(
+                message = message,
+                duration = SnackbarDuration.Short,
+            )
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -112,6 +125,7 @@ fun DictionaryListScreen(
 fun DictionaryListScreenPreview() {
     VerborumTheme {
         DictionaryListScreen(
+            snackbarHostState = SnackbarHostState(),
             onDictionaryClick = { _ -> },
             onCreateDictionaryClick = {}
         )
