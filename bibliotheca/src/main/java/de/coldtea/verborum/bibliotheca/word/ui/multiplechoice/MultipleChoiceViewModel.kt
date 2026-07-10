@@ -3,6 +3,8 @@ package de.coldtea.verborum.bibliotheca.word.ui.multiplechoice
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import de.coldtea.verborum.bibliotheca.word.domain.WordService
+import de.coldtea.verborum.bibliotheca.word.ui.createword.model.FieldKey
+import de.coldtea.verborum.bibliotheca.word.ui.model.WordMeta
 import de.coldtea.verborum.bibliotheca.word.ui.model.WordUi
 import de.coldtea.verborum.bibliotheca.word.ui.multiplechoice.model.MultipleChoiceCurrentQuestion
 import de.coldtea.verborum.bibliotheca.word.ui.multiplechoice.model.MultipleChoiceCurrentQuestionState
@@ -20,7 +22,8 @@ class MultipleChoiceViewModel @Inject constructor(
 
     private var currentQuestionIndex = 0
     private var score: Int = 0
-    private var questions: List<WordUi> = listOf()
+    private var words: List<WordUi> = listOf()
+    private var questions: List<MultipleChoiceQuestion> = listOf()
 
     private var _answered = MutableStateFlow(false)
     val answered = _answered.asSharedFlow()
@@ -35,11 +38,12 @@ class MultipleChoiceViewModel @Inject constructor(
         wordService
             .observeWordsByDictionary(dictionaryId)
             .observe(
-                onSuccess = { words ->
-                    if (words.distinctBy { it.word + it.translation }.size < 4) {
+                onSuccess = { wordList ->
+                    if (wordList.distinctBy { it.word + it.translation }.size < 4) {
                         _currentQuestion.emit(MultipleChoiceCurrentQuestionState.NotEnoughWords)
                     } else if (questions.isEmpty()) {
-                        questions = words.shuffled()
+                        words = wordList
+                        questions = wordList.flatMap { it.toQuestions() }.shuffled()
                         initNextQuestion()
                     }
                 },
@@ -97,11 +101,10 @@ class MultipleChoiceViewModel @Inject constructor(
                 totalQuestions = questions.size
             )
         } else {
-            val word = questions[currentQuestionIndex]
-            val question = MultipleChoiceQuestion(word.wordId, word.word, word.translation)
+            val question = questions[currentQuestionIndex]
             val currentQuestion = MultipleChoiceCurrentQuestion(
                 question = question,
-                choices = questions.prepareChoices(question.answer)
+                choices = prepareChoices(question)
             )
 
             MultipleChoiceCurrentQuestionState.Success(
@@ -114,22 +117,51 @@ class MultipleChoiceViewModel @Inject constructor(
         _currentQuestion.emit(nextQuestionState)
     }
 
-    private fun List<WordUi>.prepareChoices(
-        exclude: String,
+    /**
+     * A base question (word → translation) plus one question per grammatical form entered on
+     * both language sides, e.g. go/went/gone → gehen/ging/(sein) gegangen yields three questions.
+     */
+    private fun WordUi.toQuestions(): List<MultipleChoiceQuestion> {
+        val sourceMeta = WordMeta.parse(wordMeta)
+        val targetMeta = WordMeta.parse(translationMeta)
+
+        return buildList {
+            add(MultipleChoiceQuestion(wordId, word, translation))
+            FieldKey.entries.forEach { key ->
+                val questionForm = sourceMeta?.displayForm(key)
+                val answerForm = targetMeta?.displayForm(key)
+                if (questionForm != null && answerForm != null) {
+                    add(MultipleChoiceQuestion(wordId, questionForm, answerForm, key))
+                }
+            }
+        }
+    }
+
+    /**
+     * Distractors of the same grammatical form come first (a past-tense question offers other
+     * past-tense answers), padded with answers of other forms when there are not enough.
+     */
+    private fun prepareChoices(
+        current: MultipleChoiceQuestion,
         count: Int = 3
     ): List<String> {
-        return this
-            .map { it.translation }
+        val sameForm = questions
+            .filter { it.formKey == current.formKey }
+            .map { it.answer }
+        val otherForms = questions
+            .filter { it.formKey != current.formKey }
+            .map { it.answer }
+
+        return (sameForm.distinct().shuffled() + otherForms.distinct().shuffled())
             .distinct()
-            .filter { it != exclude }
-            .shuffled()
+            .filter { it != current.answer }
             .take(count)
-            .plus(exclude)
+            .plus(current.answer)
             .shuffled()
     }
 
     private fun updateLevel(wordId: String, isCorrect: Boolean) = viewModelScope.launch {
-        val wordUi = questions.first { it.wordId == wordId }
+        val wordUi = words.first { it.wordId == wordId }
         val newLevel = if (isCorrect) minOf(7, wordUi.level + 1) else maxOf(0, wordUi.level - 1)
 
         wordService.saveWord(wordUi.convertToWord().copy(level = newLevel))

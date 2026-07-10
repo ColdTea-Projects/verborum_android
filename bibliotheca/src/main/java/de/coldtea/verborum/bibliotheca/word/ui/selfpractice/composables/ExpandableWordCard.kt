@@ -45,6 +45,8 @@ import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import de.coldtea.verborum.bibliotheca.word.ui.model.WordUi
+import de.coldtea.verborum.bibliotheca.word.ui.model.translationDisplayLine
+import de.coldtea.verborum.bibliotheca.word.ui.model.wordDisplayLine
 import de.coldtea.verborum.core.theme.VerborumColors
 import de.coldtea.verborum.core.theme.VerborumTheme
 import kotlin.math.absoluteValue
@@ -84,10 +86,11 @@ fun ExpandableWordCard(
         }
     )
 
+    // Full form lines, e.g. "gehen · ging · (sein) gegangen" — mirrors the create screen preview.
     val (shownText, hiddenText) = if (!isReversed) {
-        word.word to word.translation
+        word.wordDisplayLine() to word.translationDisplayLine()
     } else {
-        word.translation to word.word
+        word.translationDisplayLine() to word.wordDisplayLine()
     }
 
     Surface(
@@ -254,10 +257,10 @@ fun PreviewExpandableWordCard() {
                 word = WordUi(
                     wordId = "",
                     dictionaryId = "",
-                    word = "Salve",
-                    wordMeta = "",
-                    translation = "Hello",
-                    translationMeta = "",
+                    word = "go",
+                    wordMeta = "{en;type=verb;past=went;participle=gone}",
+                    translation = "gehen",
+                    translationMeta = "{de;type=verb;past=ging;participle=gegangen;aux=sein}",
                     level = 0,
                     createdAt = 0L,
                     updatedAt = 0L,

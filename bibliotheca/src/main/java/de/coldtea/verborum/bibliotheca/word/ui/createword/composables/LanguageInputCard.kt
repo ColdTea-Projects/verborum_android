@@ -31,6 +31,7 @@ import de.coldtea.verborum.bibliotheca.word.ui.createword.model.Gender
 import de.coldtea.verborum.bibliotheca.word.ui.createword.model.LanguageFormSpec
 import de.coldtea.verborum.bibliotheca.word.ui.createword.model.LanguageGrammar
 import de.coldtea.verborum.bibliotheca.word.ui.createword.model.WordFormInput
+import de.coldtea.verborum.bibliotheca.word.ui.model.displayForms
 import de.coldtea.verborum.core.theme.VerborumTheme
 
 @Composable
@@ -141,8 +142,8 @@ private fun PreviewLine(languageCode: String, input: WordFormInput) {
     val surface = LanguageGrammar.composeSurface(languageCode, input.gender, input.text)
     if (surface.isBlank()) return
 
-    val plural = input.field(FieldKey.PLURAL).trim()
-    val preview = if (plural.isNotBlank()) "$surface · $plural" else surface
+    val preview = (listOf(surface) + displayForms(input.fields))
+        .joinToString(separator = " · ")
 
     Spacer(modifier = Modifier.height(12.dp))
     Text(

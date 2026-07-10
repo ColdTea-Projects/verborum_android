@@ -18,6 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
@@ -72,7 +73,20 @@ fun QuestionCard(
             }
             
             Spacer(modifier = Modifier.height(32.dp))
-            
+
+            // Form label (e.g. "Past tense") for questions about a specific grammatical form
+            question.question.formKey?.let { formKey ->
+                Text(
+                    text = stringResource(formKey.labelRes),
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    color = MaterialTheme.colorScheme.primary,
+                    letterSpacing = 1.sp,
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+            }
+
             // Question Text
             Text(
                 text = "What does \"${question.question.question}\" mean?",

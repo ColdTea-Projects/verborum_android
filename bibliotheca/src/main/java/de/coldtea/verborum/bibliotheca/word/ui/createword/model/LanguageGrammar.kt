@@ -64,13 +64,7 @@ object LanguageGrammar {
                 genderOptions = genderOptions(code),
                 fields = buildList {
                     if (code in pluralLanguages) {
-                        add(
-                            FormField.TextForm(
-                                key = FieldKey.PLURAL,
-                                labelRes = ResStrings.createWordScreenPluralLabel,
-                                hintRes = irregularHintOrNull(code),
-                            )
-                        )
+                        add(textForm(FieldKey.PLURAL, irregularHintOrNull(code)))
                     }
                 },
             )
@@ -79,12 +73,7 @@ object LanguageGrammar {
 
             WordType.ADJECTIVE -> LanguageFormSpec(
                 fields = if (code in feminineAdjectiveLanguages) {
-                    listOf(
-                        FormField.TextForm(
-                            key = FieldKey.FEMININE,
-                            labelRes = ResStrings.createWordScreenFeminineLabel,
-                        )
-                    )
+                    listOf(textForm(FieldKey.FEMININE))
                 } else {
                     emptyList()
                 },
@@ -96,46 +85,46 @@ object LanguageGrammar {
 
     private fun verbFields(code: String): List<FormField> = when (code) {
         EN -> listOf(
-            textForm(FieldKey.PAST, ResStrings.createWordScreenPastLabel, irregularHintOrNull(code)),
-            textForm(FieldKey.PARTICIPLE, ResStrings.createWordScreenParticipleLabel, irregularHintOrNull(code)),
+            textForm(FieldKey.PAST, irregularHintOrNull(code)),
+            textForm(FieldKey.PARTICIPLE, irregularHintOrNull(code)),
         )
 
         DE -> listOf(
-            textForm(FieldKey.PAST, ResStrings.createWordScreenPastLabel),
-            textForm(FieldKey.PARTICIPLE, ResStrings.createWordScreenParticipleLabel),
-            FormField.ChoiceForm(FieldKey.AUXILIARY, ResStrings.createWordScreenAuxiliaryLabel, listOf("haben", "sein")),
+            textForm(FieldKey.PAST),
+            textForm(FieldKey.PARTICIPLE),
+            FormField.ChoiceForm(FieldKey.AUXILIARY, listOf("haben", "sein")),
         )
 
         NL -> listOf(
-            textForm(FieldKey.PAST, ResStrings.createWordScreenPastLabel),
-            textForm(FieldKey.PARTICIPLE, ResStrings.createWordScreenParticipleLabel),
-            FormField.ChoiceForm(FieldKey.AUXILIARY, ResStrings.createWordScreenAuxiliaryLabel, listOf("hebben", "zijn")),
+            textForm(FieldKey.PAST),
+            textForm(FieldKey.PARTICIPLE),
+            FormField.ChoiceForm(FieldKey.AUXILIARY, listOf("hebben", "zijn")),
         )
 
         FR -> listOf(
-            textForm(FieldKey.PARTICIPLE, ResStrings.createWordScreenParticipleLabel),
-            FormField.ChoiceForm(FieldKey.AUXILIARY, ResStrings.createWordScreenAuxiliaryLabel, listOf("avoir", "être")),
+            textForm(FieldKey.PARTICIPLE),
+            FormField.ChoiceForm(FieldKey.AUXILIARY, listOf("avoir", "être")),
         )
 
         IT -> listOf(
-            textForm(FieldKey.PARTICIPLE, ResStrings.createWordScreenParticipleLabel),
-            FormField.ChoiceForm(FieldKey.AUXILIARY, ResStrings.createWordScreenAuxiliaryLabel, listOf("avere", "essere")),
+            textForm(FieldKey.PARTICIPLE),
+            FormField.ChoiceForm(FieldKey.AUXILIARY, listOf("avere", "essere")),
         )
 
         ES, PT -> listOf(
-            textForm(FieldKey.PARTICIPLE, ResStrings.createWordScreenParticipleLabel, irregularHintOrNull(code)),
+            textForm(FieldKey.PARTICIPLE, irregularHintOrNull(code)),
         )
 
         LT -> listOf(
-            textForm(FieldKey.PRESENT_3RD, ResStrings.createWordScreenPresentLabel),
-            textForm(FieldKey.PAST_3RD, ResStrings.createWordScreenPastFormLabel),
+            textForm(FieldKey.PRESENT_3RD),
+            textForm(FieldKey.PAST_3RD),
         )
 
         else -> emptyList() // tr, az: regular conjugation, nothing to capture
     }
 
-    private fun textForm(key: FieldKey, labelRes: Int, hintRes: Int? = null) =
-        FormField.TextForm(key = key, labelRes = labelRes, hintRes = hintRes)
+    private fun textForm(key: FieldKey, hintRes: Int? = null) =
+        FormField.TextForm(key = key, hintRes = hintRes)
 
     private fun irregularHintOrNull(code: String): Int? =
         // English/Spanish/Portuguese default forms are regular; only capture the exceptions.

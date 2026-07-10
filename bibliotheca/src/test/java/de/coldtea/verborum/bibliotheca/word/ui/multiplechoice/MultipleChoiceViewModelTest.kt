@@ -3,8 +3,10 @@ package de.coldtea.verborum.bibliotheca.word.ui.multiplechoice
 import de.coldtea.verborum.bibliotheca.testWordUi
 import de.coldtea.verborum.bibliotheca.word.domain.WordService
 import de.coldtea.verborum.bibliotheca.word.domain.model.Word
+import de.coldtea.verborum.bibliotheca.word.ui.createword.model.FieldKey
 import de.coldtea.verborum.bibliotheca.word.ui.model.WordUi
 import de.coldtea.verborum.bibliotheca.word.ui.multiplechoice.model.MultipleChoiceCurrentQuestionState
+import de.coldtea.verborum.bibliotheca.word.ui.multiplechoice.model.MultipleChoiceQuestion
 import de.coldtea.verborum.core.BaseTest
 import io.mockk.coVerify
 import io.mockk.every
@@ -134,6 +136,105 @@ class MultipleChoiceViewModelTest : BaseTest() {
             MultipleChoiceCurrentQuestionState.NotEnoughWords,
             viewModel.currentQuestion.first(),
         )
+    }
+
+    // endregion
+
+    // region grammatical form questions
+
+    /** Builds [count] verbs with past and participle forms on both language sides. */
+    private fun verbWords(count: Int): List<WordUi> = (1..count).map {
+        testWordUi(
+            wordId = "w-$it",
+            word = "verb-$it",
+            translation = "verbo-$it",
+            wordMeta = "{en;type=verb;past=past-$it;participle=part-$it}",
+            translationMeta = "{de;type=verb;past=pastde-$it;participle=partde-$it;aux=sein}",
+        )
+    }
+
+    /** Walks through the whole quiz collecting every question in presentation order. */
+    private suspend fun collectAllQuestions(): List<MultipleChoiceQuestion> {
+        val size = currentSuccess().size
+        return (1..size).map {
+            val question = currentSuccess().multipleChoiceCurrentQuestion.question
+            viewModel.onNextQuestionRequested()
+            question
+        }
+    }
+
+    @Test
+    fun `a word with two shared forms generates three questions`() = runTest {
+        initWith(verbWords(4))
+
+        assertEquals(12, currentSuccess().size)
+    }
+
+    @Test
+    fun `form questions pair the source form with the target form of the same word`() = runTest {
+        initWith(verbWords(4))
+
+        val pastQuestions = collectAllQuestions().filter { it.formKey == FieldKey.PAST }
+
+        assertEquals(4, pastQuestions.size)
+        pastQuestions.forEach { question ->
+            val id = question.wordId.removePrefix("w-")
+            assertEquals("past-$id", question.question)
+            assertEquals("pastde-$id", question.answer)
+        }
+    }
+
+    @Test
+    fun `participle questions carry the auxiliary in both directions`() = runTest {
+        initWith(verbWords(4))
+
+        val participleQuestions = collectAllQuestions().filter { it.formKey == FieldKey.PARTICIPLE }
+
+        assertEquals(4, participleQuestions.size)
+        participleQuestions.forEach { question ->
+            val id = question.wordId.removePrefix("w-")
+            assertEquals("part-$id", question.question)
+            assertEquals("(sein) partde-$id", question.answer)
+        }
+    }
+
+    @Test
+    fun `no auxiliary-only question is generated`() = runTest {
+        initWith(verbWords(4))
+
+        assertTrue(collectAllQuestions().none { it.formKey == FieldKey.AUXILIARY })
+    }
+
+    @Test
+    fun `no form question is generated when only one side has the form`() = runTest {
+        val words = (1..4).map {
+            testWordUi(
+                wordId = "w-$it",
+                word = "verb-$it",
+                translation = "verbo-$it",
+                wordMeta = "{en;type=verb;past=past-$it}",
+                translationMeta = "{de;type=verb}",
+            )
+        }
+
+        initWith(words)
+
+        assertEquals(4, currentSuccess().size)
+    }
+
+    @Test
+    fun `form question choices are drawn from answers of the same form`() = runTest {
+        initWith(verbWords(4))
+        val pastAnswers = (1..4).map { "pastde-$it" }
+
+        repeat(currentSuccess().size) {
+            val current = currentSuccess().multipleChoiceCurrentQuestion
+            if (current.question.formKey == FieldKey.PAST) {
+                assertEquals(4, current.choices.size)
+                assertTrue(pastAnswers.containsAll(current.choices))
+            }
+            viewModel.onNextQuestionRequested()
+        }
     }
 
     // endregion

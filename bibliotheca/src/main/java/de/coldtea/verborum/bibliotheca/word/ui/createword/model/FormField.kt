@@ -22,15 +22,15 @@ sealed interface FormField {
     /** A single-line free-text form (plural, participle, feminine…). */
     data class TextForm(
         override val key: FieldKey,
-        @StringRes val labelRes: Int,
+        @StringRes val labelRes: Int = key.labelRes,
         @StringRes val hintRes: Int? = null,
     ) : FormField
 
     /** A pick-one control over literal words that are the same in any UI language (e.g. haben/sein). */
     data class ChoiceForm(
         override val key: FieldKey,
-        @StringRes val labelRes: Int,
         val options: List<String>,
+        @StringRes val labelRes: Int = key.labelRes,
     ) : FormField
 }
 
