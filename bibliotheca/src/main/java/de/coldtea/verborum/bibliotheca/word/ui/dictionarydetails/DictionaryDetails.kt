@@ -46,6 +46,7 @@ fun DictionaryDetailsScreen(
     onTestClicked: () -> Unit,
     onSelfPracticeClicked: () -> Unit,
     onCreateWordClicked: () -> Unit,
+    onEditWordClicked: (String) -> Unit = {},
 ) {
     val dictionaryDetailState =
         viewModel.dictionaryDetailState.collectAsState(initial = DictionaryDetailState.Loading).value
@@ -146,6 +147,7 @@ fun DictionaryDetailsScreen(
                             words.forEachIndexed { index, word ->
                                 WordListItem(
                                     word = word,
+                                    onEditClick = onEditWordClicked,
                                     onDeleteClick = viewModel::deleteWord,
                                 )
 

@@ -4,7 +4,9 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import de.coldtea.verborum.bibliotheca.dictionary.ui.DictionaryListScreen
 import de.coldtea.verborum.bibliotheca.dictionary.ui.createdictionary.CreateDictionaryScreen
 import de.coldtea.verborum.bibliotheca.word.ui.createword.CreateWordScreen
@@ -46,14 +48,25 @@ fun NavGraphBuilder.insertCreateDictionary(navController: NavHostController) = c
 }
 
 fun NavGraphBuilder.insertCreateWord(navController: NavHostController) = composable(
-    "$SCREEN_CREATE_WORD/{dictionaryId}"
+    route = "$SCREEN_CREATE_WORD/{dictionaryId}?wordId={wordId}",
+    arguments = listOf(
+        navArgument("wordId") {
+            type = NavType.StringType
+            nullable = true
+            defaultValue = null
+        }
+    )
 ) { navBackStackEntry ->
     val viewModel = hiltViewModel<CreateWordViewModel>()
     val dictionaryId: String = navBackStackEntry.arguments?.getString("dictionaryId").orEmpty()
+    val wordId: String? = navBackStackEntry.arguments?.getString("wordId")
 
-    viewModel.init(dictionaryId)
+    viewModel.init(dictionaryId, wordId)
 
-    CreateWordScreen(viewModel)
+    CreateWordScreen(
+        viewModel = viewModel,
+        onWordUpdated = { navController.popBackStack() },
+    )
 }
 
 fun NavGraphBuilder.insertDictionariesDetails(navController: NavHostController) = composable(
@@ -74,6 +87,9 @@ fun NavGraphBuilder.insertDictionariesDetails(navController: NavHostController) 
         },
         onCreateWordClicked = {
             navController.navigate("$SCREEN_CREATE_WORD/$dictionaryId")
+        },
+        onEditWordClicked = { wordId ->
+            navController.navigate("$SCREEN_CREATE_WORD/$dictionaryId?wordId=$wordId")
         }
     )
 }

@@ -114,4 +114,83 @@ class WordFormRulesTest : BaseTest() {
     }
 
     // endregion
+
+    // region parseWordFormInput — inverse of compose
+
+    @Test
+    fun `parseWordFormInput rebuilds a German noun input from its stored form`() {
+        val input = WordFormInput(
+            text = "Apfel",
+            gender = Gender.MASCULINE,
+            fields = mapOf(FieldKey.PLURAL to "Äpfel"),
+        )
+        val storedText = composeWordText("de", input)
+        val storedMeta = composeWordMeta("de", WordType.NOUN, input)
+
+        assertEquals(input, parseWordFormInput("de", storedText, storedMeta))
+    }
+
+    @Test
+    fun `parseWordFormInput rebuilds a French elided noun input`() {
+        val input = WordFormInput(text = "eau", gender = Gender.FEMININE)
+        val storedText = composeWordText("fr", input)
+        val storedMeta = composeWordMeta("fr", WordType.NOUN, input)
+
+        assertEquals("l'eau", storedText)
+        assertEquals(input, parseWordFormInput("fr", storedText, storedMeta))
+    }
+
+    @Test
+    fun `parseWordFormInput rebuilds a verb input including the auxiliary`() {
+        val input = WordFormInput(
+            text = "gehen",
+            fields = mapOf(
+                FieldKey.PAST to "ging",
+                FieldKey.PARTICIPLE to "gegangen",
+                FieldKey.AUXILIARY to "sein",
+            ),
+        )
+        val storedText = composeWordText("de", input)
+        val storedMeta = composeWordMeta("de", WordType.VERB, input)
+
+        assertEquals(input, parseWordFormInput("de", storedText, storedMeta))
+    }
+
+    @Test
+    fun `parseWordFormInput rebuilds a Lithuanian noun with gender but no article`() {
+        val input = WordFormInput(
+            text = "obuolys",
+            gender = Gender.MASCULINE,
+            fields = mapOf(FieldKey.PLURAL to "obuoliai"),
+        )
+        val storedText = composeWordText("lt", input)
+        val storedMeta = composeWordMeta("lt", WordType.NOUN, input)
+
+        assertEquals("obuolys", storedText)
+        assertEquals(input, parseWordFormInput("lt", storedText, storedMeta))
+    }
+
+    @Test
+    fun `parseWordFormInput returns bare text for a blank meta`() {
+        assertEquals(WordFormInput(text = "hello"), parseWordFormInput("en", "hello", ""))
+    }
+
+    // endregion
+
+    // region parseWordType
+
+    @Test
+    fun `parseWordType reads the type from the meta`() {
+        assertEquals(WordType.NOUN, parseWordType("{de;type=noun;gender=n}"))
+        assertEquals(WordType.VERB, parseWordType("{de;type=verb}"))
+        assertEquals(WordType.ADJECTIVE, parseWordType("{fr;type=adjective}"))
+    }
+
+    @Test
+    fun `parseWordType falls back to free text when the meta has no type`() {
+        assertEquals(WordType.FREE_TEXT, parseWordType("{de}"))
+        assertEquals(WordType.FREE_TEXT, parseWordType(""))
+    }
+
+    // endregion
 }

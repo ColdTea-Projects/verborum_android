@@ -2,6 +2,7 @@ package de.coldtea.verborum.bibliotheca.word.ui.createword
 
 import de.coldtea.verborum.bibliotheca.dictionary.domain.DictionaryService
 import de.coldtea.verborum.bibliotheca.testDictionaryUi
+import de.coldtea.verborum.bibliotheca.testWordUi
 import de.coldtea.verborum.bibliotheca.word.domain.WordService
 import de.coldtea.verborum.bibliotheca.word.domain.model.Word
 import de.coldtea.verborum.bibliotheca.word.ui.createword.model.CreateWordState
@@ -10,6 +11,7 @@ import de.coldtea.verborum.bibliotheca.word.ui.createword.model.Gender
 import de.coldtea.verborum.bibliotheca.word.ui.createword.model.WordFormInput
 import de.coldtea.verborum.bibliotheca.word.ui.createword.model.WordType
 import de.coldtea.verborum.core.BaseTest
+import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
@@ -57,6 +59,21 @@ class CreateWordViewModelTest : BaseTest() {
         viewModel.init(dictionaryId)
 
         assertEquals(CreateWordState.Success(dictionary), viewModel.createWordState.first())
+    }
+
+    @Test
+    fun `init with a wordId loads the word into the state for edit mode`() = runTest {
+        val dictionary = testDictionaryUi(dictionaryId = "dict-1")
+        val word = testWordUi(wordId = "word-1", dictionaryId = "dict-1")
+        every { dictionaryService.observeDictionary("dict-1") } returns flowOf(dictionary)
+        coEvery { wordService.getWord("word-1") } returns word
+
+        viewModel.init("dict-1", "word-1")
+
+        assertEquals(
+            CreateWordState.Success(dictionary, editingWord = word),
+            viewModel.createWordState.first(),
+        )
     }
 
     @Test
@@ -125,6 +142,36 @@ class CreateWordViewModelTest : BaseTest() {
         assertEquals("{de}", saved.wordMeta)
         assertEquals("How are you?", saved.translation)
         assertEquals("{en}", saved.translationMeta)
+    }
+
+    @Test
+    fun `saveWord in edit mode keeps the wordId level and createdAt of the edited word`() = runTest {
+        val dictionary = testDictionaryUi(dictionaryId = "dict-1", fromLang = "de", toLang = "en")
+        val editedWord = testWordUi(
+            wordId = "word-1",
+            dictionaryId = "dict-1",
+            level = 4,
+            createdAt = 1_000L,
+        )
+        every { dictionaryService.observeDictionary("dict-1") } returns flowOf(dictionary)
+        coEvery { wordService.getWord("word-1") } returns editedWord
+        viewModel.init("dict-1", "word-1")
+
+        val wordSlot = slot<Word>()
+
+        viewModel.saveWord(
+            wordType = WordType.NOUN,
+            sourceInput = WordFormInput(text = "Haus", gender = Gender.NEUTER),
+            targetInput = WordFormInput(text = "house"),
+        )
+
+        coVerify(exactly = 1) { wordService.saveWord(capture(wordSlot)) }
+        val saved = wordSlot.captured
+        assertEquals("word-1", saved.wordId)
+        assertEquals("das Haus", saved.word)
+        assertEquals(4, saved.level)
+        assertEquals(1_000L, saved.createdAt)
+        assertFalse(saved.isSynced)
     }
 
     @Test

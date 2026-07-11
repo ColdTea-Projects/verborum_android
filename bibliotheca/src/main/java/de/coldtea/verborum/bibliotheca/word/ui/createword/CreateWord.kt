@@ -15,6 +15,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -35,11 +36,14 @@ import de.coldtea.verborum.bibliotheca.word.ui.createword.model.CreateWordState
 import de.coldtea.verborum.bibliotheca.word.ui.createword.model.LanguageGrammar
 import de.coldtea.verborum.bibliotheca.word.ui.createword.model.WordFormInput
 import de.coldtea.verborum.bibliotheca.word.ui.createword.model.WordType
+import de.coldtea.verborum.bibliotheca.word.ui.createword.model.parseWordFormInput
+import de.coldtea.verborum.bibliotheca.word.ui.createword.model.parseWordType
 import de.coldtea.verborum.core.theme.VerborumTheme
 
 @Composable
 fun CreateWordScreen(
-    viewModel: CreateWordViewModel = hiltViewModel()
+    viewModel: CreateWordViewModel = hiltViewModel(),
+    onWordUpdated: () -> Unit = {},
 ) {
     val createWordState =
         viewModel.createWordState.collectAsState(initial = CreateWordState.Loading).value
@@ -50,6 +54,17 @@ fun CreateWordScreen(
 
     if (createWordState is CreateWordState.Success) {
         val dictionary = createWordState.dictionaryUi
+        val editingWord = createWordState.editingWord
+        val isEditing = editingWord != null
+
+        // Edit mode: prefill the form from the stored word once it is loaded.
+        LaunchedEffect(editingWord) {
+            editingWord?.let { word ->
+                selectedType = parseWordType(word.wordMeta)
+                sourceInput = parseWordFormInput(dictionary.fromLang, word.word, word.wordMeta)
+                targetInput = parseWordFormInput(dictionary.toLang, word.translation, word.translationMeta)
+            }
+        }
 
         Column(
             modifier = Modifier
@@ -62,7 +77,10 @@ fun CreateWordScreen(
 
             // Header
             Text(
-                text = stringResource(ResStrings.createWordScreenHeader),
+                text = stringResource(
+                    if (isEditing) ResStrings.createWordScreenHeaderEdit
+                    else ResStrings.createWordScreenHeader
+                ),
                 fontSize = 28.sp,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onBackground,
@@ -94,9 +112,16 @@ fun CreateWordScreen(
                 onTypeSelected = { wordType ->
                     if (wordType != selectedType) {
                         selectedType = wordType
-                        // Keep the typed words; clear only the type-specific grammatical fields.
-                        sourceInput = WordFormInput(text = sourceInput.text)
-                        targetInput = WordFormInput(text = targetInput.text)
+                        if (editingWord != null && wordType == parseWordType(editingWord.wordMeta)) {
+                            // Back on the edited word's own type: its stored grammar fits, so
+                            // restore every field just like the first opening.
+                            sourceInput = parseWordFormInput(dictionary.fromLang, editingWord.word, editingWord.wordMeta)
+                            targetInput = parseWordFormInput(dictionary.toLang, editingWord.translation, editingWord.translationMeta)
+                        } else {
+                            // Keep the typed words; clear the grammatical fields of the old type.
+                            sourceInput = WordFormInput(text = sourceInput.text)
+                            targetInput = WordFormInput(text = targetInput.text)
+                        }
                     }
                 },
                 modifier = Modifier.fillMaxWidth()
@@ -134,8 +159,12 @@ fun CreateWordScreen(
                             sourceInput = sourceInput,
                             targetInput = targetInput,
                         )
-                        sourceInput = WordFormInput()
-                        targetInput = WordFormInput()
+                        if (isEditing) {
+                            onWordUpdated()
+                        } else {
+                            sourceInput = WordFormInput()
+                            targetInput = WordFormInput()
+                        }
                     },
                     enabled = sourceInput.text.isNotBlank() && targetInput.text.isNotBlank(),
                     shape = RoundedCornerShape(16.dp),
@@ -148,7 +177,10 @@ fun CreateWordScreen(
                         .height(56.dp)
                 ) {
                     Text(
-                        text = stringResource(ResStrings.createWordScreenSave),
+                        text = stringResource(
+                            if (isEditing) ResStrings.createWordScreenUpdate
+                            else ResStrings.createWordScreenSave
+                        ),
                         fontSize = 16.sp,
                         fontWeight = FontWeight.SemiBold,
                         letterSpacing = 0.5.sp

@@ -26,10 +26,11 @@ class CreateWordViewModel @Inject constructor(
     private val _createWordState = MutableStateFlow<CreateWordState>(CreateWordState.Loading)
     val createWordState = _createWordState.asSharedFlow()
 
-    fun init(dictionaryId: String) {
+    fun init(dictionaryId: String, wordId: String? = null) {
         dictionaryService.observeDictionary(dictionaryId).observe(
             onSuccess = { dictionary ->
-                _createWordState.emit(CreateWordState.Success(dictionary))
+                val editingWord = wordId?.let { wordService.getWord(it) }
+                _createWordState.emit(CreateWordState.Success(dictionary, editingWord))
             },
             onError = {
                 _createWordState.emit(CreateWordState.Failed)
@@ -44,17 +45,20 @@ class CreateWordViewModel @Inject constructor(
     ) = viewModelScope.launch(exceptionHandler) {
         val state = _createWordState.value as? CreateWordState.Success ?: return@launch
         val dictionary = state.dictionaryUi
+        val editingWord = state.editingWord
 
+        // In edit mode the existing id routes SaveWordUseCase to an update; progress level and
+        // creation time carry over from the edited word.
         val word = Word(
-            wordId = "",
+            wordId = editingWord?.wordId.orEmpty(),
             dictionaryId = dictionary.dictionaryId,
             word = composeWordText(dictionary.fromLang, sourceInput),
             wordMeta = composeWordMeta(dictionary.fromLang, wordType, sourceInput),
             translation = composeWordText(dictionary.toLang, targetInput),
             translationMeta = composeWordMeta(dictionary.toLang, wordType, targetInput),
             isSynced = false,
-            level = 0,
-            createdAt = getNowInMillis(),
+            level = editingWord?.level ?: 0,
+            createdAt = editingWord?.createdAt ?: getNowInMillis(),
             updatedAt = getNowInMillis(),
         )
 

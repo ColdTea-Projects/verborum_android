@@ -181,6 +181,36 @@ class LanguageGrammarTest : BaseTest() {
 
     // endregion
 
+    // region extractBaseWord — inverse of composeSurface
+
+    @Test
+    fun `extractBaseWord strips the space-separated article`() {
+        assertEquals("Apfel", LanguageGrammar.extractBaseWord("de", "der Apfel"))
+        assertEquals("Haus", LanguageGrammar.extractBaseWord("de", "das Haus"))
+        assertEquals("casa", LanguageGrammar.extractBaseWord("es", "la casa"))
+        assertEquals("deur", LanguageGrammar.extractBaseWord("nl", "de deur"))
+    }
+
+    @Test
+    fun `extractBaseWord strips the elided French and Italian article`() {
+        assertEquals("eau", LanguageGrammar.extractBaseWord("fr", "l'eau"))
+        assertEquals("amico", LanguageGrammar.extractBaseWord("it", "l'amico"))
+    }
+
+    @Test
+    fun `extractBaseWord strips the Italian lo article`() {
+        assertEquals("studente", LanguageGrammar.extractBaseWord("it", "lo studente"))
+    }
+
+    @Test
+    fun `extractBaseWord leaves article-less words untouched`() {
+        assertEquals("elma", LanguageGrammar.extractBaseWord("tr", "elma"))
+        assertEquals("obuolys", LanguageGrammar.extractBaseWord("lt", "obuolys"))
+        assertEquals("go", LanguageGrammar.extractBaseWord("en", "go"))
+    }
+
+    // endregion
+
     // region noun hints
 
     @Test

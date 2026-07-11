@@ -23,6 +23,9 @@
     <string name="createDictionaryScreenToLanguage">To Language</string>
     <string name="createDictionaryScreenCreate">Create</string>
     <string name="createWordScreenHeader">Add New Word</string>
+    <string name="createWordScreenHeaderEdit">Edit Word</string>
+    <string name="createWordScreenUpdate">Update Word</string>
+    <string name="dictionaryDetailsScreenEditWord">Edit word</string>
     <string name="createWordScreenWordType">Word Type</string>
     <string name="createWordScreenTypeNoun">Noun</string>
     <string name="createWordScreenTypeVerb">Verb</string>

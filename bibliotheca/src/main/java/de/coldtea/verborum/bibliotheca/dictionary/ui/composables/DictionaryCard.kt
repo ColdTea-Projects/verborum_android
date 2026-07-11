@@ -153,7 +153,8 @@ fun DictionaryCard(
                     Icon(
                         painter = painterResource(ResDrawables.ic_delete_24),
                         contentDescription = stringResource(ResStrings.dictionaryListScreenDeleteDictionary),
-                        tint = MaterialTheme.colorScheme.error,
+                        // The drawable carries its own colors — don't tint over them.
+                        tint = Color.Unspecified,
                         modifier = Modifier.size(24.dp)
                     )
                 }

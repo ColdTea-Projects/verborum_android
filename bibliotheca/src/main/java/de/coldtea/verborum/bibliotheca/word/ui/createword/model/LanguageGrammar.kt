@@ -165,6 +165,28 @@ object LanguageGrammar {
     // "l'" attaches with no following space; every other article is space-separated.
     private fun collapseElision(text: String): String = text.replace("' ", "'")
 
+    /**
+     * Inverse of [composeSurface]: strips the language's article from a stored surface form so it
+     * can be edited ("der Apfel" → "Apfel", "l'eau" → "eau", "lo studente" → "studente").
+     * Returns the input untouched when no known article prefix matches.
+     */
+    fun extractBaseWord(languageCode: String, surface: String): String {
+        val code = languageCode.lowercase()
+        val trimmed = surface.trim()
+
+        if ((code == FR || code == IT) && trimmed.startsWith("l'")) {
+            return trimmed.removePrefix("l'")
+        }
+
+        val articles = articlesByLanguage[code]?.values.orEmpty() +
+            listOfNotNull("lo".takeIf { code == IT })
+        articles.forEach { article ->
+            if (trimmed.startsWith("$article ")) return trimmed.removePrefix("$article ")
+        }
+
+        return trimmed
+    }
+
     private fun italianArticle(gender: Gender, word: String): String = when (gender) {
         Gender.FEMININE -> if (startsWithVowelSound(word)) "l'" else "la"
         else -> when {

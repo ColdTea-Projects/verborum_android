@@ -18,6 +18,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -33,6 +34,7 @@ import de.coldtea.verborum.core.theme.VerborumTheme
 fun WordListItem(
     modifier: Modifier = Modifier,
     word: WordUi,
+    onEditClick: (String) -> Unit = {},
     onDeleteClick: (String) -> Unit = {},
 ) {
     Surface(
@@ -70,13 +72,25 @@ fun WordListItem(
                     color = MaterialTheme.colorScheme.onSurface
                 )
 
-                IconButton(onClick = { onDeleteClick(word.wordId) }) {
-                    Icon(
-                        painter = painterResource(ResDrawables.ic_delete_24),
-                        contentDescription = stringResource(ResStrings.dictionaryDetailsScreenDeleteWord),
-                        tint = MaterialTheme.colorScheme.error,
-                        modifier = Modifier.size(20.dp)
-                    )
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    IconButton(onClick = { onEditClick(word.wordId) }) {
+                        Icon(
+                            painter = painterResource(ResDrawables.ic_edit_24),
+                            contentDescription = stringResource(ResStrings.dictionaryDetailsScreenEditWord),
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                            modifier = Modifier.size(20.dp)
+                        )
+                    }
+
+                    IconButton(onClick = { onDeleteClick(word.wordId) }) {
+                        Icon(
+                            painter = painterResource(ResDrawables.ic_delete_24),
+                            contentDescription = stringResource(ResStrings.dictionaryDetailsScreenDeleteWord),
+                            // The drawable carries its own colors — don't tint over them.
+                            tint = Color.Unspecified,
+                            modifier = Modifier.size(20.dp)
+                        )
+                    }
                 }
             }
         }

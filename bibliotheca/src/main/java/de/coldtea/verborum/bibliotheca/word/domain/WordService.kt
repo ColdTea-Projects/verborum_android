@@ -7,6 +7,7 @@ import de.coldtea.verborum.bibliotheca.word.domain.usecase.api.DeleteWordApiUseC
 import de.coldtea.verborum.bibliotheca.word.domain.usecase.api.DeleteWordByDictionaryIdApiUseCase
 import de.coldtea.verborum.bibliotheca.word.domain.usecase.local.DeleteWordByDictionaryIdUseCase
 import de.coldtea.verborum.bibliotheca.word.domain.usecase.local.DeleteWordUseCase
+import de.coldtea.verborum.bibliotheca.word.domain.usecase.local.GetWordUseCase
 import de.coldtea.verborum.bibliotheca.word.domain.usecase.local.MarkWordDeletedUseCase
 import de.coldtea.verborum.bibliotheca.word.domain.usecase.local.ObserveWordsByDictionaryUseCase
 import de.coldtea.verborum.bibliotheca.word.domain.usecase.local.SaveWordUseCase
@@ -25,6 +26,7 @@ class WordService @Inject constructor(
     private val deleteWordApiUseCase: DeleteWordApiUseCase,
     private val deleteWordUseCase: DeleteWordUseCase,
     private val markWordDeletedUseCase: MarkWordDeletedUseCase,
+    private val getWordUseCase: GetWordUseCase,
     private val saveWordUseCase: SaveWordUseCase,
     private val syncService: SyncService,
     private val uploadService: UploadService,
@@ -36,6 +38,9 @@ class WordService @Inject constructor(
             .map { it.map(Word::convertToUi) }
             .distinctUntilChanged()
             .flowOn(Dispatchers.IO)
+
+    suspend fun getWord(wordId: String): WordUi =
+        getWordUseCase.invoke(wordId).convertToUi()
 
     suspend fun saveWord(word: Word){
         saveWordUseCase.invoke(word)

@@ -9,6 +9,7 @@ import de.coldtea.verborum.bibliotheca.word.domain.usecase.api.DeleteWordApiUseC
 import de.coldtea.verborum.bibliotheca.word.domain.usecase.api.DeleteWordByDictionaryIdApiUseCase
 import de.coldtea.verborum.bibliotheca.word.domain.usecase.local.DeleteWordByDictionaryIdUseCase
 import de.coldtea.verborum.bibliotheca.word.domain.usecase.local.DeleteWordUseCase
+import de.coldtea.verborum.bibliotheca.word.domain.usecase.local.GetWordUseCase
 import de.coldtea.verborum.bibliotheca.word.domain.usecase.local.MarkWordDeletedUseCase
 import de.coldtea.verborum.bibliotheca.word.domain.usecase.local.ObserveWordsByDictionaryUseCase
 import de.coldtea.verborum.bibliotheca.word.domain.usecase.local.SaveWordUseCase
@@ -54,6 +55,10 @@ class WordServiceTest : BaseTest() {
     @MockK(relaxed = true)
     private lateinit var markWordDeletedUseCase: MarkWordDeletedUseCase
 
+    // invoke returns Word — stubbed per test with coEvery.
+    @MockK
+    private lateinit var getWordUseCase: GetWordUseCase
+
     @MockK
     private lateinit var saveWordUseCase: SaveWordUseCase
 
@@ -77,6 +82,7 @@ class WordServiceTest : BaseTest() {
             deleteWordApiUseCase = deleteWordApiUseCase,
             deleteWordUseCase = deleteWordUseCase,
             markWordDeletedUseCase = markWordDeletedUseCase,
+            getWordUseCase = getWordUseCase,
             saveWordUseCase = saveWordUseCase,
             syncService = syncService,
             uploadService = uploadService,
@@ -141,6 +147,20 @@ class WordServiceTest : BaseTest() {
         assertEquals(2, emissions.size)
         assertEquals(0, emissions[0].first().level)
         assertEquals(1, emissions[1].first().level)
+    }
+
+    // endregion
+
+    // region getWord
+
+    @Test
+    fun `getWord maps the domain word to WordUi`() = runTest {
+        val word = testWord(wordId = "word-1")
+        coEvery { getWordUseCase.invoke("word-1") } returns word
+
+        val result = wordService.getWord("word-1")
+
+        assertEquals(word.convertToUi(), result)
     }
 
     // endregion
