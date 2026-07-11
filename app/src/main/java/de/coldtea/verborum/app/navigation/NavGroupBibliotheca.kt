@@ -90,6 +90,9 @@ fun NavGraphBuilder.insertDictionariesDetails(navController: NavHostController) 
         },
         onEditWordClicked = { wordId ->
             navController.navigate("$SCREEN_CREATE_WORD/$dictionaryId?wordId=$wordId")
+        },
+        onDictionaryDeleted = {
+            navController.popBackStack()
         }
     )
 }

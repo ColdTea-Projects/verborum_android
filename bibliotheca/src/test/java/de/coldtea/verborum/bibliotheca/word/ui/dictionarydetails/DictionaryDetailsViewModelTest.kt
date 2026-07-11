@@ -7,6 +7,7 @@ import de.coldtea.verborum.bibliotheca.word.domain.WordService
 import de.coldtea.verborum.bibliotheca.word.ui.dictionarydetails.model.DictionaryDetailState
 import de.coldtea.verborum.core.BaseTest
 import io.mockk.coVerify
+import io.mockk.coVerifyOrder
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import kotlinx.coroutines.flow.first
@@ -112,6 +113,39 @@ class DictionaryDetailsViewModelTest : BaseTest() {
         viewModel.deleteWord("word-1")
 
         coVerify(exactly = 1) { wordService.deleteWord("word-1") }
+    }
+
+    // endregion
+
+    // region deleteDictionary
+
+    private fun initSuccess(dictionaryId: String = "dict-1") {
+        every { dictionaryService.observeDictionary(dictionaryId) } returns
+            flowOf(testDictionaryUi(dictionaryId = dictionaryId))
+        every { wordService.observeWordsByDictionary(dictionaryId) } returns flowOf(emptyList())
+        viewModel.init(dictionaryId)
+    }
+
+    @Test
+    fun `deleteDictionary tombstones first then cleans words then deletes the dictionary`() = runTest {
+        initSuccess("dict-1")
+
+        viewModel.deleteDictionary()
+
+        coVerifyOrder {
+            dictionaryService.markDictionaryDeleted("dict-1")
+            wordService.cleanWordsInDictionary("dict-1")
+            dictionaryService.deleteDictionary("dict-1")
+        }
+    }
+
+    @Test
+    fun `deleteDictionary does nothing when state is not Success`() = runTest {
+        // init() was never called — state is still Loading.
+        viewModel.deleteDictionary()
+
+        coVerify(exactly = 0) { dictionaryService.markDictionaryDeleted(any()) }
+        coVerify(exactly = 0) { dictionaryService.deleteDictionary(any()) }
     }
 
     // endregion

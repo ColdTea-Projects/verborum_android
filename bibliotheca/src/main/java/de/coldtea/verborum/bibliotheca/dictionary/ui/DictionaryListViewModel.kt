@@ -9,6 +9,7 @@ import de.coldtea.verborum.bibliotheca.word.domain.WordService
 import de.coldtea.verborum.core.ui.BaseViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -24,23 +25,20 @@ class DictionaryListViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            dictionaryService.observeDictionaries().observe(
-                onSuccess = { dictionary ->
-                    _dictionariesState.emit(dictionary)
+            combine(
+                dictionaryService.observeDictionaries(),
+                wordService.observeWordCounts(),
+            ) { dictionaries, wordCounts ->
+                dictionaries.map { it.copy(wordCount = wordCounts[it.dictionaryId] ?: 0) }
+            }.observe(
+                onSuccess = { dictionaries ->
+                    _dictionariesState.emit(dictionaries)
                 },
                 onError = {
                     _snackbarMessages.emit("Dictionaries could not be loaded")
                 }
             )
-             syncService.syncDictionaries()
+            syncService.syncDictionaries()
         }
-    }
-
-    fun deleteDictionary(dictionaryId: String) = viewModelScope.launch(exceptionHandler) {
-        // Tombstone first: the dictionary disappears immediately and survives offline —
-        // the server delete below may fail and will then be retried by the sync upload phase.
-        dictionaryService.markDictionaryDeleted(dictionaryId)
-        wordService.cleanWordsInDictionary(dictionaryId)
-        dictionaryService.deleteDictionary(dictionaryId)
     }
 }

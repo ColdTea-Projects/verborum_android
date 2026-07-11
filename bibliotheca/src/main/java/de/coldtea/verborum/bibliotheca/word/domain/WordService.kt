@@ -9,6 +9,7 @@ import de.coldtea.verborum.bibliotheca.word.domain.usecase.local.DeleteWordByDic
 import de.coldtea.verborum.bibliotheca.word.domain.usecase.local.DeleteWordUseCase
 import de.coldtea.verborum.bibliotheca.word.domain.usecase.local.GetWordUseCase
 import de.coldtea.verborum.bibliotheca.word.domain.usecase.local.MarkWordDeletedUseCase
+import de.coldtea.verborum.bibliotheca.word.domain.usecase.local.ObserveWordCountsUseCase
 import de.coldtea.verborum.bibliotheca.word.domain.usecase.local.ObserveWordsByDictionaryUseCase
 import de.coldtea.verborum.bibliotheca.word.domain.usecase.local.SaveWordUseCase
 import de.coldtea.verborum.bibliotheca.word.ui.model.WordUi
@@ -21,6 +22,7 @@ import javax.inject.Inject
 
 class WordService @Inject constructor(
     private val observeWordsByDictionaryUseCase: ObserveWordsByDictionaryUseCase,
+    private val observeWordCountsUseCase: ObserveWordCountsUseCase,
     private val deleteWordByDictionaryIdApiUseCase: DeleteWordByDictionaryIdApiUseCase,
     private val deleteWordByDictionaryIdUseCase: DeleteWordByDictionaryIdUseCase,
     private val deleteWordApiUseCase: DeleteWordApiUseCase,
@@ -36,6 +38,13 @@ class WordService @Inject constructor(
         observeWordsByDictionaryUseCase
             .invoke(dictionaryId)
             .map { it.map(Word::convertToUi) }
+            .distinctUntilChanged()
+            .flowOn(Dispatchers.IO)
+
+    /** Word count per dictionary id, for the dictionary list. */
+    fun observeWordCounts(): Flow<Map<String, Int>> =
+        observeWordCountsUseCase
+            .invoke()
             .distinctUntilChanged()
             .flowOn(Dispatchers.IO)
 

@@ -56,7 +56,7 @@ fun IconOnTopButton(
     
     Surface(
         modifier = modifier
-            .aspectRatio(1f)
+            .aspectRatio(1.6f)
             .clickable {
                 isPressed = !isPressed
                 onClick()

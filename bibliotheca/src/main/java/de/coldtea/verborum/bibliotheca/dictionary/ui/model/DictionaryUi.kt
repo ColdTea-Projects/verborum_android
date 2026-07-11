@@ -11,6 +11,8 @@ data class DictionaryUi(
     val toLang: String,
     val createdAt: Long,
     val updatedAt: Long,
+    // UI-only: live word count, populated by combining with word data (0 when unknown).
+    val wordCount: Int = 0,
 ) {
     fun convertToDictionary() = Dictionary(
         dictionaryId = dictionaryId,

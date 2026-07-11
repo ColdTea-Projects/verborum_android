@@ -11,6 +11,7 @@ import de.coldtea.verborum.bibliotheca.word.domain.usecase.local.DeleteWordByDic
 import de.coldtea.verborum.bibliotheca.word.domain.usecase.local.DeleteWordUseCase
 import de.coldtea.verborum.bibliotheca.word.domain.usecase.local.GetWordUseCase
 import de.coldtea.verborum.bibliotheca.word.domain.usecase.local.MarkWordDeletedUseCase
+import de.coldtea.verborum.bibliotheca.word.domain.usecase.local.ObserveWordCountsUseCase
 import de.coldtea.verborum.bibliotheca.word.domain.usecase.local.ObserveWordsByDictionaryUseCase
 import de.coldtea.verborum.bibliotheca.word.domain.usecase.local.SaveWordUseCase
 import de.coldtea.verborum.bibliotheca.word.ui.model.WordUi
@@ -34,6 +35,9 @@ class WordServiceTest : BaseTest() {
 
     @MockK
     private lateinit var observeWordsByDictionaryUseCase: ObserveWordsByDictionaryUseCase
+
+    @MockK
+    private lateinit var observeWordCountsUseCase: ObserveWordCountsUseCase
 
     // invoke returns Response<Unit> — not covered by relaxUnitFun, so relax fully for verify-only use.
     @MockK(relaxed = true)
@@ -77,6 +81,7 @@ class WordServiceTest : BaseTest() {
         super.setUp()
         wordService = WordService(
             observeWordsByDictionaryUseCase = observeWordsByDictionaryUseCase,
+            observeWordCountsUseCase = observeWordCountsUseCase,
             deleteWordByDictionaryIdApiUseCase = deleteWordByDictionaryIdApiUseCase,
             deleteWordByDictionaryIdUseCase = deleteWordByDictionaryIdUseCase,
             deleteWordApiUseCase = deleteWordApiUseCase,
@@ -147,6 +152,20 @@ class WordServiceTest : BaseTest() {
         assertEquals(2, emissions.size)
         assertEquals(0, emissions[0].first().level)
         assertEquals(1, emissions[1].first().level)
+    }
+
+    // endregion
+
+    // region observeWordCounts
+
+    @Test
+    fun `observeWordCounts delegates to the use case`() = runTest {
+        val counts = mapOf("dict-1" to 3, "dict-2" to 7)
+        every { observeWordCountsUseCase.invoke() } returns flowOf(counts)
+
+        val result = wordService.observeWordCounts().first()
+
+        assertEquals(counts, result)
     }
 
     // endregion

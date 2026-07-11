@@ -41,4 +41,18 @@ class DictionaryDetailsViewModel @Inject constructor(
     fun deleteWord(wordId: String) = viewModelScope.launch(exceptionHandler) {
         wordService.deleteWord(wordId)
     }
+
+    /**
+     * Tombstones the dictionary first so it disappears immediately and offline-safely, then cleans
+     * its words and performs the server-confirmed delete. A failed network call leaves the
+     * tombstone for the sync upload phase to retry.
+     */
+    fun deleteDictionary() = viewModelScope.launch(exceptionHandler) {
+        val state = _dictionaryDetailState.value as? DictionaryDetailState.Success ?: return@launch
+        val dictionaryId = state.dictionaryUi.dictionaryId
+
+        dictionaryService.markDictionaryDeleted(dictionaryId)
+        wordService.cleanWordsInDictionary(dictionaryId)
+        dictionaryService.deleteDictionary(dictionaryId)
+    }
 }

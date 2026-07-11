@@ -19,11 +19,11 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.ripple
+import android.text.format.DateUtils
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -33,13 +33,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import de.coldtea.verborum.bibliotheca.common.utils.ResDrawables
-import de.coldtea.verborum.bibliotheca.common.utils.ResStrings
+import de.coldtea.verborum.bibliotheca.common.utils.ResPlurals
 import de.coldtea.verborum.bibliotheca.dictionary.ui.model.DictionaryUi
 import de.coldtea.verborum.core.theme.VerborumTheme
 
@@ -48,7 +48,6 @@ fun DictionaryCard(
     modifier: Modifier = Modifier,
     dictionary: DictionaryUi,
     index: Int,
-    onDeleteClick: (DictionaryUi) -> Unit = {},
     onClick: (String) -> Unit,
 ) {
     var isPressed by remember { mutableStateOf(false) }
@@ -131,7 +130,11 @@ fun DictionaryCard(
                         modifier = Modifier.padding(top = 8.dp)
                     ) {
                         Text(
-                            text = "10 words",//TODO: get word count
+                            text = pluralStringResource(
+                                ResPlurals.dictionaryListScreenWordCount,
+                                dictionary.wordCount,
+                                dictionary.wordCount,
+                            ),
                             fontSize = 14.sp,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -141,22 +144,11 @@ fun DictionaryCard(
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                         Text(
-                            text = "Some time ago",//TODO: get last visit time
+                            text = relativeTimeAgo(dictionary.createdAt),
                             fontSize = 14.sp,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
-                }
-
-                // Delete
-                IconButton(onClick = { onDeleteClick(dictionary) }) {
-                    Icon(
-                        painter = painterResource(ResDrawables.ic_delete_24),
-                        contentDescription = stringResource(ResStrings.dictionaryListScreenDeleteDictionary),
-                        // The drawable carries its own colors — don't tint over them.
-                        tint = MaterialTheme.colorScheme.error,
-                        modifier = Modifier.size(24.dp)
-                    )
                 }
 
                 // Chevron
@@ -171,6 +163,17 @@ fun DictionaryCard(
     }
 }
 
+// "3 days ago", "5 minutes ago", … localized by the platform; recomputed only when createdAt changes.
+@Composable
+private fun relativeTimeAgo(createdAt: Long): String =
+    remember(createdAt) {
+        DateUtils.getRelativeTimeSpanString(
+            createdAt,
+            System.currentTimeMillis(),
+            DateUtils.MINUTE_IN_MILLIS,
+        ).toString()
+    }
+
 @PreviewLightDark
 @Composable
 fun PreviewDictionaryCardLight() {
@@ -183,8 +186,9 @@ fun PreviewDictionaryCardLight() {
                 isPublic = false,
                 fromLang = "EN",
                 toLang = "DE",
-                createdAt = 0L,
+                createdAt = System.currentTimeMillis() - 3 * DateUtils.DAY_IN_MILLIS,
                 updatedAt = 0L,
+                wordCount = 12,
             ),
             index = 0,
         ) { }

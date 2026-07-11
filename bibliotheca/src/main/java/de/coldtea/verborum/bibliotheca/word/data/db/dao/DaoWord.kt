@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
 import de.coldtea.verborum.bibliotheca.common.data.db.DaoBase
+import de.coldtea.verborum.bibliotheca.word.data.db.entity.DictionaryWordCount
 import de.coldtea.verborum.bibliotheca.word.data.db.entity.WordEntity
 import kotlinx.coroutines.flow.Flow
 
@@ -18,6 +19,13 @@ interface DaoWord: DaoBase<WordEntity> {
     @Transaction
     @Query("SELECT * FROM word WHERE fk_dictionary_id = :dictionaryId AND is_deleted = 0")
     fun observeWordsByDictionary(dictionaryId: String): Flow<List<WordEntity>>
+
+    // Live word count per dictionary; tombstoned rows are excluded.
+    @Query(
+        "SELECT fk_dictionary_id, COUNT(*) AS word_count FROM word " +
+            "WHERE is_deleted = 0 GROUP BY fk_dictionary_id"
+    )
+    fun observeWordCounts(): Flow<List<DictionaryWordCount>>
 
     @Transaction
     @Query("UPDATE word SET is_deleted = 1 WHERE word_id = :wordId")

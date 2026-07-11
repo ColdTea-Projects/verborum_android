@@ -14,14 +14,21 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -47,11 +54,14 @@ fun DictionaryDetailsScreen(
     onSelfPracticeClicked: () -> Unit,
     onCreateWordClicked: () -> Unit,
     onEditWordClicked: (String) -> Unit = {},
+    onDictionaryDeleted: () -> Unit = {},
 ) {
     val dictionaryDetailState =
         viewModel.dictionaryDetailState.collectAsState(initial = DictionaryDetailState.Loading).value
 
-    LazyColumn(
+    var showDeleteDialog by remember { mutableStateOf(false) }
+
+    Column(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
@@ -61,139 +71,209 @@ fun DictionaryDetailsScreen(
             val dictionary = dictionaryDetailState.dictionaryUi
             val words = dictionaryDetailState.wordsUi
 
-            item {
-                Spacer(modifier = Modifier.height(8.dp))
+            LazyColumn(
+                modifier = Modifier.weight(1f)
+            ) {
+                item {
+                    Spacer(modifier = Modifier.height(8.dp))
 
-                // Header
-                Text(
-                    text = dictionary.name,
-                    fontSize = 28.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onBackground,
-                    letterSpacing = 0.5.sp
-                )
-                val headerSubtext =
-                    if (words.isEmpty()) stringResource(ResStrings.dictionaryDetailsScreenWordListZeroItem)
-                    else pluralStringResource(
-                        ResPlurals.dictionaryDetailsScreenWordListCount,
-                        words.size,
-                        words.size,
+                    // Header
+                    Text(
+                        text = dictionary.name,
+                        fontSize = 28.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onBackground,
+                        letterSpacing = 0.5.sp
                     )
-
-                Text(
-                    text = headerSubtext,
-                    fontSize = 14.sp,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.padding(top = 4.dp)
-                )
-
-                Spacer(modifier = Modifier.height(24.dp))
-            }
-
-            // Practice Mode Buttons
-            item {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(16.dp)
-                ) {
-                    PracticeModeButton(
-                        text = stringResource(ResStrings.dictionaryDetailsScreenTest),
-                        iconRes = ResDrawables.ic_check_square_24,
-                        backgroundColor = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.weight(1f),
-                        onClick = onTestClicked
-                    )
-
-                    PracticeModeButton(
-                        text = stringResource(ResStrings.dictionaryDetailsScreenSelf),
-                        iconRes = ResDrawables.ic_play_24,
-                        backgroundColor = MaterialTheme.colorScheme.secondary,
-                        modifier = Modifier.weight(1f),
-                        onClick = onSelfPracticeClicked
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(32.dp))
-            }
-
-            // Word List Section
-            item {
-                Surface(
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(16.dp),
-                    color = MaterialTheme.colorScheme.surface,
-                    tonalElevation = 0.dp,
-                    shadowElevation = 0.dp,
-                    border = BorderStroke(
-                        1.dp,
-                        MaterialTheme.colorScheme.outline
-                    )
-                ) {
-                    Column(
-                        modifier = Modifier.padding(20.dp)
-                    ) {
-                        Text(
-                            text = stringResource(ResStrings.dictionaryDetailsScreenWordListHeader),
-                            fontSize = 12.sp,
-                            fontWeight = FontWeight.SemiBold,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            letterSpacing = 1.sp,
-                            modifier = Modifier.padding(bottom = 16.dp)
+                    val headerSubtext =
+                        if (words.isEmpty()) stringResource(ResStrings.dictionaryDetailsScreenWordListZeroItem)
+                        else pluralStringResource(
+                            ResPlurals.dictionaryDetailsScreenWordListCount,
+                            words.size,
+                            words.size,
                         )
 
-                        Column(
-                            verticalArrangement = Arrangement.spacedBy(8.dp)
-                        ) {
-                            words.forEachIndexed { index, word ->
-                                WordListItem(
-                                    word = word,
-                                    onEditClick = onEditWordClicked,
-                                    onDeleteClick = viewModel::deleteWord,
-                                )
+                    Text(
+                        text = headerSubtext,
+                        fontSize = 14.sp,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.padding(top = 4.dp)
+                    )
 
-                                if (index < words.size - 1) {
-                                    Spacer(modifier = Modifier.height(0.dp))
+                    Spacer(modifier = Modifier.height(24.dp))
+                }
+
+                // Practice Mode Buttons
+                item {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(16.dp)
+                    ) {
+                        PracticeModeButton(
+                            text = stringResource(ResStrings.dictionaryDetailsScreenTest),
+                            iconRes = ResDrawables.ic_check_square_24,
+                            backgroundColor = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier.weight(1f),
+                            onClick = onTestClicked
+                        )
+
+                        PracticeModeButton(
+                            text = stringResource(ResStrings.dictionaryDetailsScreenSelf),
+                            iconRes = ResDrawables.ic_play_24,
+                            backgroundColor = MaterialTheme.colorScheme.secondary,
+                            modifier = Modifier.weight(1f),
+                            onClick = onSelfPracticeClicked
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(32.dp))
+                }
+
+                // Word List Section
+                item {
+                    Surface(
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(16.dp),
+                        color = MaterialTheme.colorScheme.surface,
+                        tonalElevation = 0.dp,
+                        shadowElevation = 0.dp,
+                        border = BorderStroke(
+                            1.dp,
+                            MaterialTheme.colorScheme.outline
+                        )
+                    ) {
+                        Column(
+                            modifier = Modifier.padding(20.dp)
+                        ) {
+                            Text(
+                                text = stringResource(ResStrings.dictionaryDetailsScreenWordListHeader),
+                                fontSize = 12.sp,
+                                fontWeight = FontWeight.SemiBold,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                letterSpacing = 1.sp,
+                                modifier = Modifier.padding(bottom = 16.dp)
+                            )
+
+                            Column(
+                                verticalArrangement = Arrangement.spacedBy(8.dp)
+                            ) {
+                                words.forEach { word ->
+                                    WordListItem(
+                                        word = word,
+                                        onEditClick = onEditWordClicked,
+                                        onDeleteClick = viewModel::deleteWord,
+                                    )
                                 }
                             }
                         }
                     }
-                }
 
-                Spacer(modifier = Modifier.height(24.dp))
+                    Spacer(modifier = Modifier.height(24.dp))
+                }
             }
 
-            // Create Word Button
-            item {
-                OutlinedButton(
-                    onClick = onCreateWordClicked,
-                    shape = RoundedCornerShape(16.dp),
-                    border = BorderStroke(2.dp, MaterialTheme.colorScheme.primary),
-                    colors = ButtonDefaults.outlinedButtonColors(
-                        containerColor = Color.Transparent,
-                        contentColor = MaterialTheme.colorScheme.primary,
-                    ),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(56.dp)
-                ) {
-                    Icon(
-                        painter = painterResource(ResDrawables.ic_plus_24),
-                        contentDescription = null,
-                        modifier = Modifier.size(18.dp)
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(
-                        text = stringResource(ResStrings.dictionaryDetailsScreenCreateWord),
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        letterSpacing = 0.5.sp
-                    )
-                }
+            // Sticky bottom actions
+            OutlinedButton(
+                onClick = onCreateWordClicked,
+                shape = RoundedCornerShape(16.dp),
+                border = BorderStroke(2.dp, MaterialTheme.colorScheme.primary),
+                colors = ButtonDefaults.outlinedButtonColors(
+                    containerColor = Color.Transparent,
+                    contentColor = MaterialTheme.colorScheme.primary,
+                ),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 8.dp)
+                    .height(56.dp)
+            ) {
+                Icon(
+                    painter = painterResource(ResDrawables.ic_plus_24),
+                    contentDescription = null,
+                    modifier = Modifier.size(18.dp)
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = stringResource(ResStrings.dictionaryDetailsScreenCreateWord),
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    letterSpacing = 0.5.sp
+                )
+            }
 
-                Spacer(modifier = Modifier.height(24.dp))
+            Button(
+                onClick = { showDeleteDialog = true },
+                shape = RoundedCornerShape(16.dp),
+                colors = ButtonDefaults.outlinedButtonColors(
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = MaterialTheme.colorScheme.surface,
+                ),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 12.dp, bottom = 16.dp)
+                    .height(56.dp)
+            ) {
+                Icon(
+                    painter = painterResource(ResDrawables.ic_delete_24),
+                    contentDescription = null,
+                    // Inherits the button's error content color to match the red text.
+                    tint = MaterialTheme.colorScheme.error,
+                    modifier = Modifier.size(20.dp)
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = stringResource(ResStrings.dictionaryDetailsScreenDeleteDictionary),
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    letterSpacing = 0.5.sp
+                )
+            }
+
+            if (showDeleteDialog) {
+                DeleteDictionaryDialog(
+                    dictionaryName = dictionary.name,
+                    onConfirm = {
+                        showDeleteDialog = false
+                        viewModel.deleteDictionary()
+                        onDictionaryDeleted()
+                    },
+                    onDismiss = { showDeleteDialog = false },
+                )
             }
         }
     }
+}
+
+@Composable
+private fun DeleteDictionaryDialog(
+    dictionaryName: String,
+    onConfirm: () -> Unit,
+    onDismiss: () -> Unit,
+) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(text = stringResource(ResStrings.dictionaryDetailsScreenDeleteDialogTitle)) },
+        text = {
+            Text(
+                text = stringResource(
+                    ResStrings.dictionaryDetailsScreenDeleteDialogMessage,
+                    dictionaryName,
+                )
+            )
+        },
+        confirmButton = {
+            TextButton(onClick = onConfirm) {
+                Text(
+                    text = stringResource(ResStrings.dictionaryDetailsScreenDeleteDialogConfirm),
+                    color = MaterialTheme.colorScheme.error,
+                )
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text(text = stringResource(ResStrings.dictionaryDetailsScreenDeleteDialogCancel))
+            }
+        },
+    )
 }
 
 @Preview
