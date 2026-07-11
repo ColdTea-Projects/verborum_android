@@ -46,6 +46,15 @@
     <string name="createWordScreenAuxiliaryLabel">Auxiliary</string>
     <string name="createWordScreenIrregularHint">only if irregular</string>
     <string name="createWordScreenSave">Save Word</string>
+    <string name="welcomeScreenTitleIntro">Welcome to Verborum</string>
+    <string name="welcomeScreenDescriptionIntro">Your personal vocabulary library. Build dictionaries, collect words and make them stick.</string>
+    <string name="welcomeScreenTitleLibrary">Build your library</string>
+    <string name="welcomeScreenDescriptionLibrary">Create a dictionary for any language pair, then add words together with their grammar — articles, plurals, verb forms and more.</string>
+    <string name="welcomeScreenTitleTest">Test yourself</string>
+    <string name="welcomeScreenDescriptionTest">Take multiple-choice tests on your words. Every form you entered gets its own question, and correct answers raise a word\'s level.</string>
+    <string name="welcomeScreenTitlePractice">Practice with a swipe</string>
+    <string name="welcomeScreenDescriptionPractice">In self practice, tap a card to reveal the translation. Swipe right when you know the word, swipe left when you need more practice.</string>
+    <string name="welcomeScreenDone">I am done</string>
     <string name="languageEnglish">English</string>
     <string name="languageGerman">German</string>
     <string name="languageFrench">French</string>

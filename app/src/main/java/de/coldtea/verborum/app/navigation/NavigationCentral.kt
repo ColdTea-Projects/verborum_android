@@ -24,19 +24,26 @@ import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 
 @Composable
-fun NavigationCentral() {
+fun NavigationCentral(showWelcome: Boolean = false) {
     val navController = rememberNavController()
     val snackbarHostState = remember { SnackbarHostState() }
 
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val isOnWelcomeScreen = navBackStackEntry?.destination?.route == SCREEN_WELCOME
+
     Scaffold(
-        bottomBar = { VerborumNavigationBar(navController) },
+        // The welcome tour is full screen — no bottom navigation until it is done.
+        bottomBar = { if (!isOnWelcomeScreen) VerborumNavigationBar(navController) },
         snackbarHost = { SnackbarHost(snackbarHostState) },
     ) { innerPadding ->
-//        val context = LocalContext.current
         // Apply the padding globally to the whole BottomNavScreensController
         Box(modifier = Modifier.padding(innerPadding)) {
             NavHost(navController = navController, startDestination = GROUP_BIBLIOTHECA) {
-                navigation(startDestination = SCREEN_DICTIONARIES_LIST, route = GROUP_BIBLIOTHECA) {
+                navigation(
+                    startDestination = if (showWelcome) SCREEN_WELCOME else SCREEN_DICTIONARIES_LIST,
+                    route = GROUP_BIBLIOTHECA
+                ) {
+                    insertWelcome(navController)
                     insertDictionariesList(navController, snackbarHostState)
                     insertCreateDictionary(navController)
                     insertDictionariesDetails(navController)

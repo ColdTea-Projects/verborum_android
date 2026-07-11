@@ -15,6 +15,7 @@ val screenGroups = listOf(
 )
 
 const val GROUP_BIBLIOTHECA = "groupBibliotheca"
+const val SCREEN_WELCOME = "welcomeScreen"
 const val SCREEN_DICTIONARIES_LIST = "dictionariesListScreen"
 const val SCREEN_DICTIONARIES_DETAIL = "dictionariesDetailScreen"
 const val SCREEN_CREATE_DICTIONARY = "createDictionaryScreen"

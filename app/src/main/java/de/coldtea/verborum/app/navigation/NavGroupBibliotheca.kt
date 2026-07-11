@@ -9,6 +9,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import de.coldtea.verborum.bibliotheca.dictionary.ui.DictionaryListScreen
 import de.coldtea.verborum.bibliotheca.dictionary.ui.createdictionary.CreateDictionaryScreen
+import de.coldtea.verborum.bibliotheca.onboarding.ui.WelcomeScreen
 import de.coldtea.verborum.bibliotheca.word.ui.createword.CreateWordScreen
 import de.coldtea.verborum.bibliotheca.word.ui.createword.CreateWordViewModel
 import de.coldtea.verborum.bibliotheca.word.ui.dictionarydetails.DictionaryDetailsScreen
@@ -17,6 +18,18 @@ import de.coldtea.verborum.bibliotheca.word.ui.multiplechoice.MultipleChoiceQues
 import de.coldtea.verborum.bibliotheca.word.ui.multiplechoice.MultipleChoiceViewModel
 import de.coldtea.verborum.bibliotheca.word.ui.selfpractice.SelfPracticeScreen
 import de.coldtea.verborum.bibliotheca.word.ui.selfpractice.SelfPracticeViewModel
+
+fun NavGraphBuilder.insertWelcome(navController: NavHostController) = composable(
+    SCREEN_WELCOME
+) {
+    WelcomeScreen(
+        onDone = {
+            navController.navigate(SCREEN_DICTIONARIES_LIST) {
+                popUpTo(SCREEN_WELCOME) { inclusive = true }
+            }
+        }
+    )
+}
 
 fun NavGraphBuilder.insertDictionariesList(
     navController: NavHostController,
