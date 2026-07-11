@@ -14,6 +14,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
@@ -21,9 +22,14 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -35,6 +41,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import de.coldtea.verborum.bibliotheca.common.utils.ResDrawables
 import de.coldtea.verborum.bibliotheca.common.utils.ResStrings
 import de.coldtea.verborum.bibliotheca.dictionary.ui.composables.DictionaryCard
+import de.coldtea.verborum.bibliotheca.dictionary.ui.model.DictionaryUi
 import de.coldtea.verborum.core.theme.VerborumTheme
 
 @Composable
@@ -45,6 +52,7 @@ fun DictionaryListScreen(
     onCreateDictionaryClick: () -> Unit,
 ) {
     val dictionaries = viewModel.dictionariesState.collectAsState().value
+    var dictionaryToDelete by remember { mutableStateOf<DictionaryUi?>(null) }
 
     LaunchedEffect(Unit) {
         viewModel.snackbarMessages.collect { message ->
@@ -80,9 +88,6 @@ fun DictionaryListScreen(
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(text = stringResource(ResStrings.dictionaryListScreenCreate))
             }
-            Button(onClick = viewModel::cleanDictionaries) {
-                Text(text = "Delete")
-            }
         }
 
         Spacer(modifier = Modifier.height(32.dp))
@@ -113,11 +118,56 @@ fun DictionaryListScreen(
                 DictionaryCard(
                     dictionary = dictionary,
                     index = index,
+                    onDeleteClick = { dictionaryToDelete = it },
                     onClick = onDictionaryClick
                 )
             }
         }
     }
+
+    dictionaryToDelete?.let { dictionary ->
+        DeleteDictionaryDialog(
+            dictionary = dictionary,
+            onConfirm = {
+                viewModel.deleteDictionary(dictionary.dictionaryId)
+                dictionaryToDelete = null
+            },
+            onDismiss = { dictionaryToDelete = null },
+        )
+    }
+}
+
+@Composable
+private fun DeleteDictionaryDialog(
+    dictionary: DictionaryUi,
+    onConfirm: () -> Unit,
+    onDismiss: () -> Unit,
+) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(text = stringResource(ResStrings.dictionaryListScreenDeleteDialogTitle)) },
+        text = {
+            Text(
+                text = stringResource(
+                    ResStrings.dictionaryListScreenDeleteDialogMessage,
+                    dictionary.name,
+                )
+            )
+        },
+        confirmButton = {
+            TextButton(onClick = onConfirm) {
+                Text(
+                    text = stringResource(ResStrings.dictionaryListScreenDeleteDialogConfirm),
+                    color = MaterialTheme.colorScheme.error,
+                )
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text(text = stringResource(ResStrings.dictionaryListScreenDeleteDialogCancel))
+            }
+        },
+    )
 }
 
 @Preview

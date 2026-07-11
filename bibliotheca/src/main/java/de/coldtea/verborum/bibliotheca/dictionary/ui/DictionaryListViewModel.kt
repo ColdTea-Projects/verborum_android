@@ -4,13 +4,9 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import de.coldtea.verborum.bibliotheca.common.domain.SyncService
 import de.coldtea.verborum.bibliotheca.dictionary.domain.DictionaryService
-import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.local.CleanDictionariesUseCase
 import de.coldtea.verborum.bibliotheca.dictionary.ui.model.DictionaryUi
 import de.coldtea.verborum.bibliotheca.word.domain.WordService
 import de.coldtea.verborum.core.ui.BaseViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -21,7 +17,6 @@ class DictionaryListViewModel @Inject constructor(
     private val dictionaryService: DictionaryService,
     private val wordService: WordService,
     private val syncService: SyncService,
-    private val cleanDictionariesUseCase: CleanDictionariesUseCase,
 ) : BaseViewModel() {
 
     private val _dictionariesState = MutableStateFlow(listOf<DictionaryUi>())
@@ -41,14 +36,11 @@ class DictionaryListViewModel @Inject constructor(
         }
     }
 
-    fun cleanDictionaries() = viewModelScope.launch(Dispatchers.IO) {
-        dictionariesState.value.map {
-            async {
-                wordService.cleanWordsInDictionary(it.dictionaryId)
-                dictionaryService.deleteDictionary(it.dictionaryId)
-            }
-        }.awaitAll()
-        cleanDictionariesUseCase.invoke()//TODO:replace with removal at sync
-        syncService.syncDictionaries()
+    fun deleteDictionary(dictionaryId: String) = viewModelScope.launch(exceptionHandler) {
+        // Tombstone first: the dictionary disappears immediately and survives offline —
+        // the server delete below may fail and will then be retried by the sync upload phase.
+        dictionaryService.markDictionaryDeleted(dictionaryId)
+        wordService.cleanWordsInDictionary(dictionaryId)
+        dictionaryService.deleteDictionary(dictionaryId)
     }
 }

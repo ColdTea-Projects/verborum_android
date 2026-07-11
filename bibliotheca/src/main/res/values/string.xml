@@ -9,6 +9,12 @@
     <string name="dictionaryDetailsScreenWordListZeroItem">No words added yet into the dictionary</string>
     <string name="selfPracticeScreenSubtitle">Tap to reveal the translation, slide left or right to change your progress</string>
     <string name="dictionaryListScreenCreate">Create</string>
+    <string name="dictionaryListScreenDeleteDictionary">Delete dictionary</string>
+    <string name="dictionaryListScreenDeleteDialogTitle">Delete dictionary?</string>
+    <string name="dictionaryListScreenDeleteDialogMessage">"%1$s" and all of its words will be deleted.</string>
+    <string name="dictionaryListScreenDeleteDialogConfirm">Delete</string>
+    <string name="dictionaryListScreenDeleteDialogCancel">Cancel</string>
+    <string name="dictionaryDetailsScreenDeleteWord">Delete word</string>
     <string name="dictionaryDetailsScreenCreateWord">Create Word</string>
     <string name="createDictionaryScreenHeader">New Dictionary</string>
     <string name="createDictionaryScreenSubtitle">Name it and pick the language pair</string>

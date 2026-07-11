@@ -105,31 +105,13 @@ class DictionaryDetailsViewModelTest : BaseTest() {
 
     // endregion
 
-    // region cleanWords
+    // region deleteWord
 
     @Test
-    fun `cleanWords delegates to WordService with the dictionary id when state is Success`() = runTest {
-        val dictionaryId = "dict-1"
+    fun `deleteWord delegates to WordService with the word id`() = runTest {
+        viewModel.deleteWord("word-1")
 
-        every { dictionaryService.observeDictionary(dictionaryId) } returns flowOf(
-            testDictionaryUi(dictionaryId = dictionaryId)
-        )
-        every { wordService.observeWordsByDictionary(dictionaryId) } returns flowOf(
-            listOf(testWordUi(dictionaryId = dictionaryId))
-        )
-        viewModel.init(dictionaryId)
-
-        viewModel.cleanWords()
-
-        coVerify(exactly = 1) { wordService.cleanWordsInDictionary(dictionaryId) }
-    }
-
-    @Test
-    fun `cleanWords does nothing when state is not Success`() = runTest {
-        // ViewModel is still in Loading state — init() was never called.
-        viewModel.cleanWords()
-
-        coVerify(exactly = 0) { wordService.cleanWordsInDictionary(any()) }
+        coVerify(exactly = 1) { wordService.deleteWord("word-1") }
     }
 
     // endregion

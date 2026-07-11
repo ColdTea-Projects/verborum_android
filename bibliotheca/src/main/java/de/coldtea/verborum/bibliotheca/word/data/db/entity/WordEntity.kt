@@ -21,6 +21,8 @@ data class WordEntity (
     val translationMeta: String,
     @ColumnInfo(name = "isSynced")
     val isSynced: Boolean = false,
+    @ColumnInfo(name = "is_deleted")
+    val isDeleted: Boolean = false,
     @ColumnInfo(name = "level")
     val level: Int = 0,
     @ColumnInfo(name = "created_at")
@@ -37,6 +39,7 @@ data class WordEntity (
             translation = translation,
             translationMeta = translationMeta,
             isSynced = isSynced,
+            isDeleted = isDeleted,
             createdAt = createdAt,
             updatedAt = updatedAt,
             level = level,

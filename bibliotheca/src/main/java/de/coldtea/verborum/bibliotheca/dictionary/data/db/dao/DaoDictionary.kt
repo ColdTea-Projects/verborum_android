@@ -14,8 +14,13 @@ interface DaoDictionary: DaoBase<DictionaryEntity> {
     @Query("SELECT * FROM dictionary")
     suspend fun getAllDictionaries(): List<DictionaryEntity>
 
-    @Query("SELECT * FROM dictionary")
+    // UI-facing: tombstoned rows are hidden. The suspend variant above stays raw for sync.
+    @Query("SELECT * FROM dictionary WHERE is_deleted = 0")
     fun observeAllDictionaries(): Flow<List<DictionaryEntity>>
+
+    @Transaction
+    @Query("UPDATE dictionary SET is_deleted = 1 WHERE dictionary_id = :dictionaryId")
+    suspend fun markDictionaryDeleted(dictionaryId: String)
 
     @Transaction
     @Query("SELECT * FROM dictionary WHERE fk_user_id = :userId")

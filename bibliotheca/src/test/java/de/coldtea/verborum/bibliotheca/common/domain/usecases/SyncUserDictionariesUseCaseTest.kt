@@ -216,4 +216,63 @@ class SyncUserDictionariesUseCaseTest : BaseTest() {
     }
 
     // endregion
+
+    // region deletion tombstones
+
+    @Test
+    fun `invoke never resurrects a tombstoned dictionary or its words`() = runTest {
+        coEvery { dictionaryApi.getAllDictionariesByUser(GUEST_USER_ID) } returns
+            listOf(testDictionaryResponse(dictionaryId = "dict-1"))
+        coEvery { getAllDictionariesUseCase.invoke() } returns
+            listOf(testDictionary(dictionaryId = "dict-1", isSynced = true, isDeleted = true))
+
+        useCase.invoke()
+
+        coVerify(exactly = 0) { saveDictionaryUseCase.invoke(any()) }
+        // While the server still lists it, the tombstone stays for the upload phase to handle.
+        coVerify(exactly = 0) { deleteDictionaryUseCase.invoke(any()) }
+        coVerify(exactly = 0) { wordApi.getWordsByDictionary(any()) }
+    }
+
+    @Test
+    fun `invoke hard-deletes a tombstoned dictionary once it is gone remotely`() = runTest {
+        coEvery { dictionaryApi.getAllDictionariesByUser(GUEST_USER_ID) } returns emptyList()
+        coEvery { getAllDictionariesUseCase.invoke() } returns
+            listOf(testDictionary(dictionaryId = "dict-1", isSynced = true, isDeleted = true))
+
+        useCase.invoke()
+
+        coVerify(exactly = 1) { deleteDictionaryUseCase.invoke("dict-1") }
+    }
+
+    @Test
+    fun `invoke never resurrects a tombstoned word`() = runTest {
+        coEvery { dictionaryApi.getAllDictionariesByUser(GUEST_USER_ID) } returns
+            listOf(testDictionaryResponse(dictionaryId = "dict-1"))
+        coEvery { wordApi.getWordsByDictionary("dict-1") } returns
+            listOf(testWordResponse(wordId = "word-1"))
+        coEvery { getWordsByDictionaryUseCase.invoke("dict-1") } returns
+            listOf(testWord(wordId = "word-1", isSynced = true, isDeleted = true))
+
+        useCase.invoke()
+
+        coVerify(exactly = 0) { upsertWordsUseCase.invoke(any()) }
+        // While the server still lists it, the tombstone stays for the upload phase to handle.
+        coVerify(exactly = 0) { deleteWordUseCase.invoke(any()) }
+    }
+
+    @Test
+    fun `invoke hard-deletes a tombstoned word once it is gone remotely`() = runTest {
+        coEvery { dictionaryApi.getAllDictionariesByUser(GUEST_USER_ID) } returns
+            listOf(testDictionaryResponse(dictionaryId = "dict-1"))
+        coEvery { wordApi.getWordsByDictionary("dict-1") } returns emptyList()
+        coEvery { getWordsByDictionaryUseCase.invoke("dict-1") } returns
+            listOf(testWord(wordId = "word-1", isSynced = true, isDeleted = true))
+
+        useCase.invoke()
+
+        coVerify(exactly = 1) { deleteWordUseCase.invoke("word-1") }
+    }
+
+    // endregion
 }

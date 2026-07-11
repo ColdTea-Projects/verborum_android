@@ -14,7 +14,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -57,13 +56,6 @@ fun DictionaryDetailsScreen(
             .background(MaterialTheme.colorScheme.background)
             .padding(horizontal = 24.dp)
     ) {
-        item {
-            Row {
-                Button(onClick = viewModel::cleanWords) {
-                    Text(text = "Delete")
-                }
-            }
-        }
         if (dictionaryDetailState is DictionaryDetailState.Success) {
             val dictionary = dictionaryDetailState.dictionaryUi
             val words = dictionaryDetailState.wordsUi
@@ -152,7 +144,10 @@ fun DictionaryDetailsScreen(
                             verticalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
                             words.forEachIndexed { index, word ->
-                                WordListItem(word = word)
+                                WordListItem(
+                                    word = word,
+                                    onDeleteClick = viewModel::deleteWord,
+                                )
 
                                 if (index < words.size - 1) {
                                     Spacer(modifier = Modifier.height(0.dp))

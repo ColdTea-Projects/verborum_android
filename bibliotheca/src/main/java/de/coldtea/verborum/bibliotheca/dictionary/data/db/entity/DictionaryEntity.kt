@@ -17,6 +17,8 @@ data class DictionaryEntity (
     val isPublic: Boolean = false,
     @ColumnInfo(name = "isSynced")
     val isSynced: Boolean = false,
+    @ColumnInfo(name = "is_deleted")
+    val isDeleted: Boolean = false,
     @ColumnInfo(name = "from_lang")
     val fromLang: String,
     @ColumnInfo(name = "to_lang")
@@ -32,6 +34,7 @@ data class DictionaryEntity (
         name = name,
         isPublic = isPublic,
         isSynced = isSynced,
+        isDeleted = isDeleted,
         fromLang = fromLang,
         toLang = toLang,
         createdAt = createdAt,

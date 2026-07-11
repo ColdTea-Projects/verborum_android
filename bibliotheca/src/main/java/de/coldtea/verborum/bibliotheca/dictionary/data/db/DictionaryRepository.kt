@@ -30,6 +30,9 @@ class DictionaryRepository @Inject constructor(
     suspend fun updateDictionary(dictionaryEntity: DictionaryEntity) =
         bibliothecaDatabase.daoDictionary.update(dictionaryEntity)
 
+    suspend fun markDictionaryDeleted(dictionaryId: String) =
+        bibliothecaDatabase.daoDictionary.markDictionaryDeleted(dictionaryId)
+
     suspend fun deleteDictionary(dictionaryId: String) =
         bibliothecaDatabase.daoDictionary.deleteDictionary(dictionaryId)
 }

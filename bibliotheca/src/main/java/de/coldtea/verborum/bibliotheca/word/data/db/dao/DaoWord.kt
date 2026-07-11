@@ -14,9 +14,14 @@ interface DaoWord: DaoBase<WordEntity> {
     @Query("SELECT * FROM word WHERE fk_dictionary_id = :dictionaryId")
     suspend fun getWordsByDictionary(dictionaryId: String): List<WordEntity>
 
+    // UI-facing: tombstoned rows are hidden. The suspend variant above stays raw for sync.
     @Transaction
-    @Query("SELECT * FROM word WHERE fk_dictionary_id = :dictionaryId")
+    @Query("SELECT * FROM word WHERE fk_dictionary_id = :dictionaryId AND is_deleted = 0")
     fun observeWordsByDictionary(dictionaryId: String): Flow<List<WordEntity>>
+
+    @Transaction
+    @Query("UPDATE word SET is_deleted = 1 WHERE word_id = :wordId")
+    suspend fun markWordDeleted(wordId: String)
 
     @Transaction
     @Query("SELECT * FROM word WHERE word_id = :wordId")

@@ -1,17 +1,18 @@
 package de.coldtea.verborum.bibliotheca.dictionary.ui
 
+import android.util.Log
 import de.coldtea.verborum.bibliotheca.common.domain.SyncService
 import de.coldtea.verborum.bibliotheca.dictionary.domain.DictionaryService
-import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.local.CleanDictionariesUseCase
 import de.coldtea.verborum.bibliotheca.dictionary.ui.model.DictionaryUi
 import de.coldtea.verborum.bibliotheca.testDictionaryUi
 import de.coldtea.verborum.bibliotheca.word.domain.WordService
 import de.coldtea.verborum.core.BaseTest
 import io.mockk.coEvery
 import io.mockk.coVerify
+import io.mockk.coVerifyOrder
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
-import io.mockk.mockk
+import io.mockk.mockkStatic
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
@@ -31,9 +32,6 @@ class DictionaryListViewModelTest : BaseTest() {
     @MockK
     private lateinit var syncService: SyncService
 
-    @MockK
-    private lateinit var cleanDictionariesUseCase: CleanDictionariesUseCase
-
     override fun setUp() {
         super.setUp()
         // syncDictionaries() has an inferred non-Unit return type (try/catch expression),
@@ -49,7 +47,6 @@ class DictionaryListViewModelTest : BaseTest() {
         dictionaryService = dictionaryService,
         wordService = wordService,
         syncService = syncService,
-        cleanDictionariesUseCase = cleanDictionariesUseCase,
     )
 
     // region initial state
@@ -107,42 +104,36 @@ class DictionaryListViewModelTest : BaseTest() {
 
     // endregion
 
-    // region cleanDictionaries
+    // region deleteDictionary
 
     @Test
-    fun `cleanDictionaries cleans words and deletes every dictionary then cleans locals and syncs`() = runTest {
-        val dictionaries = listOf(
-            testDictionaryUi(dictionaryId = "dict-1"),
-            testDictionaryUi(dictionaryId = "dict-2"),
-        )
-        every { dictionaryService.observeDictionaries() } returns flowOf(dictionaries)
-        // deleteDictionary returns the API response — relaxUnitFun does not answer it.
-        coEvery { dictionaryService.deleteDictionary(any()) } returns mockk()
+    fun `deleteDictionary tombstones first then cleans words then deletes the dictionary`() = runTest {
+        every { dictionaryService.observeDictionaries() } returns
+            flowOf(listOf(testDictionaryUi(dictionaryId = "dict-1")))
         val viewModel = buildViewModel()
 
-        viewModel.cleanDictionaries()
+        viewModel.deleteDictionary("dict-1")
 
-        // cleanDictionaries runs on Dispatchers.IO (not replaced by MainDispatcherRule),
-        // so wait for the real background work with verification timeouts.
-        coVerify(timeout = 2000, exactly = 1) { wordService.cleanWordsInDictionary("dict-1") }
-        coVerify(timeout = 2000, exactly = 1) { wordService.cleanWordsInDictionary("dict-2") }
-        coVerify(timeout = 2000, exactly = 1) { dictionaryService.deleteDictionary("dict-1") }
-        coVerify(timeout = 2000, exactly = 1) { dictionaryService.deleteDictionary("dict-2") }
-        coVerify(timeout = 2000, exactly = 1) { cleanDictionariesUseCase.invoke() }
-        // Once for construction, once for the clean-up.
-        coVerify(timeout = 2000, exactly = 2) { syncService.syncDictionaries() }
+        coVerifyOrder {
+            dictionaryService.markDictionaryDeleted("dict-1")
+            wordService.cleanWordsInDictionary("dict-1")
+            dictionaryService.deleteDictionary("dict-1")
+        }
     }
 
     @Test
-    fun `cleanDictionaries with no dictionaries still runs global clean and sync`() = runTest {
+    fun `deleteDictionary failure keeps the tombstone and does not crash`() = runTest {
+        // The BaseViewModel exceptionHandler logs the failure — Log must be mocked in unit tests.
+        mockkStatic(Log::class)
+        every { Log.e(any(), any(), any()) } returns 0
         every { dictionaryService.observeDictionaries() } returns flowOf(emptyList())
+        coEvery { wordService.cleanWordsInDictionary("dict-1") } throws RuntimeException("api down")
         val viewModel = buildViewModel()
 
-        viewModel.cleanDictionaries()
+        viewModel.deleteDictionary("dict-1") // must not throw — handled by exceptionHandler
 
-        coVerify(timeout = 2000, exactly = 1) { cleanDictionariesUseCase.invoke() }
-        coVerify(timeout = 2000, exactly = 2) { syncService.syncDictionaries() }
-        coVerify(exactly = 0) { wordService.cleanWordsInDictionary(any()) }
+        // The tombstone was written before the network failure; the hard delete never ran.
+        coVerify(exactly = 1) { dictionaryService.markDictionaryDeleted("dict-1") }
         coVerify(exactly = 0) { dictionaryService.deleteDictionary(any()) }
     }
 

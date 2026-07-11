@@ -38,11 +38,7 @@ class DictionaryDetailsViewModel @Inject constructor(
         )
     }
 
-    fun cleanWords() = viewModelScope.launch {
-        if (_dictionaryDetailState.value !is DictionaryDetailState.Success) {
-            return@launch
-        }
-
-        wordService.cleanWordsInDictionary((_dictionaryDetailState.value as DictionaryDetailState.Success).dictionaryUi.dictionaryId)
+    fun deleteWord(wordId: String) = viewModelScope.launch(exceptionHandler) {
+        wordService.deleteWord(wordId)
     }
 }

@@ -28,6 +28,9 @@ class WordRepository @Inject constructor(
     suspend fun updateWord(wordEntity: WordEntity) =
         bibliothecaDatabase.daoWord.update(wordEntity)
 
+    suspend fun markWordDeleted(wordId: String) =
+        bibliothecaDatabase.daoWord.markWordDeleted(wordId)
+
     suspend fun deleteWords(wordIds: List<String>) =
         bibliothecaDatabase.daoWord.deleteWords(wordIds)
 

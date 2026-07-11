@@ -3,8 +3,11 @@ package de.coldtea.verborum.bibliotheca.word.domain
 import de.coldtea.verborum.bibliotheca.common.domain.SyncService
 import de.coldtea.verborum.bibliotheca.common.domain.UploadService
 import de.coldtea.verborum.bibliotheca.word.domain.model.Word
+import de.coldtea.verborum.bibliotheca.word.domain.usecase.api.DeleteWordApiUseCase
 import de.coldtea.verborum.bibliotheca.word.domain.usecase.api.DeleteWordByDictionaryIdApiUseCase
 import de.coldtea.verborum.bibliotheca.word.domain.usecase.local.DeleteWordByDictionaryIdUseCase
+import de.coldtea.verborum.bibliotheca.word.domain.usecase.local.DeleteWordUseCase
+import de.coldtea.verborum.bibliotheca.word.domain.usecase.local.MarkWordDeletedUseCase
 import de.coldtea.verborum.bibliotheca.word.domain.usecase.local.ObserveWordsByDictionaryUseCase
 import de.coldtea.verborum.bibliotheca.word.domain.usecase.local.SaveWordUseCase
 import de.coldtea.verborum.bibliotheca.word.ui.model.WordUi
@@ -19,6 +22,9 @@ class WordService @Inject constructor(
     private val observeWordsByDictionaryUseCase: ObserveWordsByDictionaryUseCase,
     private val deleteWordByDictionaryIdApiUseCase: DeleteWordByDictionaryIdApiUseCase,
     private val deleteWordByDictionaryIdUseCase: DeleteWordByDictionaryIdUseCase,
+    private val deleteWordApiUseCase: DeleteWordApiUseCase,
+    private val deleteWordUseCase: DeleteWordUseCase,
+    private val markWordDeletedUseCase: MarkWordDeletedUseCase,
     private val saveWordUseCase: SaveWordUseCase,
     private val syncService: SyncService,
     private val uploadService: UploadService,
@@ -35,9 +41,22 @@ class WordService @Inject constructor(
         saveWordUseCase.invoke(word)
     }
 
+    /**
+     * Tombstones the word first so the deletion is immediate and offline-safe, then hard-deletes
+     * once the server confirms. A failed or offline API call leaves the tombstone in place;
+     * the sync upload phase retries it.
+     */
+    suspend fun deleteWord(wordId: String) {
+        markWordDeletedUseCase.invoke(wordId)
+        if (deleteWordApiUseCase.invoke(wordId).isSuccessful) {
+            deleteWordUseCase.invoke(wordId)
+        }
+    }
+
     suspend fun cleanWordsInDictionary(dictionaryId: String) {
-        deleteWordByDictionaryIdApiUseCase.invoke(dictionaryId)
-        deleteWordByDictionaryIdUseCase.invoke(dictionaryId)//TODO: replace with update diff delete
+        if (deleteWordByDictionaryIdApiUseCase.invoke(dictionaryId).isSuccessful) {
+            deleteWordByDictionaryIdUseCase.invoke(dictionaryId)
+        }
     }
 
 }

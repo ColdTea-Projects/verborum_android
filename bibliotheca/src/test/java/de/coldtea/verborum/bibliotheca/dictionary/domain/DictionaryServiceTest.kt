@@ -4,6 +4,8 @@ import de.coldtea.verborum.bibliotheca.common.domain.SyncService
 import de.coldtea.verborum.bibliotheca.common.domain.UploadService
 import de.coldtea.verborum.bibliotheca.dictionary.data.db.entity.DictionaryEntity.Companion.GUEST_USER_ID
 import de.coldtea.verborum.bibliotheca.dictionary.domain.model.Dictionary
+import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.local.DeleteDictionaryUseCase
+import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.local.MarkDictionaryDeletedUseCase
 import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.local.ObserveAllDictionariesUseCase
 import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.local.ObserveDictionaryUseCase
 import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.local.SaveDictionaryUseCase
@@ -36,6 +38,14 @@ class DictionaryServiceTest : BaseTest() {
     @MockK
     private lateinit var saveDictionaryUseCase: SaveDictionaryUseCase
 
+    // invoke returns Unit — covered by relaxUnitFun.
+    @MockK
+    private lateinit var deleteDictionaryUseCase: DeleteDictionaryUseCase
+
+    // invoke returns the repository result (non-Unit) — relax fully for verify-only use.
+    @MockK(relaxed = true)
+    private lateinit var markDictionaryDeletedUseCase: MarkDictionaryDeletedUseCase
+
     @MockK
     private lateinit var syncService: SyncService
 
@@ -50,6 +60,8 @@ class DictionaryServiceTest : BaseTest() {
             observeAllDictionariesUseCase = observeAllDictionariesUseCase,
             observeDictionaryUseCase = observeDictionaryUseCase,
             saveDictionaryUseCase = saveDictionaryUseCase,
+            deleteDictionaryUseCase = deleteDictionaryUseCase,
+            markDictionaryDeletedUseCase = markDictionaryDeletedUseCase,
             syncService = syncService,
             uploadService = uploadService,
         )
@@ -163,12 +175,31 @@ class DictionaryServiceTest : BaseTest() {
     // region deleteDictionary
 
     @Test
-    fun `deleteDictionary delegates to uploadService`() = runTest {
-        coEvery { uploadService.deleteDictionary("dict-1") } returns mockk()
+    fun `deleteDictionary deletes locally only after the api confirms`() = runTest {
+        coEvery { uploadService.deleteDictionary("dict-1") } returns
+            mockk { every { isSuccessful } returns true }
 
         dictionaryService.deleteDictionary("dict-1")
 
         coVerify(exactly = 1) { uploadService.deleteDictionary("dict-1") }
+        coVerify(exactly = 1) { deleteDictionaryUseCase.invoke("dict-1") }
+    }
+
+    @Test
+    fun `deleteDictionary keeps the local row when the api delete fails`() = runTest {
+        coEvery { uploadService.deleteDictionary("dict-1") } returns
+            mockk { every { isSuccessful } returns false }
+
+        dictionaryService.deleteDictionary("dict-1")
+
+        coVerify(exactly = 0) { deleteDictionaryUseCase.invoke(any()) }
+    }
+
+    @Test
+    fun `markDictionaryDeleted delegates to the tombstone use case`() = runTest {
+        dictionaryService.markDictionaryDeleted("dict-1")
+
+        coVerify(exactly = 1) { markDictionaryDeletedUseCase.invoke("dict-1") }
     }
 
     // endregion

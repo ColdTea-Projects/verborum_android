@@ -5,15 +5,22 @@ import de.coldtea.verborum.bibliotheca.common.domain.UploadService
 import de.coldtea.verborum.bibliotheca.testWord
 import de.coldtea.verborum.bibliotheca.testWordUi
 import de.coldtea.verborum.bibliotheca.word.domain.model.Word
+import de.coldtea.verborum.bibliotheca.word.domain.usecase.api.DeleteWordApiUseCase
 import de.coldtea.verborum.bibliotheca.word.domain.usecase.api.DeleteWordByDictionaryIdApiUseCase
 import de.coldtea.verborum.bibliotheca.word.domain.usecase.local.DeleteWordByDictionaryIdUseCase
+import de.coldtea.verborum.bibliotheca.word.domain.usecase.local.DeleteWordUseCase
+import de.coldtea.verborum.bibliotheca.word.domain.usecase.local.MarkWordDeletedUseCase
 import de.coldtea.verborum.bibliotheca.word.domain.usecase.local.ObserveWordsByDictionaryUseCase
 import de.coldtea.verborum.bibliotheca.word.domain.usecase.local.SaveWordUseCase
 import de.coldtea.verborum.bibliotheca.word.ui.model.WordUi
 import de.coldtea.verborum.core.BaseTest
 import io.mockk.impl.annotations.MockK
+import io.mockk.coEvery
 import io.mockk.coVerify
+import io.mockk.coVerifyOrder
 import io.mockk.every
+import io.mockk.mockk
+import retrofit2.Response
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
@@ -35,8 +42,23 @@ class WordServiceTest : BaseTest() {
     @MockK(relaxed = true)
     private lateinit var deleteWordByDictionaryIdUseCase: DeleteWordByDictionaryIdUseCase
 
+    // invoke returns Response<Unit> — stubbed per test with coEvery.
+    @MockK
+    private lateinit var deleteWordApiUseCase: DeleteWordApiUseCase
+
+    // invoke returns the repository result (non-Unit) — relax fully for verify-only use.
+    @MockK(relaxed = true)
+    private lateinit var deleteWordUseCase: DeleteWordUseCase
+
+    // invoke returns the repository result (non-Unit) — relax fully for verify-only use.
+    @MockK(relaxed = true)
+    private lateinit var markWordDeletedUseCase: MarkWordDeletedUseCase
+
     @MockK
     private lateinit var saveWordUseCase: SaveWordUseCase
+
+    private val successResponse = mockk<Response<Unit>> { every { isSuccessful } returns true }
+    private val failureResponse = mockk<Response<Unit>> { every { isSuccessful } returns false }
 
     @MockK
     private lateinit var syncService: SyncService
@@ -52,6 +74,9 @@ class WordServiceTest : BaseTest() {
             observeWordsByDictionaryUseCase = observeWordsByDictionaryUseCase,
             deleteWordByDictionaryIdApiUseCase = deleteWordByDictionaryIdApiUseCase,
             deleteWordByDictionaryIdUseCase = deleteWordByDictionaryIdUseCase,
+            deleteWordApiUseCase = deleteWordApiUseCase,
+            deleteWordUseCase = deleteWordUseCase,
+            markWordDeletedUseCase = markWordDeletedUseCase,
             saveWordUseCase = saveWordUseCase,
             syncService = syncService,
             uploadService = uploadService,
@@ -133,24 +158,52 @@ class WordServiceTest : BaseTest() {
 
     // endregion
 
-    // region cleanWordsInDictionary
+    // region deleteWord
 
     @Test
-    fun `cleanWordsInDictionary calls api delete use case`() = runTest {
-        val dictionaryId = "dict-1"
+    fun `deleteWord tombstones first then deletes remotely and locally on success`() = runTest {
+        coEvery { deleteWordApiUseCase.invoke("word-1") } returns successResponse
 
-        wordService.cleanWordsInDictionary(dictionaryId)
+        wordService.deleteWord("word-1")
 
-        coVerify(exactly = 1) { deleteWordByDictionaryIdApiUseCase.invoke(dictionaryId) }
+        coVerifyOrder {
+            markWordDeletedUseCase.invoke("word-1")
+            deleteWordApiUseCase.invoke("word-1")
+            deleteWordUseCase.invoke("word-1")
+        }
     }
 
     @Test
-    fun `cleanWordsInDictionary calls local delete use case`() = runTest {
-        val dictionaryId = "dict-1"
+    fun `deleteWord keeps the tombstone when the api delete fails`() = runTest {
+        coEvery { deleteWordApiUseCase.invoke("word-1") } returns failureResponse
 
-        wordService.cleanWordsInDictionary(dictionaryId)
+        wordService.deleteWord("word-1")
 
-        coVerify(exactly = 1) { deleteWordByDictionaryIdUseCase.invoke(dictionaryId) }
+        coVerify(exactly = 1) { markWordDeletedUseCase.invoke("word-1") }
+        coVerify(exactly = 0) { deleteWordUseCase.invoke(any()) }
+    }
+
+    // endregion
+
+    // region cleanWordsInDictionary
+
+    @Test
+    fun `cleanWordsInDictionary deletes locally only after the api confirms`() = runTest {
+        coEvery { deleteWordByDictionaryIdApiUseCase.invoke("dict-1") } returns successResponse
+
+        wordService.cleanWordsInDictionary("dict-1")
+
+        coVerify(exactly = 1) { deleteWordByDictionaryIdApiUseCase.invoke("dict-1") }
+        coVerify(exactly = 1) { deleteWordByDictionaryIdUseCase.invoke("dict-1") }
+    }
+
+    @Test
+    fun `cleanWordsInDictionary skips the local delete when the api fails`() = runTest {
+        coEvery { deleteWordByDictionaryIdApiUseCase.invoke("dict-1") } returns failureResponse
+
+        wordService.cleanWordsInDictionary("dict-1")
+
+        coVerify(exactly = 0) { deleteWordByDictionaryIdUseCase.invoke(any()) }
     }
 
     // endregion

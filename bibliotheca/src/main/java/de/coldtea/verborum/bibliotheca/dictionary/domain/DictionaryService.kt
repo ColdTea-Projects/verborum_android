@@ -5,7 +5,9 @@ import de.coldtea.verborum.bibliotheca.common.domain.UploadService
 import de.coldtea.verborum.bibliotheca.common.utils.getNowInMillis
 import de.coldtea.verborum.bibliotheca.dictionary.data.db.entity.DictionaryEntity.Companion.GUEST_USER_ID
 import de.coldtea.verborum.bibliotheca.dictionary.domain.model.Dictionary
+import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.local.DeleteDictionaryUseCase
 import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.local.GetDictionaryUseCase
+import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.local.MarkDictionaryDeletedUseCase
 import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.local.ObserveAllDictionariesUseCase
 import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.local.ObserveDictionaryUseCase
 import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.local.SaveDictionaryUseCase
@@ -22,6 +24,8 @@ class DictionaryService @Inject constructor(
     private val observeAllDictionariesUseCase: ObserveAllDictionariesUseCase,
     private val observeDictionaryUseCase: ObserveDictionaryUseCase,
     private val saveDictionaryUseCase: SaveDictionaryUseCase,
+    private val deleteDictionaryUseCase: DeleteDictionaryUseCase,
+    private val markDictionaryDeletedUseCase: MarkDictionaryDeletedUseCase,
     private val syncService: SyncService,
     private val uploadService: UploadService,
 ) {
@@ -55,6 +59,14 @@ class DictionaryService @Inject constructor(
         return saveDictionaryUseCase.invoke(dictionary)
     }
 
-    suspend fun deleteDictionary(dictionaryId: String) =
-        uploadService.deleteDictionary(dictionaryId)
+    /** Tombstones the dictionary: hidden locally at once, offline-safe. */
+    suspend fun markDictionaryDeleted(dictionaryId: String) =
+        markDictionaryDeletedUseCase.invoke(dictionaryId)
+
+    /** Hard-deletes locally only when the server confirms; otherwise the tombstone remains. */
+    suspend fun deleteDictionary(dictionaryId: String) {
+        if (uploadService.deleteDictionary(dictionaryId).isSuccessful) {
+            deleteDictionaryUseCase.invoke(dictionaryId)
+        }
+    }
 }
