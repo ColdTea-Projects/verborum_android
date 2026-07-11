@@ -24,7 +24,7 @@ fun NavGraphBuilder.insertWelcome(navController: NavHostController) = composable
 ) {
     WelcomeScreen(
         onDone = {
-            navController.navigate(SCREEN_DICTIONARIES_LIST) {
+            navController.navigate(GROUP_BIBLIOTHECA) {
                 popUpTo(SCREEN_WELCOME) { inclusive = true }
             }
         }

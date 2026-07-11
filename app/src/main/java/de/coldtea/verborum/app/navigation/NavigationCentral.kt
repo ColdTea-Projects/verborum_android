@@ -38,12 +38,17 @@ fun NavigationCentral(showWelcome: Boolean = false) {
     ) { innerPadding ->
         // Apply the padding globally to the whole BottomNavScreensController
         Box(modifier = Modifier.padding(innerPadding)) {
-            NavHost(navController = navController, startDestination = GROUP_BIBLIOTHECA) {
+            NavHost(
+                navController = navController,
+                // Welcome is a top-level destination, not part of a tab group, so
+                // switching tabs can never re-show it once the tour is finished.
+                startDestination = if (showWelcome) SCREEN_WELCOME else GROUP_BIBLIOTHECA
+            ) {
+                insertWelcome(navController)
                 navigation(
-                    startDestination = if (showWelcome) SCREEN_WELCOME else SCREEN_DICTIONARIES_LIST,
+                    startDestination = SCREEN_DICTIONARIES_LIST,
                     route = GROUP_BIBLIOTHECA
                 ) {
-                    insertWelcome(navController)
                     insertDictionariesList(navController, snackbarHostState)
                     insertCreateDictionary(navController)
                     insertDictionariesDetails(navController)
