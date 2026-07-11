@@ -8,6 +8,7 @@
     <string name="dictionaryDetailsScreenWordListHeader">Word List</string>
     <string name="dictionaryDetailsScreenWordListZeroItem">No words added yet into the dictionary</string>
     <string name="selfPracticeScreenSubtitle">Tap to reveal the translation, slide left or right to change your progress</string>
+    <string name="selfPracticeScreenSwitch">Switch</string>
     <string name="dictionaryListScreenCreate">Create</string>
     <string name="dictionaryDetailsScreenDeleteDictionary">Delete Dictionary</string>
     <string name="dictionaryDetailsScreenDeleteDialogTitle">Delete dictionary?</string>

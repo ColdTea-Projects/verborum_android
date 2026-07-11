@@ -32,6 +32,7 @@ import de.coldtea.verborum.bibliotheca.common.utils.ResStrings
 import de.coldtea.verborum.bibliotheca.dictionary.ui.createdictionary.composables.LanguageDropdown
 import de.coldtea.verborum.bibliotheca.dictionary.ui.createdictionary.model.CreateDictionaryState
 import de.coldtea.verborum.core.theme.VerborumTheme
+import de.coldtea.verborum.core.ui.RegisterTopBar
 
 @Composable
 fun CreateDictionaryScreen(
@@ -57,31 +58,19 @@ fun CreateDictionaryScreen(
             fromLanguage != toLanguage &&
             createDictionaryState !is CreateDictionaryState.Saving
 
+    RegisterTopBar(
+        title = stringResource(ResStrings.createDictionaryScreenHeader),
+        subtitle = stringResource(ResStrings.createDictionaryScreenSubtitle),
+        showBackButton = true,
+    )
+
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
             .padding(horizontal = 24.dp)
     ) {
-        Spacer(modifier = Modifier.height(32.dp))
-
-        // Header
-        Text(
-            text = stringResource(ResStrings.createDictionaryScreenHeader),
-            fontSize = 32.sp,
-            fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.onBackground,
-            letterSpacing = 0.5.sp
-        )
-
-        Text(
-            text = stringResource(ResStrings.createDictionaryScreenSubtitle),
-            fontSize = 14.sp,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            modifier = Modifier.padding(top = 4.dp)
-        )
-
-        Spacer(modifier = Modifier.height(32.dp))
+        Spacer(modifier = Modifier.height(16.dp))
 
         OutlinedTextField(
             value = name,

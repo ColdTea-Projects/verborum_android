@@ -52,32 +52,6 @@ fun MultipleChoiceContent(
     ) {
         Spacer(modifier = Modifier.height(8.dp))
 
-        // Header
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Column {
-                Text(
-                    text = "Test Mode",
-                    fontSize = 28.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onBackground,
-                    letterSpacing = 0.5.sp
-                )
-
-                Text(
-                    text = "Question ${currentQuestionState.index} of ${currentQuestionState.size}",
-                    fontSize = 14.sp,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.padding(top = 4.dp)
-                )
-            }
-        }
-
-        Spacer(modifier = Modifier.height(32.dp))
-
         // Question Card
 
         QuestionCard(

@@ -49,17 +49,6 @@ fun ResultScreen(
     {
         Spacer(modifier = Modifier.height(8.dp))
 
-        // Header
-        Text(
-            text = "Test Complete",
-            fontSize = 28.sp,
-            fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.onBackground,
-            letterSpacing = 0.5.sp
-        )
-
-        Spacer(modifier = Modifier.height(32.dp))
-
         // Results Card
         Surface(
             modifier = Modifier.fillMaxWidth(),

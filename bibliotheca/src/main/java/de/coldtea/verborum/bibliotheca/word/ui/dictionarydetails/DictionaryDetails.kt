@@ -46,6 +46,7 @@ import de.coldtea.verborum.bibliotheca.word.ui.dictionarydetails.composables.Pra
 import de.coldtea.verborum.bibliotheca.word.ui.dictionarydetails.composables.WordListItem
 import de.coldtea.verborum.bibliotheca.word.ui.dictionarydetails.model.DictionaryDetailState
 import de.coldtea.verborum.core.theme.VerborumTheme
+import de.coldtea.verborum.core.ui.RegisterTopBar
 
 @Composable
 fun DictionaryDetailsScreen(
@@ -71,36 +72,25 @@ fun DictionaryDetailsScreen(
             val dictionary = dictionaryDetailState.dictionaryUi
             val words = dictionaryDetailState.wordsUi
 
+            val headerSubtext =
+                if (words.isEmpty()) stringResource(ResStrings.dictionaryDetailsScreenWordListZeroItem)
+                else pluralStringResource(
+                    ResPlurals.dictionaryDetailsScreenWordListCount,
+                    words.size,
+                    words.size,
+                )
+
+            RegisterTopBar(
+                title = dictionary.name,
+                subtitle = headerSubtext,
+                showBackButton = true,
+            )
+
             LazyColumn(
                 modifier = Modifier.weight(1f)
             ) {
                 item {
                     Spacer(modifier = Modifier.height(8.dp))
-
-                    // Header
-                    Text(
-                        text = dictionary.name,
-                        fontSize = 28.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onBackground,
-                        letterSpacing = 0.5.sp
-                    )
-                    val headerSubtext =
-                        if (words.isEmpty()) stringResource(ResStrings.dictionaryDetailsScreenWordListZeroItem)
-                        else pluralStringResource(
-                            ResPlurals.dictionaryDetailsScreenWordListCount,
-                            words.size,
-                            words.size,
-                        )
-
-                    Text(
-                        text = headerSubtext,
-                        fontSize = 14.sp,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        modifier = Modifier.padding(top = 4.dp)
-                    )
-
-                    Spacer(modifier = Modifier.height(24.dp))
                 }
 
                 // Practice Mode Buttons

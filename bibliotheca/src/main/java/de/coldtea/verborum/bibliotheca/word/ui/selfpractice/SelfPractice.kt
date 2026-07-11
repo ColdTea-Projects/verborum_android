@@ -1,9 +1,7 @@
 package de.coldtea.verborum.bibliotheca.word.ui.selfpractice
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -11,7 +9,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -19,7 +19,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -29,9 +28,9 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import de.coldtea.verborum.bibliotheca.common.utils.ResStrings
 import de.coldtea.verborum.bibliotheca.word.ui.selfpractice.composables.ExpandableWordCard
-import de.coldtea.verborum.bibliotheca.word.ui.selfpractice.composables.SwitchWordsButton
 import de.coldtea.verborum.bibliotheca.word.ui.selfpractice.model.SelfPracticeState
 import de.coldtea.verborum.core.theme.VerborumTheme
+import de.coldtea.verborum.core.ui.RegisterTopBar
 
 @Composable
 fun SelfPracticeScreen(
@@ -49,65 +48,61 @@ fun SelfPracticeScreen(
             wordIdOrder.value = selfPracticeState.wordsUi.map { it.wordId }.shuffled()
         }
 
-        LazyColumn(
+        RegisterTopBar(
+            title = selfPracticeState.dictionaryName,
+            subtitle = stringResource(ResStrings.selfPracticeScreenSubtitle),
+            showBackButton = true,
+        )
+
+        Column(
             modifier = Modifier
                 .fillMaxSize()
                 .background(MaterialTheme.colorScheme.background)
                 .padding(horizontal = 24.dp)
         ) {
-            item {
-                Spacer(modifier = Modifier.height(8.dp))
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Column(modifier = Modifier.weight(0.85f)) {
-                        // Header
-                        Text(
-                            text = selfPracticeState.dictionaryName,
-                            fontSize = 28.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.onBackground,
-                            letterSpacing = 0.5.sp
-                        )
-
-                        Text(
-                            text = stringResource(ResStrings.selfPracticeScreenSubtitle),
-                            fontSize = 14.sp,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            modifier = Modifier.padding(top = 4.dp)
-                        )
-                    }
-
-                    SwitchWordsButton(modifier = Modifier.weight(0.15f)) {
-                        reverseMode.value = !reverseMode.value
-                    }
+            LazyColumn(modifier = Modifier.weight(1f)) {
+                item {
+                    Spacer(modifier = Modifier.height(8.dp))
                 }
 
-                Spacer(modifier = Modifier.height(32.dp))
+                // Word Cards
+                items(wordIdOrder.value) { wordId ->
+                    val word = selfPracticeState.wordsUi.first { it.wordId == wordId }
+                    val isRevealed = revealedStates[word.wordId] ?: false
+
+                    ExpandableWordCard(
+                        word = word,
+                        isRevealed = isRevealed,
+                        isReversed = reverseMode.value,
+                        onToggleReveal = {
+                            revealedStates[word.wordId] = !isRevealed
+                        },
+                        onProgressChange = viewModel::onProgressUpdated
+                    )
+
+                    Spacer(modifier = Modifier.height(16.dp))
+                }
             }
 
-            // Word Cards
-            items(wordIdOrder.value) { wordId ->
-                val word = selfPracticeState.wordsUi.first { it.wordId == wordId }
-                val isRevealed = revealedStates[word.wordId] ?: false
-
-                ExpandableWordCard(
-                    word = word,
-                    isRevealed = isRevealed,
-                    isReversed = reverseMode.value,
-                    onToggleReveal = {
-                        revealedStates[word.wordId] = !isRevealed
-                    },
-                    onProgressChange = viewModel::onProgressUpdated
+            // Sticky bottom action: flip which side of each card is shown.
+            Button(
+                onClick = { reverseMode.value = !reverseMode.value },
+                shape = RoundedCornerShape(16.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = MaterialTheme.colorScheme.onPrimary,
+                ),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 16.dp)
+                    .height(56.dp)
+            ) {
+                Text(
+                    text = stringResource(ResStrings.selfPracticeScreenSwitch),
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    letterSpacing = 0.5.sp
                 )
-
-                Spacer(modifier = Modifier.height(16.dp))
-            }
-
-            item {
-                Spacer(modifier = Modifier.height(8.dp))
             }
         }
     }

@@ -39,6 +39,7 @@ import de.coldtea.verborum.bibliotheca.word.ui.createword.model.WordType
 import de.coldtea.verborum.bibliotheca.word.ui.createword.model.parseWordFormInput
 import de.coldtea.verborum.bibliotheca.word.ui.createword.model.parseWordType
 import de.coldtea.verborum.core.theme.VerborumTheme
+import de.coldtea.verborum.core.ui.RegisterTopBar
 
 @Composable
 fun CreateWordScreen(
@@ -66,6 +67,15 @@ fun CreateWordScreen(
             }
         }
 
+        RegisterTopBar(
+            title = stringResource(
+                if (isEditing) ResStrings.createWordScreenHeaderEdit
+                else ResStrings.createWordScreenHeader
+            ),
+            subtitle = dictionary.name,
+            showBackButton = true,
+        )
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -74,27 +84,6 @@ fun CreateWordScreen(
                 .padding(horizontal = 24.dp)
         ) {
             Spacer(modifier = Modifier.height(8.dp))
-
-            // Header
-            Text(
-                text = stringResource(
-                    if (isEditing) ResStrings.createWordScreenHeaderEdit
-                    else ResStrings.createWordScreenHeader
-                ),
-                fontSize = 28.sp,
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.onBackground,
-                letterSpacing = 0.5.sp
-            )
-
-            Text(
-                text = dictionary.name,
-                fontSize = 14.sp,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.padding(top = 4.dp)
-            )
-
-            Spacer(modifier = Modifier.height(24.dp))
 
             // Word Type
             Text(

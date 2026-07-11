@@ -35,6 +35,7 @@ import de.coldtea.verborum.bibliotheca.common.utils.ResDrawables
 import de.coldtea.verborum.bibliotheca.common.utils.ResStrings
 import de.coldtea.verborum.bibliotheca.dictionary.ui.composables.DictionaryCard
 import de.coldtea.verborum.core.theme.VerborumTheme
+import de.coldtea.verborum.core.ui.RegisterTopBar
 
 @Composable
 fun DictionaryListScreen(
@@ -54,6 +55,12 @@ fun DictionaryListScreen(
         }
     }
 
+    RegisterTopBar(
+        title = stringResource(ResStrings.dictionaryListScreenHeader),
+        subtitle = stringResource(ResStrings.dictionaryListScreenSubtitle),
+        showBackButton = false,
+    )
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -61,24 +68,6 @@ fun DictionaryListScreen(
             .padding(horizontal = 24.dp)
     ) {
         Spacer(modifier = Modifier.height(16.dp))
-
-        // Header
-        Text(
-            text = stringResource(ResStrings.dictionaryListScreenHeader),
-            fontSize = 32.sp,
-            fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.onBackground,
-            letterSpacing = 0.5.sp
-        )
-
-        Text(
-            text = stringResource(ResStrings.dictionaryListScreenSubtitle),
-            fontSize = 14.sp,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            modifier = Modifier.padding(top = 4.dp)
-        )
-
-        Spacer(modifier = Modifier.height(32.dp))
 
         // Dictionary List
         LazyColumn(

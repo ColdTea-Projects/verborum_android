@@ -30,7 +30,7 @@ import de.coldtea.verborum.bibliotheca.word.ui.multiplechoice.composables.Multip
 import de.coldtea.verborum.bibliotheca.word.ui.multiplechoice.composables.QuestionCard
 import de.coldtea.verborum.bibliotheca.word.ui.multiplechoice.composables.ResultScreen
 import de.coldtea.verborum.bibliotheca.word.ui.multiplechoice.model.MultipleChoiceCurrentQuestionState
-import de.coldtea.verborum.core.extensions.debounce
+import de.coldtea.verborum.core.ui.RegisterTopBar
 
 @Composable
 fun MultipleChoiceQuestionScreen(
@@ -53,6 +53,11 @@ fun MultipleChoiceQuestionScreen(
 
     when (currentQuestionState) {
         is MultipleChoiceCurrentQuestionState.Success -> {
+            RegisterTopBar(
+                title = "Test Mode",
+                subtitle = "Question ${currentQuestionState.index} of ${currentQuestionState.size}",
+                showBackButton = true,
+            )
             MultipleChoiceContent(
                 currentQuestionState = currentQuestionState,
                 answered = answered,
@@ -64,6 +69,10 @@ fun MultipleChoiceQuestionScreen(
         }
 
         is MultipleChoiceCurrentQuestionState.Completed -> {
+            RegisterTopBar(
+                title = "Test Complete",
+                showBackButton = true,
+            )
             ResultScreen(
                 resultState = currentQuestionState,
                 onBackClick = onBackClick,
