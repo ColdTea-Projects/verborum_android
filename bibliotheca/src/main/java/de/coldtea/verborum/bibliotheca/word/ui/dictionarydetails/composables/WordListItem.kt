@@ -87,7 +87,7 @@ fun WordListItem(
                             painter = painterResource(ResDrawables.ic_delete_24),
                             contentDescription = stringResource(ResStrings.dictionaryDetailsScreenDeleteWord),
                             // The drawable carries its own colors — don't tint over them.
-                            tint = Color.Unspecified,
+                            tint = MaterialTheme.colorScheme.error,
                             modifier = Modifier.size(20.dp)
                         )
                     }

@@ -154,7 +154,7 @@ fun DictionaryCard(
                         painter = painterResource(ResDrawables.ic_delete_24),
                         contentDescription = stringResource(ResStrings.dictionaryListScreenDeleteDictionary),
                         // The drawable carries its own colors — don't tint over them.
-                        tint = Color.Unspecified,
+                        tint = MaterialTheme.colorScheme.error,
                         modifier = Modifier.size(24.dp)
                     )
                 }
