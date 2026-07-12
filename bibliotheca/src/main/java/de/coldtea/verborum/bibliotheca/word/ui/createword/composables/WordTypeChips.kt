@@ -3,7 +3,8 @@ package de.coldtea.verborum.bibliotheca.word.ui.createword.composables
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
@@ -14,25 +15,26 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import de.coldtea.verborum.bibliotheca.word.ui.createword.model.WordType
+import de.coldtea.verborum.bibliotheca.word.ui.createword.model.WordCategory
 import de.coldtea.verborum.core.theme.VerborumTheme
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun WordTypeChips(
     modifier: Modifier = Modifier,
-    selectedType: WordType?,
-    onTypeSelected: (WordType) -> Unit,
+    selectedCategory: WordCategory?,
+    onCategorySelected: (WordCategory) -> Unit,
 ) {
-    Row(
+    FlowRow(
         modifier = modifier,
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
-        WordType.entries.forEach { wordType ->
-            val isSelected = wordType == selectedType
+        WordCategory.entries.forEach { category ->
+            val isSelected = category == selectedCategory
             val shape = RoundedCornerShape(20.dp)
 
             Surface(
@@ -42,19 +44,17 @@ fun WordTypeChips(
                 border = if (isSelected) null
                 else BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
                 modifier = Modifier
-                    .weight(1f)
                     .clip(shape)
-                    .clickable { onTypeSelected(wordType) }
+                    .clickable { onCategorySelected(category) }
             ) {
                 Text(
-                    text = stringResource(wordType.labelRes),
+                    text = stringResource(category.labelRes),
                     fontSize = 13.sp,
                     fontWeight = if (isSelected) FontWeight.SemiBold else FontWeight.Medium,
-                    textAlign = TextAlign.Center,
                     maxLines = 1,
                     color = if (isSelected) MaterialTheme.colorScheme.onPrimary
                     else MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.padding(horizontal = 4.dp, vertical = 10.dp)
+                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 10.dp)
                 )
             }
         }
@@ -66,8 +66,8 @@ fun WordTypeChips(
 fun WordTypeChipsPreview() {
     VerborumTheme {
         WordTypeChips(
-            selectedType = WordType.NOUN,
-            onTypeSelected = {},
+            selectedCategory = WordCategory.NOUN,
+            onCategorySelected = {},
         )
     }
 }

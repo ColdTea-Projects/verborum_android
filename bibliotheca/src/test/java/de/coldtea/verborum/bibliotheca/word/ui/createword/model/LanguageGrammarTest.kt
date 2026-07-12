@@ -105,20 +105,77 @@ class LanguageGrammarTest : BaseTest() {
     // region formSpec — adjectives
 
     @Test
-    fun `Romance and Lithuanian adjectives expose a feminine field`() {
+    fun `Romance and Lithuanian adjectives expose feminine then comparison fields`() {
         listOf("fr", "es", "it", "pt", "lt").forEach { code ->
             assertEquals(
-                "expected feminine field for $code",
-                listOf(FieldKey.FEMININE),
+                "expected feminine + comparison fields for $code",
+                listOf(FieldKey.FEMININE, FieldKey.COMPARATIVE, FieldKey.SUPERLATIVE),
                 LanguageGrammar.formSpec(code, WordType.ADJECTIVE).fields.map { it.key },
             )
         }
     }
 
     @Test
-    fun `German and English adjectives have no extra fields`() {
-        assertTrue(LanguageGrammar.formSpec("de", WordType.ADJECTIVE).isEmpty)
-        assertTrue(LanguageGrammar.formSpec("en", WordType.ADJECTIVE).isEmpty)
+    fun `German and English adjectives expose comparison fields but no feminine`() {
+        listOf("de", "en", "nl").forEach { code ->
+            assertEquals(
+                "expected comparison fields for $code",
+                listOf(FieldKey.COMPARATIVE, FieldKey.SUPERLATIVE),
+                LanguageGrammar.formSpec(code, WordType.ADJECTIVE).fields.map { it.key },
+            )
+        }
+    }
+
+    @Test
+    fun `Turkish and Azerbaijani adjectives have no fields — comparison is periphrastic`() {
+        assertTrue(LanguageGrammar.formSpec("tr", WordType.ADJECTIVE).isEmpty)
+        assertTrue(LanguageGrammar.formSpec("az", WordType.ADJECTIVE).isEmpty)
+    }
+
+    // endregion
+
+    // region formSpec — adverbs
+
+    @Test
+    fun `adverbs capture only the word itself — comparison lives on the adjective card`() {
+        listOf("de", "en", "nl", "lt", "fr", "tr").forEach { code ->
+            assertTrue(
+                "expected empty adverb spec for $code",
+                LanguageGrammar.formSpec(code, WordType.ADVERB).isEmpty,
+            )
+        }
+    }
+
+    @Test
+    fun `English comparison is hinted as only-if-irregular while German is not`() {
+        val enComparative = LanguageGrammar.formSpec("en", WordType.ADJECTIVE).fields
+            .filterIsInstance<FormField.TextForm>()
+            .first { it.key == FieldKey.COMPARATIVE }
+        val deComparative = LanguageGrammar.formSpec("de", WordType.ADJECTIVE).fields
+            .filterIsInstance<FormField.TextForm>()
+            .first { it.key == FieldKey.COMPARATIVE }
+
+        assertTrue(enComparative.hintRes != null)
+        assertNull(deComparative.hintRes)
+    }
+
+    // endregion
+
+    // region formSpec — other closed-class types
+
+    @Test
+    fun `other sub-types capture only the word itself`() {
+        listOf(
+            WordType.FREE_TEXT,
+            WordType.PREPOSITION,
+            WordType.PRONOUN,
+            WordType.NUMERAL,
+            WordType.CONJUNCTION,
+            WordType.INTERJECTION,
+            WordType.ARTICLE,
+        ).forEach { type ->
+            assertTrue("$type should have an empty spec", LanguageGrammar.formSpec("de", type).isEmpty)
+        }
     }
 
     // endregion

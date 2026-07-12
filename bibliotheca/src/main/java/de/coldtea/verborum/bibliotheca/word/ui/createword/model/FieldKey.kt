@@ -13,6 +13,8 @@ import de.coldtea.verborum.bibliotheca.common.utils.ResStrings
 enum class FieldKey(val metaKey: String, @StringRes val labelRes: Int) {
     PLURAL("plural", ResStrings.createWordScreenPluralLabel),
     FEMININE("feminine", ResStrings.createWordScreenFeminineLabel),
+    COMPARATIVE("comparative", ResStrings.createWordScreenComparativeLabel),
+    SUPERLATIVE("superlative", ResStrings.createWordScreenSuperlativeLabel),
     PRESENT_3RD("present", ResStrings.createWordScreenPresentLabel),
     PAST("past", ResStrings.createWordScreenPastLabel),
     PAST_3RD("past3", ResStrings.createWordScreenPastFormLabel),

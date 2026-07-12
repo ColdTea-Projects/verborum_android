@@ -40,10 +40,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import de.coldtea.verborum.bibliotheca.word.ui.model.WordMeta
 import de.coldtea.verborum.bibliotheca.word.ui.model.WordUi
 import de.coldtea.verborum.bibliotheca.word.ui.model.translationDisplayLine
 import de.coldtea.verborum.bibliotheca.word.ui.model.wordDisplayLine
@@ -85,6 +90,18 @@ fun ExpandableWordCard(
             tween(500) // No animation during drag
         }
     )
+
+    // The part of speech, appended in red to both lines, e.g. "der Apfel/Äpfel (noun)". Free text
+    // carries no type, so nothing is appended for it.
+    val wordType = remember(word) { WordMeta.parse(word.wordMeta)?.wordType }
+    val typeSuffix = wordType?.let { " (${stringResource(it.labelRes).lowercase()})" }.orEmpty()
+    val typeColor = MaterialTheme.colorScheme.primary
+    fun withType(base: String) = buildAnnotatedString {
+        append(base)
+        if (typeSuffix.isNotEmpty()) {
+            withStyle(SpanStyle(color = typeColor)) { append(typeSuffix) }
+        }
+    }
 
     // Full form lines, e.g. "gehen · ging · (sein) gegangen" — mirrors the create screen preview.
     // Remembered because the drag/settle animation recomposes every frame; without this the JSON
@@ -170,7 +187,7 @@ fun ExpandableWordCard(
             ) {
                 // Word (always visible)
                 Text(
-                    text = shownText,
+                    text = withType(shownText),
                     fontSize = 16.sp,
                     fontWeight = FontWeight.SemiBold,
                     color = MaterialTheme.colorScheme.onSurface,
@@ -261,10 +278,10 @@ fun PreviewExpandableWordCard() {
                 word = WordUi(
                     wordId = "",
                     dictionaryId = "",
-                    word = "go",
-                    wordMeta = "{en;type=verb;past=went;participle=gone}",
-                    translation = "gehen",
-                    translationMeta = "{de;type=verb;past=ging;participle=gegangen;aux=sein}",
+                    word = """["go"]""",
+                    wordMeta = """{"lang":"en","type":"verb","fields":{"past":["went"],"participle":["gone"]}}""",
+                    translation = """["gehen"]""",
+                    translationMeta = """{"lang":"de","type":"verb","fields":{"past":["ging"],"participle":["gegangen"],"aux":["sein"]}}""",
                     level = 0,
                     createdAt = 0L,
                     updatedAt = 0L,

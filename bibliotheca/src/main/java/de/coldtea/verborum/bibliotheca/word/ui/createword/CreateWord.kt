@@ -31,11 +31,14 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import de.coldtea.verborum.bibliotheca.common.ui.model.SupportedLanguage
 import de.coldtea.verborum.bibliotheca.common.utils.ResStrings
 import de.coldtea.verborum.bibliotheca.word.ui.createword.composables.LanguageInputCard
+import de.coldtea.verborum.bibliotheca.word.ui.createword.composables.OtherTypeDropdown
 import de.coldtea.verborum.bibliotheca.word.ui.createword.composables.WordTypeChips
 import de.coldtea.verborum.bibliotheca.word.ui.createword.model.CreateWordState
 import de.coldtea.verborum.bibliotheca.word.ui.createword.model.LanguageGrammar
+import de.coldtea.verborum.bibliotheca.word.ui.createword.model.WordCategory
 import de.coldtea.verborum.bibliotheca.word.ui.createword.model.WordFormInput
 import de.coldtea.verborum.bibliotheca.word.ui.createword.model.WordType
+import de.coldtea.verborum.bibliotheca.word.ui.createword.model.defaultType
 import de.coldtea.verborum.bibliotheca.word.ui.createword.model.parseWordFormInputs
 import de.coldtea.verborum.bibliotheca.word.ui.createword.model.parseWordType
 import de.coldtea.verborum.core.theme.VerborumTheme
@@ -58,6 +61,22 @@ fun CreateWordScreen(
         val dictionary = createWordState.dictionaryUi
         val editingWord = createWordState.editingWord
         val isEditing = editingWord != null
+
+        // Switches the active word type: back on the edited word's own type restores its stored
+        // grammar; any other type keeps the typed words but clears the old type's grammatical fields.
+        fun applyType(newType: WordType) {
+            if (newType == selectedType) return
+            selectedType = newType
+            if (editingWord != null && newType == parseWordType(editingWord.wordMeta)) {
+                sourceInputs = parseWordFormInputs(dictionary.fromLang, editingWord.word, editingWord.wordMeta)
+                    .ifEmpty { listOf(WordFormInput()) }
+                targetInputs = parseWordFormInputs(dictionary.toLang, editingWord.translation, editingWord.translationMeta)
+                    .ifEmpty { listOf(WordFormInput()) }
+            } else {
+                sourceInputs = sourceInputs.map { WordFormInput(text = it.text) }
+                targetInputs = targetInputs.map { WordFormInput(text = it.text) }
+            }
+        }
 
         // Edit mode: prefill the form from the stored word once it is loaded.
         LaunchedEffect(editingWord) {
@@ -100,28 +119,24 @@ fun CreateWordScreen(
             Spacer(modifier = Modifier.height(12.dp))
 
             WordTypeChips(
-                selectedType = selectedType,
-                onTypeSelected = { wordType ->
-                    if (wordType != selectedType) {
-                        selectedType = wordType
-                        if (editingWord != null && wordType == parseWordType(editingWord.wordMeta)) {
-                            // Back on the edited word's own type: its stored grammar fits, so
-                            // restore every alternative just like the first opening.
-                            sourceInputs = parseWordFormInputs(dictionary.fromLang, editingWord.word, editingWord.wordMeta)
-                                .ifEmpty { listOf(WordFormInput()) }
-                            targetInputs = parseWordFormInputs(dictionary.toLang, editingWord.translation, editingWord.translationMeta)
-                                .ifEmpty { listOf(WordFormInput()) }
-                        } else {
-                            // Keep the typed words; clear the grammatical fields of the old type.
-                            sourceInputs = sourceInputs.map { WordFormInput(text = it.text) }
-                            targetInputs = targetInputs.map { WordFormInput(text = it.text) }
-                        }
-                    }
+                selectedCategory = selectedType?.category,
+                onCategorySelected = { category ->
+                    if (category != selectedType?.category) applyType(category.defaultType)
                 },
                 modifier = Modifier.fillMaxWidth()
             )
 
             selectedType?.let { wordType ->
+                // The "Other" bucket picks its concrete part of speech from a dropdown.
+                if (wordType.category == WordCategory.OTHER) {
+                    Spacer(modifier = Modifier.height(16.dp))
+                    OtherTypeDropdown(
+                        selected = wordType,
+                        onSelected = { applyType(it) },
+                        modifier = Modifier.fillMaxWidth(),
+                    )
+                }
+
                 Spacer(modifier = Modifier.height(24.dp))
 
                 LanguageInputCard(

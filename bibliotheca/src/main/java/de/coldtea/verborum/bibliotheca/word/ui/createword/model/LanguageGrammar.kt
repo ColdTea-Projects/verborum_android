@@ -50,6 +50,13 @@ object LanguageGrammar {
     /** Languages whose adjectives inflect for a distinct feminine form. */
     private val feminineAdjectiveLanguages: Set<String> = setOf(FR, ES, IT, PT, LT)
 
+    /**
+     * Languages worth capturing comparative/superlative forms for (adjectives and adverbs).
+     * Turkish/Azerbaijani are excluded: comparison there is fully periphrastic (daha…, ən…), so
+     * there is nothing per-word to store.
+     */
+    private val comparisonLanguages: Set<String> = setOf(EN, DE, NL, FR, ES, IT, PT, LT)
+
     fun genderOptions(languageCode: String): List<Gender> =
         genderByLanguage[languageCode.lowercase()].orEmpty()
 
@@ -72,16 +79,37 @@ object LanguageGrammar {
             WordType.VERB -> LanguageFormSpec(fields = verbFields(code))
 
             WordType.ADJECTIVE -> LanguageFormSpec(
-                fields = if (code in feminineAdjectiveLanguages) {
-                    listOf(textForm(FieldKey.FEMININE))
-                } else {
-                    emptyList()
+                fields = buildList {
+                    if (code in feminineAdjectiveLanguages) add(textForm(FieldKey.FEMININE))
+                    addAll(comparisonFields(code))
                 },
             )
 
-            WordType.FREE_TEXT -> LanguageFormSpec()
+            // Adverbs, free text, and the closed-class sub-types capture only the word itself.
+            // (Adverb comparison overlaps almost entirely with the adjective card, and the few
+            // adverb-only irregulars aren't worth a dedicated field.)
+            else -> LanguageFormSpec()
         }
     }
+
+    /**
+     * Comparative + superlative forms, for languages where they are worth entering. Germanic/Baltic
+     * inflect morphologically (always shown); the Romance languages and English are periphrastic, so
+     * these are hinted as irregular-only. Empty for languages outside [comparisonLanguages].
+     */
+    private fun comparisonFields(code: String): List<FormField> =
+        if (code in comparisonLanguages) {
+            listOf(
+                textForm(FieldKey.COMPARATIVE, comparisonHintOrNull(code)),
+                textForm(FieldKey.SUPERLATIVE, comparisonHintOrNull(code)),
+            )
+        } else {
+            emptyList()
+        }
+
+    private fun comparisonHintOrNull(code: String): Int? =
+        // de/nl/lt comparison is morphological; en + Romance are periphrastic — capture only exceptions.
+        if (code in setOf(EN, FR, ES, IT, PT)) ResStrings.createWordScreenIrregularHint else null
 
     private fun verbFields(code: String): List<FormField> = when (code) {
         EN -> listOf(

@@ -130,6 +130,13 @@ fun DictionaryCard(
                         color = MaterialTheme.colorScheme.onSurface
                     )
 
+                    Text(
+                        text = languagePairLabel(dictionary.fromLang, dictionary.toLang),
+                        fontSize = 14.sp,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.padding(top = 2.dp)
+                    )
+
                     Row(
                         horizontalArrangement = Arrangement.spacedBy(16.dp),
                         modifier = Modifier.padding(top = 8.dp)

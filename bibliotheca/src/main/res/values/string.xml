@@ -3,6 +3,7 @@
     <!--String-->
     <string name="dictionaryListScreenHeader">Bibliotheca</string>
     <string name="dictionaryListScreenSubtitle">Your dictionaries</string>
+    <string name="dictionaryLanguagePair">%1$s to %2$s</string>
     <string name="dictionaryDetailsScreenTest">Test</string>
     <string name="dictionaryDetailsScreenSelf">Self Practice</string>
     <string name="dictionaryDetailsScreenWordListHeader">Word List</string>
@@ -35,7 +36,18 @@
     <string name="createWordScreenTypeNoun">Noun</string>
     <string name="createWordScreenTypeVerb">Verb</string>
     <string name="createWordScreenTypeAdjective">Adjective</string>
+    <string name="createWordScreenTypeAdverb">Adverb</string>
     <string name="createWordScreenTypeFreeText">Free Text</string>
+    <string name="createWordScreenTypeOther">Other</string>
+    <string name="createWordScreenTypePreposition">Preposition</string>
+    <string name="createWordScreenTypePronoun">Pronoun</string>
+    <string name="createWordScreenTypeNumeral">Numeral</string>
+    <string name="createWordScreenTypeConjunction">Conjunction</string>
+    <string name="createWordScreenTypeInterjection">Interjection</string>
+    <string name="createWordScreenTypeArticle">Article</string>
+    <string name="createWordScreenOtherTypeLabel">Type</string>
+    <string name="createWordScreenComparativeLabel">Comparative</string>
+    <string name="createWordScreenSuperlativeLabel">Superlative</string>
     <string name="createWordScreenTextLabel">Text</string>
     <string name="createWordScreenGenderLabel">Gender</string>
     <string name="createWordScreenGenderMasculine">m.</string>

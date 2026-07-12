@@ -243,12 +243,65 @@ class WordFormRulesTest : BaseTest() {
         assertEquals(WordType.NOUN, parseWordType("""{"lang":"de","type":"noun","genders":["n"]}"""))
         assertEquals(WordType.VERB, parseWordType("""{"lang":"de","type":"verb"}"""))
         assertEquals(WordType.ADJECTIVE, parseWordType("""{"lang":"fr","type":"adjective"}"""))
+        assertEquals(WordType.ADVERB, parseWordType("""{"lang":"de","type":"adverb"}"""))
+        assertEquals(WordType.PREPOSITION, parseWordType("""{"lang":"de","type":"preposition"}"""))
+        assertEquals(WordType.PRONOUN, parseWordType("""{"lang":"de","type":"pronoun"}"""))
     }
 
     @Test
     fun `parseWordType falls back to free text when the meta has no type`() {
+        // Words saved before sub-types existed carry no type — they load back as free text.
         assertEquals(WordType.FREE_TEXT, parseWordType("""{"lang":"de"}"""))
         assertEquals(WordType.FREE_TEXT, parseWordType(""))
+    }
+
+    // endregion
+
+    // region comparison, adverb & other sub-types
+
+    @Test
+    fun `composeWordMeta serializes an adjective with its comparison forms`() {
+        val input = WordFormInput(
+            text = "groß",
+            fields = mapOf(
+                FieldKey.COMPARATIVE to "größer",
+                FieldKey.SUPERLATIVE to "am größten",
+            ),
+        )
+
+        assertEquals(
+            """{"lang":"de","type":"adjective","fields":{"comparative":["größer"],"superlative":["am größten"]}}""",
+            composeWordMeta("de", WordType.ADJECTIVE, input),
+        )
+    }
+
+    @Test
+    fun `parseWordFormInputs round-trips an adjective with comparison forms`() {
+        val input = WordFormInput(
+            text = "groß",
+            fields = mapOf(
+                FieldKey.COMPARATIVE to "größer",
+                FieldKey.SUPERLATIVE to "am größten",
+            ),
+        )
+        val text = composeWordText("de", input)
+        val meta = composeWordMeta("de", WordType.ADJECTIVE, input)
+
+        assertEquals(input, parseWordFormInputs("de", text, meta).first())
+    }
+
+    @Test
+    fun `composeWordMeta records an adverb with only its type`() {
+        val input = WordFormInput(text = "gern")
+
+        assertEquals("""{"lang":"de","type":"adverb"}""", composeWordMeta("de", WordType.ADVERB, input))
+    }
+
+    @Test
+    fun `composeWordMeta records an other sub-type as its meta type`() {
+        val input = WordFormInput(text = "mit")
+
+        assertEquals("""{"lang":"de","type":"preposition"}""", composeWordMeta("de", WordType.PREPOSITION, input))
     }
 
     // endregion

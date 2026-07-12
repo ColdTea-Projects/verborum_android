@@ -41,6 +41,7 @@ import de.coldtea.verborum.bibliotheca.common.utils.ResDrawables
 import de.coldtea.verborum.bibliotheca.common.utils.ResPlurals
 import de.coldtea.verborum.bibliotheca.common.utils.ResStrings
 import de.coldtea.verborum.bibliotheca.dictionary.ui.composables.DeleteDictionaryDialog
+import de.coldtea.verborum.bibliotheca.dictionary.ui.composables.languagePairLabel
 import de.coldtea.verborum.bibliotheca.word.ui.dictionarydetails.composables.PracticeModeButton
 import de.coldtea.verborum.bibliotheca.word.ui.dictionarydetails.composables.WordListItem
 import de.coldtea.verborum.bibliotheca.word.ui.dictionarydetails.model.DictionaryDetailState
@@ -71,17 +72,16 @@ fun DictionaryDetailsScreen(
             val dictionary = dictionaryDetailState.dictionaryUi
             val words = dictionaryDetailState.wordsUi
 
-            val headerSubtext =
-                if (words.isEmpty()) stringResource(ResStrings.dictionaryDetailsScreenWordListZeroItem)
-                else pluralStringResource(
-                    ResPlurals.dictionaryDetailsScreenWordListCount,
-                    words.size,
-                    words.size,
-                )
+            val languagePair = languagePairLabel(dictionary.fromLang, dictionary.toLang)
+            val wordCount = pluralStringResource(
+                ResPlurals.dictionaryListScreenWordCount,
+                words.size,
+                words.size,
+            )
 
             RegisterTopBar(
                 title = dictionary.name,
-                subtitle = headerSubtext,
+                subtitle = "$languagePair · $wordCount",
                 showBackButton = true,
             )
 
