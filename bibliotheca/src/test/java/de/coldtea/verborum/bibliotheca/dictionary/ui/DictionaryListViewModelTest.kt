@@ -8,6 +8,7 @@ import de.coldtea.verborum.bibliotheca.word.domain.WordService
 import de.coldtea.verborum.core.BaseTest
 import io.mockk.coEvery
 import io.mockk.coVerify
+import io.mockk.coVerifyOrder
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import kotlinx.coroutines.flow.emptyFlow
@@ -115,6 +116,24 @@ class DictionaryListViewModelTest : BaseTest() {
 
         assertEquals(emptyList<DictionaryUi>(), viewModel.dictionariesState.first())
         coVerify(exactly = 1) { syncService.syncDictionaries() }
+    }
+
+    // endregion
+
+    // region deleteDictionary
+
+    @Test
+    fun `deleteDictionary tombstones first then cleans words then deletes the dictionary`() = runTest {
+        every { dictionaryService.observeDictionaries() } returns emptyFlow()
+        val viewModel = buildViewModel()
+
+        viewModel.deleteDictionary("dict-1")
+
+        coVerifyOrder {
+            dictionaryService.markDictionaryDeleted("dict-1")
+            wordService.cleanWordsInDictionary("dict-1")
+            dictionaryService.deleteDictionary("dict-1")
+        }
     }
 
     // endregion

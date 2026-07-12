@@ -9,6 +9,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import de.coldtea.verborum.bibliotheca.dictionary.ui.DictionaryListScreen
 import de.coldtea.verborum.bibliotheca.dictionary.ui.createdictionary.CreateDictionaryScreen
+import de.coldtea.verborum.bibliotheca.dictionary.ui.createdictionary.CreateDictionaryViewModel
 import de.coldtea.verborum.bibliotheca.onboarding.ui.WelcomeScreen
 import de.coldtea.verborum.bibliotheca.word.ui.createword.CreateWordScreen
 import de.coldtea.verborum.bibliotheca.word.ui.createword.CreateWordViewModel
@@ -44,19 +45,36 @@ fun NavGraphBuilder.insertDictionariesList(
         },
         onCreateDictionaryClick = {
             navController.navigate(SCREEN_CREATE_DICTIONARY)
+        },
+        onEditDictionaryClick = { dictionaryId ->
+            navController.navigate("$SCREEN_CREATE_DICTIONARY?dictionaryId=$dictionaryId")
         }
     )
 }
 
 fun NavGraphBuilder.insertCreateDictionary(navController: NavHostController) = composable(
-    SCREEN_CREATE_DICTIONARY
-) {
+    route = "$SCREEN_CREATE_DICTIONARY?dictionaryId={dictionaryId}",
+    arguments = listOf(
+        navArgument("dictionaryId") {
+            type = NavType.StringType
+            nullable = true
+            defaultValue = null
+        }
+    )
+) { navBackStackEntry ->
+    val viewModel = hiltViewModel<CreateDictionaryViewModel>()
+    val dictionaryId: String? = navBackStackEntry.arguments?.getString("dictionaryId")
+
+    viewModel.init(dictionaryId)
+
     CreateDictionaryScreen(
-        onDictionaryCreated = { dictionaryId ->
-            navController.navigate("$SCREEN_DICTIONARIES_DETAIL/$dictionaryId") {
+        viewModel = viewModel,
+        onDictionaryCreated = { newId ->
+            navController.navigate("$SCREEN_DICTIONARIES_DETAIL/$newId") {
                 popUpTo(SCREEN_DICTIONARIES_LIST)
             }
-        }
+        },
+        onDictionaryUpdated = { navController.popBackStack() },
     )
 }
 

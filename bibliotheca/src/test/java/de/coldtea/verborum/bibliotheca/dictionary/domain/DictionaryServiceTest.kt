@@ -5,11 +5,13 @@ import de.coldtea.verborum.bibliotheca.common.domain.UploadService
 import de.coldtea.verborum.bibliotheca.dictionary.data.db.entity.DictionaryEntity.Companion.GUEST_USER_ID
 import de.coldtea.verborum.bibliotheca.dictionary.domain.model.Dictionary
 import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.local.DeleteDictionaryUseCase
+import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.local.GetDictionaryUseCase
 import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.local.MarkDictionaryDeletedUseCase
 import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.local.ObserveAllDictionariesUseCase
 import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.local.ObserveDictionaryUseCase
 import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.local.SaveDictionaryUseCase
 import de.coldtea.verborum.bibliotheca.testDictionary
+import de.coldtea.verborum.bibliotheca.testDictionaryUi
 import de.coldtea.verborum.core.BaseTest
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -33,6 +35,10 @@ class DictionaryServiceTest : BaseTest() {
 
     @MockK
     private lateinit var observeDictionaryUseCase: ObserveDictionaryUseCase
+
+    // invoke returns Dictionary — not covered by relaxUnitFun, stubbed per test with coEvery.
+    @MockK
+    private lateinit var getDictionaryUseCase: GetDictionaryUseCase
 
     // invoke returns String — not covered by relaxUnitFun, stubbed per test with coEvery.
     @MockK
@@ -59,6 +65,7 @@ class DictionaryServiceTest : BaseTest() {
         dictionaryService = DictionaryService(
             observeAllDictionariesUseCase = observeAllDictionariesUseCase,
             observeDictionaryUseCase = observeDictionaryUseCase,
+            getDictionaryUseCase = getDictionaryUseCase,
             saveDictionaryUseCase = saveDictionaryUseCase,
             deleteDictionaryUseCase = deleteDictionaryUseCase,
             markDictionaryDeletedUseCase = markDictionaryDeletedUseCase,
@@ -168,6 +175,42 @@ class DictionaryServiceTest : BaseTest() {
         val result = dictionaryService.observeDictionary("dict-1").first()
 
         assertEquals(dictionary.convertToUi(), result)
+    }
+
+    // endregion
+
+    // region getDictionary / updateDictionary
+
+    @Test
+    fun `getDictionary maps the loaded dictionary to DictionaryUi`() = runTest {
+        val dictionary = testDictionary(dictionaryId = "dict-1", name = "German Basics")
+        coEvery { getDictionaryUseCase.invoke("dict-1") } returns dictionary
+
+        val result = dictionaryService.getDictionary("dict-1")
+
+        assertEquals(dictionary.convertToUi(), result)
+    }
+
+    @Test
+    fun `updateDictionary preserves identity, re-marks unsynced, and delegates to SaveDictionaryUseCase`() = runTest {
+        val dictionarySlot = slot<Dictionary>()
+        coEvery { saveDictionaryUseCase.invoke(capture(dictionarySlot)) } returns "dict-1"
+
+        dictionaryService.updateDictionary(
+            testDictionaryUi(
+                dictionaryId = "dict-1",
+                name = "German Advanced",
+                fromLang = "de",
+                toLang = "es",
+            )
+        )
+
+        val saved = dictionarySlot.captured
+        assertEquals("dict-1", saved.dictionaryId)
+        assertEquals("German Advanced", saved.name)
+        assertEquals("de", saved.fromLang)
+        assertEquals("es", saved.toLang)
+        assertFalse(saved.isSynced)
     }
 
     // endregion

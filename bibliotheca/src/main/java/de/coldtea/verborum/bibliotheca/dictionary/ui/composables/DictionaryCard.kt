@@ -3,8 +3,9 @@ package de.coldtea.verborum.bibliotheca.dictionary.ui.composables
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.spring
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -43,12 +44,14 @@ import de.coldtea.verborum.bibliotheca.common.utils.ResPlurals
 import de.coldtea.verborum.bibliotheca.dictionary.ui.model.DictionaryUi
 import de.coldtea.verborum.core.theme.VerborumTheme
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun DictionaryCard(
     modifier: Modifier = Modifier,
     dictionary: DictionaryUi,
     index: Int,
     onClick: (String) -> Unit,
+    onLongClick: (DictionaryUi) -> Unit = {},
 ) {
     var isPressed by remember { mutableStateOf(false) }
 
@@ -64,13 +67,15 @@ fun DictionaryCard(
         modifier = modifier
             .fillMaxWidth()
             .offset(y = animatedOffset)
-            .clickable(
+            .combinedClickable(
                 interactionSource = remember { MutableInteractionSource() },
                 indication = ripple(), // Material 3 ripple
-            ) {
-                isPressed = !isPressed
-                onClick(dictionary.dictionaryId)
-            },
+                onClick = {
+                    isPressed = !isPressed
+                    onClick(dictionary.dictionaryId)
+                },
+                onLongClick = { onLongClick(dictionary) },
+            ),
         shape = RoundedCornerShape(16.dp),
         color = MaterialTheme.colorScheme.surfaceVariant,
         tonalElevation = 2.dp,
@@ -191,6 +196,7 @@ fun PreviewDictionaryCardLight() {
                 wordCount = 12,
             ),
             index = 0,
-        ) { }
+            onClick = {},
+        )
     }
 }

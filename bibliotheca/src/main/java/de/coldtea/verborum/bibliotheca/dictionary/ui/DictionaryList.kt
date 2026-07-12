@@ -1,8 +1,10 @@
 package de.coldtea.verborum.bibliotheca.dictionary.ui
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -15,15 +17,24 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -33,7 +44,9 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import de.coldtea.verborum.bibliotheca.common.utils.ResDrawables
 import de.coldtea.verborum.bibliotheca.common.utils.ResStrings
+import de.coldtea.verborum.bibliotheca.dictionary.ui.composables.DeleteDictionaryDialog
 import de.coldtea.verborum.bibliotheca.dictionary.ui.composables.DictionaryCard
+import de.coldtea.verborum.bibliotheca.dictionary.ui.model.DictionaryUi
 import de.coldtea.verborum.core.theme.VerborumTheme
 import de.coldtea.verborum.core.ui.RegisterTopBar
 
@@ -43,8 +56,13 @@ fun DictionaryListScreen(
     snackbarHostState: SnackbarHostState,
     onDictionaryClick: (String) -> Unit,
     onCreateDictionaryClick: () -> Unit,
+    onEditDictionaryClick: (String) -> Unit = {},
 ) {
     val dictionaries = viewModel.dictionariesState.collectAsState().value
+
+    // Long-press target for the options sheet, and the dictionary pending delete confirmation.
+    var optionsFor by remember { mutableStateOf<DictionaryUi?>(null) }
+    var confirmDeleteFor by remember { mutableStateOf<DictionaryUi?>(null) }
 
     LaunchedEffect(Unit) {
         viewModel.snackbarMessages.collect { message ->
@@ -53,6 +71,31 @@ fun DictionaryListScreen(
                 duration = SnackbarDuration.Short,
             )
         }
+    }
+
+    optionsFor?.let { dictionary ->
+        DictionaryOptionsSheet(
+            onDismiss = { optionsFor = null },
+            onEdit = {
+                optionsFor = null
+                onEditDictionaryClick(dictionary.dictionaryId)
+            },
+            onDelete = {
+                optionsFor = null
+                confirmDeleteFor = dictionary
+            },
+        )
+    }
+
+    confirmDeleteFor?.let { dictionary ->
+        DeleteDictionaryDialog(
+            dictionaryName = dictionary.name,
+            onConfirm = {
+                confirmDeleteFor = null
+                viewModel.deleteDictionary(dictionary.dictionaryId)
+            },
+            onDismiss = { confirmDeleteFor = null },
+        )
     }
 
     RegisterTopBar(
@@ -78,7 +121,8 @@ fun DictionaryListScreen(
                 DictionaryCard(
                     dictionary = dictionary,
                     index = index,
-                    onClick = onDictionaryClick
+                    onClick = onDictionaryClick,
+                    onLongClick = { optionsFor = it },
                 )
             }
         }
@@ -109,6 +153,66 @@ fun DictionaryListScreen(
                 letterSpacing = 0.5.sp
             )
         }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun DictionaryOptionsSheet(
+    onDismiss: () -> Unit,
+    onEdit: () -> Unit,
+    onDelete: () -> Unit,
+) {
+    ModalBottomSheet(
+        onDismissRequest = onDismiss,
+        sheetState = rememberModalBottomSheetState(),
+    ) {
+        Column(modifier = Modifier.padding(bottom = 24.dp)) {
+            DictionaryOptionRow(
+                iconRes = ResDrawables.ic_edit_24,
+                text = stringResource(ResStrings.dictionaryOptionsEdit),
+                // Neutral action — reads against the background like normal content.
+                color = MaterialTheme.colorScheme.onBackground,
+                onClick = onEdit,
+            )
+            DictionaryOptionRow(
+                iconRes = ResDrawables.ic_delete_24,
+                text = stringResource(ResStrings.dictionaryOptionsDelete),
+                // Destructive action — flagged in the error color.
+                color = MaterialTheme.colorScheme.error,
+                onClick = onDelete,
+            )
+        }
+    }
+}
+
+@Composable
+private fun DictionaryOptionRow(
+    iconRes: Int,
+    text: String,
+    color: Color,
+    onClick: () -> Unit,
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(onClick = onClick)
+            .padding(horizontal = 24.dp, vertical = 16.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Icon(
+            painter = painterResource(iconRes),
+            contentDescription = null,
+            tint = color,
+            modifier = Modifier.size(24.dp),
+        )
+        Spacer(modifier = Modifier.width(16.dp))
+        Text(
+            text = text,
+            fontSize = 16.sp,
+            fontWeight = FontWeight.Medium,
+            color = color,
+        )
     }
 }
 

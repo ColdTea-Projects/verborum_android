@@ -4,5 +4,6 @@ sealed class CreateDictionaryState {
     data object Idle : CreateDictionaryState()
     data object Saving : CreateDictionaryState()
     data class Created(val dictionaryId: String) : CreateDictionaryState()
+    data object Updated : CreateDictionaryState()
     data object Failed : CreateDictionaryState()
 }

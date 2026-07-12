@@ -41,4 +41,14 @@ class DictionaryListViewModel @Inject constructor(
             syncService.syncDictionaries()
         }
     }
+
+    /**
+     * Tombstones the dictionary first so it disappears immediately and offline-safely, then cleans
+     * its words and performs the server-confirmed delete — mirrors the details screen's delete.
+     */
+    fun deleteDictionary(dictionaryId: String) = viewModelScope.launch(exceptionHandler) {
+        dictionaryService.markDictionaryDeleted(dictionaryId)
+        wordService.cleanWordsInDictionary(dictionaryId)
+        dictionaryService.deleteDictionary(dictionaryId)
+    }
 }

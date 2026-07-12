@@ -50,7 +50,6 @@ fun LanguageInputCard(
     barColor: Color,
     spec: LanguageFormSpec,
     inputs: List<WordFormInput>,
-    canAddAlternative: Boolean,
     onInputChange: (Int, WordFormInput) -> Unit,
     onAddAlternative: () -> Unit,
     onRemoveAlternative: (Int) -> Unit,
@@ -97,26 +96,24 @@ fun LanguageInputCard(
                     )
                 }
 
-                if (canAddAlternative) {
-                    Spacer(modifier = Modifier.height(12.dp))
-                    // The + sits at the left of its own row, right after the last field.
-                    Row(modifier = Modifier.fillMaxWidth()) {
-                        OutlinedButton(
-                            onClick = onAddAlternative,
-                            shape = RoundedCornerShape(12.dp),
-                        ) {
-                            Icon(
-                                painter = painterResource(ResDrawables.ic_plus_24),
-                                contentDescription = null,
-                                modifier = Modifier.size(16.dp)
-                            )
-                            Spacer(modifier = Modifier.width(6.dp))
-                            Text(
-                                text = stringResource(ResStrings.createWordScreenAddAlternative),
-                                fontSize = 13.sp,
-                                fontWeight = FontWeight.SemiBold,
-                            )
-                        }
+                Spacer(modifier = Modifier.height(12.dp))
+                // The + sits at the left of its own row, right after the last field.
+                Row(modifier = Modifier.fillMaxWidth()) {
+                    OutlinedButton(
+                        onClick = onAddAlternative,
+                        shape = RoundedCornerShape(12.dp),
+                    ) {
+                        Icon(
+                            painter = painterResource(ResDrawables.ic_plus_24),
+                            contentDescription = null,
+                            modifier = Modifier.size(16.dp)
+                        )
+                        Spacer(modifier = Modifier.width(6.dp))
+                        Text(
+                            text = stringResource(ResStrings.createWordScreenAddAlternative),
+                            fontSize = 13.sp,
+                            fontWeight = FontWeight.SemiBold,
+                        )
                     }
                 }
 
@@ -251,7 +248,6 @@ fun LanguageInputCardPreview() {
                     fields = mapOf(FieldKey.PLURAL to "Äpfel"),
                 ),
             ),
-            canAddAlternative = true,
             onInputChange = { _, _ -> },
             onAddAlternative = {},
             onRemoveAlternative = {},

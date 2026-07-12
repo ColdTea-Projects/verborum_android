@@ -38,19 +38,33 @@ import de.coldtea.verborum.core.ui.RegisterTopBar
 fun CreateDictionaryScreen(
     viewModel: CreateDictionaryViewModel = hiltViewModel(),
     onDictionaryCreated: (String) -> Unit,
+    onDictionaryUpdated: () -> Unit = {},
 ) {
     val createDictionaryState =
         viewModel.createDictionaryState.collectAsState(initial = CreateDictionaryState.Idle).value
+    val editingDictionary = viewModel.editingDictionary.collectAsState().value
+    val isEditing = editingDictionary != null
 
     LaunchedEffect(createDictionaryState) {
-        if (createDictionaryState is CreateDictionaryState.Created) {
-            onDictionaryCreated(createDictionaryState.dictionaryId)
+        when (createDictionaryState) {
+            is CreateDictionaryState.Created -> onDictionaryCreated(createDictionaryState.dictionaryId)
+            is CreateDictionaryState.Updated -> onDictionaryUpdated()
+            else -> Unit
         }
     }
 
     var name by remember { mutableStateOf("") }
     var fromLanguage by remember { mutableStateOf<SupportedLanguage?>(null) }
     var toLanguage by remember { mutableStateOf<SupportedLanguage?>(null) }
+
+    // Edit mode: prefill the form from the loaded dictionary once it arrives.
+    LaunchedEffect(editingDictionary) {
+        editingDictionary?.let { dictionary ->
+            name = dictionary.name
+            fromLanguage = SupportedLanguage.fromCode(dictionary.fromLang)
+            toLanguage = SupportedLanguage.fromCode(dictionary.toLang)
+        }
+    }
 
     val isCreateEnabled = name.isNotBlank() &&
             fromLanguage != null &&
@@ -59,7 +73,10 @@ fun CreateDictionaryScreen(
             createDictionaryState !is CreateDictionaryState.Saving
 
     RegisterTopBar(
-        title = stringResource(ResStrings.createDictionaryScreenHeader),
+        title = stringResource(
+            if (isEditing) ResStrings.createDictionaryScreenHeaderEdit
+            else ResStrings.createDictionaryScreenHeader
+        ),
         subtitle = stringResource(ResStrings.createDictionaryScreenSubtitle),
         showBackButton = true,
     )
@@ -86,6 +103,8 @@ fun CreateDictionaryScreen(
             label = stringResource(ResStrings.createDictionaryScreenFromLanguage),
             selectedLanguage = fromLanguage,
             onLanguageSelected = { fromLanguage = it },
+            // A dictionary's language pair is fixed once its words exist — locked in edit mode.
+            enabled = !isEditing,
             modifier = Modifier.fillMaxWidth()
         )
 
@@ -95,6 +114,7 @@ fun CreateDictionaryScreen(
             label = stringResource(ResStrings.createDictionaryScreenToLanguage),
             selectedLanguage = toLanguage,
             onLanguageSelected = { toLanguage = it },
+            enabled = !isEditing,
             modifier = Modifier.fillMaxWidth()
         )
 
@@ -104,7 +124,7 @@ fun CreateDictionaryScreen(
             onClick = {
                 val fromLang = fromLanguage ?: return@Button
                 val toLang = toLanguage ?: return@Button
-                viewModel.create(name, fromLang, toLang)
+                viewModel.save(name, fromLang, toLang)
             },
             enabled = isCreateEnabled,
             shape = RoundedCornerShape(16.dp),
@@ -117,7 +137,10 @@ fun CreateDictionaryScreen(
                 .height(56.dp)
         ) {
             Text(
-                text = stringResource(ResStrings.createDictionaryScreenCreate),
+                text = stringResource(
+                    if (isEditing) ResStrings.createDictionaryScreenUpdate
+                    else ResStrings.createDictionaryScreenCreate
+                ),
                 fontSize = 16.sp,
                 fontWeight = FontWeight.SemiBold,
                 letterSpacing = 0.5.sp

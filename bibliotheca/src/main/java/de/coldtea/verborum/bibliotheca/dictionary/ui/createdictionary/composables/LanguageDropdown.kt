@@ -27,22 +27,24 @@ fun LanguageDropdown(
     label: String,
     selectedLanguage: SupportedLanguage?,
     onLanguageSelected: (SupportedLanguage) -> Unit,
+    enabled: Boolean = true,
 ) {
     var expanded by remember { mutableStateOf(false) }
 
     ExposedDropdownMenuBox(
         expanded = expanded,
-        onExpandedChange = { expanded = it },
+        onExpandedChange = { if (enabled) expanded = it },
         modifier = modifier,
     ) {
         OutlinedTextField(
             value = selectedLanguage?.let { stringResource(it.displayNameRes) }.orEmpty(),
             onValueChange = {},
             readOnly = true,
+            enabled = enabled,
             label = { Text(text = label) },
             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
             modifier = Modifier
-                .menuAnchor(MenuAnchorType.PrimaryNotEditable)
+                .menuAnchor(MenuAnchorType.PrimaryNotEditable, enabled = enabled)
                 .fillMaxWidth(),
         )
 

@@ -23,6 +23,10 @@
     <string name="createDictionaryScreenFromLanguage">From Language</string>
     <string name="createDictionaryScreenToLanguage">To Language</string>
     <string name="createDictionaryScreenCreate">Create</string>
+    <string name="createDictionaryScreenHeaderEdit">Edit Dictionary</string>
+    <string name="createDictionaryScreenUpdate">Update</string>
+    <string name="dictionaryOptionsEdit">Edit</string>
+    <string name="dictionaryOptionsDelete">Delete</string>
     <string name="createWordScreenHeader">Add New Word</string>
     <string name="createWordScreenHeaderEdit">Edit Word</string>
     <string name="createWordScreenUpdate">Update Word</string>

@@ -23,6 +23,7 @@ import kotlin.collections.map
 class DictionaryService @Inject constructor(
     private val observeAllDictionariesUseCase: ObserveAllDictionariesUseCase,
     private val observeDictionaryUseCase: ObserveDictionaryUseCase,
+    private val getDictionaryUseCase: GetDictionaryUseCase,
     private val saveDictionaryUseCase: SaveDictionaryUseCase,
     private val deleteDictionaryUseCase: DeleteDictionaryUseCase,
     private val markDictionaryDeletedUseCase: MarkDictionaryDeletedUseCase,
@@ -41,6 +42,19 @@ class DictionaryService @Inject constructor(
         .distinctUntilChanged()
         .map(Dictionary::convertToUi)
         .flowOn(Dispatchers.IO)
+
+    /** One-shot read for prefilling the edit screen. */
+    suspend fun getDictionary(dictionaryId: String): DictionaryUi =
+        getDictionaryUseCase.invoke(dictionaryId).convertToUi()
+
+    /** Saves edits to an existing dictionary, preserving id/owner/creation and re-marking unsynced. */
+    suspend fun updateDictionary(dictionary: DictionaryUi): String {
+        val updated = dictionary.convertToDictionary().copy(
+            updatedAt = getNowInMillis(),
+            isSynced = false,
+        )
+        return saveDictionaryUseCase.invoke(updated)
+    }
 
     suspend fun createDictionary(name: String, fromLang: String, toLang: String): String {
         val dictionary =

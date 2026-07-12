@@ -130,7 +130,6 @@ fun CreateWordScreen(
                     barColor = MaterialTheme.colorScheme.primary,
                     spec = LanguageGrammar.formSpec(dictionary.fromLang, wordType),
                     inputs = sourceInputs,
-                    canAddAlternative = wordType != WordType.FREE_TEXT,
                     onInputChange = { index, updated ->
                         sourceInputs = sourceInputs.toMutableList().also { it[index] = updated }
                     },
@@ -150,7 +149,6 @@ fun CreateWordScreen(
                     barColor = MaterialTheme.colorScheme.secondary,
                     spec = LanguageGrammar.formSpec(dictionary.toLang, wordType),
                     inputs = targetInputs,
-                    canAddAlternative = wordType != WordType.FREE_TEXT,
                     onInputChange = { index, updated ->
                         targetInputs = targetInputs.toMutableList().also { it[index] = updated }
                     },

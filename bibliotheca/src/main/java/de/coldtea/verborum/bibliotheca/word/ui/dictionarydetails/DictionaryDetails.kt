@@ -14,7 +14,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
@@ -22,7 +21,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -42,6 +40,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import de.coldtea.verborum.bibliotheca.common.utils.ResDrawables
 import de.coldtea.verborum.bibliotheca.common.utils.ResPlurals
 import de.coldtea.verborum.bibliotheca.common.utils.ResStrings
+import de.coldtea.verborum.bibliotheca.dictionary.ui.composables.DeleteDictionaryDialog
 import de.coldtea.verborum.bibliotheca.word.ui.dictionarydetails.composables.PracticeModeButton
 import de.coldtea.verborum.bibliotheca.word.ui.dictionarydetails.composables.WordListItem
 import de.coldtea.verborum.bibliotheca.word.ui.dictionarydetails.model.DictionaryDetailState
@@ -231,39 +230,6 @@ fun DictionaryDetailsScreen(
             }
         }
     }
-}
-
-@Composable
-private fun DeleteDictionaryDialog(
-    dictionaryName: String,
-    onConfirm: () -> Unit,
-    onDismiss: () -> Unit,
-) {
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        title = { Text(text = stringResource(ResStrings.dictionaryDetailsScreenDeleteDialogTitle)) },
-        text = {
-            Text(
-                text = stringResource(
-                    ResStrings.dictionaryDetailsScreenDeleteDialogMessage,
-                    dictionaryName,
-                )
-            )
-        },
-        confirmButton = {
-            TextButton(onClick = onConfirm) {
-                Text(
-                    text = stringResource(ResStrings.dictionaryDetailsScreenDeleteDialogConfirm),
-                    color = MaterialTheme.colorScheme.error,
-                )
-            }
-        },
-        dismissButton = {
-            TextButton(onClick = onDismiss) {
-                Text(text = stringResource(ResStrings.dictionaryDetailsScreenDeleteDialogCancel))
-            }
-        },
-    )
 }
 
 @Preview
