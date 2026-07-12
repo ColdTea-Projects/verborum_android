@@ -102,22 +102,26 @@ class CreateWordViewModelTest : BaseTest() {
 
         viewModel.saveWord(
             wordType = WordType.NOUN,
-            sourceInput = WordFormInput(
-                text = " Haus ",
-                gender = Gender.NEUTER,
-                fields = mapOf(FieldKey.PLURAL to "Häuser"),
+            sourceInputs = listOf(
+                WordFormInput(
+                    text = " Haus ",
+                    gender = Gender.NEUTER,
+                    fields = mapOf(FieldKey.PLURAL to "Häuser"),
+                ),
             ),
-            targetInput = WordFormInput(text = "house", fields = mapOf(FieldKey.PLURAL to "houses")),
+            targetInputs = listOf(
+                WordFormInput(text = "house", fields = mapOf(FieldKey.PLURAL to "houses")),
+            ),
         )
 
         coVerify(exactly = 1) { wordService.saveWord(capture(wordSlot)) }
         val saved = wordSlot.captured
         assertEquals("", saved.wordId)
         assertEquals("dict-1", saved.dictionaryId)
-        assertEquals("das Haus", saved.word)
-        assertEquals("{de;type=noun;gender=n;plural=Häuser}", saved.wordMeta)
-        assertEquals("house", saved.translation)
-        assertEquals("{en;type=noun;plural=houses}", saved.translationMeta)
+        assertEquals("""["das Haus"]""", saved.word)
+        assertEquals("""{"lang":"de","type":"noun","genders":["n"],"fields":{"plural":["Häuser"]}}""", saved.wordMeta)
+        assertEquals("""["house"]""", saved.translation)
+        assertEquals("""{"lang":"en","type":"noun","fields":{"plural":["houses"]}}""", saved.translationMeta)
         assertEquals(0, saved.level)
         assertFalse(saved.isSynced)
     }
@@ -132,16 +136,16 @@ class CreateWordViewModelTest : BaseTest() {
 
         viewModel.saveWord(
             wordType = WordType.FREE_TEXT,
-            sourceInput = WordFormInput(text = "Wie geht es dir?"),
-            targetInput = WordFormInput(text = "How are you?"),
+            sourceInputs = listOf(WordFormInput(text = "Wie geht es dir?")),
+            targetInputs = listOf(WordFormInput(text = "How are you?")),
         )
 
         coVerify(exactly = 1) { wordService.saveWord(capture(wordSlot)) }
         val saved = wordSlot.captured
-        assertEquals("Wie geht es dir?", saved.word)
-        assertEquals("{de}", saved.wordMeta)
-        assertEquals("How are you?", saved.translation)
-        assertEquals("{en}", saved.translationMeta)
+        assertEquals("""["Wie geht es dir?"]""", saved.word)
+        assertEquals("""{"lang":"de"}""", saved.wordMeta)
+        assertEquals("""["How are you?"]""", saved.translation)
+        assertEquals("""{"lang":"en"}""", saved.translationMeta)
     }
 
     @Test
@@ -161,14 +165,14 @@ class CreateWordViewModelTest : BaseTest() {
 
         viewModel.saveWord(
             wordType = WordType.NOUN,
-            sourceInput = WordFormInput(text = "Haus", gender = Gender.NEUTER),
-            targetInput = WordFormInput(text = "house"),
+            sourceInputs = listOf(WordFormInput(text = "Haus", gender = Gender.NEUTER)),
+            targetInputs = listOf(WordFormInput(text = "house")),
         )
 
         coVerify(exactly = 1) { wordService.saveWord(capture(wordSlot)) }
         val saved = wordSlot.captured
         assertEquals("word-1", saved.wordId)
-        assertEquals("das Haus", saved.word)
+        assertEquals("""["das Haus"]""", saved.word)
         assertEquals(4, saved.level)
         assertEquals(1_000L, saved.createdAt)
         assertFalse(saved.isSynced)
@@ -179,8 +183,8 @@ class CreateWordViewModelTest : BaseTest() {
         // ViewModel is still in Loading state — init() was never called.
         viewModel.saveWord(
             wordType = WordType.NOUN,
-            sourceInput = WordFormInput(text = "Haus"),
-            targetInput = WordFormInput(text = "house"),
+            sourceInputs = listOf(WordFormInput(text = "Haus")),
+            targetInputs = listOf(WordFormInput(text = "house")),
         )
 
         coVerify(exactly = 0) { wordService.saveWord(any()) }

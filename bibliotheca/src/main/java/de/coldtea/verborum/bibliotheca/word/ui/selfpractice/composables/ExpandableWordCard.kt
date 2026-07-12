@@ -87,10 +87,14 @@ fun ExpandableWordCard(
     )
 
     // Full form lines, e.g. "gehen · ging · (sein) gegangen" — mirrors the create screen preview.
-    val (shownText, hiddenText) = if (!isReversed) {
-        word.wordDisplayLine() to word.translationDisplayLine()
-    } else {
-        word.translationDisplayLine() to word.wordDisplayLine()
+    // Remembered because the drag/settle animation recomposes every frame; without this the JSON
+    // meta would be re-parsed per frame per card.
+    val (shownText, hiddenText) = remember(word, isReversed) {
+        if (!isReversed) {
+            word.wordDisplayLine() to word.translationDisplayLine()
+        } else {
+            word.translationDisplayLine() to word.wordDisplayLine()
+        }
     }
 
     Surface(

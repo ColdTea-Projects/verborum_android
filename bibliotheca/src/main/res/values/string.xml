@@ -47,6 +47,9 @@
     <string name="createWordScreenAuxiliaryLabel">Auxiliary</string>
     <string name="createWordScreenIrregularHint">only if irregular</string>
     <string name="createWordScreenSave">Save Word</string>
+    <string name="createWordScreenAddAlternative">Alternative</string>
+    <string name="createWordScreenAlternative">Alternative</string>
+    <string name="createWordScreenRemoveAlternative">Remove alternative</string>
     <string name="welcomeScreenTitleIntro">Welcome to Verborum</string>
     <string name="welcomeScreenDescriptionIntro">Your personal vocabulary library. Build dictionaries, collect words and make them stick.</string>
     <string name="welcomeScreenTitleLibrary">Build your library</string>

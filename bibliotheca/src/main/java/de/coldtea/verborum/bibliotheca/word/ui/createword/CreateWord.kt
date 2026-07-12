@@ -36,7 +36,7 @@ import de.coldtea.verborum.bibliotheca.word.ui.createword.model.CreateWordState
 import de.coldtea.verborum.bibliotheca.word.ui.createword.model.LanguageGrammar
 import de.coldtea.verborum.bibliotheca.word.ui.createword.model.WordFormInput
 import de.coldtea.verborum.bibliotheca.word.ui.createword.model.WordType
-import de.coldtea.verborum.bibliotheca.word.ui.createword.model.parseWordFormInput
+import de.coldtea.verborum.bibliotheca.word.ui.createword.model.parseWordFormInputs
 import de.coldtea.verborum.bibliotheca.word.ui.createword.model.parseWordType
 import de.coldtea.verborum.core.theme.VerborumTheme
 import de.coldtea.verborum.core.ui.RegisterTopBar
@@ -50,8 +50,9 @@ fun CreateWordScreen(
         viewModel.createWordState.collectAsState(initial = CreateWordState.Loading).value
 
     var selectedType by remember { mutableStateOf<WordType?>(null) }
-    var sourceInput by remember { mutableStateOf(WordFormInput()) }
-    var targetInput by remember { mutableStateOf(WordFormInput()) }
+    // One entry per alternative meaning; the first is always present, the + button appends more.
+    var sourceInputs by remember { mutableStateOf(listOf(WordFormInput())) }
+    var targetInputs by remember { mutableStateOf(listOf(WordFormInput())) }
 
     if (createWordState is CreateWordState.Success) {
         val dictionary = createWordState.dictionaryUi
@@ -62,8 +63,10 @@ fun CreateWordScreen(
         LaunchedEffect(editingWord) {
             editingWord?.let { word ->
                 selectedType = parseWordType(word.wordMeta)
-                sourceInput = parseWordFormInput(dictionary.fromLang, word.word, word.wordMeta)
-                targetInput = parseWordFormInput(dictionary.toLang, word.translation, word.translationMeta)
+                sourceInputs = parseWordFormInputs(dictionary.fromLang, word.word, word.wordMeta)
+                    .ifEmpty { listOf(WordFormInput()) }
+                targetInputs = parseWordFormInputs(dictionary.toLang, word.translation, word.translationMeta)
+                    .ifEmpty { listOf(WordFormInput()) }
             }
         }
 
@@ -103,13 +106,15 @@ fun CreateWordScreen(
                         selectedType = wordType
                         if (editingWord != null && wordType == parseWordType(editingWord.wordMeta)) {
                             // Back on the edited word's own type: its stored grammar fits, so
-                            // restore every field just like the first opening.
-                            sourceInput = parseWordFormInput(dictionary.fromLang, editingWord.word, editingWord.wordMeta)
-                            targetInput = parseWordFormInput(dictionary.toLang, editingWord.translation, editingWord.translationMeta)
+                            // restore every alternative just like the first opening.
+                            sourceInputs = parseWordFormInputs(dictionary.fromLang, editingWord.word, editingWord.wordMeta)
+                                .ifEmpty { listOf(WordFormInput()) }
+                            targetInputs = parseWordFormInputs(dictionary.toLang, editingWord.translation, editingWord.translationMeta)
+                                .ifEmpty { listOf(WordFormInput()) }
                         } else {
                             // Keep the typed words; clear the grammatical fields of the old type.
-                            sourceInput = WordFormInput(text = sourceInput.text)
-                            targetInput = WordFormInput(text = targetInput.text)
+                            sourceInputs = sourceInputs.map { WordFormInput(text = it.text) }
+                            targetInputs = targetInputs.map { WordFormInput(text = it.text) }
                         }
                     }
                 },
@@ -124,8 +129,17 @@ fun CreateWordScreen(
                     languageCode = dictionary.fromLang,
                     barColor = MaterialTheme.colorScheme.primary,
                     spec = LanguageGrammar.formSpec(dictionary.fromLang, wordType),
-                    input = sourceInput,
-                    onInputChange = { sourceInput = it }
+                    inputs = sourceInputs,
+                    canAddAlternative = wordType != WordType.FREE_TEXT,
+                    onInputChange = { index, updated ->
+                        sourceInputs = sourceInputs.toMutableList().also { it[index] = updated }
+                    },
+                    onAddAlternative = { sourceInputs = sourceInputs + WordFormInput() },
+                    // filterIndexed instead of removeAt: a double-tap on the same x delivers two
+                    // clicks against one list state; a stale index must not throw.
+                    onRemoveAlternative = { index ->
+                        sourceInputs = sourceInputs.filterIndexed { i, _ -> i != index }
+                    },
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
@@ -135,8 +149,15 @@ fun CreateWordScreen(
                     languageCode = dictionary.toLang,
                     barColor = MaterialTheme.colorScheme.secondary,
                     spec = LanguageGrammar.formSpec(dictionary.toLang, wordType),
-                    input = targetInput,
-                    onInputChange = { targetInput = it }
+                    inputs = targetInputs,
+                    canAddAlternative = wordType != WordType.FREE_TEXT,
+                    onInputChange = { index, updated ->
+                        targetInputs = targetInputs.toMutableList().also { it[index] = updated }
+                    },
+                    onAddAlternative = { targetInputs = targetInputs + WordFormInput() },
+                    onRemoveAlternative = { index ->
+                        targetInputs = targetInputs.filterIndexed { i, _ -> i != index }
+                    },
                 )
 
                 Spacer(modifier = Modifier.height(24.dp))
@@ -145,17 +166,18 @@ fun CreateWordScreen(
                     onClick = {
                         viewModel.saveWord(
                             wordType = wordType,
-                            sourceInput = sourceInput,
-                            targetInput = targetInput,
+                            sourceInputs = sourceInputs,
+                            targetInputs = targetInputs,
                         )
                         if (isEditing) {
                             onWordUpdated()
                         } else {
-                            sourceInput = WordFormInput()
-                            targetInput = WordFormInput()
+                            sourceInputs = listOf(WordFormInput())
+                            targetInputs = listOf(WordFormInput())
                         }
                     },
-                    enabled = sourceInput.text.isNotBlank() && targetInput.text.isNotBlank(),
+                    enabled = sourceInputs.any { it.text.isNotBlank() } &&
+                            targetInputs.any { it.text.isNotBlank() },
                     shape = RoundedCornerShape(16.dp),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = MaterialTheme.colorScheme.primary,

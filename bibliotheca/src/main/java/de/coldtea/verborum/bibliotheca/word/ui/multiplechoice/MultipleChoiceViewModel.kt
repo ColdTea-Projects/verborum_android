@@ -6,6 +6,7 @@ import de.coldtea.verborum.bibliotheca.word.domain.WordService
 import de.coldtea.verborum.bibliotheca.word.ui.createword.model.FieldKey
 import de.coldtea.verborum.bibliotheca.word.ui.model.WordMeta
 import de.coldtea.verborum.bibliotheca.word.ui.model.WordUi
+import de.coldtea.verborum.bibliotheca.word.ui.model.surfacesDisplay
 import de.coldtea.verborum.bibliotheca.word.ui.multiplechoice.model.MultipleChoiceCurrentQuestion
 import de.coldtea.verborum.bibliotheca.word.ui.multiplechoice.model.MultipleChoiceCurrentQuestionState
 import de.coldtea.verborum.bibliotheca.word.ui.multiplechoice.model.MultipleChoiceQuestion
@@ -126,7 +127,8 @@ class MultipleChoiceViewModel @Inject constructor(
         val targetMeta = WordMeta.parse(translationMeta)
 
         return buildList {
-            add(MultipleChoiceQuestion(wordId, word, translation))
+            // Surfaces are stored as JSON arrays; the question/answer show "kaufen/erwerben".
+            add(MultipleChoiceQuestion(wordId, surfacesDisplay(word), surfacesDisplay(translation)))
             FieldKey.entries.forEach { key ->
                 val questionForm = sourceMeta?.displayForm(key)
                 val answerForm = targetMeta?.displayForm(key)

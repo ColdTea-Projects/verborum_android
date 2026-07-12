@@ -40,22 +40,27 @@ class CreateWordViewModel @Inject constructor(
 
     fun saveWord(
         wordType: WordType,
-        sourceInput: WordFormInput,
-        targetInput: WordFormInput,
+        sourceInputs: List<WordFormInput>,
+        targetInputs: List<WordFormInput>,
     ) = viewModelScope.launch(exceptionHandler) {
         val state = _createWordState.value as? CreateWordState.Success ?: return@launch
         val dictionary = state.dictionaryUi
         val editingWord = state.editingWord
+
+        // Drop blank alternatives so the surface list and meta arrays stay index-aligned; keep at
+        // least the first so a half-filled word still saves.
+        val sources = sourceInputs.filter { it.text.isNotBlank() }.ifEmpty { sourceInputs.take(1) }
+        val targets = targetInputs.filter { it.text.isNotBlank() }.ifEmpty { targetInputs.take(1) }
 
         // In edit mode the existing id routes SaveWordUseCase to an update; progress level and
         // creation time carry over from the edited word.
         val word = Word(
             wordId = editingWord?.wordId.orEmpty(),
             dictionaryId = dictionary.dictionaryId,
-            word = composeWordText(dictionary.fromLang, sourceInput),
-            wordMeta = composeWordMeta(dictionary.fromLang, wordType, sourceInput),
-            translation = composeWordText(dictionary.toLang, targetInput),
-            translationMeta = composeWordMeta(dictionary.toLang, wordType, targetInput),
+            word = composeWordText(dictionary.fromLang, sources),
+            wordMeta = composeWordMeta(dictionary.fromLang, wordType, sources),
+            translation = composeWordText(dictionary.toLang, targets),
+            translationMeta = composeWordMeta(dictionary.toLang, wordType, targets),
             isSynced = false,
             level = editingWord?.level ?: 0,
             createdAt = editingWord?.createdAt ?: getNowInMillis(),

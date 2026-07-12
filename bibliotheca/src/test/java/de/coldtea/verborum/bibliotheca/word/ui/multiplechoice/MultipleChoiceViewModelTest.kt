@@ -148,8 +148,8 @@ class MultipleChoiceViewModelTest : BaseTest() {
             wordId = "w-$it",
             word = "verb-$it",
             translation = "verbo-$it",
-            wordMeta = "{en;type=verb;past=past-$it;participle=part-$it}",
-            translationMeta = "{de;type=verb;past=pastde-$it;participle=partde-$it;aux=sein}",
+            wordMeta = """{"lang":"en","type":"verb","fields":{"past":["past-$it"],"participle":["part-$it"]}}""",
+            translationMeta = """{"lang":"de","type":"verb","fields":{"past":["pastde-$it"],"participle":["partde-$it"],"aux":["sein"]}}""",
         )
     }
 
@@ -212,8 +212,8 @@ class MultipleChoiceViewModelTest : BaseTest() {
                 wordId = "w-$it",
                 word = "verb-$it",
                 translation = "verbo-$it",
-                wordMeta = "{en;type=verb;past=past-$it}",
-                translationMeta = "{de;type=verb}",
+                wordMeta = """{"lang":"en","type":"verb","fields":{"past":["past-$it"]}}""",
+                translationMeta = """{"lang":"de","type":"verb"}""",
             )
         }
 
