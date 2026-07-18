@@ -13,6 +13,7 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.layout.Arrangement
@@ -26,12 +27,15 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.relocation.BringIntoViewRequester
+import androidx.compose.foundation.relocation.bringIntoViewRequester
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -54,8 +58,14 @@ import de.coldtea.verborum.bibliotheca.word.ui.model.translationDisplayLine
 import de.coldtea.verborum.bibliotheca.word.ui.model.wordDisplayLine
 import de.coldtea.verborum.core.theme.VerborumColors
 import de.coldtea.verborum.core.theme.VerborumTheme
+import kotlinx.coroutines.delay
 import kotlin.math.absoluteValue
 
+// Matches the reveal expand animation below (tween 300ms); after it the card is at full height, so
+// scrolling it into view catches the bottom rather than the pre-expansion bounds.
+private const val REVEAL_EXPAND_MILLIS = 300L
+
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ExpandableWordCard(
     modifier: Modifier = Modifier,
@@ -114,9 +124,27 @@ fun ExpandableWordCard(
         }
     }
 
+    // When a card near the bottom of the list is revealed, its expanded content would run off the
+    // screen. Once the expand animation has grown the card, ask the scrolling parent to bring the
+    // full card into view, so it effectively opens upward instead of being clipped.
+    //
+    // Only react to a real false→true toggle on THIS card. Guarding against the initial value keeps
+    // an already-expanded card from scrolling itself into view merely because the list composed it
+    // as it scrolled by — otherwise revealing one card cascades through every expanded card below.
+    val bringIntoViewRequester = remember { BringIntoViewRequester() }
+    var wasRevealed by remember { mutableStateOf(isRevealed) }
+    LaunchedEffect(isRevealed) {
+        if (isRevealed && !wasRevealed) {
+            delay(REVEAL_EXPAND_MILLIS)
+            bringIntoViewRequester.bringIntoView()
+        }
+        wasRevealed = isRevealed
+    }
+
     Surface(
         modifier = modifier
             .fillMaxWidth()
+            .bringIntoViewRequester(bringIntoViewRequester)
             .offset(x = animatedOffset.dp)
             .pointerInput(Unit) {
                 detectHorizontalDragGestures(
