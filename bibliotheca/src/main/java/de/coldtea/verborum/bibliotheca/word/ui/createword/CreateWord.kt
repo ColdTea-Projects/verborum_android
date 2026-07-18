@@ -22,6 +22,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -33,6 +34,7 @@ import de.coldtea.verborum.bibliotheca.common.utils.ResStrings
 import de.coldtea.verborum.bibliotheca.word.ui.createword.composables.LanguageInputCard
 import de.coldtea.verborum.bibliotheca.word.ui.createword.composables.OtherTypeDropdown
 import de.coldtea.verborum.bibliotheca.word.ui.createword.composables.WordTypeChips
+import de.coldtea.verborum.bibliotheca.word.ui.createword.composables.textFieldsPerMeaning
 import de.coldtea.verborum.bibliotheca.word.ui.createword.model.CreateWordState
 import de.coldtea.verborum.bibliotheca.word.ui.createword.model.LanguageGrammar
 import de.coldtea.verborum.bibliotheca.word.ui.createword.model.WordCategory
@@ -139,11 +141,22 @@ fun CreateWordScreen(
 
                 Spacer(modifier = Modifier.height(24.dp))
 
+                // One shared, ordered list of focus requesters spanning both cards so the IME "Next"
+                // action walks every text field top-to-bottom; only the very last one shows "Done".
+                val sourceSpec = LanguageGrammar.formSpec(dictionary.fromLang, wordType)
+                val targetSpec = LanguageGrammar.formSpec(dictionary.toLang, wordType)
+                val sourceFieldCount = textFieldsPerMeaning(sourceSpec) * sourceInputs.size
+                val targetFieldCount = textFieldsPerMeaning(targetSpec) * targetInputs.size
+                val totalFieldCount = sourceFieldCount + targetFieldCount
+                val focusRequesters = remember(totalFieldCount) {
+                    List(totalFieldCount) { FocusRequester() }
+                }
+
                 LanguageInputCard(
                     languageName = languageDisplayName(dictionary.fromLang),
                     languageCode = dictionary.fromLang,
                     barColor = MaterialTheme.colorScheme.primary,
-                    spec = LanguageGrammar.formSpec(dictionary.fromLang, wordType),
+                    spec = sourceSpec,
                     inputs = sourceInputs,
                     onInputChange = { index, updated ->
                         sourceInputs = sourceInputs.toMutableList().also { it[index] = updated }
@@ -154,6 +167,9 @@ fun CreateWordScreen(
                     onRemoveAlternative = { index ->
                         sourceInputs = sourceInputs.filterIndexed { i, _ -> i != index }
                     },
+                    fieldRequesters = focusRequesters.subList(0, sourceFieldCount),
+                    // After the source card's last field, hop to the target card's first field.
+                    nextFieldRequester = focusRequesters.getOrNull(sourceFieldCount),
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
@@ -162,7 +178,7 @@ fun CreateWordScreen(
                     languageName = languageDisplayName(dictionary.toLang),
                     languageCode = dictionary.toLang,
                     barColor = MaterialTheme.colorScheme.secondary,
-                    spec = LanguageGrammar.formSpec(dictionary.toLang, wordType),
+                    spec = targetSpec,
                     inputs = targetInputs,
                     onInputChange = { index, updated ->
                         targetInputs = targetInputs.toMutableList().also { it[index] = updated }
@@ -171,6 +187,9 @@ fun CreateWordScreen(
                     onRemoveAlternative = { index ->
                         targetInputs = targetInputs.filterIndexed { i, _ -> i != index }
                     },
+                    fieldRequesters = focusRequesters.subList(sourceFieldCount, totalFieldCount),
+                    // Target is the last card: its final field ends the form (Done).
+                    nextFieldRequester = null,
                 )
 
                 Spacer(modifier = Modifier.height(24.dp))

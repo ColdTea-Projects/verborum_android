@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -30,11 +31,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.text.intl.LocaleList
 import androidx.compose.ui.tooling.preview.Preview
@@ -54,6 +59,10 @@ import de.coldtea.verborum.bibliotheca.word.ui.createword.model.WordFormInput
 import de.coldtea.verborum.bibliotheca.word.ui.model.displayLine
 import de.coldtea.verborum.core.theme.VerborumTheme
 
+/** The number of keyboard text fields one meaning of [spec] renders: the base word plus its text forms. */
+internal fun textFieldsPerMeaning(spec: LanguageFormSpec): Int =
+    1 + spec.fields.count { it is FormField.TextForm }
+
 @Composable
 fun LanguageInputCard(
     modifier: Modifier = Modifier,
@@ -65,7 +74,13 @@ fun LanguageInputCard(
     onInputChange: (Int, WordFormInput) -> Unit,
     onAddAlternative: () -> Unit,
     onRemoveAlternative: (Int) -> Unit,
+    // One requester per text field this card renders, in top-to-bottom order; the IME "Next" action
+    // advances along them. [nextFieldRequester] is the field to jump to after this card's last one
+    // (the next card's first field), or null when this card ends the whole form.
+    fieldRequesters: List<FocusRequester> = emptyList(),
+    nextFieldRequester: FocusRequester? = null,
 ) {
+    val perMeaning = textFieldsPerMeaning(spec)
     Surface(
         modifier = modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
@@ -105,6 +120,9 @@ fun LanguageInputCard(
                         spec = spec,
                         input = input,
                         onInputChange = { onInputChange(index, it) },
+                        slotOffset = index * perMeaning,
+                        requesters = fieldRequesters,
+                        nextAfterLast = nextFieldRequester,
                     )
                 }
 
@@ -142,7 +160,15 @@ private fun MeaningFields(
     spec: LanguageFormSpec,
     input: WordFormInput,
     onInputChange: (WordFormInput) -> Unit,
+    slotOffset: Int,
+    requesters: List<FocusRequester>,
+    nextAfterLast: FocusRequester?,
 ) {
+    // Resolves a text field's requester and the field the IME "Next" action should jump to: the next
+    // slot in this card, or [nextAfterLast] when this is the card's final field.
+    fun requesterAt(slot: Int): FocusRequester? = requesters.getOrNull(slot)
+    fun nextAfter(slot: Int): FocusRequester? = requesters.getOrNull(slot + 1) ?: nextAfterLast
+
     if (spec.genderOptions.isNotEmpty()) {
         Spacer(modifier = Modifier.height(16.dp))
         FieldLabel(text = stringResource(ResStrings.createWordScreenGenderLabel))
@@ -158,29 +184,34 @@ private fun MeaningFields(
 
     Spacer(modifier = Modifier.height(16.dp))
 
-    // Ask the IME for this dictionary language's script (Arabic keyboard for ar/fa, Greek for el…);
-    // RTL scripts also lay their fields out right-to-left so entry reads naturally.
-    val keyboardOptions = KeyboardOptions(hintLocales = LocaleList(Locale(languageCode)))
+    // The base word occupies the first slot; the text forms follow in declaration order (choice
+    // chips take no slot, as they carry no keyboard).
+    val textFormKeys = spec.fields.filterIsInstance<FormField.TextForm>().map { it.key }
 
     ScriptTextField(
         languageCode = languageCode,
         value = input.text,
         onValueChange = { onInputChange(input.copy(text = it)) },
         label = stringResource(ResStrings.createWordScreenTextLabel),
-        keyboardOptions = keyboardOptions,
+        focusRequester = requesterAt(slotOffset),
+        nextFocusRequester = nextAfter(slotOffset),
     )
 
     spec.fields.forEach { field ->
         Spacer(modifier = Modifier.height(12.dp))
         when (field) {
-            is FormField.TextForm -> ScriptTextField(
-                languageCode = languageCode,
-                value = input.field(field.key),
-                onValueChange = { onInputChange(input.withField(field.key, it)) },
-                label = stringResource(field.labelRes),
-                placeholder = field.hintRes?.let { stringResource(it) },
-                keyboardOptions = keyboardOptions,
-            )
+            is FormField.TextForm -> {
+                val slot = slotOffset + 1 + textFormKeys.indexOf(field.key)
+                ScriptTextField(
+                    languageCode = languageCode,
+                    value = input.field(field.key),
+                    onValueChange = { onInputChange(input.withField(field.key, it)) },
+                    label = stringResource(field.labelRes),
+                    placeholder = field.hintRes?.let { stringResource(it) },
+                    focusRequester = requesterAt(slot),
+                    nextFocusRequester = nextAfter(slot),
+                )
+            }
 
             is FormField.ChoiceForm -> {
                 FieldLabel(text = stringResource(field.labelRes))
@@ -234,7 +265,9 @@ private val RTL_LANGUAGE_CODES = setOf("ar", "fa")
 
 /**
  * A single-line text field bound to a dictionary language's script: it hints the IME to open that
- * language's keyboard via [keyboardOptions], and lays itself out right-to-left for RTL scripts.
+ * language's keyboard, lays itself out right-to-left for RTL scripts, and wires the IME action so
+ * "Next" advances to [nextFocusRequester]. When there is no next field, the action becomes "Done"
+ * and dismisses the keyboard.
  */
 @Composable
 private fun ScriptTextField(
@@ -242,7 +275,8 @@ private fun ScriptTextField(
     value: String,
     onValueChange: (String) -> Unit,
     label: String,
-    keyboardOptions: KeyboardOptions,
+    focusRequester: FocusRequester?,
+    nextFocusRequester: FocusRequester?,
     placeholder: String? = null,
 ) {
     val direction = if (languageCode.lowercase() in RTL_LANGUAGE_CODES) {
@@ -253,6 +287,18 @@ private fun ScriptTextField(
     // Latched true when the last keystroke introduced a wrong-script letter (which we drop);
     // cleared as soon as an accepted change comes through, so the hint only shows on a rejection.
     var rejectedForeignScript by remember { mutableStateOf(false) }
+    val focusManager = LocalFocusManager.current
+
+    // Ask the IME for this dictionary language's script (Arabic keyboard for ar/fa, Greek for el…);
+    // the last field on the form uses Done, every earlier one Next.
+    val keyboardOptions = KeyboardOptions(
+        hintLocales = LocaleList(Locale(languageCode)),
+        imeAction = if (nextFocusRequester != null) ImeAction.Next else ImeAction.Done,
+    )
+    val keyboardActions = KeyboardActions(
+        onNext = { nextFocusRequester?.requestFocus() },
+        onDone = { focusManager.clearFocus() },
+    )
 
     CompositionLocalProvider(LocalLayoutDirection provides direction) {
         OutlinedTextField(
@@ -279,7 +325,10 @@ private fun ScriptTextField(
                 null
             },
             keyboardOptions = keyboardOptions,
-            modifier = Modifier.fillMaxWidth(),
+            keyboardActions = keyboardActions,
+            modifier = Modifier
+                .fillMaxWidth()
+                .then(if (focusRequester != null) Modifier.focusRequester(focusRequester) else Modifier),
         )
     }
 }
