@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.sp
 import de.coldtea.verborum.bibliotheca.common.utils.ResDrawables
 import de.coldtea.verborum.bibliotheca.common.utils.ResStrings
 import de.coldtea.verborum.bibliotheca.word.ui.model.WordUi
+import de.coldtea.verborum.bibliotheca.word.ui.model.languageCodeOf
 import de.coldtea.verborum.bibliotheca.word.ui.model.surfacesDisplay
 import de.coldtea.verborum.core.theme.VerborumTheme
 
@@ -68,8 +69,8 @@ fun WordListItem(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    // Stored as a JSON array of alternatives; show "buy/purchase".
-                    text = surfacesDisplay(word.word),
+                    // Stored as a JSON array of alternatives; show "buy/purchase" (script-aware separator).
+                    text = surfacesDisplay(word.word, languageCodeOf(word.wordMeta)),
                     fontSize = 16.sp,
                     fontWeight = FontWeight.SemiBold,
                     color = MaterialTheme.colorScheme.onSurface,

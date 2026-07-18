@@ -13,7 +13,16 @@ enum class SupportedLanguage(val code: String, @StringRes val displayNameRes: In
     DUTCH("nl", ResStrings.languageDutch),
     LITHUANIAN("lt", ResStrings.languageLithuanian),
     TURKISH("tr", ResStrings.languageTurkish),
-    AZERBAIJANI("az", ResStrings.languageAzerbaijani);
+    AZERBAIJANI("az", ResStrings.languageAzerbaijani),
+    POLISH("pl", ResStrings.languagePolish),
+    UKRAINIAN("uk", ResStrings.languageUkrainian),
+    RUSSIAN("ru", ResStrings.languageRussian),
+    GREEK("el", ResStrings.languageGreek),
+    ARABIC("ar", ResStrings.languageArabic),
+    FARSI("fa", ResStrings.languageFarsi),
+    JAPANESE("ja", ResStrings.languageJapanese),
+    CHINESE("zh", ResStrings.languageChinese),
+    KOREAN("ko", ResStrings.languageKorean);
 
     companion object {
         fun fromCode(code: String): SupportedLanguage? =

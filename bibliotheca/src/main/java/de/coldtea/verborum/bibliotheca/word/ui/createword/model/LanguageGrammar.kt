@@ -22,6 +22,15 @@ object LanguageGrammar {
     private const val TR = "tr"
     private const val AZ = "az"
     private const val EN = "en"
+    private const val PL = "pl"
+    private const val UK = "uk"
+    private const val RU = "ru"
+    private const val EL = "el"
+    private const val AR = "ar"
+    private const val FA = "fa"
+    private const val JA = "ja"
+    private const val ZH = "zh"
+    private const val KO = "ko"
 
     /** Genders offered for nouns in each language. Absent = language has no grammatical gender. */
     private val genderByLanguage: Map<String, List<Gender>> = mapOf(
@@ -32,6 +41,12 @@ object LanguageGrammar {
         PT to listOf(Gender.MASCULINE, Gender.FEMININE),
         NL to listOf(Gender.COMMON, Gender.NEUTER),
         LT to listOf(Gender.MASCULINE, Gender.FEMININE),
+        // Slavic + Greek: three genders shown as labels (Greek adds articles below); Arabic: two.
+        PL to listOf(Gender.MASCULINE, Gender.FEMININE, Gender.NEUTER),
+        UK to listOf(Gender.MASCULINE, Gender.FEMININE, Gender.NEUTER),
+        RU to listOf(Gender.MASCULINE, Gender.FEMININE, Gender.NEUTER),
+        EL to listOf(Gender.MASCULINE, Gender.FEMININE, Gender.NEUTER),
+        AR to listOf(Gender.MASCULINE, Gender.FEMININE),
     )
 
     /** Base definite article per gender, before elision. Absent = language uses no article. */
@@ -42,20 +57,34 @@ object LanguageGrammar {
         IT to mapOf(Gender.MASCULINE to "il", Gender.FEMININE to "la"),
         PT to mapOf(Gender.MASCULINE to "o", Gender.FEMININE to "a"),
         NL to mapOf(Gender.COMMON to "de", Gender.NEUTER to "het"),
+        EL to mapOf(Gender.MASCULINE to "ο", Gender.FEMININE to "η", Gender.NEUTER to "το"),
     )
 
-    /** Languages whose plural is irregular/unpredictable enough to be worth capturing. */
-    private val pluralLanguages: Set<String> = genderByLanguage.keys + EN
+    /**
+     * Languages whose plural is irregular/unpredictable enough to be worth capturing. Farsi joins
+     * the gendered languages + English: its regular ‑ها needs no entry, but borrowed Arabic broken
+     * plurals (کتاب → کتب) do — captured as an irregular-only hint.
+     */
+    private val pluralLanguages: Set<String> = genderByLanguage.keys + EN + FA
+
+    /** Languages that record a kana/pinyin reading on every typed word (leads all other forms). */
+    private val readingLanguages: Set<String> = setOf(JA, ZH)
+
+    /** Languages whose nouns and verbs carry a consonantal root (Arabic). */
+    private val rootLanguages: Set<String> = setOf(AR)
+
+    /** Languages whose nouns carry a measure word / classifier (Chinese). */
+    private val measureLanguages: Set<String> = setOf(ZH)
 
     /** Languages whose adjectives inflect for a distinct feminine form. */
-    private val feminineAdjectiveLanguages: Set<String> = setOf(FR, ES, IT, PT, LT)
+    private val feminineAdjectiveLanguages: Set<String> = setOf(FR, ES, IT, PT, LT, AR)
 
     /**
      * Languages worth capturing comparative/superlative forms for (adjectives and adverbs).
      * Turkish/Azerbaijani are excluded: comparison there is fully periphrastic (daha…, ən…), so
-     * there is nothing per-word to store.
+     * there is nothing per-word to store. Slavic + Greek join (morphological, or irregular-only).
      */
-    private val comparisonLanguages: Set<String> = setOf(EN, DE, NL, FR, ES, IT, PT, LT)
+    private val comparisonLanguages: Set<String> = setOf(EN, DE, NL, FR, ES, IT, PT, LT, PL, UK, RU, EL)
 
     fun genderOptions(languageCode: String): List<Gender> =
         genderByLanguage[languageCode.lowercase()].orEmpty()
@@ -66,30 +95,42 @@ object LanguageGrammar {
      */
     fun formSpec(languageCode: String, wordType: WordType): LanguageFormSpec {
         val code = languageCode.lowercase()
-        return when (wordType) {
-            WordType.NOUN -> LanguageFormSpec(
-                genderOptions = genderOptions(code),
-                fields = buildList {
-                    if (code in pluralLanguages) {
-                        add(textForm(FieldKey.PLURAL, irregularHintOrNull(code)))
-                    }
-                },
-            )
+        return LanguageFormSpec(
+            genderOptions = if (wordType == WordType.NOUN) genderOptions(code) else emptyList(),
+            fields = buildList {
+                // Reading (kana/pinyin) leads every typed entry for the languages that use it —
+                // including adverbs and the closed-class sub-types, but not untyped free text.
+                if (code in readingLanguages && wordType != WordType.FREE_TEXT) {
+                    add(textForm(FieldKey.READING))
+                }
+                addAll(typeFields(code, wordType))
+            },
+        )
+    }
 
-            WordType.VERB -> LanguageFormSpec(fields = verbFields(code))
-
-            WordType.ADJECTIVE -> LanguageFormSpec(
-                fields = buildList {
-                    if (code in feminineAdjectiveLanguages) add(textForm(FieldKey.FEMININE))
-                    addAll(comparisonFields(code))
-                },
-            )
-
-            // Adverbs, free text, and the closed-class sub-types capture only the word itself.
-            // (Adverb comparison overlaps almost entirely with the adjective card, and the few
-            // adverb-only irregulars aren't worth a dedicated field.)
-            else -> LanguageFormSpec()
+    /** The forms specific to a word type, beyond gender and the reading handled by [formSpec]. */
+    private fun typeFields(code: String, wordType: WordType): List<FormField> = when (wordType) {
+        WordType.NOUN -> buildList {
+            if (code in pluralLanguages) add(textForm(FieldKey.PLURAL, irregularHintOrNull(code)))
+            if (code in rootLanguages) add(textForm(FieldKey.ROOT))
+            if (code in measureLanguages) add(textForm(FieldKey.MEASURE))
         }
+
+        WordType.VERB -> verbFields(code)
+
+        WordType.ADJECTIVE -> buildList {
+            if (code in feminineAdjectiveLanguages) add(textForm(FieldKey.FEMININE, feminineHintOrNull(code)))
+            addAll(comparisonFields(code))
+            when (code) {
+                JA -> add(japaneseAdjectiveClass())
+                KO -> add(textForm(FieldKey.POLITE))
+            }
+        }
+
+        // Adverbs, free text, and the closed-class sub-types capture only the word itself (plus a
+        // reading where the language uses one). Adverb comparison overlaps with the adjective card,
+        // and the few adverb-only irregulars aren't worth a dedicated field.
+        else -> emptyList()
     }
 
     /**
@@ -108,14 +149,34 @@ object LanguageGrammar {
         }
 
     private fun comparisonHintOrNull(code: String): Int? =
-        // de/nl/lt comparison is morphological; en + Romance are periphrastic — capture only exceptions.
-        if (code in setOf(EN, FR, ES, IT, PT)) ResStrings.createWordScreenIrregularHint else null
+        // de/nl/lt/pl/uk comparison is morphological; en + Romance + ru + el are periphrastic or
+        // regular-by-default, so capture only the exceptions.
+        if (code in setOf(EN, FR, ES, IT, PT, RU, EL)) ResStrings.createWordScreenIrregularHint else null
 
     private fun verbFields(code: String): List<FormField> = when (code) {
         EN -> listOf(
             textForm(FieldKey.PAST, irregularHintOrNull(code)),
             textForm(FieldKey.PARTICIPLE, irregularHintOrNull(code)),
         )
+
+        // Slavic present (3sg) + aspect counterpart of the imperfective.
+        PL, UK, RU -> listOf(
+            textForm(FieldKey.PRESENT_3RD),
+            textForm(FieldKey.ASPECT),
+        )
+
+        EL -> listOf(textForm(FieldKey.PAST)) // aorist
+
+        AR -> listOf(
+            textForm(FieldKey.PRESENT_3RD),
+            textForm(FieldKey.ROOT),
+        )
+
+        FA -> listOf(textForm(FieldKey.STEM)) // present stem, the irregular core of Farsi verbs
+
+        JA -> listOf(japaneseVerbClass()) // reading is prepended by formSpec
+
+        KO -> listOf(textForm(FieldKey.POLITE)) // 해요체; verbs and adjectives conjugate alike
 
         DE -> listOf(
             textForm(FieldKey.PAST),
@@ -148,15 +209,40 @@ object LanguageGrammar {
             textForm(FieldKey.PAST_3RD),
         )
 
-        else -> emptyList() // tr, az: regular conjugation, nothing to capture
+        // tr, az: regular conjugation; zh: reading only (added by formSpec) — nothing more here.
+        else -> emptyList()
     }
+
+    /** Japanese verb conjugation class: stored as a stable code, shown as a localized chip. */
+    private fun japaneseVerbClass(): FormField.LabeledChoiceForm = FormField.LabeledChoiceForm(
+        key = FieldKey.CLASS,
+        options = listOf(
+            FormField.LabeledChoiceForm.Option("group1", ResStrings.createWordScreenClassGroup1),
+            FormField.LabeledChoiceForm.Option("group2", ResStrings.createWordScreenClassGroup2),
+            FormField.LabeledChoiceForm.Option("irregular", ResStrings.createWordScreenClassIrregular),
+        ),
+    )
+
+    /** Japanese adjective class: い-adjective vs な-adjective. */
+    private fun japaneseAdjectiveClass(): FormField.LabeledChoiceForm = FormField.LabeledChoiceForm(
+        key = FieldKey.CLASS,
+        options = listOf(
+            FormField.LabeledChoiceForm.Option("i", ResStrings.createWordScreenClassIAdjective),
+            FormField.LabeledChoiceForm.Option("na", ResStrings.createWordScreenClassNaAdjective),
+        ),
+    )
 
     private fun textForm(key: FieldKey, hintRes: Int? = null) =
         FormField.TextForm(key = key, hintRes = hintRes)
 
     private fun irregularHintOrNull(code: String): Int? =
-        // English/Spanish/Portuguese default forms are regular; only capture the exceptions.
-        if (code == EN || code == ES || code == PT) ResStrings.createWordScreenIrregularHint else null
+        // English/Spanish/Portuguese default forms are regular, as is Farsi's ‑ها plural; capture
+        // only the exceptions.
+        if (code == EN || code == ES || code == PT || code == FA) ResStrings.createWordScreenIrregularHint else null
+
+    private fun feminineHintOrNull(code: String): Int? =
+        // Arabic's feminine ة is the regular default; only its irregular feminines are worth entering.
+        if (code == AR) ResStrings.createWordScreenIrregularHint else null
 
     /** What the gender chip displays: the article where one exists, otherwise a grammatical label. */
     fun genderLabel(languageCode: String, gender: Gender): GenderLabel {

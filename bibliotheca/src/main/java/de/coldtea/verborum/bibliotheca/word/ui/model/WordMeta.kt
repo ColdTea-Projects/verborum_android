@@ -11,6 +11,25 @@ import kotlinx.serialization.json.Json
 const val ALT_SEPARATOR = "/"
 
 /**
+ * The display separators for one language's script. A presentation line must never mix directions,
+ * so RTL and CJK scripts use their own punctuation instead of the Latin "/" and " · ". Storage is
+ * unaffected — surfaces are always a JSON array and meanings never share a string.
+ *
+ * [alt] joins alternative meanings within a slot; [column] joins the form slots of a line.
+ */
+data class DisplaySeparators(val alt: String, val column: String)
+
+fun separatorsFor(languageCode: String): DisplaySeparators = when (languageCode.lowercase()) {
+    "ar", "fa" -> DisplaySeparators(alt = "،", column = "؛ ") // ، and ؛ (RTL)
+    "ja" -> DisplaySeparators(alt = "・", column = "、") // ・ and 、
+    "zh" -> DisplaySeparators(alt = "、", column = "；") // 、 and ；
+    else -> DisplaySeparators(alt = ALT_SEPARATOR, column = " · ") // Latin, Cyrillic, Greek, Korean
+}
+
+/** The language code recorded in a meta blob, or empty when the meta is missing/unparseable. */
+fun languageCodeOf(meta: String): String = parseBundle(meta)?.languageCode.orEmpty()
+
+/**
  * Parsed form of the meta blob written by the create-word screen. A word can carry several
  * alternative meanings (e.g. *kaufen/erwerben*); each [WordMetaBundle.Meaning] is one alternative.
  *
@@ -104,7 +123,8 @@ fun parseBundle(meta: String): WordMetaBundle? {
 
 /** [WordMeta.displayForm] over raw field values, usable before a meta string exists. */
 fun displayForm(fields: Map<FieldKey, String>, key: FieldKey): String? {
-    if (key == FieldKey.AUXILIARY) return null
+    // Auxiliary folds into the participle; class is a stored code (group2, na…), not a shown form.
+    if (key == FieldKey.AUXILIARY || key == FieldKey.CLASS) return null
     val value = fields[key]?.takeIf { it.isNotBlank() } ?: return null
     if (key != FieldKey.PARTICIPLE) return value
     val auxiliary = fields[FieldKey.AUXILIARY]?.takeIf { it.isNotBlank() }
@@ -131,30 +151,43 @@ fun splitSurfaces(text: String): List<String> {
     return listOf(trimmed)
 }
 
-/** The stored surface column as shown to the learner: `["buy","purchase"]` → "buy/purchase". */
-fun surfacesDisplay(text: String): String = splitSurfaces(text).joinToString(ALT_SEPARATOR)
+/**
+ * The stored surface column as shown to the learner: `["buy","purchase"]` → "buy/purchase". The
+ * [languageCode] picks the script's separator so RTL/CJK lines stay single-direction.
+ */
+fun surfacesDisplay(text: String, languageCode: String): String =
+    splitSurfaces(text).joinToString(separatorsFor(languageCode).alt)
 
 /**
  * One presentation line from surfaces plus each meaning's grammatical fields: alternatives are
- * joined by "/" within each slot, slots by " · " — "kaufen/erwerben · kaufte/erwarb · …".
- * Shared by the stored-word renderers and the create screen's live preview.
+ * joined within each slot, slots by the column separator — "kaufen/erwerben · kaufte/erwarb · …".
+ * [languageCode] selects the script-appropriate separators. Shared by the stored-word renderers
+ * and the create screen's live preview.
  */
-fun displayLine(surfaces: List<String>, meaningsFields: List<Map<FieldKey, String>>): String {
-    val baseColumn = surfaces.filter { it.isNotBlank() }.joinToString(ALT_SEPARATOR)
+fun displayLine(
+    surfaces: List<String>,
+    meaningsFields: List<Map<FieldKey, String>>,
+    languageCode: String,
+): String {
+    val sep = separatorsFor(languageCode)
+    val baseColumn = surfaces.filter { it.isNotBlank() }.joinToString(sep.alt)
     val formColumns = FieldKey.entries.mapNotNull { key ->
         meaningsFields.mapNotNull { displayForm(it, key) }
             .takeIf { it.isNotEmpty() }
-            ?.joinToString(ALT_SEPARATOR)
+            ?.joinToString(sep.alt)
     }
-    return (listOf(baseColumn) + formColumns).filter { it.isNotBlank() }.joinToString(separator = " · ")
+    return (listOf(baseColumn) + formColumns).filter { it.isNotBlank() }.joinToString(separator = sep.column)
 }
 
 /** [displayLine] over the stored columns of a saved word. */
-fun displayLine(text: String, meta: String): String =
-    displayLine(
+fun displayLine(text: String, meta: String): String {
+    val bundle = parseBundle(meta)
+    return displayLine(
         surfaces = splitSurfaces(text),
-        meaningsFields = parseBundle(meta)?.meanings?.map { it.fields }.orEmpty(),
+        meaningsFields = bundle?.meanings?.map { it.fields }.orEmpty(),
+        languageCode = bundle?.languageCode.orEmpty(),
     )
+}
 
 fun WordUi.wordDisplayLine(): String = displayLine(word, wordMeta)
 

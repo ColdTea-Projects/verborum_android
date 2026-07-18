@@ -32,6 +32,19 @@ sealed interface FormField {
         val options: List<String>,
         @StringRes val labelRes: Int = key.labelRes,
     ) : FormField
+
+    /**
+     * A pick-one control whose options store a stable ASCII [Option.code] but show a localized
+     * [Option.labelRes] on the chip (e.g. Japanese verb class: code `group1`, label "Godan (う)").
+     * Unlike [ChoiceForm], the stored value and the displayed text differ.
+     */
+    data class LabeledChoiceForm(
+        override val key: FieldKey,
+        val options: List<Option>,
+        @StringRes val labelRes: Int = key.labelRes,
+    ) : FormField {
+        data class Option(val code: String, @StringRes val labelRes: Int)
+    }
 }
 
 /** How a gender is shown on its selector chip: either a literal article or a localized label. */

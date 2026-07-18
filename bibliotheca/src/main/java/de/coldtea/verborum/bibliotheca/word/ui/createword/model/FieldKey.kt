@@ -11,6 +11,9 @@ import de.coldtea.verborum.bibliotheca.common.utils.ResStrings
  * The declaration order defines the order these are serialized into the meta string.
  */
 enum class FieldKey(val metaKey: String, @StringRes val labelRes: Int) {
+    // Reading leads so kana/pinyin serialize and display before every other form (existing
+    // languages never emit it, so declaring it first is safe for them).
+    READING("reading", ResStrings.createWordScreenReadingLabel),
     PLURAL("plural", ResStrings.createWordScreenPluralLabel),
     FEMININE("feminine", ResStrings.createWordScreenFeminineLabel),
     COMPARATIVE("comparative", ResStrings.createWordScreenComparativeLabel),
@@ -20,4 +23,10 @@ enum class FieldKey(val metaKey: String, @StringRes val labelRes: Int) {
     PAST_3RD("past3", ResStrings.createWordScreenPastFormLabel),
     PARTICIPLE("participle", ResStrings.createWordScreenParticipleLabel),
     AUXILIARY("aux", ResStrings.createWordScreenAuxiliaryLabel),
+    ASPECT("aspect", ResStrings.createWordScreenAspectLabel),
+    ROOT("root", ResStrings.createWordScreenRootLabel),
+    STEM("stem", ResStrings.createWordScreenStemLabel),
+    MEASURE("measure", ResStrings.createWordScreenMeasureLabel),
+    CLASS("class", ResStrings.createWordScreenClassLabel),
+    POLITE("polite", ResStrings.createWordScreenPoliteLabel),
 }

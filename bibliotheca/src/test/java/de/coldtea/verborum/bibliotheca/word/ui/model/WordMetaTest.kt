@@ -107,8 +107,8 @@ class WordMetaTest : BaseTest() {
 
     @Test
     fun `surfacesDisplay joins the stored surfaces with a slash`() {
-        assertEquals("buy/purchase", surfacesDisplay("""["buy","purchase"]"""))
-        assertEquals("elma", surfacesDisplay("""["elma"]"""))
+        assertEquals("buy/purchase", surfacesDisplay("""["buy","purchase"]""", "en"))
+        assertEquals("elma", surfacesDisplay("""["elma"]""", "tr"))
     }
 
     // endregion
