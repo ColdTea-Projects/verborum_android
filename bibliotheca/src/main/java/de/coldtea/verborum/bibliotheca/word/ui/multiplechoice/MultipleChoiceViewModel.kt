@@ -27,6 +27,13 @@ class MultipleChoiceViewModel @Inject constructor(
     private var words: List<WordUi> = listOf()
     private var questions: List<MultipleChoiceQuestion> = listOf()
 
+    // The score counts every correct *question* (base form plus plurals, tenses, alternatives). The
+    // level, by contrast, moves per *word*: the first correct answer for a word raises it once, the
+    // first wrong answer lowers it once, and later answers for that word leave the level alone — so
+    // a word's level shifts by at most +1 and/or -1 per test.
+    private val raisedWordIds = mutableSetOf<String>()
+    private val loweredWordIds = mutableSetOf<String>()
+
     private var _answered = MutableStateFlow(false)
     val answered = _answered.asSharedFlow()
 
@@ -46,6 +53,7 @@ class MultipleChoiceViewModel @Inject constructor(
                     } else if (questions.isEmpty()) {
                         words = wordList
                         questions = wordList.flatMap { it.toQuestions() }.shuffled()
+                        resetScoring()
                         initNextQuestion()
                     }
                 },
@@ -66,10 +74,10 @@ class MultipleChoiceViewModel @Inject constructor(
             val correctAnswer = question.multipleChoiceCurrentQuestion.question.answer
             if (correctAnswer == _selectedAnswer.value) {
                 score += 1
-                updateLevel(currentQuestionWordUiId, true)
+                registerCorrect(currentQuestionWordUiId)
                 _snackbarMessages.emit("Correct answer!")
             } else {
-                updateLevel(currentQuestionWordUiId, false)
+                registerWrong(currentQuestionWordUiId)
                 _snackbarMessages.emit("Incorrect, correct answer was $correctAnswer")
             }
             _answered.emit(true)
@@ -89,18 +97,35 @@ class MultipleChoiceViewModel @Inject constructor(
     fun onRetryClicked() = viewModelScope.launch {
         _selectedAnswer.emit("")
         _answered.emit(false)
-        score = 0
+        resetScoring()
         currentQuestionIndex = 0
         initNextQuestion()
     }
 
+    private fun resetScoring() {
+        score = 0
+        raisedWordIds.clear()
+        loweredWordIds.clear()
+    }
+
+    /** First correct answer for a word raises its level once; later correct forms only add to the score. */
+    private fun registerCorrect(wordId: String) {
+        if (raisedWordIds.add(wordId)) applyWordLevel(wordId)
+    }
+
+    /** First wrong answer for a word lowers its level once; repeats are ignored. */
+    private fun registerWrong(wordId: String) {
+        if (loweredWordIds.add(wordId)) applyWordLevel(wordId)
+    }
+
     private suspend fun initNextQuestion() {
         val nextQuestionState = if (currentQuestionIndex == questions.size) {
+            // Scored per question: every correct answer counts, across all forms of every word.
             MultipleChoiceCurrentQuestionState.Completed(
                 passed = score > (questions.size / 2),
                 percentage = ((score.toDouble() / questions.size.toDouble()) * 100).toInt(),
                 correctAnswers = score,
-                totalQuestions = questions.size
+                totalQuestions = questions.size,
             )
         } else {
             val question = questions[currentQuestionIndex]
@@ -169,9 +194,15 @@ class MultipleChoiceViewModel @Inject constructor(
             .shuffled()
     }
 
-    private fun updateLevel(wordId: String, isCorrect: Boolean) = viewModelScope.launch {
+    /**
+     * Re-derives the word's level from its stored value plus the (at most) one raise and one lower
+     * it has earned this test, so the two independent latches compose correctly and repeated saves
+     * stay consistent regardless of the order answers arrive in.
+     */
+    private fun applyWordLevel(wordId: String) = viewModelScope.launch {
         val wordUi = words.first { it.wordId == wordId }
-        val newLevel = if (isCorrect) minOf(7, wordUi.level + 1) else maxOf(0, wordUi.level - 1)
+        val delta = (if (wordId in raisedWordIds) 1 else 0) + (if (wordId in loweredWordIds) -1 else 0)
+        val newLevel = (wordUi.level + delta).coerceIn(0, 7)
 
         wordService.saveWord(wordUi.convertToWord().copy(level = newLevel))
     }

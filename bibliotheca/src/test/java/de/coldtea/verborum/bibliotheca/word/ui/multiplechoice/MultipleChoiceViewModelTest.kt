@@ -310,6 +310,99 @@ class MultipleChoiceViewModelTest : BaseTest() {
 
     // endregion
 
+    // region per-word scoring and leveling
+
+    /** Walks the whole quiz, deciding per question: true = answer correctly, false = wrong, null = skip. */
+    private suspend fun walkAnswering(decide: (MultipleChoiceQuestion) -> Boolean?) {
+        val size = currentSuccess().size
+        repeat(size) {
+            val question = currentSuccess().multipleChoiceCurrentQuestion.question
+            when (decide(question)) {
+                true -> answerCurrentQuestion(correctly = true)
+                false -> answerCurrentQuestion(correctly = false)
+                null -> Unit
+            }
+            viewModel.onNextQuestionRequested()
+        }
+    }
+
+    @Test
+    fun `a word answered correctly in several forms raises its level only once`() = runTest {
+        initWith(verbWords(4).map { it.copy(level = 2) })
+
+        // w-1 produces three questions (base, past, participle); answer all of them correctly.
+        walkAnswering { if (it.wordId == "w-1") true else null }
+
+        val saved = mutableListOf<Word>()
+        coVerify(exactly = 1) { wordService.saveWord(capture(saved)) }
+        assertEquals("w-1", saved.single().wordId)
+        assertEquals(3, saved.single().level)
+    }
+
+    @Test
+    fun `a word answered wrong in several forms lowers its level only once`() = runTest {
+        initWith(verbWords(4).map { it.copy(level = 2) })
+
+        walkAnswering { if (it.wordId == "w-1") false else null }
+
+        val saved = mutableListOf<Word>()
+        coVerify(exactly = 1) { wordService.saveWord(capture(saved)) }
+        assertEquals(1, saved.single().level)
+    }
+
+    @Test
+    fun `a word answered both correctly and wrong nets no level change`() = runTest {
+        initWith(verbWords(4).map { it.copy(level = 4) })
+
+        walkAnswering {
+            when {
+                it.wordId != "w-1" -> null
+                it.formKey == null -> true            // base form correct
+                it.formKey == FieldKey.PAST -> false  // past form wrong
+                else -> null
+            }
+        }
+
+        // One raise and one lower for the same word settle back to its stored level, whatever order.
+        val saved = mutableListOf<Word>()
+        coVerify { wordService.saveWord(capture(saved)) }
+        assertEquals("w-1", saved.last().wordId)
+        assertEquals(4, saved.last().level)
+    }
+
+    @Test
+    fun `score counts every correct form question, not just the word`() = runTest {
+        initWith(verbWords(4)) // 4 words, 12 questions (base + past + participle each)
+
+        // Every form of two words correct (6 questions), every form of the other two wrong (6).
+        walkAnswering { it.wordId == "w-1" || it.wordId == "w-2" }
+
+        assertEquals(
+            MultipleChoiceCurrentQuestionState.Completed(
+                passed = false,
+                percentage = 50,
+                correctAnswers = 6,
+                totalQuestions = 12,
+            ),
+            viewModel.currentQuestion.first(),
+        )
+    }
+
+    @Test
+    fun `each correct form question adds to the score independently`() = runTest {
+        initWith(verbWords(4)) // 12 questions
+
+        // Only w-1's base form is answered correctly; every other question is wrong.
+        walkAnswering { it.wordId == "w-1" && it.formKey == null }
+
+        val completed = viewModel.currentQuestion.first() as MultipleChoiceCurrentQuestionState.Completed
+        assertEquals(1, completed.correctAnswers)
+        assertEquals(12, completed.totalQuestions)
+        assertEquals(8, completed.percentage) // 1 / 12 → 8%
+    }
+
+    // endregion
+
     // region navigation and completion
 
     @Test
