@@ -111,6 +111,7 @@
     <string name="dictionaryListScreenRetry">تلاش دوباره</string>
     <string name="dictionaryDetailsScreenNoWordsToPractice">ابتدا واژه‌ای بیفزایید — هنوز چیزی برای تمرین نیست</string>
     <string name="dictionaryDetailsScreenNotEnoughWordsForTest">آزمون به دست‌کم ۴ واژه در این جفت زبان نیاز دارد</string>
+    <string name="offlineBannerMessage">آفلاین هستید — تغییرات پس از اتصال دوباره همگام‌سازی می‌شوند</string>
     <!--Plurals-->
     <plurals name="dictionaryDetailsScreenWordListCount">
         <item quantity="one">%1$d واژه در واژه‌نامه</item>

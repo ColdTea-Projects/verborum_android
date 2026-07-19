@@ -111,6 +111,7 @@
     <string name="dictionaryListScreenRetry">Tentar novamente</string>
     <string name="dictionaryDetailsScreenNoWordsToPractice">Adicione primeiro uma palavra — ainda não há nada para praticar</string>
     <string name="dictionaryDetailsScreenNotEnoughWordsForTest">Um teste precisa de pelo menos 4 palavras neste par de idiomas</string>
+    <string name="offlineBannerMessage">Está offline — as alterações serão sincronizadas ao reconectar</string>
     <!--Plurals-->
     <plurals name="dictionaryDetailsScreenWordListCount">
         <item quantity="one">%1$d palavra no dicionário</item>

@@ -111,6 +111,7 @@
     <string name="dictionaryListScreenRetry">重试</string>
     <string name="dictionaryDetailsScreenNoWordsToPractice">请先添加单词——目前没有可练习的内容</string>
     <string name="dictionaryDetailsScreenNotEnoughWordsForTest">测验需要该语言对中至少 4 个单词</string>
+    <string name="offlineBannerMessage">您已离线——更改将在重新连接后同步</string>
     <!--Plurals-->
     <plurals name="dictionaryDetailsScreenWordListCount">
         <item quantity="other">词典中有%1$d个单词</item>

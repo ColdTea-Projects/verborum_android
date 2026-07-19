@@ -111,6 +111,7 @@
     <string name="dictionaryListScreenRetry">Opnieuw proberen</string>
     <string name="dictionaryDetailsScreenNoWordsToPractice">Voeg eerst een woord toe — er is nog niets om te oefenen</string>
     <string name="dictionaryDetailsScreenNotEnoughWordsForTest">Een test heeft minstens 4 woorden in dit taalpaar nodig</string>
+    <string name="offlineBannerMessage">Je bent offline — wijzigingen worden gesynchroniseerd zodra je weer verbinding hebt</string>
     <!--Plurals-->
     <plurals name="dictionaryDetailsScreenWordListCount">
         <item quantity="one">%1$d woord in het woordenboek</item>

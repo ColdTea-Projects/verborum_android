@@ -111,6 +111,7 @@
     <string name="dictionaryListScreenRetry">Yeniden dene</string>
     <string name="dictionaryDetailsScreenNoWordsToPractice">Önce bir kelime ekleyin — henüz çalışılacak bir şey yok</string>
     <string name="dictionaryDetailsScreenNotEnoughWordsForTest">Test için bu dil çiftinde en az 4 kelime gerekir</string>
+    <string name="offlineBannerMessage">Çevrimdışısınız — değişiklikler yeniden bağlandığınızda eşitlenecek</string>
     <!--Plurals-->
     <plurals name="dictionaryDetailsScreenWordListCount">
         <item quantity="one">sözlükte %1$d kelime</item>

@@ -111,6 +111,7 @@
     <string name="dictionaryListScreenRetry">Yenidən cəhd et</string>
     <string name="dictionaryDetailsScreenNoWordsToPractice">Əvvəlcə söz əlavə edin — hələ məşq ediləcək bir şey yoxdur</string>
     <string name="dictionaryDetailsScreenNotEnoughWordsForTest">Test üçün bu dil cütündə ən azı 4 söz lazımdır</string>
+    <string name="offlineBannerMessage">Oflaynsınız — dəyişikliklər yenidən qoşulduqda sinxronlaşdırılacaq</string>
     <!--Plurals-->
     <plurals name="dictionaryDetailsScreenWordListCount">
         <item quantity="one">lüğətdə %1$d söz</item>

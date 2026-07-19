@@ -111,6 +111,7 @@
     <string name="dictionaryListScreenRetry">Bandyti dar kartą</string>
     <string name="dictionaryDetailsScreenNoWordsToPractice">Pirmiausia pridėkite žodį – dar nėra ko mokytis</string>
     <string name="dictionaryDetailsScreenNotEnoughWordsForTest">Testui reikia bent 4 žodžių šioje kalbų poroje</string>
+    <string name="offlineBannerMessage">Esate neprisijungę – pakeitimai bus sinchronizuoti prisijungus</string>
     <!--Plurals-->
     <plurals name="dictionaryDetailsScreenWordListCount">
         <item quantity="one">%1$d žodis žodyne</item>

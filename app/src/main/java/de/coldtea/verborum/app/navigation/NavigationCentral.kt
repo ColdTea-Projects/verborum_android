@@ -1,5 +1,6 @@
 package de.coldtea.verborum.app.navigation
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -18,6 +19,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -38,9 +40,12 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import de.coldtea.verborum.app.R
+// Translations live in bibliotheca, which carries all 19 locales; the app module has none.
+import de.coldtea.verborum.bibliotheca.R as BibliothecaR
 import de.coldtea.verborum.core.ui.LocalVerborumTopBarController
 import de.coldtea.verborum.core.ui.VerborumTopBarController
 import de.coldtea.verborum.core.ui.VerborumTopBarState
+import de.coldtea.verborum.core.ui.rememberIsOnline
 
 @Composable
 fun NavigationCentral(showWelcome: Boolean = false) {
@@ -57,16 +62,25 @@ fun NavigationCentral(showWelcome: Boolean = false) {
         currentRoute == SCREEN_DICTIONARIES_LIST || currentRoute == SCREEN_FORUM_MAIN_SCREEN
 
     val topBarState = topBarController.state
+    val isOnline = rememberIsOnline()
 
     CompositionLocalProvider(LocalVerborumTopBarController provides topBarController) {
         Scaffold(
             topBar = {
-                // Welcome is full screen; every other screen renders the shared header.
-                if (!isOnWelcomeScreen && topBarState.title.isNotEmpty()) {
-                    VerborumTopBar(
-                        state = topBarState,
-                        onBackClick = { navController.popBackStack() },
-                    )
+                Column {
+                    // Welcome is full screen; every other screen renders the shared header.
+                    if (!isOnWelcomeScreen && topBarState.title.isNotEmpty()) {
+                        VerborumTopBar(
+                            state = topBarState,
+                            onBackClick = { navController.popBackStack() },
+                        )
+                    }
+                    // Pinned under the header rather than floating over the content: being offline
+                    // is a standing condition, so it should stay visible instead of timing out
+                    // like a transient message would.
+                    AnimatedVisibility(visible = !isOnline && !isOnWelcomeScreen) {
+                        OfflineBanner()
+                    }
                 }
             },
             bottomBar = { if (isRootScreen) VerborumNavigationBar(navController) },
@@ -97,6 +111,32 @@ fun NavigationCentral(showWelcome: Boolean = false) {
                     }
                 }
             }
+        }
+    }
+}
+
+/**
+ * Standing "you are offline" notice shown directly beneath the shared top bar. Uses the theme's
+ * error container so it reads as a warning in both light and dark.
+ */
+@Composable
+private fun OfflineBanner() {
+    Surface(
+        modifier = Modifier.fillMaxWidth(),
+        color = MaterialTheme.colorScheme.errorContainer,
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 24.dp, vertical = 10.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Text(
+                text = stringResource(BibliothecaR.string.offlineBannerMessage),
+                fontSize = 13.sp,
+                fontWeight = FontWeight.Medium,
+                color = MaterialTheme.colorScheme.onErrorContainer,
+            )
         }
     }
 }

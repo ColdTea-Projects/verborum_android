@@ -111,6 +111,7 @@
     <string name="dictionaryListScreenRetry">再試行</string>
     <string name="dictionaryDetailsScreenNoWordsToPractice">まず単語を追加してください — 練習できるものがありません</string>
     <string name="dictionaryDetailsScreenNotEnoughWordsForTest">テストにはこの言語ペアで少なくとも4語が必要です</string>
+    <string name="offlineBannerMessage">オフラインです — 変更は再接続時に同期されます</string>
     <!--Plurals-->
     <plurals name="dictionaryDetailsScreenWordListCount">
         <item quantity="other">辞書に%1$d語</item>

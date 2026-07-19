@@ -111,6 +111,7 @@
     <string name="dictionaryListScreenRetry">다시 시도</string>
     <string name="dictionaryDetailsScreenNoWordsToPractice">먼저 단어를 추가하세요 — 아직 연습할 내용이 없습니다</string>
     <string name="dictionaryDetailsScreenNotEnoughWordsForTest">테스트에는 이 언어 쌍에 단어가 최소 4개 필요합니다</string>
+    <string name="offlineBannerMessage">오프라인 상태입니다 — 변경 사항은 다시 연결되면 동기화됩니다</string>
     <!--Plurals-->
     <plurals name="dictionaryDetailsScreenWordListCount">
         <item quantity="other">사전에 %1$d개 단어</item>

@@ -111,6 +111,7 @@
     <string name="dictionaryListScreenRetry">Επανάληψη</string>
     <string name="dictionaryDetailsScreenNoWordsToPractice">Προσθέστε πρώτα μια λέξη — δεν υπάρχει τίποτα για εξάσκηση</string>
     <string name="dictionaryDetailsScreenNotEnoughWordsForTest">Ένα τεστ χρειάζεται τουλάχιστον 4 λέξεις σε αυτό το ζεύγος γλωσσών</string>
+    <string name="offlineBannerMessage">Είστε εκτός σύνδεσης — οι αλλαγές θα συγχρονιστούν μόλις επανασυνδεθείτε</string>
     <!--Plurals-->
     <plurals name="dictionaryDetailsScreenWordListCount">
         <item quantity="one">%1$d λέξη στο λεξικό</item>

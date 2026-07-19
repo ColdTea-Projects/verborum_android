@@ -111,6 +111,7 @@
     <string name="dictionaryListScreenRetry">إعادة المحاولة</string>
     <string name="dictionaryDetailsScreenNoWordsToPractice">أضف كلمة أولاً — لا يوجد شيء للتدرب عليه بعد</string>
     <string name="dictionaryDetailsScreenNotEnoughWordsForTest">يحتاج الاختبار إلى 4 كلمات على الأقل في زوج اللغات هذا</string>
+    <string name="offlineBannerMessage">أنت غير متصل — ستتم مزامنة التغييرات عند إعادة الاتصال</string>
     <!--Plurals-->
     <plurals name="dictionaryDetailsScreenWordListCount">
         <item quantity="zero">لا توجد كلمات في القاموس</item>

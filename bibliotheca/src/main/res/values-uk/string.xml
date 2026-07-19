@@ -111,6 +111,7 @@
     <string name="dictionaryListScreenRetry">Повторити спробу</string>
     <string name="dictionaryDetailsScreenNoWordsToPractice">Спершу додайте слово — поки немає що практикувати</string>
     <string name="dictionaryDetailsScreenNotEnoughWordsForTest">Для тесту потрібно щонайменше 4 слова в цій мовній парі</string>
+    <string name="offlineBannerMessage">Ви офлайн — зміни синхронізуються після відновлення зʼєднання</string>
     <!--Plurals-->
     <plurals name="dictionaryDetailsScreenWordListCount">
         <item quantity="one">%1$d слово в словнику</item>
