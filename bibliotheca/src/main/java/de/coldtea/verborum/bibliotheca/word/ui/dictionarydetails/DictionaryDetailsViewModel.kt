@@ -27,7 +27,10 @@ class DictionaryDetailsViewModel @Inject constructor(
             dictionaryService.observeDictionary(dictionaryId),
             wordService.observeWordsByDictionary(dictionaryId)
         ) { dictionary, words ->
-            DictionaryDetailState.Success(dictionary, words)
+            // A null dictionary means it was tombstoned/removed — surface it as Deleted so the
+            // screen navigates back instead of re-rendering (and re-registering) a stale header.
+            if (dictionary == null) DictionaryDetailState.Deleted
+            else DictionaryDetailState.Success(dictionary, words)
         }.observe (
             onSuccess = { state ->
                 _dictionaryDetailState.emit(state)

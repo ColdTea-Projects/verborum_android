@@ -23,6 +23,9 @@ class DictionaryListViewModel @Inject constructor(
     private val _dictionariesState = MutableStateFlow(listOf<DictionaryUi>())
     val dictionariesState = _dictionariesState.asStateFlow()
 
+    private val _isRefreshing = MutableStateFlow(false)
+    val isRefreshing = _isRefreshing.asStateFlow()
+
     init {
         viewModelScope.launch {
             combine(
@@ -40,6 +43,16 @@ class DictionaryListViewModel @Inject constructor(
             )
             syncService.syncDictionaries()
         }
+    }
+
+    /**
+     * User-initiated foreground sync for pull-to-refresh. Runs the same [SyncService] the
+     * background worker uses; [SyncService] handles its own errors, so the spinner always clears.
+     */
+    fun refresh() = viewModelScope.launch {
+        _isRefreshing.emit(true)
+        syncService.syncDictionaries()
+        _isRefreshing.emit(false)
     }
 
     /**

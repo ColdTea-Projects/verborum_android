@@ -37,10 +37,11 @@ class DictionaryService @Inject constructor(
         .map { it.map(Dictionary::convertToUi) }
         .flowOn(Dispatchers.IO)
 
-    fun observeDictionary(dictionaryId: String): Flow<DictionaryUi> = observeDictionaryUseCase
+    /** Emits null once the dictionary is tombstoned or removed, letting screens react to deletion. */
+    fun observeDictionary(dictionaryId: String): Flow<DictionaryUi?> = observeDictionaryUseCase
         .invoke(dictionaryId)
         .distinctUntilChanged()
-        .map(Dictionary::convertToUi)
+        .map { it?.convertToUi() }
         .flowOn(Dispatchers.IO)
 
     /** One-shot read for prefilling the edit screen. */

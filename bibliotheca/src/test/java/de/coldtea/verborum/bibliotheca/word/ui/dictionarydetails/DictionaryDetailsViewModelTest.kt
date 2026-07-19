@@ -1,6 +1,7 @@
 package de.coldtea.verborum.bibliotheca.word.ui.dictionarydetails
 
 import de.coldtea.verborum.bibliotheca.dictionary.domain.DictionaryService
+import de.coldtea.verborum.bibliotheca.dictionary.ui.model.DictionaryUi
 import de.coldtea.verborum.bibliotheca.testDictionaryUi
 import de.coldtea.verborum.bibliotheca.testWordUi
 import de.coldtea.verborum.bibliotheca.word.domain.WordService
@@ -86,6 +87,18 @@ class DictionaryDetailsViewModelTest : BaseTest() {
         viewModel.init(dictionaryId)
 
         assertEquals(DictionaryDetailState.Failed, viewModel.dictionaryDetailState.first())
+    }
+
+    @Test
+    fun `init emits Deleted when the dictionary is gone`() = runTest {
+        val dictionaryId = "dict-1"
+
+        every { dictionaryService.observeDictionary(dictionaryId) } returns flowOf<DictionaryUi?>(null)
+        every { wordService.observeWordsByDictionary(dictionaryId) } returns flowOf(emptyList())
+
+        viewModel.init(dictionaryId)
+
+        assertEquals(DictionaryDetailState.Deleted, viewModel.dictionaryDetailState.first())
     }
 
     @Test

@@ -22,6 +22,7 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -61,6 +62,13 @@ fun DictionaryDetailsScreen(
         viewModel.dictionaryDetailState.collectAsState(initial = DictionaryDetailState.Loading).value
 
     var showDeleteDialog by remember { mutableStateOf(false) }
+
+    // Navigation is driven by the observed state, not the delete button: once the dictionary is
+    // gone the screen leaves exactly once, so the async delete can't race the back navigation and
+    // the torn-down screen can never re-register the shared top bar with the stale dictionary.
+    LaunchedEffect(dictionaryDetailState) {
+        if (dictionaryDetailState is DictionaryDetailState.Deleted) onDictionaryDeleted()
+    }
 
     Column(
         modifier = Modifier
@@ -223,7 +231,6 @@ fun DictionaryDetailsScreen(
                     onConfirm = {
                         showDeleteDialog = false
                         viewModel.deleteDictionary()
-                        onDictionaryDeleted()
                     },
                     onDismiss = { showDeleteDialog = false },
                 )

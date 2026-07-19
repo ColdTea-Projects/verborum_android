@@ -14,6 +14,7 @@ import de.coldtea.verborum.bibliotheca.word.ui.createword.model.composeWordText
 import de.coldtea.verborum.core.ui.BaseViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -27,7 +28,7 @@ class CreateWordViewModel @Inject constructor(
     val createWordState = _createWordState.asSharedFlow()
 
     fun init(dictionaryId: String, wordId: String? = null) {
-        dictionaryService.observeDictionary(dictionaryId).observe(
+        dictionaryService.observeDictionary(dictionaryId).filterNotNull().observe(
             onSuccess = { dictionary ->
                 val editingWord = wordId?.let { wordService.getWord(it) }
                 _createWordState.emit(CreateWordState.Success(dictionary, editingWord))

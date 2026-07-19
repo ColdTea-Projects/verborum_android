@@ -24,6 +24,7 @@ import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -50,6 +51,7 @@ import de.coldtea.verborum.bibliotheca.dictionary.ui.model.DictionaryUi
 import de.coldtea.verborum.core.theme.VerborumTheme
 import de.coldtea.verborum.core.ui.RegisterTopBar
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DictionaryListScreen(
     viewModel: DictionaryListViewModel = hiltViewModel(),
@@ -59,6 +61,7 @@ fun DictionaryListScreen(
     onEditDictionaryClick: (String) -> Unit = {},
 ) {
     val dictionaries = viewModel.dictionariesState.collectAsState().value
+    val isRefreshing = viewModel.isRefreshing.collectAsState().value
 
     // Long-press target for the options sheet, and the dictionary pending delete confirmation.
     var optionsFor by remember { mutableStateOf<DictionaryUi?>(null) }
@@ -104,54 +107,61 @@ fun DictionaryListScreen(
         showBackButton = false,
     )
 
-    Column(
+    PullToRefreshBox(
+        isRefreshing = isRefreshing,
+        onRefresh = viewModel::refresh,
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
-            .padding(horizontal = 24.dp)
+            .background(MaterialTheme.colorScheme.background),
     ) {
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // Dictionary List
-        LazyColumn(
-            modifier = Modifier.weight(1f),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 24.dp)
         ) {
-            itemsIndexed(dictionaries) { index, dictionary ->
-                DictionaryCard(
-                    dictionary = dictionary,
-                    index = index,
-                    onClick = onDictionaryClick,
-                    onLongClick = { optionsFor = it },
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Dictionary List
+            LazyColumn(
+                modifier = Modifier.weight(1f),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                itemsIndexed(dictionaries) { index, dictionary ->
+                    DictionaryCard(
+                        dictionary = dictionary,
+                        index = index,
+                        onClick = onDictionaryClick,
+                        onLongClick = { optionsFor = it },
+                    )
+                }
+            }
+
+            // Sticky bottom action
+            Button(
+                onClick = onCreateDictionaryClick,
+                shape = RoundedCornerShape(16.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = MaterialTheme.colorScheme.onPrimary,
+                ),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 16.dp)
+                    .height(56.dp)
+            ) {
+                Icon(
+                    painter = painterResource(ResDrawables.ic_plus_24),
+                    contentDescription = null,
+                    modifier = Modifier.size(18.dp)
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = stringResource(ResStrings.dictionaryListScreenCreate),
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    letterSpacing = 0.5.sp
                 )
             }
-        }
-
-        // Sticky bottom action
-        Button(
-            onClick = onCreateDictionaryClick,
-            shape = RoundedCornerShape(16.dp),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.primary,
-                contentColor = MaterialTheme.colorScheme.onPrimary,
-            ),
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 16.dp)
-                .height(56.dp)
-        ) {
-            Icon(
-                painter = painterResource(ResDrawables.ic_plus_24),
-                contentDescription = null,
-                modifier = Modifier.size(18.dp)
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-            Text(
-                text = stringResource(ResStrings.dictionaryListScreenCreate),
-                fontSize = 16.sp,
-                fontWeight = FontWeight.SemiBold,
-                letterSpacing = 0.5.sp
-            )
         }
     }
 }

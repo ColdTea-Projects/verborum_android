@@ -11,8 +11,8 @@ class ObserveDictionaryUseCase @Inject constructor(
     private val dictionaryRepository: DictionaryRepository,
 ) {
 
-    fun invoke(dictionaryId: String): Flow<Dictionary> =
+    fun invoke(dictionaryId: String): Flow<Dictionary?> =
         dictionaryRepository
             .observeDictionary(dictionaryId)
-            .map { it.convertToDictionary() }
+            .map { it?.convertToDictionary() }
 }

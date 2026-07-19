@@ -7,5 +7,7 @@ sealed class DictionaryDetailState{
     data object Failed: DictionaryDetailState()
     data object Loading: DictionaryDetailState()
 
+    data object Deleted: DictionaryDetailState()
+
     data class Success(val dictionaryUi: DictionaryUi, val wordsUi: List<WordUi>) : DictionaryDetailState()
 }

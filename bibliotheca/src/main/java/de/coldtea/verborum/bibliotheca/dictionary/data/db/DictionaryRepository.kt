@@ -21,7 +21,7 @@ class DictionaryRepository @Inject constructor(
     suspend fun getDictionary(dictionaryId: String): DictionaryEntity =
         bibliothecaDatabase.daoDictionary.getDictionary(dictionaryId)
 
-    fun observeDictionary(dictionaryId: String): Flow<DictionaryEntity> =
+    fun observeDictionary(dictionaryId: String): Flow<DictionaryEntity?> =
         bibliothecaDatabase.daoDictionary.observeDictionary(dictionaryId)
 
     suspend fun saveDictionary(dictionaryEntity: DictionaryEntity) =

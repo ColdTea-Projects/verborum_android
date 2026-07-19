@@ -9,6 +9,7 @@ import de.coldtea.verborum.core.ui.BaseViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -23,7 +24,7 @@ class SelfPracticeViewModel @Inject constructor(
 
     fun init(dictionaryId: String) {
         combine(
-            dictionaryService.observeDictionary(dictionaryId),
+            dictionaryService.observeDictionary(dictionaryId).filterNotNull(),
             wordService.observeWordsByDictionary(dictionaryId)
         ) { dictionary, words ->
             SelfPracticeState.Success(dictionary.name, words)

@@ -31,8 +31,8 @@ interface DaoDictionary: DaoBase<DictionaryEntity> {
     suspend fun getDictionary(dictionaryId: String): DictionaryEntity
 
     @Transaction
-    @Query("SELECT * FROM dictionary WHERE dictionary_id = :dictionaryId")
-    fun observeDictionary(dictionaryId: String): Flow<DictionaryEntity>
+    @Query("SELECT * FROM dictionary WHERE dictionary_id = :dictionaryId AND is_deleted = 0")
+    fun observeDictionary(dictionaryId: String): Flow<DictionaryEntity?>
 
     @Transaction
     @Query("DELETE FROM dictionary WHERE dictionary_id = :dictionaryId")

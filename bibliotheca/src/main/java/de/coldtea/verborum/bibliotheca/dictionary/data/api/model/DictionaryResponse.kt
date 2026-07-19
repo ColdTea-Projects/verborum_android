@@ -23,7 +23,12 @@ data class DictionaryResponse(
     @SerialName("toLang")
     val toLang: String,
 ) {
-    fun convertToDictionary() = Dictionary(
+    /**
+     * The dictionary DTO carries no timestamps, so the caller supplies them: the existing local
+     * [createdAt]/[updatedAt] when this row is already known (preserving them across re-downloads),
+     * or the current time for a row first seen now.
+     */
+    fun convertToDictionary(createdAt: Long, updatedAt: Long) = Dictionary(
         dictionaryId = dictionaryId,
         userId = userId,
         name = name,
@@ -31,7 +36,7 @@ data class DictionaryResponse(
         isSynced = true,
         fromLang = fromLang,
         toLang = toLang.orEmpty(),
-        createdAt = 1724102088L,
-        updatedAt = 1724102088L,
+        createdAt = createdAt,
+        updatedAt = updatedAt,
     )
 }

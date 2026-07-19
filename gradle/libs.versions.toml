@@ -31,6 +31,8 @@ material3 = "1.4.0"
 foundation-layout = "1.10.3"
 mockk = "1.13.12"
 kotlinx-coroutines-test = "1.8.1"
+work = "2.9.1"
+androidx-hilt = "1.2.0"
 
 [libraries]
 androidx_core_ktx = { module = "androidx.core:core-ktx", version.ref = "androidx_core_ktx" }
@@ -69,6 +71,9 @@ material3 = { group = "androidx.compose.material3", name = "material3", version.
 foundationLayout = { group = "androidx.compose.foundation", name = "foundation-layout", version.ref = "foundation-layout" }
 mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
 kotlinx_coroutines_test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinx-coroutines-test" }
+androidx_work_runtime = { module = "androidx.work:work-runtime-ktx", version.ref = "work" }
+androidx_hilt_work = { module = "androidx.hilt:hilt-work", version.ref = "androidx-hilt" }
+androidx_hilt_compiler = { module = "androidx.hilt:hilt-compiler", version.ref = "androidx-hilt" }
 
 
 [plugins]

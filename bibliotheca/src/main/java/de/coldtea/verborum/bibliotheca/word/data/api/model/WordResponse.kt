@@ -21,7 +21,12 @@ data class WordResponse(
     @SerialName("translationMeta")
     var translationMeta: String?,
 ) {
-    fun convertToWord(dictionaryId: String): Word =
+    /**
+     * The word DTO carries no timestamps, so the caller supplies them: the existing local
+     * [createdAt]/[updatedAt] when this word is already known (preserving them across re-downloads),
+     * or the current time for a word first seen now.
+     */
+    fun convertToWord(dictionaryId: String, createdAt: Long, updatedAt: Long): Word =
         Word(
             dictionaryId = dictionaryId,
             wordId = wordId.orEmpty(),
@@ -30,7 +35,7 @@ data class WordResponse(
             translation = translation.orEmpty(),
             translationMeta = translationMeta.orEmpty(),
             isSynced = true,
-            createdAt = 1724102088L,
-            updatedAt = 1724102088L
+            createdAt = createdAt,
+            updatedAt = updatedAt
         )
 }

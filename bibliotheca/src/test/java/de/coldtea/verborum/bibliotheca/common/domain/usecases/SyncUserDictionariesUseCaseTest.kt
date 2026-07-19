@@ -1,5 +1,6 @@
 package de.coldtea.verborum.bibliotheca.common.domain.usecases
 
+import de.coldtea.verborum.bibliotheca.common.utils.getNowInMillis
 import de.coldtea.verborum.bibliotheca.dictionary.data.api.DictionaryApi
 import de.coldtea.verborum.bibliotheca.dictionary.data.db.entity.DictionaryEntity.Companion.GUEST_USER_ID
 import de.coldtea.verborum.bibliotheca.dictionary.domain.model.Dictionary
@@ -18,10 +19,14 @@ import de.coldtea.verborum.bibliotheca.word.domain.usecase.local.UpsertWordsUseC
 import de.coldtea.verborum.core.BaseTest
 import io.mockk.coEvery
 import io.mockk.coVerify
+import io.mockk.every
 import io.mockk.impl.annotations.MockK
+import io.mockk.mockkStatic
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Test
+
+private const val FIXED_NOW = 1_700_000_000_000L
 
 class SyncUserDictionariesUseCaseTest : BaseTest() {
 
@@ -72,6 +77,10 @@ class SyncUserDictionariesUseCaseTest : BaseTest() {
         coEvery { saveDictionaryUseCase.invoke(any()) } returns "saved-id"
         coEvery { getAllDictionariesUseCase.invoke() } returns emptyList()
         coEvery { getWordsByDictionaryUseCase.invoke(any()) } returns emptyList()
+
+        // Newly downloaded rows stamp the current time; pin it so timestamp assertions are stable.
+        mockkStatic("de.coldtea.verborum.bibliotheca.common.utils.DateTimeProviderKt")
+        every { getNowInMillis() } returns FIXED_NOW
     }
 
     // region no server information
@@ -117,7 +126,10 @@ class SyncUserDictionariesUseCaseTest : BaseTest() {
 
         useCase.invoke()
 
-        assertEquals(responses.map { it.convertToDictionary() }, savedDictionaries)
+        assertEquals(
+            responses.map { it.convertToDictionary(createdAt = FIXED_NOW, updatedAt = FIXED_NOW) },
+            savedDictionaries,
+        )
     }
 
     @Test
@@ -171,7 +183,10 @@ class SyncUserDictionariesUseCaseTest : BaseTest() {
 
         useCase.invoke()
 
-        assertEquals(listOf(wordResponse.convertToWord("dict-1")), upserted.single())
+        assertEquals(
+            listOf(wordResponse.convertToWord("dict-1", createdAt = FIXED_NOW, updatedAt = FIXED_NOW)),
+            upserted.single(),
+        )
     }
 
     @Test

@@ -89,6 +89,10 @@ dependencies {
     implementation(libs.hilt.navigation.compose)
     ksp(libs.hilt.compiler)
 
+    //WorkManager (provides HiltWorkerFactory to the Application's Configuration)
+    implementation(libs.androidx.work.runtime)
+    implementation(libs.androidx.hilt.work)
+
     //Room
     implementation(libs.room.runtime)
     implementation(libs.room.paging)
