@@ -37,7 +37,7 @@ android {
     buildTypes {
 
         debug {
-            buildConfigField("String", "ROOT_URL_VERBORUM_API", "\"http://192.168.0.241:8085/\"")
+            buildConfigField("String", "ROOT_URL_VERBORUM_API", "\"http://10.0.2.2:8085/\"")
 
             isMinifyEnabled = false
             isJniDebuggable = true
