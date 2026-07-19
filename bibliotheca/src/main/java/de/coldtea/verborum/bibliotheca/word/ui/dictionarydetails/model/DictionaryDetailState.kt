@@ -9,5 +9,15 @@ sealed class DictionaryDetailState{
 
     data object Deleted: DictionaryDetailState()
 
-    data class Success(val dictionaryUi: DictionaryUi, val wordsUi: List<WordUi>) : DictionaryDetailState()
+    /**
+     * [canSelfPractice] needs at least one word here; [canTest] additionally needs enough distinct
+     * entries across the whole language pair to build multiple-choice distractors. Both are decided
+     * in the view model so the screen only has to render them.
+     */
+    data class Success(
+        val dictionaryUi: DictionaryUi,
+        val wordsUi: List<WordUi>,
+        val canSelfPractice: Boolean = false,
+        val canTest: Boolean = false,
+    ) : DictionaryDetailState()
 }

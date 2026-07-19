@@ -109,6 +109,8 @@
     <string name="createWordScreenScriptRestriction">Burada yalnızca %1$s harfleri yazılabilir.</string>
     <string name="dictionaryListScreenLoadError">Sözlükleriniz yüklenemedi</string>
     <string name="dictionaryListScreenRetry">Yeniden dene</string>
+    <string name="dictionaryDetailsScreenNoWordsToPractice">Önce bir kelime ekleyin — henüz çalışılacak bir şey yok</string>
+    <string name="dictionaryDetailsScreenNotEnoughWordsForTest">Test için bu dil çiftinde en az 4 kelime gerekir</string>
     <!--Plurals-->
     <plurals name="dictionaryDetailsScreenWordListCount">
         <item quantity="one">sözlükte %1$d kelime</item>

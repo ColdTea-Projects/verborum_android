@@ -109,6 +109,8 @@
     <string name="createWordScreenScriptRestriction">ここには%1$sの文字のみ入力できます。</string>
     <string name="dictionaryListScreenLoadError">辞書を読み込めませんでした</string>
     <string name="dictionaryListScreenRetry">再試行</string>
+    <string name="dictionaryDetailsScreenNoWordsToPractice">まず単語を追加してください — 練習できるものがありません</string>
+    <string name="dictionaryDetailsScreenNotEnoughWordsForTest">テストにはこの言語ペアで少なくとも4語が必要です</string>
     <!--Plurals-->
     <plurals name="dictionaryDetailsScreenWordListCount">
         <item quantity="other">辞書に%1$d語</item>

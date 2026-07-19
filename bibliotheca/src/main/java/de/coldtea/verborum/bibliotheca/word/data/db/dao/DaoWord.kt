@@ -20,6 +20,24 @@ interface DaoWord: DaoBase<WordEntity> {
     @Query("SELECT * FROM word WHERE fk_dictionary_id = :dictionaryId AND is_deleted = 0")
     fun observeWordsByDictionary(dictionaryId: String): Flow<List<WordEntity>>
 
+    /**
+     * Every live word that belongs to a dictionary with the *same language pair* as
+     * [dictionaryId] — including that dictionary's own words.
+     *
+     * Feeds the multiple-choice distractor pool: wrong answers are drawn from the whole language
+     * pair rather than a single dictionary, so a small dictionary still gets plausible choices.
+     * Tombstoned words and tombstoned dictionaries are excluded on both sides of the join.
+     */
+    @Transaction
+    @Query(
+        "SELECT w.* FROM word w " +
+            "INNER JOIN dictionary d ON w.fk_dictionary_id = d.dictionary_id " +
+            "WHERE w.is_deleted = 0 AND d.is_deleted = 0 " +
+            "AND d.from_lang = (SELECT from_lang FROM dictionary WHERE dictionary_id = :dictionaryId) " +
+            "AND d.to_lang = (SELECT to_lang FROM dictionary WHERE dictionary_id = :dictionaryId)"
+    )
+    fun observeWordsInLanguagePairOf(dictionaryId: String): Flow<List<WordEntity>>
+
     // Live word count per dictionary; tombstoned rows are excluded.
     @Query(
         "SELECT fk_dictionary_id, COUNT(*) AS word_count FROM word " +

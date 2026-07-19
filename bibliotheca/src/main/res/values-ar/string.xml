@@ -109,6 +109,8 @@
     <string name="createWordScreenScriptRestriction">يمكن إدخال حروف %1$s فقط هنا.</string>
     <string name="dictionaryListScreenLoadError">تعذّر تحميل قواميسك</string>
     <string name="dictionaryListScreenRetry">إعادة المحاولة</string>
+    <string name="dictionaryDetailsScreenNoWordsToPractice">أضف كلمة أولاً — لا يوجد شيء للتدرب عليه بعد</string>
+    <string name="dictionaryDetailsScreenNotEnoughWordsForTest">يحتاج الاختبار إلى 4 كلمات على الأقل في زوج اللغات هذا</string>
     <!--Plurals-->
     <plurals name="dictionaryDetailsScreenWordListCount">
         <item quantity="zero">لا توجد كلمات في القاموس</item>

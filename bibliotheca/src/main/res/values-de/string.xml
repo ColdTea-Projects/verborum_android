@@ -109,6 +109,8 @@
     <string name="createWordScreenScriptRestriction">Hier sind nur %1$s Buchstaben erlaubt.</string>
     <string name="dictionaryListScreenLoadError">Deine Wörterbücher konnten nicht geladen werden</string>
     <string name="dictionaryListScreenRetry">Wiederholen</string>
+    <string name="dictionaryDetailsScreenNoWordsToPractice">Füge zuerst ein Wort hinzu — es gibt noch nichts zu üben</string>
+    <string name="dictionaryDetailsScreenNotEnoughWordsForTest">Ein Test braucht mindestens 4 Wörter in diesem Sprachpaar</string>
     <!--Plurals-->
     <plurals name="dictionaryDetailsScreenWordListCount">
         <item quantity="one">%1$d Wort im Wörterbuch</item>

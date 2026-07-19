@@ -5,6 +5,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import de.coldtea.verborum.bibliotheca.dictionary.domain.DictionaryService
 import de.coldtea.verborum.bibliotheca.word.domain.WordService
 import de.coldtea.verborum.bibliotheca.word.ui.dictionarydetails.model.DictionaryDetailState
+import de.coldtea.verborum.bibliotheca.word.ui.multiplechoice.REQUIRED_WORDS_FOR_TEST
 import de.coldtea.verborum.core.ui.BaseViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -25,12 +26,23 @@ class DictionaryDetailsViewModel @Inject constructor(
     fun init(dictionaryId: String) = viewModelScope.launch {
         combine(
             dictionaryService.observeDictionary(dictionaryId),
-            wordService.observeWordsByDictionary(dictionaryId)
-        ) { dictionary, words ->
+            wordService.observeWordsByDictionary(dictionaryId),
+            wordService.observeWordsInLanguagePair(dictionaryId),
+        ) { dictionary, words, languagePairWords ->
             // A null dictionary means it was tombstoned/removed — surface it as Deleted so the
             // screen navigates back instead of re-rendering (and re-registering) a stale header.
-            if (dictionary == null) DictionaryDetailState.Deleted
-            else DictionaryDetailState.Success(dictionary, words)
+            if (dictionary == null) {
+                DictionaryDetailState.Deleted
+            } else {
+                val distinctInPair =
+                    languagePairWords.distinctBy { it.word + it.translation }.size
+                DictionaryDetailState.Success(
+                    dictionaryUi = dictionary,
+                    wordsUi = words,
+                    canSelfPractice = words.isNotEmpty(),
+                    canTest = words.isNotEmpty() && distinctInPair >= REQUIRED_WORDS_FOR_TEST,
+                )
+            }
         }.observe (
             onSuccess = { state ->
                 _dictionaryDetailState.emit(state)

@@ -109,6 +109,8 @@
     <string name="createWordScreenScriptRestriction">여기에는 %1$s 문자만 입력할 수 있습니다.</string>
     <string name="dictionaryListScreenLoadError">사전을 불러오지 못했습니다</string>
     <string name="dictionaryListScreenRetry">다시 시도</string>
+    <string name="dictionaryDetailsScreenNoWordsToPractice">먼저 단어를 추가하세요 — 아직 연습할 내용이 없습니다</string>
+    <string name="dictionaryDetailsScreenNotEnoughWordsForTest">테스트에는 이 언어 쌍에 단어가 최소 4개 필요합니다</string>
     <!--Plurals-->
     <plurals name="dictionaryDetailsScreenWordListCount">
         <item quantity="other">사전에 %1$d개 단어</item>

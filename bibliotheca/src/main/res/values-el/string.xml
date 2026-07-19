@@ -109,6 +109,8 @@
     <string name="createWordScreenScriptRestriction">Εδώ μπορείτε να πληκτρολογήσετε μόνο χαρακτήρες %1$s.</string>
     <string name="dictionaryListScreenLoadError">Δεν ήταν δυνατή η φόρτωση των λεξικών σας</string>
     <string name="dictionaryListScreenRetry">Επανάληψη</string>
+    <string name="dictionaryDetailsScreenNoWordsToPractice">Προσθέστε πρώτα μια λέξη — δεν υπάρχει τίποτα για εξάσκηση</string>
+    <string name="dictionaryDetailsScreenNotEnoughWordsForTest">Ένα τεστ χρειάζεται τουλάχιστον 4 λέξεις σε αυτό το ζεύγος γλωσσών</string>
     <!--Plurals-->
     <plurals name="dictionaryDetailsScreenWordListCount">
         <item quantity="one">%1$d λέξη στο λεξικό</item>

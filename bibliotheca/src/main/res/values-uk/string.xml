@@ -109,6 +109,8 @@
     <string name="createWordScreenScriptRestriction">Тут можна вводити лише літери: %1$s.</string>
     <string name="dictionaryListScreenLoadError">Не вдалося завантажити ваші словники</string>
     <string name="dictionaryListScreenRetry">Повторити спробу</string>
+    <string name="dictionaryDetailsScreenNoWordsToPractice">Спершу додайте слово — поки немає що практикувати</string>
+    <string name="dictionaryDetailsScreenNotEnoughWordsForTest">Для тесту потрібно щонайменше 4 слова в цій мовній парі</string>
     <!--Plurals-->
     <plurals name="dictionaryDetailsScreenWordListCount">
         <item quantity="one">%1$d слово в словнику</item>

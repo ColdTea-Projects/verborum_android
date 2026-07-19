@@ -35,22 +35,31 @@ import de.coldtea.verborum.bibliotheca.common.utils.ResDrawables
 import de.coldtea.verborum.core.theme.VerborumColors
 import de.coldtea.verborum.core.theme.VerborumTheme
 
+/**
+ * A disabled button is dimmed but deliberately stays tappable: tapping it routes to
+ * [onUnavailableClick] so the user is told *why* the mode is unavailable rather than pressing
+ * something inert.
+ */
 @Composable
 fun PracticeModeButton(
     modifier: Modifier = Modifier,
     text: String,
     iconRes: Int,
     backgroundColor: Color,
+    enabled: Boolean = true,
+    onUnavailableClick: () -> Unit = {},
     onClick: () -> Unit
 ) {
     IconOnTopButton (
         modifier = modifier,
         text = text,
         iconRes = iconRes,
-        backgroundColor = backgroundColor,
-        onClick = onClick,
+        backgroundColor = if (enabled) backgroundColor else backgroundColor.copy(alpha = DISABLED_ALPHA),
+        onClick = { if (enabled) onClick() else onUnavailableClick() },
     )
 }
+
+private const val DISABLED_ALPHA = 0.35f
 
 
 @Preview(showBackground = true, backgroundColor = 0xFF0F0F0F)

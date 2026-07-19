@@ -13,6 +13,7 @@ import de.coldtea.verborum.bibliotheca.word.domain.usecase.local.GetWordUseCase
 import de.coldtea.verborum.bibliotheca.word.domain.usecase.local.MarkWordDeletedUseCase
 import de.coldtea.verborum.bibliotheca.word.domain.usecase.local.ObserveWordCountsUseCase
 import de.coldtea.verborum.bibliotheca.word.domain.usecase.local.ObserveWordsByDictionaryUseCase
+import de.coldtea.verborum.bibliotheca.word.domain.usecase.local.ObserveWordsInLanguagePairUseCase
 import de.coldtea.verborum.bibliotheca.word.domain.usecase.local.SaveWordUseCase
 import de.coldtea.verborum.bibliotheca.word.ui.model.WordUi
 import de.coldtea.verborum.core.BaseTest
@@ -35,6 +36,9 @@ class WordServiceTest : BaseTest() {
 
     @MockK
     private lateinit var observeWordsByDictionaryUseCase: ObserveWordsByDictionaryUseCase
+
+    @MockK
+    private lateinit var observeWordsInLanguagePairUseCase: ObserveWordsInLanguagePairUseCase
 
     @MockK
     private lateinit var observeWordCountsUseCase: ObserveWordCountsUseCase
@@ -81,6 +85,7 @@ class WordServiceTest : BaseTest() {
         super.setUp()
         wordService = WordService(
             observeWordsByDictionaryUseCase = observeWordsByDictionaryUseCase,
+            observeWordsInLanguagePairUseCase = observeWordsInLanguagePairUseCase,
             observeWordCountsUseCase = observeWordCountsUseCase,
             deleteWordByDictionaryIdApiUseCase = deleteWordByDictionaryIdApiUseCase,
             deleteWordByDictionaryIdUseCase = deleteWordByDictionaryIdUseCase,

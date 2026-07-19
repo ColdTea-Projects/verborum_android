@@ -14,8 +14,12 @@ import de.coldtea.verborum.bibliotheca.word.ui.multiplechoice.model.MultipleChoi
 import de.coldtea.verborum.core.ui.BaseViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+
+/** A question shows one correct answer plus three distractors. */
+const val REQUIRED_WORDS_FOR_TEST = 4
 
 @HiltViewModel
 class MultipleChoiceViewModel @Inject constructor(
@@ -26,6 +30,11 @@ class MultipleChoiceViewModel @Inject constructor(
     private var score: Int = 0
     private var words: List<WordUi> = listOf()
     private var questions: List<MultipleChoiceQuestion> = listOf()
+
+    // Wrong answers are drawn from every dictionary sharing this language pair, grouped by form so
+    // a past-tense question can still be offered past-tense distractors. Questions themselves stay
+    // limited to the dictionary under test.
+    private var distractorsByForm: Map<FieldKey?, List<String>> = emptyMap()
 
     // The score counts every correct *question* (base form plus plurals, tenses, alternatives). The
     // level, by contrast, moves per *word*: the first correct answer for a word raises it once, the
@@ -44,15 +53,27 @@ class MultipleChoiceViewModel @Inject constructor(
     val currentQuestion = _currentQuestion.asSharedFlow()
 
     fun init(dictionaryId: String) {
-        wordService
-            .observeWordsByDictionary(dictionaryId)
+        combine(
+            wordService.observeWordsByDictionary(dictionaryId),
+            wordService.observeWordsInLanguagePair(dictionaryId),
+        ) { dictionaryWords, languagePairWords -> dictionaryWords to languagePairWords }
             .observe(
-                onSuccess = { wordList ->
-                    if (wordList.distinctBy { it.word + it.translation }.size < 4) {
+                onSuccess = { (dictionaryWords, languagePairWords) ->
+                    // A question needs three plausible wrong answers, so the whole language pair
+                    // — not just this dictionary — must hold at least four distinct entries.
+                    val distinctInPair =
+                        languagePairWords.distinctBy { it.word + it.translation }.size
+
+                    if (dictionaryWords.isEmpty() || distinctInPair < REQUIRED_WORDS_FOR_TEST) {
                         _currentQuestion.emit(MultipleChoiceCurrentQuestionState.NotEnoughWords)
                     } else if (questions.isEmpty()) {
-                        words = wordList
-                        questions = wordList.flatMap { it.toQuestions() }.shuffled()
+                        words = dictionaryWords
+                        // One question per form of every word in *this* dictionary: 11 forms in
+                        // the dictionary means 11 questions.
+                        questions = dictionaryWords.flatMap { it.toQuestions() }.shuffled()
+                        distractorsByForm = languagePairWords
+                            .flatMap { it.toQuestions() }
+                            .groupBy({ it.formKey }, { it.answer })
                         resetScoring()
                         initNextQuestion()
                     }
@@ -173,18 +194,18 @@ class MultipleChoiceViewModel @Inject constructor(
 
     /**
      * Distractors of the same grammatical form come first (a past-tense question offers other
-     * past-tense answers), padded with answers of other forms when there are not enough.
+     * past-tense answers), padded with answers of other forms when there are not enough. Both come
+     * from the language-pair pool, so wrong answers are never limited to the dictionary under test.
      */
     private fun prepareChoices(
         current: MultipleChoiceQuestion,
         count: Int = 3
     ): List<String> {
-        val sameForm = questions
-            .filter { it.formKey == current.formKey }
-            .map { it.answer }
-        val otherForms = questions
-            .filter { it.formKey != current.formKey }
-            .map { it.answer }
+        val sameForm = distractorsByForm[current.formKey].orEmpty()
+        val otherForms = distractorsByForm
+            .filterKeys { it != current.formKey }
+            .values
+            .flatten()
 
         return (sameForm.distinct().shuffled() + otherForms.distinct().shuffled())
             .distinct()

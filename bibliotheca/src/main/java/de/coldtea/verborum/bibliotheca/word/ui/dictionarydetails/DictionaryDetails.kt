@@ -28,8 +28,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import android.widget.Toast
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
@@ -80,6 +82,11 @@ fun DictionaryDetailsScreen(
             val dictionary = dictionaryDetailState.dictionaryUi
             val words = dictionaryDetailState.wordsUi
 
+            val context = LocalContext.current
+            val noWordsMessage = stringResource(ResStrings.dictionaryDetailsScreenNoWordsToPractice)
+            val notEnoughForTestMessage =
+                stringResource(ResStrings.dictionaryDetailsScreenNotEnoughWordsForTest)
+
             val languagePair = languagePairLabel(dictionary.fromLang, dictionary.toLang)
             val wordCount = pluralStringResource(
                 ResPlurals.dictionaryListScreenWordCount,
@@ -111,6 +118,12 @@ fun DictionaryDetailsScreen(
                             iconRes = ResDrawables.ic_check_square_24,
                             backgroundColor = MaterialTheme.colorScheme.primary,
                             modifier = Modifier.weight(1f),
+                            enabled = dictionaryDetailState.canTest,
+                            onUnavailableClick = {
+                                // No words at all is the more basic problem, so it wins the message.
+                                val message = if (words.isEmpty()) noWordsMessage else notEnoughForTestMessage
+                                Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+                            },
                             onClick = onTestClicked
                         )
 
@@ -119,6 +132,10 @@ fun DictionaryDetailsScreen(
                             iconRes = ResDrawables.ic_play_24,
                             backgroundColor = MaterialTheme.colorScheme.secondary,
                             modifier = Modifier.weight(1f),
+                            enabled = dictionaryDetailState.canSelfPractice,
+                            onUnavailableClick = {
+                                Toast.makeText(context, noWordsMessage, Toast.LENGTH_SHORT).show()
+                            },
                             onClick = onSelfPracticeClicked
                         )
                     }

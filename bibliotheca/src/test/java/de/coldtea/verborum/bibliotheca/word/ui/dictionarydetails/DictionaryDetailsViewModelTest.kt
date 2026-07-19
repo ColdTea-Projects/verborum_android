@@ -16,6 +16,8 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class DictionaryDetailsViewModelTest : BaseTest() {
@@ -31,6 +33,8 @@ class DictionaryDetailsViewModelTest : BaseTest() {
     override fun setUp() {
         super.setUp()
         viewModel = DictionaryDetailsViewModel(dictionaryService, wordService)
+        // Distractor pool for the test gate; tests that care about it override this stub.
+        every { wordService.observeWordsInLanguagePair(any()) } returns flowOf(emptyList())
     }
 
     // region initial state
@@ -56,10 +60,84 @@ class DictionaryDetailsViewModelTest : BaseTest() {
         viewModel.init(dictionaryId)
 
         assertEquals(
-            DictionaryDetailState.Success(dictionary, words),
+            // The default stub leaves the language pair empty, so a test cannot be built yet.
+            DictionaryDetailState.Success(
+                dictionaryUi = dictionary,
+                wordsUi = words,
+                canSelfPractice = true,
+                canTest = false,
+            ),
             viewModel.dictionaryDetailState.first(),
         )
     }
+
+    // region practice availability
+
+    @Test
+    fun `test is available once the language pair holds four distinct words`() = runTest {
+        val dictionaryId = "dict-1"
+        val words = listOf(testWordUi(wordId = "w-1"))
+        // Only one word here, but the pair as a whole has enough to build distractors.
+        val languagePairWords = (1..4).map {
+            testWordUi(wordId = "p-$it", word = "word-$it", translation = "translation-$it")
+        }
+
+        every { dictionaryService.observeDictionary(dictionaryId) } returns
+            flowOf(testDictionaryUi(dictionaryId = dictionaryId))
+        every { wordService.observeWordsByDictionary(dictionaryId) } returns flowOf(words)
+        every { wordService.observeWordsInLanguagePair(dictionaryId) } returns
+            flowOf(languagePairWords)
+
+        viewModel.init(dictionaryId)
+
+        val state = viewModel.dictionaryDetailState.first() as DictionaryDetailState.Success
+        assertTrue(state.canSelfPractice)
+        assertTrue(state.canTest)
+    }
+
+    @Test
+    fun `test stays unavailable when the language pair has only three distinct words`() = runTest {
+        val dictionaryId = "dict-1"
+        val words = listOf(testWordUi(wordId = "w-1"))
+        val languagePairWords = (1..3).map {
+            testWordUi(wordId = "p-$it", word = "word-$it", translation = "translation-$it")
+        }
+
+        every { dictionaryService.observeDictionary(dictionaryId) } returns
+            flowOf(testDictionaryUi(dictionaryId = dictionaryId))
+        every { wordService.observeWordsByDictionary(dictionaryId) } returns flowOf(words)
+        every { wordService.observeWordsInLanguagePair(dictionaryId) } returns
+            flowOf(languagePairWords)
+
+        viewModel.init(dictionaryId)
+
+        val state = viewModel.dictionaryDetailState.first() as DictionaryDetailState.Success
+        // Self practice only needs this dictionary's own words.
+        assertTrue(state.canSelfPractice)
+        assertFalse(state.canTest)
+    }
+
+    @Test
+    fun `neither mode is available for an empty dictionary`() = runTest {
+        val dictionaryId = "dict-1"
+        val languagePairWords = (1..4).map {
+            testWordUi(wordId = "p-$it", word = "word-$it", translation = "translation-$it")
+        }
+
+        every { dictionaryService.observeDictionary(dictionaryId) } returns
+            flowOf(testDictionaryUi(dictionaryId = dictionaryId))
+        every { wordService.observeWordsByDictionary(dictionaryId) } returns flowOf(emptyList())
+        every { wordService.observeWordsInLanguagePair(dictionaryId) } returns
+            flowOf(languagePairWords)
+
+        viewModel.init(dictionaryId)
+
+        val state = viewModel.dictionaryDetailState.first() as DictionaryDetailState.Success
+        assertFalse(state.canSelfPractice)
+        assertFalse(state.canTest)
+    }
+
+    // endregion
 
     @Test
     fun `init emits Failed when dictionary flow throws`() = runTest {

@@ -43,8 +43,19 @@ class MultipleChoiceViewModelTest : BaseTest() {
         )
     }
 
-    private fun initWith(words: List<WordUi>, dictionaryId: String = "dict-1") {
+    /**
+     * [languagePairWords] is the distractor pool drawn from every dictionary sharing the language
+     * pair; it defaults to the dictionary's own words, which is the single-dictionary case.
+     */
+    private fun initWith(
+        words: List<WordUi>,
+        languagePairWords: List<WordUi> = words,
+        dictionaryId: String = "dict-1",
+    ) {
         every { wordService.observeWordsByDictionary(dictionaryId) } returns flowOf(words)
+        every {
+            wordService.observeWordsInLanguagePair(dictionaryId)
+        } returns flowOf(languagePairWords)
         viewModel.init(dictionaryId)
     }
 
@@ -73,6 +84,74 @@ class MultipleChoiceViewModelTest : BaseTest() {
     fun `initially nothing is answered and no answer is selected`() = runTest {
         assertFalse(viewModel.answered.first())
         assertEquals("", viewModel.selectedAnswer.first())
+    }
+
+    // endregion
+
+    // region language pair pool
+
+    @Test
+    fun `questions come only from this dictionary while distractors come from the whole pair`() =
+        runTest {
+            // One word to be tested, three more elsewhere in the same language pair.
+            val words = listOf(
+                testWordUi(wordId = "own", word = "own-word", translation = "own-translation"),
+            )
+            val languagePairWords = words + (1..3).map {
+                testWordUi(
+                    wordId = "other-$it",
+                    word = "other-word-$it",
+                    translation = "other-translation-$it",
+                )
+            }
+
+            initWith(words, languagePairWords = languagePairWords)
+
+            val state = currentSuccess()
+            // Exactly one question — the pool must not add questions, only wrong answers.
+            assertEquals(1, state.size)
+
+            val choices = state.multipleChoiceCurrentQuestion.choices
+            assertEquals(4, choices.size)
+            assertTrue(choices.contains("own-translation"))
+            // The other three can only have come from the other dictionaries in the pair.
+            assertEquals(
+                listOf("other-translation-1", "other-translation-2", "other-translation-3").sorted(),
+                choices.filterNot { it == "own-translation" }.sorted(),
+            )
+        }
+
+    @Test
+    fun `a dictionary with enough words of its own still builds a test`() = runTest {
+        val words = distinctWords(4)
+
+        initWith(words)
+
+        assertEquals(4, currentSuccess().size)
+    }
+
+    @Test
+    fun `NotEnoughWords when the language pair has too few words even if this dictionary has some`() =
+        runTest {
+            val words = distinctWords(2)
+
+            // The pair as a whole holds only three distinct entries — not enough for distractors.
+            initWith(words, languagePairWords = distinctWords(3))
+
+            assertEquals(
+                MultipleChoiceCurrentQuestionState.NotEnoughWords,
+                viewModel.currentQuestion.first(),
+            )
+        }
+
+    @Test
+    fun `NotEnoughWords when this dictionary is empty even if the pair is rich`() = runTest {
+        initWith(emptyList(), languagePairWords = distinctWords(10))
+
+        assertEquals(
+            MultipleChoiceCurrentQuestionState.NotEnoughWords,
+            viewModel.currentQuestion.first(),
+        )
     }
 
     // endregion
@@ -106,6 +185,7 @@ class MultipleChoiceViewModelTest : BaseTest() {
         every { wordService.observeWordsByDictionary("dict-1") } returns flow {
             throw RuntimeException("db error")
         }
+        every { wordService.observeWordsInLanguagePair("dict-1") } returns flowOf(emptyList())
 
         viewModel.init("dict-1")
 

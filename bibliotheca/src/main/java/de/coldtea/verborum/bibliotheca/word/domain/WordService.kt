@@ -11,6 +11,7 @@ import de.coldtea.verborum.bibliotheca.word.domain.usecase.local.GetWordUseCase
 import de.coldtea.verborum.bibliotheca.word.domain.usecase.local.MarkWordDeletedUseCase
 import de.coldtea.verborum.bibliotheca.word.domain.usecase.local.ObserveWordCountsUseCase
 import de.coldtea.verborum.bibliotheca.word.domain.usecase.local.ObserveWordsByDictionaryUseCase
+import de.coldtea.verborum.bibliotheca.word.domain.usecase.local.ObserveWordsInLanguagePairUseCase
 import de.coldtea.verborum.bibliotheca.word.domain.usecase.local.SaveWordUseCase
 import de.coldtea.verborum.bibliotheca.word.ui.model.WordUi
 import kotlinx.coroutines.Dispatchers
@@ -22,6 +23,7 @@ import javax.inject.Inject
 
 class WordService @Inject constructor(
     private val observeWordsByDictionaryUseCase: ObserveWordsByDictionaryUseCase,
+    private val observeWordsInLanguagePairUseCase: ObserveWordsInLanguagePairUseCase,
     private val observeWordCountsUseCase: ObserveWordCountsUseCase,
     private val deleteWordByDictionaryIdApiUseCase: DeleteWordByDictionaryIdApiUseCase,
     private val deleteWordByDictionaryIdUseCase: DeleteWordByDictionaryIdUseCase,
@@ -36,6 +38,17 @@ class WordService @Inject constructor(
 
     fun observeWordsByDictionary(dictionaryId: String): Flow<List<WordUi>> =
         observeWordsByDictionaryUseCase
+            .invoke(dictionaryId)
+            .map { it.map(Word::convertToUi) }
+            .distinctUntilChanged()
+            .flowOn(Dispatchers.IO)
+
+    /**
+     * Words from every dictionary sharing this one's language pair (its own included). Backs the
+     * test's distractor pool and the "enough words to build a test" check.
+     */
+    fun observeWordsInLanguagePair(dictionaryId: String): Flow<List<WordUi>> =
+        observeWordsInLanguagePairUseCase
             .invoke(dictionaryId)
             .map { it.map(Word::convertToUi) }
             .distinctUntilChanged()

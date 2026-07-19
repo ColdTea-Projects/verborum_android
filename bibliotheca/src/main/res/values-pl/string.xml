@@ -109,6 +109,8 @@
     <string name="createWordScreenScriptRestriction">Tutaj można wpisać tylko litery: %1$s.</string>
     <string name="dictionaryListScreenLoadError">Nie udało się wczytać Twoich słowników</string>
     <string name="dictionaryListScreenRetry">Spróbuj ponownie</string>
+    <string name="dictionaryDetailsScreenNoWordsToPractice">Najpierw dodaj słowo — nie ma jeszcze czego ćwiczyć</string>
+    <string name="dictionaryDetailsScreenNotEnoughWordsForTest">Test wymaga co najmniej 4 słów w tej parze językowej</string>
     <!--Plurals-->
     <plurals name="dictionaryDetailsScreenWordListCount">
         <item quantity="one">%1$d słowo w słowniku</item>
