@@ -54,12 +54,12 @@ fun PracticeModeButton(
         modifier = modifier,
         text = text,
         iconRes = iconRes,
-        backgroundColor = if (enabled) backgroundColor else backgroundColor.copy(alpha = DISABLED_ALPHA),
+        // Matches the disabled buttons elsewhere in the app (e.g. "Next Question" in the test),
+        // which use onSurfaceVariant as their disabled container with white content.
+        backgroundColor = if (enabled) backgroundColor else MaterialTheme.colorScheme.onSurfaceVariant,
         onClick = { if (enabled) onClick() else onUnavailableClick() },
     )
 }
-
-private const val DISABLED_ALPHA = 0.35f
 
 
 @Preview(showBackground = true, backgroundColor = 0xFF0F0F0F)
