@@ -107,6 +107,8 @@
     <string name="createWordScreenClassIAdjective">い-прилагательное</string>
     <string name="createWordScreenClassNaAdjective">な-прилагательное</string>
     <string name="createWordScreenScriptRestriction">Здесь можно вводить только буквы: %1$s.</string>
+    <string name="dictionaryListScreenLoadError">Не удалось загрузить ваши словари</string>
+    <string name="dictionaryListScreenRetry">Повторить</string>
     <!--Plurals-->
     <plurals name="dictionaryDetailsScreenWordListCount">
         <item quantity="one">%1$d слово в словаре</item>

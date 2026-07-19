@@ -66,12 +66,15 @@ class SyncUserDictionariesUseCase @Inject constructor(
             if (dictionaryResponse.dictionaryId !in locallyModifiedDictionaryIds) {
                 val existing = localDictionaryById[dictionaryResponse.dictionaryId]
                 val now = getNowInMillis()
-                saveDictionaryUseCase.invoke(
-                    dictionaryResponse.convertToDictionary(
-                        createdAt = existing?.createdAt ?: now,
-                        updatedAt = existing?.updatedAt ?: now,
-                    )
+                val merged = dictionaryResponse.convertToDictionary(
+                    fallbackCreatedAt = existing?.createdAt ?: now,
+                    fallbackUpdatedAt = existing?.updatedAt ?: now,
                 )
+                // Only write when something actually changed: DaoBase.insert is REPLACE, which
+                // deletes and re-inserts the row, invalidating Room's observers for no reason.
+                if (merged != existing) {
+                    saveDictionaryUseCase.invoke(merged)
+                }
             }
             syncWords(dictionaryResponse.dictionaryId)
         }
@@ -87,8 +90,11 @@ class SyncUserDictionariesUseCase @Inject constructor(
                 val now = getNowInMillis()
                 response.convertToWord(
                     dictionaryId = dictionaryId,
-                    createdAt = existing?.createdAt ?: now,
-                    updatedAt = existing?.updatedAt ?: now,
+                    fallbackCreatedAt = existing?.createdAt ?: now,
+                    fallbackUpdatedAt = existing?.updatedAt ?: now,
+                    // Practice progress lives only on this device — carry it over so the merge
+                    // cannot reset it to zero.
+                    level = existing?.level ?: 0,
                 )
             }
             ?: return
@@ -106,7 +112,11 @@ class SyncUserDictionariesUseCase @Inject constructor(
             .filter { it.wordId !in remoteWordIds }
             .forEach { deleteWordUseCase.invoke(it.wordId) }
 
-        val wordsToUpsert = remoteWords.filterNot { it.wordId in skippedWordIds }
+        // Same reasoning as the dictionary write above: a word already identical locally is
+        // dropped from the batch so the upsert cannot churn rows that did not change.
+        val wordsToUpsert = remoteWords.filterNot { word ->
+            word.wordId in skippedWordIds || word == localWordById[word.wordId]
+        }
         if (wordsToUpsert.isNotEmpty()) {
             upsertWordsUseCase.invoke(wordsToUpsert)
         }

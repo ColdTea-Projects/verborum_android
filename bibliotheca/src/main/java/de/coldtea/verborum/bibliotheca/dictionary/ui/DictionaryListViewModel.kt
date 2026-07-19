@@ -4,7 +4,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import de.coldtea.verborum.bibliotheca.common.domain.SyncService
 import de.coldtea.verborum.bibliotheca.dictionary.domain.DictionaryService
-import de.coldtea.verborum.bibliotheca.dictionary.ui.model.DictionaryUi
+import de.coldtea.verborum.bibliotheca.dictionary.ui.model.DictionaryListState
 import de.coldtea.verborum.bibliotheca.word.domain.WordService
 import de.coldtea.verborum.core.ui.BaseViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,29 +20,40 @@ class DictionaryListViewModel @Inject constructor(
     private val syncService: SyncService,
 ) : BaseViewModel() {
 
-    private val _dictionariesState = MutableStateFlow(listOf<DictionaryUi>())
+    private val _dictionariesState =
+        MutableStateFlow<DictionaryListState>(DictionaryListState.Loading)
     val dictionariesState = _dictionariesState.asStateFlow()
 
     private val _isRefreshing = MutableStateFlow(false)
     val isRefreshing = _isRefreshing.asStateFlow()
 
     init {
+        observeDictionaries()
         viewModelScope.launch {
-            combine(
-                dictionaryService.observeDictionaries(),
-                wordService.observeWordCounts(),
-            ) { dictionaries, wordCounts ->
-                dictionaries.map { it.copy(wordCount = wordCounts[it.dictionaryId] ?: 0) }
-            }.observe(
-                onSuccess = { dictionaries ->
-                    _dictionariesState.emit(dictionaries)
-                },
-                onError = {
-                    _snackbarMessages.emit("Dictionaries could not be loaded")
-                }
-            )
             syncService.syncDictionaries()
         }
+    }
+
+    private fun observeDictionaries() {
+        combine(
+            dictionaryService.observeDictionaries(),
+            wordService.observeWordCounts(),
+        ) { dictionaries, wordCounts ->
+            dictionaries.map { it.copy(wordCount = wordCounts[it.dictionaryId] ?: 0) }
+        }.observe(
+            onSuccess = { dictionaries ->
+                _dictionariesState.emit(DictionaryListState.Success(dictionaries))
+            },
+            onError = {
+                _dictionariesState.emit(DictionaryListState.Failed)
+            }
+        )
+    }
+
+    /** Re-subscribes after a Failed state — the observed flow terminates on error. */
+    fun retry() {
+        _dictionariesState.value = DictionaryListState.Loading
+        observeDictionaries()
     }
 
     /**

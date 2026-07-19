@@ -107,6 +107,8 @@
     <string name="createWordScreenClassIAdjective">صفت い</string>
     <string name="createWordScreenClassNaAdjective">صفت な</string>
     <string name="createWordScreenScriptRestriction">در اینجا فقط می‌توان حروف %1$s را وارد کرد.</string>
+    <string name="dictionaryListScreenLoadError">بارگیری واژه‌نامه‌های شما ممکن نشد</string>
+    <string name="dictionaryListScreenRetry">تلاش دوباره</string>
     <!--Plurals-->
     <plurals name="dictionaryDetailsScreenWordListCount">
         <item quantity="one">%1$d واژه در واژه‌نامه</item>

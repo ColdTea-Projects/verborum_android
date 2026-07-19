@@ -107,6 +107,8 @@
     <string name="createWordScreenClassIAdjective">い-adjective</string>
     <string name="createWordScreenClassNaAdjective">な-adjective</string>
     <string name="createWordScreenScriptRestriction">Burada yalnızca %1$s harfleri yazılabilir.</string>
+    <string name="dictionaryListScreenLoadError">Sözlükleriniz yüklenemedi</string>
+    <string name="dictionaryListScreenRetry">Yeniden dene</string>
     <!--Plurals-->
     <plurals name="dictionaryDetailsScreenWordListCount">
         <item quantity="one">sözlükte %1$d kelime</item>

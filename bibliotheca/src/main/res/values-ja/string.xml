@@ -107,6 +107,8 @@
     <string name="createWordScreenClassIAdjective">い形容詞</string>
     <string name="createWordScreenClassNaAdjective">な形容詞</string>
     <string name="createWordScreenScriptRestriction">ここには%1$sの文字のみ入力できます。</string>
+    <string name="dictionaryListScreenLoadError">辞書を読み込めませんでした</string>
+    <string name="dictionaryListScreenRetry">再試行</string>
     <!--Plurals-->
     <plurals name="dictionaryDetailsScreenWordListCount">
         <item quantity="other">辞書に%1$d語</item>

@@ -107,6 +107,8 @@
     <string name="createWordScreenClassIAdjective">い-прикметник</string>
     <string name="createWordScreenClassNaAdjective">な-прикметник</string>
     <string name="createWordScreenScriptRestriction">Тут можна вводити лише літери: %1$s.</string>
+    <string name="dictionaryListScreenLoadError">Не вдалося завантажити ваші словники</string>
+    <string name="dictionaryListScreenRetry">Повторити спробу</string>
     <!--Plurals-->
     <plurals name="dictionaryDetailsScreenWordListCount">
         <item quantity="one">%1$d слово в словнику</item>

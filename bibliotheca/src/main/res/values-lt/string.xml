@@ -107,6 +107,8 @@
     <string name="createWordScreenClassIAdjective">い-adjective</string>
     <string name="createWordScreenClassNaAdjective">な-adjective</string>
     <string name="createWordScreenScriptRestriction">Čia galima rašyti tik %1$s raidėmis.</string>
+    <string name="dictionaryListScreenLoadError">Nepavyko įkelti jūsų žodynų</string>
+    <string name="dictionaryListScreenRetry">Bandyti dar kartą</string>
     <!--Plurals-->
     <plurals name="dictionaryDetailsScreenWordListCount">
         <item quantity="one">%1$d žodis žodyne</item>

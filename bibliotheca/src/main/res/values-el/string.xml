@@ -107,6 +107,8 @@
     <string name="createWordScreenClassIAdjective">Επίθετο い</string>
     <string name="createWordScreenClassNaAdjective">Επίθετο な</string>
     <string name="createWordScreenScriptRestriction">Εδώ μπορείτε να πληκτρολογήσετε μόνο χαρακτήρες %1$s.</string>
+    <string name="dictionaryListScreenLoadError">Δεν ήταν δυνατή η φόρτωση των λεξικών σας</string>
+    <string name="dictionaryListScreenRetry">Επανάληψη</string>
     <!--Plurals-->
     <plurals name="dictionaryDetailsScreenWordListCount">
         <item quantity="one">%1$d λέξη στο λεξικό</item>

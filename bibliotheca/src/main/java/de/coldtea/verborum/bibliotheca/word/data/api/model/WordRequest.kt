@@ -21,4 +21,9 @@ data class WordRequest(
     val translation: String,
     @SerialName("translationMeta")
     val translationMeta: String,
+    // ISO-8601. Server-owned like the dictionary's — sent for completeness, see DictionaryRequest.
+    @SerialName("creationTimestamp")
+    val creationTimestamp: String? = null,
+    @SerialName("updateTimestamp")
+    val updateTimestamp: String? = null,
 )

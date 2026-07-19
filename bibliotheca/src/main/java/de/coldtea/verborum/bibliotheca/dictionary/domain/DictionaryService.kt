@@ -31,10 +31,15 @@ class DictionaryService @Inject constructor(
     private val uploadService: UploadService,
 ) {
 
+    /**
+     * Deduplicated on the *UI* model on purpose: sync flips domain-only fields like `isSynced`,
+     * which the list never renders. Comparing after the mapping means those writes produce no
+     * emission at all, so the screen does not recompose for changes it cannot show.
+     */
     fun observeDictionaries(): Flow<List<DictionaryUi>> = observeAllDictionariesUseCase
         .invoke()
-        .distinctUntilChanged()
         .map { it.map(Dictionary::convertToUi) }
+        .distinctUntilChanged()
         .flowOn(Dispatchers.IO)
 
     /** Emits null once the dictionary is tombstoned or removed, letting screens react to deletion. */

@@ -107,6 +107,8 @@
     <string name="createWordScreenClassIAdjective">صفة い</string>
     <string name="createWordScreenClassNaAdjective">صفة な</string>
     <string name="createWordScreenScriptRestriction">يمكن إدخال حروف %1$s فقط هنا.</string>
+    <string name="dictionaryListScreenLoadError">تعذّر تحميل قواميسك</string>
+    <string name="dictionaryListScreenRetry">إعادة المحاولة</string>
     <!--Plurals-->
     <plurals name="dictionaryDetailsScreenWordListCount">
         <item quantity="zero">لا توجد كلمات في القاموس</item>

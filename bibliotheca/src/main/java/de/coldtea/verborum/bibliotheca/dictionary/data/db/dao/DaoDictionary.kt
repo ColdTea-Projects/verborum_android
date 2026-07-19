@@ -15,7 +15,16 @@ interface DaoDictionary: DaoBase<DictionaryEntity> {
     suspend fun getAllDictionaries(): List<DictionaryEntity>
 
     // UI-facing: tombstoned rows are hidden. The suspend variant above stays raw for sync.
-    @Query("SELECT * FROM dictionary WHERE is_deleted = 0")
+    //
+    // The ORDER BY is load-bearing, not cosmetic: DaoBase.insert uses OnConflictStrategy.REPLACE,
+    // which SQLite implements as DELETE + INSERT, so every row re-saved by a sync gets a new
+    // rowid. Without an explicit sort the query returns rows in rowid order, meaning the list
+    // silently reorders itself after every sync. Sorting by a stable column keeps the order fixed
+    // so identical data produces an identical list — and therefore no recomposition at all.
+    @Query(
+        "SELECT * FROM dictionary WHERE is_deleted = 0 " +
+            "ORDER BY created_at ASC, dictionary_id ASC"
+    )
     fun observeAllDictionaries(): Flow<List<DictionaryEntity>>
 
     @Transaction

@@ -107,6 +107,8 @@
     <string name="createWordScreenClassIAdjective">Przymiotnik い</string>
     <string name="createWordScreenClassNaAdjective">Przymiotnik な</string>
     <string name="createWordScreenScriptRestriction">Tutaj można wpisać tylko litery: %1$s.</string>
+    <string name="dictionaryListScreenLoadError">Nie udało się wczytać Twoich słowników</string>
+    <string name="dictionaryListScreenRetry">Spróbuj ponownie</string>
     <!--Plurals-->
     <plurals name="dictionaryDetailsScreenWordListCount">
         <item quantity="one">%1$d słowo w słowniku</item>

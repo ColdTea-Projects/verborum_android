@@ -107,6 +107,8 @@
     <string name="createWordScreenClassIAdjective">い-adjective</string>
     <string name="createWordScreenClassNaAdjective">な-adjective</string>
     <string name="createWordScreenScriptRestriction">Aquí solo se pueden escribir letras en %1$s.</string>
+    <string name="dictionaryListScreenLoadError">No se pudieron cargar tus diccionarios</string>
+    <string name="dictionaryListScreenRetry">Reintentar</string>
     <!--Plurals-->
     <plurals name="dictionaryDetailsScreenWordListCount">
         <item quantity="one">%1$d palabra en el diccionario</item>

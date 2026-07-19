@@ -127,9 +127,43 @@ class SyncUserDictionariesUseCaseTest : BaseTest() {
         useCase.invoke()
 
         assertEquals(
-            responses.map { it.convertToDictionary(createdAt = FIXED_NOW, updatedAt = FIXED_NOW) },
+            responses.map { it.convertToDictionary(fallbackCreatedAt = FIXED_NOW, fallbackUpdatedAt = FIXED_NOW) },
             savedDictionaries,
         )
+    }
+
+    @Test
+    fun `invoke does not rewrite a dictionary that is already identical locally`() = runTest {
+        val response = testDictionaryResponse(dictionaryId = "dict-1")
+        // The exact row the merge would produce — writing it again would only churn the table.
+        val identicalLocal =
+            response.convertToDictionary(fallbackCreatedAt = 5_000L, fallbackUpdatedAt = 6_000L)
+        coEvery { dictionaryApi.getAllDictionariesByUser(GUEST_USER_ID) } returns listOf(response)
+        coEvery { getAllDictionariesUseCase.invoke() } returns listOf(identicalLocal)
+        coEvery { wordApi.getWordsByDictionary(any()) } returns null
+
+        useCase.invoke()
+
+        coVerify(exactly = 0) { saveDictionaryUseCase.invoke(any()) }
+    }
+
+    @Test
+    fun `invoke still writes a dictionary whose remote content differs`() = runTest {
+        val response = testDictionaryResponse(dictionaryId = "dict-1", name = "Renamed remotely")
+        val staleLocal = response
+            .convertToDictionary(fallbackCreatedAt = 5_000L, fallbackUpdatedAt = 6_000L)
+            .copy(name = "Old name")
+        coEvery { dictionaryApi.getAllDictionariesByUser(GUEST_USER_ID) } returns listOf(response)
+        coEvery { getAllDictionariesUseCase.invoke() } returns listOf(staleLocal)
+        coEvery { wordApi.getWordsByDictionary(any()) } returns null
+
+        useCase.invoke()
+
+        coVerify(exactly = 1) {
+            saveDictionaryUseCase.invoke(
+                response.convertToDictionary(fallbackCreatedAt = 5_000L, fallbackUpdatedAt = 6_000L)
+            )
+        }
     }
 
     @Test
@@ -184,9 +218,47 @@ class SyncUserDictionariesUseCaseTest : BaseTest() {
         useCase.invoke()
 
         assertEquals(
-            listOf(wordResponse.convertToWord("dict-1", createdAt = FIXED_NOW, updatedAt = FIXED_NOW)),
+            listOf(wordResponse.convertToWord("dict-1", fallbackCreatedAt = FIXED_NOW, fallbackUpdatedAt = FIXED_NOW)),
             upserted.single(),
         )
+    }
+
+    @Test
+    fun `invoke does not upsert words that are already identical locally`() = runTest {
+        val wordResponse = testWordResponse(wordId = "word-1")
+        val identicalLocal = wordResponse.convertToWord(
+            dictionaryId = "dict-1",
+            fallbackCreatedAt = 5_000L,
+            fallbackUpdatedAt = 6_000L,
+        )
+        coEvery { dictionaryApi.getAllDictionariesByUser(GUEST_USER_ID) } returns
+            listOf(testDictionaryResponse(dictionaryId = "dict-1"))
+        coEvery { wordApi.getWordsByDictionary("dict-1") } returns listOf(wordResponse)
+        coEvery { getWordsByDictionaryUseCase.invoke("dict-1") } returns listOf(identicalLocal)
+
+        useCase.invoke()
+
+        coVerify(exactly = 0) { upsertWordsUseCase.invoke(any()) }
+    }
+
+    @Test
+    fun `invoke preserves the local practice level when merging a remote word`() = runTest {
+        val wordResponse = testWordResponse(wordId = "word-1")
+        // Same content as the server, but this device has practice progress the backend
+        // does not store — a merge must not reset it.
+        val practiced = wordResponse
+            .convertToWord(dictionaryId = "dict-1", fallbackCreatedAt = 5_000L, fallbackUpdatedAt = 6_000L)
+            .copy(level = 4, word = "stale so the row is rewritten")
+        coEvery { dictionaryApi.getAllDictionariesByUser(GUEST_USER_ID) } returns
+            listOf(testDictionaryResponse(dictionaryId = "dict-1"))
+        coEvery { wordApi.getWordsByDictionary("dict-1") } returns listOf(wordResponse)
+        coEvery { getWordsByDictionaryUseCase.invoke("dict-1") } returns listOf(practiced)
+        val upserted = mutableListOf<List<Word>>()
+        coEvery { upsertWordsUseCase.invoke(capture(upserted)) } returns Unit
+
+        useCase.invoke()
+
+        assertEquals(4, upserted.single().single().level)
     }
 
     @Test

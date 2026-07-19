@@ -21,4 +21,12 @@ data class DictionaryRequest(
     val fromLang: String,
     @SerialName("toLang")
     val toLang: String,
+    // ISO-8601. Sent for completeness, but the server currently owns these: Hibernate's
+    // @CreationTimestamp / @UpdateTimestamp overwrite whatever the client supplies (verified —
+    // the request is accepted, the sent value is simply replaced). They matter here only if the
+    // backend later honours a client value, e.g. to preserve a row created offline.
+    @SerialName("creationTimestamp")
+    val creationTimestamp: String? = null,
+    @SerialName("updateTimestamp")
+    val updateTimestamp: String? = null,
 )

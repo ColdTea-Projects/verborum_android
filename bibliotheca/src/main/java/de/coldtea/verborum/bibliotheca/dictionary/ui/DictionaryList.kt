@@ -3,6 +3,7 @@ package de.coldtea.verborum.bibliotheca.dictionary.ui
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -11,7 +12,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -21,6 +24,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -47,6 +51,8 @@ import de.coldtea.verborum.bibliotheca.common.utils.ResDrawables
 import de.coldtea.verborum.bibliotheca.common.utils.ResStrings
 import de.coldtea.verborum.bibliotheca.dictionary.ui.composables.DeleteDictionaryDialog
 import de.coldtea.verborum.bibliotheca.dictionary.ui.composables.DictionaryCard
+import de.coldtea.verborum.bibliotheca.dictionary.ui.composables.DictionaryCardSkeleton
+import de.coldtea.verborum.bibliotheca.dictionary.ui.model.DictionaryListState
 import de.coldtea.verborum.bibliotheca.dictionary.ui.model.DictionaryUi
 import de.coldtea.verborum.core.theme.VerborumTheme
 import de.coldtea.verborum.core.ui.RegisterTopBar
@@ -60,8 +66,12 @@ fun DictionaryListScreen(
     onCreateDictionaryClick: () -> Unit,
     onEditDictionaryClick: (String) -> Unit = {},
 ) {
-    val dictionaries = viewModel.dictionariesState.collectAsState().value
+    val dictionaryListState = viewModel.dictionariesState.collectAsState().value
     val isRefreshing = viewModel.isRefreshing.collectAsState().value
+
+    // Hoisted so the scroll position survives the Loading -> Success switch and screen
+    // navigation, instead of being re-created per state branch.
+    val listState = rememberLazyListState()
 
     // Long-press target for the options sheet, and the dictionary pending delete confirmation.
     var optionsFor by remember { mutableStateOf<DictionaryUi?>(null) }
@@ -121,18 +131,64 @@ fun DictionaryListScreen(
         ) {
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Dictionary List
-            LazyColumn(
-                modifier = Modifier.weight(1f),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                itemsIndexed(dictionaries) { index, dictionary ->
-                    DictionaryCard(
-                        dictionary = dictionary,
-                        index = index,
-                        onClick = onDictionaryClick,
-                        onLongClick = { optionsFor = it },
-                    )
+            when (dictionaryListState) {
+                is DictionaryListState.Loading -> {
+                    LazyColumn(
+                        modifier = Modifier.weight(1f),
+                        verticalArrangement = Arrangement.spacedBy(16.dp)
+                    ) {
+                        items(count = 4) {
+                            DictionaryCardSkeleton()
+                        }
+                    }
+                }
+
+                is DictionaryListState.Failed -> {
+                    Box(
+                        modifier = Modifier.weight(1f),
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.spacedBy(16.dp),
+                        ) {
+                            Text(
+                                text = stringResource(ResStrings.dictionaryListScreenLoadError),
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.Medium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            )
+                            OutlinedButton(onClick = viewModel::retry) {
+                                Text(text = stringResource(ResStrings.dictionaryListScreenRetry))
+                            }
+                        }
+                    }
+                }
+
+                is DictionaryListState.Success -> {
+                    // Dictionary List
+                    LazyColumn(
+                        state = listState,
+                        modifier = Modifier.weight(1f),
+                        verticalArrangement = Arrangement.spacedBy(16.dp)
+                    ) {
+                        itemsIndexed(
+                            items = dictionaryListState.dictionaries,
+                            // Stable identity, deliberately with no item animation. The query is
+                            // now explicitly ordered, so an unchanged list is literally the same
+                            // list and nothing recomposes. When items do arrive, the key lets
+                            // LazyColumn anchor the scroll on the item you are looking at, so
+                            // rows loading off-screen never shift the visible ones.
+                            key = { _, dictionary -> dictionary.dictionaryId },
+                        ) { index, dictionary ->
+                            DictionaryCard(
+                                dictionary = dictionary,
+                                index = index,
+                                onClick = onDictionaryClick,
+                                onLongClick = { optionsFor = it },
+                            )
+                        }
+                    }
                 }
             }
 

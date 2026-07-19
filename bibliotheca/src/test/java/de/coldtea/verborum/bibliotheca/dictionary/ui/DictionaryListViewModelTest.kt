@@ -2,7 +2,7 @@ package de.coldtea.verborum.bibliotheca.dictionary.ui
 
 import de.coldtea.verborum.bibliotheca.common.domain.SyncService
 import de.coldtea.verborum.bibliotheca.dictionary.domain.DictionaryService
-import de.coldtea.verborum.bibliotheca.dictionary.ui.model.DictionaryUi
+import de.coldtea.verborum.bibliotheca.dictionary.ui.model.DictionaryListState
 import de.coldtea.verborum.bibliotheca.testDictionaryUi
 import de.coldtea.verborum.bibliotheca.word.domain.WordService
 import de.coldtea.verborum.core.BaseTest
@@ -17,6 +17,7 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class DictionaryListViewModelTest : BaseTest() {
@@ -52,12 +53,13 @@ class DictionaryListViewModelTest : BaseTest() {
     // region initial state
 
     @Test
-    fun `initial dictionariesState is an empty list`() = runTest {
+    fun `initial dictionariesState is Loading`() = runTest {
+        // A never-emitting flow leaves the view model at its constructor-assigned initial state.
         every { dictionaryService.observeDictionaries() } returns emptyFlow()
 
         val viewModel = buildViewModel()
 
-        assertEquals(emptyList<DictionaryUi>(), viewModel.dictionariesState.first())
+        assertEquals(DictionaryListState.Loading, viewModel.dictionariesState.first())
     }
 
     // endregion
@@ -65,7 +67,7 @@ class DictionaryListViewModelTest : BaseTest() {
     // region init
 
     @Test
-    fun `state reflects the observed dictionaries`() = runTest {
+    fun `state reflects the observed dictionaries as Success`() = runTest {
         val dictionaries = listOf(
             testDictionaryUi(dictionaryId = "dict-1", name = "German Basics"),
             testDictionaryUi(dictionaryId = "dict-2", name = "Spanish Basics"),
@@ -74,7 +76,10 @@ class DictionaryListViewModelTest : BaseTest() {
 
         val viewModel = buildViewModel()
 
-        assertEquals(dictionaries, viewModel.dictionariesState.first())
+        assertEquals(
+            DictionaryListState.Success(dictionaries),
+            viewModel.dictionariesState.first(),
+        )
     }
 
     @Test
@@ -88,9 +93,10 @@ class DictionaryListViewModelTest : BaseTest() {
 
         val viewModel = buildViewModel()
 
-        val state = viewModel.dictionariesState.first { it.isNotEmpty() }
-        assertEquals(5, state.first { it.dictionaryId == "dict-1" }.wordCount)
-        assertEquals(0, state.first { it.dictionaryId == "dict-2" }.wordCount)
+        val state = viewModel.dictionariesState.first { it is DictionaryListState.Success }
+                as DictionaryListState.Success
+        assertEquals(5, state.dictionaries.first { it.dictionaryId == "dict-1" }.wordCount)
+        assertEquals(0, state.dictionaries.first { it.dictionaryId == "dict-2" }.wordCount)
     }
 
     @Test
@@ -103,19 +109,54 @@ class DictionaryListViewModelTest : BaseTest() {
     }
 
     @Test
-    fun `observe error keeps state empty and still syncs`() = runTest {
-        // The error is handled via onError, which surfaces a snackbar message.
-        // (The snackbar SharedFlow has replay 0, so the emission itself cannot be
-        // asserted post-hoc — the observable contract here is: state stays empty,
-        // sync still runs, and no exception escapes.)
+    fun `observe error emits Failed and still syncs`() = runTest {
         every { dictionaryService.observeDictionaries() } returns flow {
             throw RuntimeException("db error")
         }
 
         val viewModel = buildViewModel()
 
-        assertEquals(emptyList<DictionaryUi>(), viewModel.dictionariesState.first())
+        assertEquals(DictionaryListState.Failed, viewModel.dictionariesState.first())
         coVerify(exactly = 1) { syncService.syncDictionaries() }
+    }
+
+    // endregion
+
+    // region retry
+
+    @Test
+    fun `retry re-subscribes and can recover from Failed to Success`() = runTest {
+        every { dictionaryService.observeDictionaries() } returns flow {
+            throw RuntimeException("db error")
+        }
+        val viewModel = buildViewModel()
+        assertEquals(DictionaryListState.Failed, viewModel.dictionariesState.first())
+
+        val dictionaries = listOf(testDictionaryUi(dictionaryId = "dict-1"))
+        every { dictionaryService.observeDictionaries() } returns flowOf(dictionaries)
+
+        viewModel.retry()
+
+        assertEquals(
+            DictionaryListState.Success(dictionaries),
+            viewModel.dictionariesState.first(),
+        )
+    }
+
+    @Test
+    fun `retry sets state to Loading before re-subscribing`() = runTest {
+        every { dictionaryService.observeDictionaries() } returns flow {
+            throw RuntimeException("db error")
+        }
+        val viewModel = buildViewModel()
+        assertEquals(DictionaryListState.Failed, viewModel.dictionariesState.first())
+
+        // A never-emitting flow lets us observe the Loading state retry() sets immediately.
+        every { dictionaryService.observeDictionaries() } returns emptyFlow()
+
+        viewModel.retry()
+
+        assertTrue(viewModel.dictionariesState.first() is DictionaryListState.Loading)
     }
 
     // endregion
