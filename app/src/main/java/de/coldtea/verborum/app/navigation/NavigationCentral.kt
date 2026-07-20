@@ -42,6 +42,7 @@ import androidx.navigation.compose.rememberNavController
 import de.coldtea.verborum.app.R
 // Translations live in bibliotheca, which carries all 19 locales; the app module has none.
 import de.coldtea.verborum.bibliotheca.R as BibliothecaR
+import de.coldtea.verborum.core.ui.LocalSnackbarHostState
 import de.coldtea.verborum.core.ui.LocalVerborumTopBarController
 import de.coldtea.verborum.core.ui.VerborumTopBarController
 import de.coldtea.verborum.core.ui.VerborumTopBarState
@@ -64,7 +65,10 @@ fun NavigationCentral(showWelcome: Boolean = false) {
     val topBarState = topBarController.state
     val isOnline = rememberIsOnline()
 
-    CompositionLocalProvider(LocalVerborumTopBarController provides topBarController) {
+    CompositionLocalProvider(
+        LocalVerborumTopBarController provides topBarController,
+        LocalSnackbarHostState provides snackbarHostState,
+    ) {
         Scaffold(
             topBar = {
                 Column {
@@ -99,12 +103,12 @@ fun NavigationCentral(showWelcome: Boolean = false) {
                         startDestination = SCREEN_DICTIONARIES_LIST,
                         route = GROUP_BIBLIOTHECA
                     ) {
-                        insertDictionariesList(navController, snackbarHostState)
+                        insertDictionariesList(navController)
                         insertCreateDictionary(navController)
                         insertDictionariesDetails(navController)
                         insertCreateWord(navController)
                         insertSelfPractice(navController)
-                        insertMultipleChoiceScreen(navController, snackbarHostState)
+                        insertMultipleChoiceScreen(navController)
                     }
                     navigation(startDestination = SCREEN_FORUM_MAIN_SCREEN, route = GROUP_FORUM) {
                         insertForumMain(navController)

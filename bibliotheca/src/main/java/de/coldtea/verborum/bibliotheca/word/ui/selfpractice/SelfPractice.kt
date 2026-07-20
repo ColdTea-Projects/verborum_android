@@ -26,11 +26,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import de.coldtea.verborum.bibliotheca.common.ui.components.ScreenError
 import de.coldtea.verborum.bibliotheca.common.utils.ResStrings
 import de.coldtea.verborum.bibliotheca.word.ui.selfpractice.composables.ExpandableWordCard
 import de.coldtea.verborum.bibliotheca.word.ui.selfpractice.model.SelfPracticeState
 import de.coldtea.verborum.core.theme.VerborumTheme
 import de.coldtea.verborum.core.ui.RegisterTopBar
+import de.coldtea.verborum.core.ui.ShowSnackbarMessages
 
 @Composable
 fun SelfPracticeScreen(
@@ -39,9 +41,16 @@ fun SelfPracticeScreen(
     val selfPracticeState =
         viewModel.selfPracticeState.collectAsState(initial = SelfPracticeState.Loading).value
 
+    ShowSnackbarMessages(viewModel.snackbarMessages)
+
     val revealedStates = remember { mutableStateMapOf<String, Boolean>() }
     val reverseMode = remember { mutableStateOf(false) }
     val wordIdOrder = remember { mutableStateOf<List<String>>(listOf()) }
+
+    if (selfPracticeState is SelfPracticeState.Failed) {
+        RegisterTopBar(title = stringResource(ResStrings.errorScreenTitle), showBackButton = true)
+        ScreenError(onRetry = viewModel::retry)
+    }
 
     if (selfPracticeState is SelfPracticeState.Success) {
         if (wordIdOrder.value.isEmpty()) {

@@ -19,6 +19,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import de.coldtea.verborum.bibliotheca.common.utils.ResStrings
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
@@ -89,7 +90,7 @@ fun QuestionCard(
 
             // Question Text
             Text(
-                text = "What does \"${question.question.question}\" mean?",
+                text = stringResource(ResStrings.testQuestionPrompt, question.question.question),
                 fontSize = 22.sp,
                 fontWeight = FontWeight.SemiBold,
                 color = MaterialTheme.colorScheme.onSurface,

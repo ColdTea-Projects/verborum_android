@@ -17,7 +17,9 @@ import kotlinx.coroutines.launch
 
 abstract class BaseViewModel : ViewModel() {
 
-    protected val _snackbarMessages = MutableSharedFlow<String>()
+    // UiText, not String: messages are resolved to a localized string in the UI layer, since a
+    // ViewModel has no Context. See [ShowSnackbarMessages].
+    protected val _snackbarMessages = MutableSharedFlow<UiText>()
     val snackbarMessages = _snackbarMessages.asSharedFlow()
 
     protected val exceptionHandler = CoroutineExceptionHandler { _, exception ->

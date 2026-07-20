@@ -25,11 +25,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import de.coldtea.verborum.bibliotheca.common.utils.ResStrings
 import de.coldtea.verborum.bibliotheca.word.ui.multiplechoice.model.MultipleChoiceCurrentQuestionState
 import de.coldtea.verborum.core.theme.VerborumTheme
 
@@ -94,7 +96,11 @@ fun ResultScreen(
                         )
 
                         Text(
-                            text = "${resultState.correctAnswers} of ${resultState.totalQuestions}",
+                            text = stringResource(
+                                ResStrings.testResultScore,
+                                resultState.correctAnswers,
+                                resultState.totalQuestions,
+                            ),
                             fontSize = 14.sp,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                             modifier = Modifier.padding(top = 8.dp)
@@ -106,7 +112,10 @@ fun ResultScreen(
 
                 // Result Message
                 Text(
-                    text = if (resultState.passed) "Excellent Work!" else "Keep Practicing!",
+                    text = stringResource(
+                        if (resultState.passed) ResStrings.testResultTitlePassed
+                        else ResStrings.testResultTitleFailed
+                    ),
                     fontSize = 24.sp,
                     fontWeight = FontWeight.SemiBold,
                     color = MaterialTheme.colorScheme.onSurface,
@@ -116,11 +125,10 @@ fun ResultScreen(
                 Spacer(modifier = Modifier.height(12.dp))
 
                 Text(
-                    text = if (resultState.passed) {
-                        "You have a strong grasp of these words. Great job!"
-                    } else {
-                        "Review the words and try again to improve your score."
-                    },
+                    text = stringResource(
+                        if (resultState.passed) ResStrings.testResultMessagePassed
+                        else ResStrings.testResultMessageFailed
+                    ),
                     fontSize = 16.sp,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.padding(horizontal = 16.dp),
@@ -150,7 +158,7 @@ fun ResultScreen(
                         shape = RoundedCornerShape(12.dp)
                     ) {
                         Text(
-                            text = "Back to Dictionary",
+                            text = stringResource(ResStrings.testResultBackToDictionary),
                             fontSize = 14.sp,
                             fontWeight = FontWeight.SemiBold
                         )
@@ -168,7 +176,7 @@ fun ResultScreen(
                         shape = RoundedCornerShape(12.dp)
                     ) {
                         Text(
-                            text = "Try Again",
+                            text = stringResource(ResStrings.testResultTryAgain),
                             fontSize = 16.sp,
                             fontWeight = FontWeight.SemiBold
                         )
@@ -186,14 +194,14 @@ fun ResultScreen(
         ) {
             StatCard(
                 value = resultState.correctAnswers.toString(),
-                label = "Correct",
+                label = stringResource(ResStrings.testResultCorrectLabel),
                 color = MaterialTheme.colorScheme.secondary,
                 modifier = Modifier.weight(1f)
             )
 
             StatCard(
                 value = (resultState.totalQuestions - resultState.correctAnswers).toString(),
-                label = "Incorrect",
+                label = stringResource(ResStrings.testResultIncorrectLabel),
                 color = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.weight(1f)
             )

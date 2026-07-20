@@ -3,10 +3,12 @@ package de.coldtea.verborum.bibliotheca.dictionary.ui.createdictionary
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import de.coldtea.verborum.bibliotheca.common.ui.model.SupportedLanguage
+import de.coldtea.verborum.bibliotheca.common.utils.ResStrings
 import de.coldtea.verborum.bibliotheca.dictionary.domain.DictionaryService
 import de.coldtea.verborum.bibliotheca.dictionary.ui.createdictionary.model.CreateDictionaryState
 import de.coldtea.verborum.bibliotheca.dictionary.ui.model.DictionaryUi
 import de.coldtea.verborum.core.ui.BaseViewModel
+import de.coldtea.verborum.core.ui.UiText
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -29,8 +31,13 @@ class CreateDictionaryViewModel @Inject constructor(
     /** Loads the dictionary to edit; a null/blank id (create mode) or an already-loaded one is a no-op. */
     fun init(dictionaryId: String?) {
         if (dictionaryId.isNullOrEmpty() || _editingDictionary.value != null) return
-        viewModelScope.launch(exceptionHandler) {
-            _editingDictionary.emit(dictionaryService.getDictionary(dictionaryId))
+        viewModelScope.launch {
+            try {
+                _editingDictionary.emit(dictionaryService.getDictionary(dictionaryId))
+            } catch (e: Exception) {
+                // Prefill failed — tell the user; the form stays usable as a blank create form.
+                _snackbarMessages.emit(UiText.Resource(ResStrings.errorScreenMessage))
+            }
         }
     }
 
@@ -62,6 +69,7 @@ class CreateDictionaryViewModel @Inject constructor(
                 _createDictionaryState.emit(result)
             } catch (e: Exception) {
                 _createDictionaryState.emit(CreateDictionaryState.Failed)
+                _snackbarMessages.emit(UiText.Resource(ResStrings.errorSaveFailed))
             }
         }
 }

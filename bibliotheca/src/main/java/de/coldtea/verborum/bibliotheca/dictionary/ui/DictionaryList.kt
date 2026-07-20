@@ -51,17 +51,18 @@ import de.coldtea.verborum.bibliotheca.common.utils.ResDrawables
 import de.coldtea.verborum.bibliotheca.common.utils.ResStrings
 import de.coldtea.verborum.bibliotheca.dictionary.ui.composables.DeleteDictionaryDialog
 import de.coldtea.verborum.bibliotheca.dictionary.ui.composables.DictionaryCard
+import de.coldtea.verborum.bibliotheca.common.ui.components.ScreenError
 import de.coldtea.verborum.bibliotheca.dictionary.ui.composables.DictionaryCardSkeleton
 import de.coldtea.verborum.bibliotheca.dictionary.ui.model.DictionaryListState
 import de.coldtea.verborum.bibliotheca.dictionary.ui.model.DictionaryUi
 import de.coldtea.verborum.core.theme.VerborumTheme
 import de.coldtea.verborum.core.ui.RegisterTopBar
+import de.coldtea.verborum.core.ui.ShowSnackbarMessages
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DictionaryListScreen(
     viewModel: DictionaryListViewModel = hiltViewModel(),
-    snackbarHostState: SnackbarHostState,
     onDictionaryClick: (String) -> Unit,
     onCreateDictionaryClick: () -> Unit,
     onEditDictionaryClick: (String) -> Unit = {},
@@ -77,14 +78,8 @@ fun DictionaryListScreen(
     var optionsFor by remember { mutableStateOf<DictionaryUi?>(null) }
     var confirmDeleteFor by remember { mutableStateOf<DictionaryUi?>(null) }
 
-    LaunchedEffect(Unit) {
-        viewModel.snackbarMessages.collect { message ->
-            snackbarHostState.showSnackbar(
-                message = message,
-                duration = SnackbarDuration.Short,
-            )
-        }
-    }
+    // Delete failures (and any other one-off notice) surface on the shared snackbar.
+    ShowSnackbarMessages(viewModel.snackbarMessages)
 
     optionsFor?.let { dictionary ->
         DictionaryOptionsSheet(
@@ -144,25 +139,11 @@ fun DictionaryListScreen(
                 }
 
                 is DictionaryListState.Failed -> {
-                    Box(
+                    ScreenError(
+                        onRetry = viewModel::retry,
                         modifier = Modifier.weight(1f),
-                        contentAlignment = Alignment.Center,
-                    ) {
-                        Column(
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.spacedBy(16.dp),
-                        ) {
-                            Text(
-                                text = stringResource(ResStrings.dictionaryListScreenLoadError),
-                                fontSize = 16.sp,
-                                fontWeight = FontWeight.Medium,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            )
-                            OutlinedButton(onClick = viewModel::retry) {
-                                Text(text = stringResource(ResStrings.dictionaryListScreenRetry))
-                            }
-                        }
-                    }
+                        message = stringResource(ResStrings.dictionaryListScreenLoadError),
+                    )
                 }
 
                 is DictionaryListState.Success -> {
@@ -287,7 +268,6 @@ private fun DictionaryOptionRow(
 fun DictionaryListScreenPreview() {
     VerborumTheme {
         DictionaryListScreen(
-            snackbarHostState = SnackbarHostState(),
             onDictionaryClick = { _ -> },
             onCreateDictionaryClick = {}
         )

@@ -43,6 +43,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import de.coldtea.verborum.bibliotheca.common.utils.ResDrawables
 import de.coldtea.verborum.bibliotheca.common.utils.ResPlurals
 import de.coldtea.verborum.bibliotheca.common.utils.ResStrings
+import de.coldtea.verborum.bibliotheca.common.ui.components.ScreenError
 import de.coldtea.verborum.bibliotheca.dictionary.ui.composables.DeleteDictionaryDialog
 import de.coldtea.verborum.bibliotheca.dictionary.ui.composables.languagePairLabel
 import de.coldtea.verborum.bibliotheca.word.ui.dictionarydetails.composables.PracticeModeButton
@@ -50,6 +51,7 @@ import de.coldtea.verborum.bibliotheca.word.ui.dictionarydetails.composables.Wor
 import de.coldtea.verborum.bibliotheca.word.ui.dictionarydetails.model.DictionaryDetailState
 import de.coldtea.verborum.core.theme.VerborumTheme
 import de.coldtea.verborum.core.ui.RegisterTopBar
+import de.coldtea.verborum.core.ui.ShowSnackbarMessages
 
 @Composable
 fun DictionaryDetailsScreen(
@@ -62,6 +64,9 @@ fun DictionaryDetailsScreen(
 ) {
     val dictionaryDetailState =
         viewModel.dictionaryDetailState.collectAsState(initial = DictionaryDetailState.Loading).value
+
+    // Delete failures surface here; the screen stays put.
+    ShowSnackbarMessages(viewModel.snackbarMessages)
 
     var showDeleteDialog by remember { mutableStateOf(false) }
 
@@ -253,6 +258,12 @@ fun DictionaryDetailsScreen(
                 )
             }
         }
+    }
+
+    // Rendered after (over) the empty column so its opaque background covers it on load failure.
+    if (dictionaryDetailState is DictionaryDetailState.Failed) {
+        RegisterTopBar(title = stringResource(ResStrings.errorScreenTitle), showBackButton = true)
+        ScreenError(onRetry = viewModel::retry)
     }
 }
 

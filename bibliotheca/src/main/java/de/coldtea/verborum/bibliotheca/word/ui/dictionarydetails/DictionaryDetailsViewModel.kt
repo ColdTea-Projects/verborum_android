@@ -2,11 +2,14 @@ package de.coldtea.verborum.bibliotheca.word.ui.dictionarydetails
 
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import de.coldtea.verborum.bibliotheca.common.utils.ResStrings
 import de.coldtea.verborum.bibliotheca.dictionary.domain.DictionaryService
 import de.coldtea.verborum.bibliotheca.word.domain.WordService
 import de.coldtea.verborum.bibliotheca.word.ui.dictionarydetails.model.DictionaryDetailState
 import de.coldtea.verborum.bibliotheca.word.ui.multiplechoice.REQUIRED_WORDS_FOR_TEST
 import de.coldtea.verborum.core.ui.BaseViewModel
+import de.coldtea.verborum.core.ui.UiText
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.combine
@@ -23,8 +26,23 @@ class DictionaryDetailsViewModel @Inject constructor(
         MutableStateFlow<DictionaryDetailState>(DictionaryDetailState.Loading)
     val dictionaryDetailState = _dictionaryDetailState.asSharedFlow()
 
-    fun init(dictionaryId: String) = viewModelScope.launch {
-        combine(
+    private var loadJob: Job? = null
+    private var dictionaryId: String = ""
+
+    fun init(dictionaryId: String) {
+        this.dictionaryId = dictionaryId
+        observeDetails()
+    }
+
+    /** Re-subscribes after a Failed load (the observed flow terminates on error). */
+    fun retry() {
+        _dictionaryDetailState.tryEmit(DictionaryDetailState.Loading)
+        observeDetails()
+    }
+
+    private fun observeDetails() {
+        loadJob?.cancel()
+        loadJob = combine(
             dictionaryService.observeDictionary(dictionaryId),
             wordService.observeWordsByDictionary(dictionaryId),
             wordService.observeWordsInLanguagePair(dictionaryId),
@@ -53,21 +71,29 @@ class DictionaryDetailsViewModel @Inject constructor(
         )
     }
 
-    fun deleteWord(wordId: String) = viewModelScope.launch(exceptionHandler) {
-        wordService.deleteWord(wordId)
+    fun deleteWord(wordId: String) = viewModelScope.launch {
+        try {
+            wordService.deleteWord(wordId)
+        } catch (e: Exception) {
+            _snackbarMessages.emit(UiText.Resource(ResStrings.errorDeleteFailed))
+        }
     }
 
     /**
      * Tombstones the dictionary first so it disappears immediately and offline-safely, then cleans
      * its words and performs the server-confirmed delete. A failed network call leaves the
-     * tombstone for the sync upload phase to retry.
+     * tombstone for the sync upload phase to retry; only a thrown local write is surfaced.
      */
-    fun deleteDictionary() = viewModelScope.launch(exceptionHandler) {
+    fun deleteDictionary() = viewModelScope.launch {
         val state = _dictionaryDetailState.value as? DictionaryDetailState.Success ?: return@launch
         val dictionaryId = state.dictionaryUi.dictionaryId
 
-        dictionaryService.markDictionaryDeleted(dictionaryId)
-        wordService.cleanWordsInDictionary(dictionaryId)
-        dictionaryService.deleteDictionary(dictionaryId)
+        try {
+            dictionaryService.markDictionaryDeleted(dictionaryId)
+            wordService.cleanWordsInDictionary(dictionaryId)
+            dictionaryService.deleteDictionary(dictionaryId)
+        } catch (e: Exception) {
+            _snackbarMessages.emit(UiText.Resource(ResStrings.errorDeleteFailed))
+        }
     }
 }

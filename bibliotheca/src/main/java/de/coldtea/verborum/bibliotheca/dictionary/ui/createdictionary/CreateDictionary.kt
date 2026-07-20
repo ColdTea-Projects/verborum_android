@@ -33,6 +33,7 @@ import de.coldtea.verborum.bibliotheca.dictionary.ui.createdictionary.composable
 import de.coldtea.verborum.bibliotheca.dictionary.ui.createdictionary.model.CreateDictionaryState
 import de.coldtea.verborum.core.theme.VerborumTheme
 import de.coldtea.verborum.core.ui.RegisterTopBar
+import de.coldtea.verborum.core.ui.ShowSnackbarMessages
 
 @Composable
 fun CreateDictionaryScreen(
@@ -44,6 +45,9 @@ fun CreateDictionaryScreen(
         viewModel.createDictionaryState.collectAsState(initial = CreateDictionaryState.Idle).value
     val editingDictionary = viewModel.editingDictionary.collectAsState().value
     val isEditing = editingDictionary != null
+
+    // Save/prefill failures surface here; the form stays intact so the user can retry.
+    ShowSnackbarMessages(viewModel.snackbarMessages)
 
     LaunchedEffect(createDictionaryState) {
         when (createDictionaryState) {

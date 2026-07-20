@@ -190,5 +190,36 @@ class CreateWordViewModelTest : BaseTest() {
         coVerify(exactly = 0) { wordService.saveWord(any()) }
     }
 
+    @Test
+    fun `saveWord attempts the save and stays in Success when the save fails`() = runTest {
+        // The wordSaved signal and the error snackbar are both replay-0 SharedFlows that cannot be
+        // asserted post-hoc; the observable contract is that a failed save is attempted and does
+        // not crash or leave the edit form — the state stays Success so the user can retry.
+        val dictionary = testDictionaryUi(dictionaryId = "dict-1")
+        every { dictionaryService.observeDictionary("dict-1") } returns flowOf(dictionary)
+        coEvery { wordService.saveWord(any()) } throws RuntimeException("db error")
+        viewModel.init("dict-1")
+
+        viewModel.saveWord(
+            wordType = WordType.NOUN,
+            sourceInputs = listOf(WordFormInput(text = "Haus")),
+            targetInputs = listOf(WordFormInput(text = "house")),
+        )
+
+        coVerify(exactly = 1) { wordService.saveWord(any()) }
+        assertEquals(CreateWordState.Success(dictionary), viewModel.createWordState.first())
+    }
+
+    @Test
+    fun `init emits Failed when loading the edited word throws`() = runTest {
+        every { dictionaryService.observeDictionary("dict-1") } returns
+            flowOf(testDictionaryUi(dictionaryId = "dict-1"))
+        coEvery { wordService.getWord("word-1") } throws RuntimeException("db error")
+
+        viewModel.init("dict-1", "word-1")
+
+        assertEquals(CreateWordState.Failed, viewModel.createWordState.first())
+    }
+
     // endregion
 }

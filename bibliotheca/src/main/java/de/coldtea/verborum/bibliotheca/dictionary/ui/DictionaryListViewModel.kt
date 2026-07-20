@@ -4,9 +4,11 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import de.coldtea.verborum.bibliotheca.common.domain.SyncService
 import de.coldtea.verborum.bibliotheca.dictionary.domain.DictionaryService
+import de.coldtea.verborum.bibliotheca.common.utils.ResStrings
 import de.coldtea.verborum.bibliotheca.dictionary.ui.model.DictionaryListState
 import de.coldtea.verborum.bibliotheca.word.domain.WordService
 import de.coldtea.verborum.core.ui.BaseViewModel
+import de.coldtea.verborum.core.ui.UiText
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
@@ -69,10 +71,16 @@ class DictionaryListViewModel @Inject constructor(
     /**
      * Tombstones the dictionary first so it disappears immediately and offline-safely, then cleans
      * its words and performs the server-confirmed delete — mirrors the details screen's delete.
+     * A failure here means the local tombstone write itself threw (the API-delete path is
+     * offline-safe and simply retries via sync), so it is surfaced rather than swallowed.
      */
-    fun deleteDictionary(dictionaryId: String) = viewModelScope.launch(exceptionHandler) {
-        dictionaryService.markDictionaryDeleted(dictionaryId)
-        wordService.cleanWordsInDictionary(dictionaryId)
-        dictionaryService.deleteDictionary(dictionaryId)
+    fun deleteDictionary(dictionaryId: String) = viewModelScope.launch {
+        try {
+            dictionaryService.markDictionaryDeleted(dictionaryId)
+            wordService.cleanWordsInDictionary(dictionaryId)
+            dictionaryService.deleteDictionary(dictionaryId)
+        } catch (e: Exception) {
+            _snackbarMessages.emit(UiText.Resource(ResStrings.errorDeleteFailed))
+        }
     }
 }

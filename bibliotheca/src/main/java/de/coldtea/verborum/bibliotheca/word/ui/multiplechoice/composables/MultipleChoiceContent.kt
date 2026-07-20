@@ -25,6 +25,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
+import de.coldtea.verborum.bibliotheca.common.utils.ResStrings
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.PreviewLightDark
@@ -80,7 +82,7 @@ fun MultipleChoiceContent(
             shape = RoundedCornerShape(12.dp)
         ) {
             Text(
-                text = "Next Question",
+                text = stringResource(ResStrings.testNextQuestion),
                 fontSize = 16.sp,
                 fontWeight = FontWeight.SemiBold
             )
@@ -104,7 +106,7 @@ fun MultipleChoiceContent(
             shape = RoundedCornerShape(12.dp)
         ) {
             Text(
-                text = "Check",
+                text = stringResource(ResStrings.testCheckAnswer),
                 fontSize = 16.sp,
                 fontWeight = FontWeight.SemiBold
             )

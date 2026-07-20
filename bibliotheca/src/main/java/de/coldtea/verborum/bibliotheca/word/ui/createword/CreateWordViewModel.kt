@@ -2,6 +2,7 @@ package de.coldtea.verborum.bibliotheca.word.ui.createword
 
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import de.coldtea.verborum.bibliotheca.common.utils.ResStrings
 import de.coldtea.verborum.bibliotheca.common.utils.getNowInMillis
 import de.coldtea.verborum.bibliotheca.dictionary.domain.DictionaryService
 import de.coldtea.verborum.bibliotheca.word.domain.WordService
@@ -12,6 +13,9 @@ import de.coldtea.verborum.bibliotheca.word.ui.createword.model.WordType
 import de.coldtea.verborum.bibliotheca.word.ui.createword.model.composeWordMeta
 import de.coldtea.verborum.bibliotheca.word.ui.createword.model.composeWordText
 import de.coldtea.verborum.core.ui.BaseViewModel
+import de.coldtea.verborum.core.ui.UiText
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.filterNotNull
@@ -27,11 +31,37 @@ class CreateWordViewModel @Inject constructor(
     private val _createWordState = MutableStateFlow<CreateWordState>(CreateWordState.Loading)
     val createWordState = _createWordState.asSharedFlow()
 
+    // One-shot signal that a save succeeded (payload = was it an edit), so the screen navigates
+    // back on edit / clears the form on create — only then, never on a failed save.
+    private val _wordSaved = MutableSharedFlow<Boolean>()
+    val wordSaved = _wordSaved.asSharedFlow()
+
+    private var loadJob: Job? = null
+    private var dictionaryId: String = ""
+    private var wordId: String? = null
+
     fun init(dictionaryId: String, wordId: String? = null) {
-        dictionaryService.observeDictionary(dictionaryId).filterNotNull().observe(
+        this.dictionaryId = dictionaryId
+        this.wordId = wordId
+        observeDictionary()
+    }
+
+    /** Re-subscribes after a Failed load (the observed flow terminates on error). */
+    fun retry() {
+        _createWordState.tryEmit(CreateWordState.Loading)
+        observeDictionary()
+    }
+
+    private fun observeDictionary() {
+        loadJob?.cancel()
+        loadJob = dictionaryService.observeDictionary(dictionaryId).filterNotNull().observe(
             onSuccess = { dictionary ->
-                val editingWord = wordId?.let { wordService.getWord(it) }
-                _createWordState.emit(CreateWordState.Success(dictionary, editingWord))
+                try {
+                    val editingWord = wordId?.let { wordService.getWord(it) }
+                    _createWordState.emit(CreateWordState.Success(dictionary, editingWord))
+                } catch (e: Exception) {
+                    _createWordState.emit(CreateWordState.Failed)
+                }
             },
             onError = {
                 _createWordState.emit(CreateWordState.Failed)
@@ -68,6 +98,11 @@ class CreateWordViewModel @Inject constructor(
             updatedAt = getNowInMillis(),
         )
 
-        wordService.saveWord(word)
+        try {
+            wordService.saveWord(word)
+            _wordSaved.emit(editingWord != null)
+        } catch (e: Exception) {
+            _snackbarMessages.emit(UiText.Resource(ResStrings.errorSaveFailed))
+        }
     }
 }

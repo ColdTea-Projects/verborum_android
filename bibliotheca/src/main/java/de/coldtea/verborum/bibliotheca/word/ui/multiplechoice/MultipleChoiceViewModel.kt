@@ -2,6 +2,7 @@ package de.coldtea.verborum.bibliotheca.word.ui.multiplechoice
 
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import de.coldtea.verborum.bibliotheca.common.utils.ResStrings
 import de.coldtea.verborum.bibliotheca.word.domain.WordService
 import de.coldtea.verborum.bibliotheca.word.ui.createword.model.FieldKey
 import de.coldtea.verborum.bibliotheca.word.ui.model.WordMeta
@@ -12,6 +13,8 @@ import de.coldtea.verborum.bibliotheca.word.ui.multiplechoice.model.MultipleChoi
 import de.coldtea.verborum.bibliotheca.word.ui.multiplechoice.model.MultipleChoiceCurrentQuestionState
 import de.coldtea.verborum.bibliotheca.word.ui.multiplechoice.model.MultipleChoiceQuestion
 import de.coldtea.verborum.core.ui.BaseViewModel
+import de.coldtea.verborum.core.ui.UiText
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.combine
@@ -52,8 +55,23 @@ class MultipleChoiceViewModel @Inject constructor(
         MutableStateFlow<MultipleChoiceCurrentQuestionState>(MultipleChoiceCurrentQuestionState.Loading)
     val currentQuestion = _currentQuestion.asSharedFlow()
 
+    private var loadJob: Job? = null
+    private var dictionaryId: String = ""
+
     fun init(dictionaryId: String) {
-        combine(
+        this.dictionaryId = dictionaryId
+        observeWords()
+    }
+
+    /** Re-subscribes after a Failed load (the observed flow terminates on error). */
+    fun retry() {
+        _currentQuestion.tryEmit(MultipleChoiceCurrentQuestionState.Loading)
+        observeWords()
+    }
+
+    private fun observeWords() {
+        loadJob?.cancel()
+        loadJob = combine(
             wordService.observeWordsByDictionary(dictionaryId),
             wordService.observeWordsInLanguagePair(dictionaryId),
         ) { dictionaryWords, languagePairWords -> dictionaryWords to languagePairWords }
@@ -96,10 +114,12 @@ class MultipleChoiceViewModel @Inject constructor(
             if (correctAnswer == _selectedAnswer.value) {
                 score += 1
                 registerCorrect(currentQuestionWordUiId)
-                _snackbarMessages.emit("Correct answer!")
+                _snackbarMessages.emit(UiText.Resource(ResStrings.testCorrectAnswer))
             } else {
                 registerWrong(currentQuestionWordUiId)
-                _snackbarMessages.emit("Incorrect, correct answer was $correctAnswer")
+                _snackbarMessages.emit(
+                    UiText.Resource(ResStrings.testIncorrectAnswer, listOf(correctAnswer))
+                )
             }
             _answered.emit(true)
         }
@@ -221,10 +241,16 @@ class MultipleChoiceViewModel @Inject constructor(
      * stay consistent regardless of the order answers arrive in.
      */
     private fun applyWordLevel(wordId: String) = viewModelScope.launch {
-        val wordUi = words.first { it.wordId == wordId }
-        val delta = (if (wordId in raisedWordIds) 1 else 0) + (if (wordId in loweredWordIds) -1 else 0)
-        val newLevel = (wordUi.level + delta).coerceIn(0, 7)
+        try {
+            val wordUi = words.first { it.wordId == wordId }
+            val delta =
+                (if (wordId in raisedWordIds) 1 else 0) + (if (wordId in loweredWordIds) -1 else 0)
+            val newLevel = (wordUi.level + delta).coerceIn(0, 7)
 
-        wordService.saveWord(wordUi.convertToWord().copy(level = newLevel))
+            wordService.saveWord(wordUi.convertToWord().copy(level = newLevel))
+        } catch (e: Exception) {
+            // The answer already counted toward the score; only persisting the level failed.
+            _snackbarMessages.emit(UiText.Resource(ResStrings.errorSaveFailed))
+        }
     }
 }

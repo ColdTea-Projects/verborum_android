@@ -7,6 +7,7 @@ import de.coldtea.verborum.bibliotheca.word.domain.WordService
 import de.coldtea.verborum.bibliotheca.word.ui.selfpractice.model.SelfPracticeState
 import de.coldtea.verborum.core.BaseTest
 import io.mockk.impl.annotations.MockK
+import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
 import kotlinx.coroutines.flow.first
@@ -14,6 +15,7 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class SelfPracticeViewModelTest : BaseTest() {
@@ -122,7 +124,7 @@ class SelfPracticeViewModelTest : BaseTest() {
     }
 
     @Test
-    fun `onProgressUpdated with unknown wordId emits Failed state`() = runTest {
+    fun `onProgressUpdated with unknown wordId keeps the session and saves nothing`() = runTest {
         val dictionaryId = "dict-1"
 
         every { dictionaryService.observeDictionary(dictionaryId) } returns flowOf(testDictionaryUi())
@@ -134,7 +136,29 @@ class SelfPracticeViewModelTest : BaseTest() {
 
         viewModel.onProgressUpdated(wordId = "does-not-exist", progress = 2)
 
-        assertEquals(SelfPracticeState.Failed, viewModel.selfPracticeState.first())
+        // A stray id must not tear down an active practice session, and nothing is persisted.
+        assertTrue(viewModel.selfPracticeState.first() is SelfPracticeState.Success)
+        coVerify(exactly = 0) { wordService.saveWord(any()) }
+    }
+
+    @Test
+    fun `onProgressUpdated keeps the session on a failed save`() = runTest {
+        // A failed save must not tear down the session (the failure surfaces via snackbar, which
+        // is a replay-0 SharedFlow and so cannot be asserted post-hoc — the observable contract
+        // here is: the save was attempted and the state stays Success rather than Failed).
+        val dictionaryId = "dict-1"
+        val wordId = "w-1"
+
+        every { dictionaryService.observeDictionary(dictionaryId) } returns flowOf(testDictionaryUi())
+        every { wordService.observeWordsByDictionary(dictionaryId) } returns
+            flowOf(listOf(testWordUi(wordId = wordId)))
+        coEvery { wordService.saveWord(any()) } throws RuntimeException("db error")
+
+        viewModel.init(dictionaryId)
+        viewModel.onProgressUpdated(wordId = wordId, progress = 4)
+
+        coVerify(exactly = 1) { wordService.saveWord(any()) }
+        assertTrue(viewModel.selfPracticeState.first() is SelfPracticeState.Success)
     }
 
     @Test

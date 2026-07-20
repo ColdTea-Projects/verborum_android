@@ -29,6 +29,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import de.coldtea.verborum.bibliotheca.common.ui.components.ScreenError
 import de.coldtea.verborum.bibliotheca.common.ui.model.SupportedLanguage
 import de.coldtea.verborum.bibliotheca.common.utils.ResStrings
 import de.coldtea.verborum.bibliotheca.word.ui.createword.composables.LanguageInputCard
@@ -45,6 +46,7 @@ import de.coldtea.verborum.bibliotheca.word.ui.createword.model.parseWordFormInp
 import de.coldtea.verborum.bibliotheca.word.ui.createword.model.parseWordType
 import de.coldtea.verborum.core.theme.VerborumTheme
 import de.coldtea.verborum.core.ui.RegisterTopBar
+import de.coldtea.verborum.core.ui.ShowSnackbarMessages
 
 @Composable
 fun CreateWordScreen(
@@ -54,12 +56,33 @@ fun CreateWordScreen(
     val createWordState =
         viewModel.createWordState.collectAsState(initial = CreateWordState.Loading).value
 
+    ShowSnackbarMessages(viewModel.snackbarMessages)
+
     var selectedType by remember { mutableStateOf<WordType?>(null) }
     // One entry per alternative meaning; the first is always present, the + button appends more.
     var sourceInputs by remember { mutableStateOf(listOf(WordFormInput())) }
     var targetInputs by remember { mutableStateOf(listOf(WordFormInput())) }
 
-    if (createWordState is CreateWordState.Success) {
+    // Post-save handling runs only when the save actually succeeded: edit closes the screen,
+    // create clears the form for the next entry. A failed save surfaces a snackbar and stays put.
+    LaunchedEffect(Unit) {
+        viewModel.wordSaved.collect { wasEditing ->
+            if (wasEditing) {
+                onWordUpdated()
+            } else {
+                sourceInputs = listOf(WordFormInput())
+                targetInputs = listOf(WordFormInput())
+            }
+        }
+    }
+
+    when (createWordState) {
+        is CreateWordState.Loading -> Unit
+        is CreateWordState.Failed -> {
+            RegisterTopBar(title = stringResource(ResStrings.errorScreenTitle), showBackButton = true)
+            ScreenError(onRetry = viewModel::retry)
+        }
+        is CreateWordState.Success -> {
         val dictionary = createWordState.dictionaryUi
         val editingWord = createWordState.editingWord
         val isEditing = editingWord != null
@@ -195,18 +218,14 @@ fun CreateWordScreen(
                 Spacer(modifier = Modifier.height(24.dp))
 
                 Button(
+                    // Navigation/clearing is driven by the wordSaved event, so it happens only on
+                    // a successful save; a failure keeps the form and shows a snackbar.
                     onClick = {
                         viewModel.saveWord(
                             wordType = wordType,
                             sourceInputs = sourceInputs,
                             targetInputs = targetInputs,
                         )
-                        if (isEditing) {
-                            onWordUpdated()
-                        } else {
-                            sourceInputs = listOf(WordFormInput())
-                            targetInputs = listOf(WordFormInput())
-                        }
                     },
                     enabled = sourceInputs.any { it.text.isNotBlank() } &&
                             targetInputs.any { it.text.isNotBlank() },
@@ -232,6 +251,7 @@ fun CreateWordScreen(
             }
 
             Spacer(modifier = Modifier.height(24.dp))
+            }
         }
     }
 }
