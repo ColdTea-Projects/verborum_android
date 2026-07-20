@@ -26,5 +26,7 @@ class VerborumApplication : Application(), Configuration.Provider {
     override fun onCreate() {
         super.onCreate()
         syncScheduler.ensurePeriodicSync()
+        // Reconcile as soon as connectivity returns, rather than waiting for the periodic cadence.
+        syncScheduler.syncOnReconnect()
     }
 }
