@@ -33,7 +33,8 @@ fun MultipleChoiceQuestionScreen(
     val answered = viewModel.answered.collectAsState(false).value
     val selectedAnswer = viewModel.selectedAnswer.collectAsState("").value
 
-    // Answer feedback and level-save failures both surface here.
+    // Only errors (e.g. a failed level save) use the snackbar now; the correct/incorrect result
+    // is shown inline by MultipleChoiceContent so it never blocks the action buttons.
     ShowSnackbarMessages(viewModel.snackbarMessages)
 
     when (currentQuestionState) {

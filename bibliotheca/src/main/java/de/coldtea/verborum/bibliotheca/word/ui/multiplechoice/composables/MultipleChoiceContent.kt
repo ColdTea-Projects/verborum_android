@@ -66,7 +66,43 @@ fun MultipleChoiceContent(
 
         Spacer(modifier = Modifier.weight(1f))
 
-        // Next Button (if answer selected)
+        // Inline result, shown right above the actions. The flexible spacer above absorbs its
+        // height, so the buttons stay put — and unlike the old bottom snackbar it never covers
+        // them, so the user can hit "Next" immediately without waiting for it to dismiss.
+        val question = currentQuestionState.multipleChoiceCurrentQuestion.question
+        if (answered) {
+            AnswerFeedback(
+                isCorrect = selectedAnswer == question.answer,
+                correctAnswer = question.answer,
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+        }
+
+        // Check answer (active until the answer is submitted)
+        Button(
+            onClick = debounce(onAnswerGiven),
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(56.dp),
+            enabled = selectedAnswer.isNotEmpty() && !answered,
+            colors = ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.primary,
+                contentColor = Color.White,
+                disabledContainerColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                disabledContentColor = Color.White,
+            ),
+            shape = RoundedCornerShape(12.dp)
+        ) {
+            Text(
+                text = stringResource(ResStrings.testCheckAnswer),
+                fontSize = 16.sp,
+                fontWeight = FontWeight.SemiBold
+            )
+        }
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        // Next question (active once the answer has been checked)
         Button(
             onClick = debounce(onNextQuestionRequested),
             modifier = Modifier
@@ -88,31 +124,41 @@ fun MultipleChoiceContent(
             )
         }
 
-        Spacer(modifier = Modifier.height(12.dp))
+        Spacer(modifier = Modifier.height(24.dp))
+    }
+}
 
-        // Check answer Button (if answer selected)
-        Button(
-            onClick = debounce(onAnswerGiven),
+/**
+ * Non-blocking answer result shown inline above the action buttons: gold when correct, error red
+ * when wrong (mirroring the pass/fail colours of the result screen). Uses the app's theme like
+ * every other surface, rather than a system toast, so it reads consistently.
+ */
+@Composable
+private fun AnswerFeedback(
+    isCorrect: Boolean,
+    correctAnswer: String,
+    modifier: Modifier = Modifier,
+) {
+    val color = if (isCorrect) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.error
+    Surface(
+        modifier = modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(12.dp),
+        color = color.copy(alpha = 0.12f),
+    ) {
+        Text(
+            text = if (isCorrect) {
+                stringResource(ResStrings.testCorrectAnswer)
+            } else {
+                stringResource(ResStrings.testIncorrectAnswer, correctAnswer)
+            },
+            color = color,
+            fontSize = 15.sp,
+            fontWeight = FontWeight.SemiBold,
+            textAlign = TextAlign.Center,
             modifier = Modifier
                 .fillMaxWidth()
-                .height(56.dp),
-            enabled = !selectedAnswer.isEmpty() && !answered,
-            colors = ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.primary,
-                contentColor = Color.White,
-                disabledContainerColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                disabledContentColor = Color.White,
-            ),
-            shape = RoundedCornerShape(12.dp)
-        ) {
-            Text(
-                text = stringResource(ResStrings.testCheckAnswer),
-                fontSize = 16.sp,
-                fontWeight = FontWeight.SemiBold
-            )
-        }
-
-        Spacer(modifier = Modifier.height(24.dp))
+                .padding(horizontal = 16.dp, vertical = 12.dp),
+        )
     }
 }
 

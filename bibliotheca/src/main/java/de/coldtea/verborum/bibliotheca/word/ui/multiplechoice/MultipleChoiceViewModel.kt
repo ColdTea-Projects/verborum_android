@@ -127,13 +127,12 @@ class MultipleChoiceViewModel @Inject constructor(
             if (correctAnswer == _selectedAnswer.value) {
                 score += 1
                 registerCorrect(currentQuestionWordUiId)
-                _snackbarMessages.emit(UiText.Resource(ResStrings.testCorrectAnswer))
             } else {
                 registerWrong(currentQuestionWordUiId)
-                _snackbarMessages.emit(
-                    UiText.Resource(ResStrings.testIncorrectAnswer, listOf(correctAnswer))
-                )
             }
+            // The correct/incorrect result is shown inline by the screen (derived from `answered`
+            // + the selected vs. correct answer), so it never covers the action buttons the way a
+            // bottom snackbar did — the user can advance immediately.
             _answered.emit(true)
         }
     }
