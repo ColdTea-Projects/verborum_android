@@ -1,5 +1,6 @@
 package de.coldtea.verborum.bibliotheca.dictionary.ui
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -48,17 +49,24 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import de.coldtea.verborum.bibliotheca.common.ui.model.SupportedLanguage
 import de.coldtea.verborum.bibliotheca.common.utils.ResDrawables
 import de.coldtea.verborum.bibliotheca.common.utils.ResStrings
 import de.coldtea.verborum.bibliotheca.dictionary.ui.composables.DeleteDictionaryDialog
 import de.coldtea.verborum.bibliotheca.dictionary.ui.composables.DictionaryCard
 import de.coldtea.verborum.bibliotheca.common.ui.components.ScreenError
 import de.coldtea.verborum.bibliotheca.dictionary.ui.composables.DictionaryCardSkeleton
+import de.coldtea.verborum.bibliotheca.dictionary.ui.composables.DictionaryFilterBar
+import de.coldtea.verborum.bibliotheca.dictionary.ui.composables.DictionarySearchField
+import de.coldtea.verborum.bibliotheca.dictionary.ui.composables.SelectionBottomSheet
+import de.coldtea.verborum.bibliotheca.dictionary.ui.composables.SelectionOption
 import de.coldtea.verborum.bibliotheca.dictionary.ui.model.DictionaryListState
+import de.coldtea.verborum.bibliotheca.dictionary.ui.model.DictionarySort
 import de.coldtea.verborum.bibliotheca.dictionary.ui.model.DictionaryUi
 import de.coldtea.verborum.core.theme.VerborumTheme
 import de.coldtea.verborum.core.ui.RegisterTopBar
 import de.coldtea.verborum.core.ui.ShowSnackbarMessages
+import de.coldtea.verborum.core.ui.VerborumTopBarAction
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -71,6 +79,13 @@ fun DictionaryListScreen(
     val dictionaryListState = viewModel.dictionariesState.collectAsState().value
     val isRefreshing = viewModel.isRefreshing.collectAsState().value
 
+    val searchExpanded = viewModel.searchExpanded.collectAsState().value
+    val searchQuery = viewModel.searchQuery.collectAsState().value
+    val fromFilter = viewModel.fromFilter.collectAsState().value
+    val toFilter = viewModel.toFilter.collectAsState().value
+    val sortOrder = viewModel.sortOrder.collectAsState().value
+    val hasActiveFilters = searchQuery.isNotBlank() || fromFilter != null || toFilter != null
+
     // Hoisted so the scroll position survives the Loading -> Success switch and screen
     // navigation, instead of being re-created per state branch.
     val listState = rememberLazyListState()
@@ -78,6 +93,11 @@ fun DictionaryListScreen(
     // Long-press target for the options sheet, and the dictionary pending delete confirmation.
     var optionsFor by remember { mutableStateOf<DictionaryUi?>(null) }
     var confirmDeleteFor by remember { mutableStateOf<DictionaryUi?>(null) }
+
+    // Which filter/sort bottom sheet (if any) is open.
+    var showFromSheet by remember { mutableStateOf(false) }
+    var showToSheet by remember { mutableStateOf(false) }
+    var showSortSheet by remember { mutableStateOf(false) }
 
     // Delete failures (and any other one-off notice) surface on the shared snackbar.
     ShowSnackbarMessages(viewModel.snackbarMessages)
@@ -107,10 +127,42 @@ fun DictionaryListScreen(
         )
     }
 
+    if (showFromSheet) {
+        LanguageFilterSheet(
+            title = stringResource(ResStrings.createDictionaryScreenFromLanguage),
+            selected = fromFilter,
+            onSelect = viewModel::onFromFilterChange,
+            onDismiss = { showFromSheet = false },
+        )
+    }
+
+    if (showToSheet) {
+        LanguageFilterSheet(
+            title = stringResource(ResStrings.createDictionaryScreenToLanguage),
+            selected = toFilter,
+            onSelect = viewModel::onToFilterChange,
+            onDismiss = { showToSheet = false },
+        )
+    }
+
+    if (showSortSheet) {
+        SortSheet(
+            selected = sortOrder,
+            onSelect = viewModel::onSortChange,
+            onDismiss = { showSortSheet = false },
+        )
+    }
+
     RegisterTopBar(
         title = stringResource(ResStrings.dictionaryListScreenHeader),
         subtitle = stringResource(ResStrings.dictionaryListScreenSubtitle),
         showBackButton = false,
+        // Magnifier on the right toggles the search field below.
+        action = VerborumTopBarAction(
+            iconRes = ResDrawables.ic_search_24,
+            contentDescription = stringResource(ResStrings.dictionaryListSearch),
+            onClick = viewModel::toggleSearch,
+        ),
     )
 
     PullToRefreshBox(
@@ -126,6 +178,28 @@ fun DictionaryListScreen(
                 .padding(horizontal = 24.dp)
         ) {
             Spacer(modifier = Modifier.height(16.dp))
+
+            // The whole search + filter/sort area expands and collapses together, toggled by the
+            // top-bar magnifier.
+            AnimatedVisibility(visible = searchExpanded) {
+                Column {
+                    DictionarySearchField(
+                        query = searchQuery,
+                        onQueryChange = viewModel::onSearchQueryChange,
+                    )
+                    Spacer(modifier = Modifier.height(12.dp))
+                    DictionaryFilterBar(
+                        fromFilter = fromFilter,
+                        toFilter = toFilter,
+                        sortOrder = sortOrder,
+                        onFromClick = { showFromSheet = true },
+                        onToClick = { showToSheet = true },
+                        onSortClick = { showSortSheet = true },
+                        onClearClick = viewModel::clearFilters,
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+                }
+            }
 
             when (dictionaryListState) {
                 is DictionaryListState.Loading -> {
@@ -149,31 +223,43 @@ fun DictionaryListScreen(
                 }
 
                 is DictionaryListState.Success -> {
-                    // Dictionary List
-                    LazyColumn(
-                        state = listState,
-                        modifier = Modifier.weight(1f),
-                        // spacedBy only pads between items; without content padding the first and
-                        // last cards' shadow and press-lift are clipped by the list bounds and look
-                        // cut off. This gives the edges un-clipped breathing room.
-                        contentPadding = PaddingValues(vertical = 8.dp),
-                        verticalArrangement = Arrangement.spacedBy(16.dp)
-                    ) {
-                        itemsIndexed(
-                            items = dictionaryListState.dictionaries,
-                            // Stable identity, deliberately with no item animation. The query is
-                            // now explicitly ordered, so an unchanged list is literally the same
-                            // list and nothing recomposes. When items do arrive, the key lets
-                            // LazyColumn anchor the scroll on the item you are looking at, so
-                            // rows loading off-screen never shift the visible ones.
-                            key = { _, dictionary -> dictionary.dictionaryId },
-                        ) { index, dictionary ->
-                            DictionaryCard(
-                                dictionary = dictionary,
-                                index = index,
-                                onClick = onDictionaryClick,
-                                onLongClick = { optionsFor = it },
+                    if (dictionaryListState.dictionaries.isEmpty() && hasActiveFilters) {
+                        // Filters/search excluded everything (an empty library without filters just
+                        // shows the blank list under the Create button, as before).
+                        Box(
+                            modifier = Modifier.weight(1f),
+                            contentAlignment = Alignment.Center,
+                        ) {
+                            Text(
+                                text = stringResource(ResStrings.dictionaryListNoMatches),
+                                fontSize = 15.sp,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
                             )
+                        }
+                    } else {
+                        // Dictionary List
+                        LazyColumn(
+                            state = listState,
+                            modifier = Modifier.weight(1f),
+                            // spacedBy only pads between items; without content padding the first
+                            // and last cards' shadow and press-lift are clipped by the list bounds
+                            // and look cut off. This gives the edges un-clipped breathing room.
+                            contentPadding = PaddingValues(vertical = 8.dp),
+                            verticalArrangement = Arrangement.spacedBy(16.dp)
+                        ) {
+                            itemsIndexed(
+                                items = dictionaryListState.dictionaries,
+                                // Stable identity, deliberately with no item animation, so an
+                                // unchanged (already ordered) list produces no recomposition.
+                                key = { _, dictionary -> dictionary.dictionaryId },
+                            ) { index, dictionary ->
+                                DictionaryCard(
+                                    dictionary = dictionary,
+                                    index = index,
+                                    onClick = onDictionaryClick,
+                                    onLongClick = { optionsFor = it },
+                                )
+                            }
                         }
                     }
                 }
@@ -207,6 +293,57 @@ fun DictionaryListScreen(
             }
         }
     }
+}
+
+/** Bottom sheet listing "Any language" plus every supported language, filtering by [selected]. */
+@Composable
+private fun LanguageFilterSheet(
+    title: String,
+    selected: SupportedLanguage?,
+    onSelect: (SupportedLanguage?) -> Unit,
+    onDismiss: () -> Unit,
+) {
+    // buildList/forEach are inline, so stringResource is valid inside them.
+    val options = buildList {
+        add(
+            SelectionOption(
+                label = stringResource(ResStrings.dictionaryListAnyLanguage),
+                isSelected = selected == null,
+                onSelect = { onSelect(null) },
+            )
+        )
+        SupportedLanguage.entries.forEach { language ->
+            add(
+                SelectionOption(
+                    label = stringResource(language.displayNameRes),
+                    isSelected = selected == language,
+                    onSelect = { onSelect(language) },
+                )
+            )
+        }
+    }
+    SelectionBottomSheet(title = title, options = options, onDismiss = onDismiss)
+}
+
+/** Bottom sheet listing the [DictionarySort] options, marking [selected]. */
+@Composable
+private fun SortSheet(
+    selected: DictionarySort,
+    onSelect: (DictionarySort) -> Unit,
+    onDismiss: () -> Unit,
+) {
+    val options = DictionarySort.entries.map { sort ->
+        SelectionOption(
+            label = stringResource(sort.labelRes),
+            isSelected = selected == sort,
+            onSelect = { onSelect(sort) },
+        )
+    }
+    SelectionBottomSheet(
+        title = stringResource(ResStrings.dictionaryListSortTitle),
+        options = options,
+        onDismiss = onDismiss,
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

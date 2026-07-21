@@ -133,6 +133,21 @@
     <string name="testResultTryAgain">Reintentar</string>
     <string name="testResultCorrectLabel">Correctas</string>
     <string name="testResultIncorrectLabel">Incorrectas</string>
+    <string name="dictionaryListSearch">Buscar</string>
+    <string name="dictionaryListSearchHint">Buscar diccionarios</string>
+    <string name="dictionaryListFromChip">De: %1$s</string>
+    <string name="dictionaryListToChip">A: %1$s</string>
+    <string name="dictionaryListFilterAny">Cualquiera</string>
+    <string name="dictionaryListClear">Borrar</string>
+    <string name="dictionaryListAnyLanguage">Cualquier idioma</string>
+    <string name="dictionaryListSortTitle">Ordenar por</string>
+    <string name="dictionarySortNameAsc">Nombre (A–Z)</string>
+    <string name="dictionarySortNameDesc">Nombre (Z–A)</string>
+    <string name="dictionarySortFromLanguage">Idioma de origen (A–Z)</string>
+    <string name="dictionarySortToLanguage">Idioma de destino (A–Z)</string>
+    <string name="dictionarySortNewest">Más recientes primero</string>
+    <string name="dictionarySortOldest">Más antiguos primero</string>
+    <string name="dictionaryListNoMatches">Ningún diccionario coincide con tus filtros</string>
     <!--Plurals-->
     <plurals name="dictionaryDetailsScreenWordListCount">
         <item quantity="one">%1$d palabra en el diccionario</item>

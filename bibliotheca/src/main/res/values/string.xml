@@ -133,6 +133,21 @@
     <string name="testResultTryAgain">Try Again</string>
     <string name="testResultCorrectLabel">Correct</string>
     <string name="testResultIncorrectLabel">Incorrect</string>
+    <string name="dictionaryListSearch">Search</string>
+    <string name="dictionaryListSearchHint">Search dictionaries</string>
+    <string name="dictionaryListFromChip">From: %1$s</string>
+    <string name="dictionaryListToChip">To: %1$s</string>
+    <string name="dictionaryListFilterAny">Any</string>
+    <string name="dictionaryListClear">Clear</string>
+    <string name="dictionaryListAnyLanguage">Any language</string>
+    <string name="dictionaryListSortTitle">Sort by</string>
+    <string name="dictionarySortNameAsc">Name (A–Z)</string>
+    <string name="dictionarySortNameDesc">Name (Z–A)</string>
+    <string name="dictionarySortFromLanguage">From language (A–Z)</string>
+    <string name="dictionarySortToLanguage">To language (A–Z)</string>
+    <string name="dictionarySortNewest">Newest first</string>
+    <string name="dictionarySortOldest">Oldest first</string>
+    <string name="dictionaryListNoMatches">No dictionaries match your filters</string>
     <!--Plurals-->
     <plurals name="dictionaryDetailsScreenWordListCount">
         <item quantity="one">%1$d word in the dictionary</item>

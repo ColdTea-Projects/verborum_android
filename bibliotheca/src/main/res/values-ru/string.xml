@@ -133,6 +133,21 @@
     <string name="testResultTryAgain">Ещё раз</string>
     <string name="testResultCorrectLabel">Верно</string>
     <string name="testResultIncorrectLabel">Неверно</string>
+    <string name="dictionaryListSearch">Поиск</string>
+    <string name="dictionaryListSearchHint">Поиск словарей</string>
+    <string name="dictionaryListFromChip">Из: %1$s</string>
+    <string name="dictionaryListToChip">На: %1$s</string>
+    <string name="dictionaryListFilterAny">Любой</string>
+    <string name="dictionaryListClear">Очистить</string>
+    <string name="dictionaryListAnyLanguage">Любой язык</string>
+    <string name="dictionaryListSortTitle">Сортировать по</string>
+    <string name="dictionarySortNameAsc">Название (A–Z)</string>
+    <string name="dictionarySortNameDesc">Название (Z–A)</string>
+    <string name="dictionarySortFromLanguage">Исходный язык (A–Z)</string>
+    <string name="dictionarySortToLanguage">Целевой язык (A–Z)</string>
+    <string name="dictionarySortNewest">Сначала новые</string>
+    <string name="dictionarySortOldest">Сначала старые</string>
+    <string name="dictionaryListNoMatches">Нет словарей, соответствующих фильтрам</string>
     <!--Plurals-->
     <plurals name="dictionaryDetailsScreenWordListCount">
         <item quantity="one">%1$d слово в словаре</item>

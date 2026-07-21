@@ -133,6 +133,21 @@
     <string name="testResultTryAgain">دوباره تلاش کن</string>
     <string name="testResultCorrectLabel">درست</string>
     <string name="testResultIncorrectLabel">نادرست</string>
+    <string name="dictionaryListSearch">جستجو</string>
+    <string name="dictionaryListSearchHint">جستجوی واژه‌نامه‌ها</string>
+    <string name="dictionaryListFromChip">از: %1$s</string>
+    <string name="dictionaryListToChip">به: %1$s</string>
+    <string name="dictionaryListFilterAny">هر</string>
+    <string name="dictionaryListClear">پاک کردن</string>
+    <string name="dictionaryListAnyLanguage">هر زبان</string>
+    <string name="dictionaryListSortTitle">مرتب‌سازی بر اساس</string>
+    <string name="dictionarySortNameAsc">نام (A–Z)</string>
+    <string name="dictionarySortNameDesc">نام (Z–A)</string>
+    <string name="dictionarySortFromLanguage">زبان مبدأ (A–Z)</string>
+    <string name="dictionarySortToLanguage">زبان مقصد (A–Z)</string>
+    <string name="dictionarySortNewest">ابتدا جدیدترین</string>
+    <string name="dictionarySortOldest">ابتدا قدیمی‌ترین</string>
+    <string name="dictionaryListNoMatches">هیچ واژه‌نامه‌ای با فیلترهای شما مطابقت ندارد</string>
     <!--Plurals-->
     <plurals name="dictionaryDetailsScreenWordListCount">
         <item quantity="one">%1$d واژه در واژه‌نامه</item>

@@ -133,6 +133,21 @@
     <string name="testResultTryAgain">Bandyti dar kartą</string>
     <string name="testResultCorrectLabel">Teisingi</string>
     <string name="testResultIncorrectLabel">Neteisingi</string>
+    <string name="dictionaryListSearch">Ieškoti</string>
+    <string name="dictionaryListSearchHint">Ieškoti žodynų</string>
+    <string name="dictionaryListFromChip">Iš: %1$s</string>
+    <string name="dictionaryListToChip">Į: %1$s</string>
+    <string name="dictionaryListFilterAny">Bet kokia</string>
+    <string name="dictionaryListClear">Išvalyti</string>
+    <string name="dictionaryListAnyLanguage">Bet kokia kalba</string>
+    <string name="dictionaryListSortTitle">Rūšiuoti pagal</string>
+    <string name="dictionarySortNameAsc">Pavadinimas (A–Z)</string>
+    <string name="dictionarySortNameDesc">Pavadinimas (Z–A)</string>
+    <string name="dictionarySortFromLanguage">Originalo kalba (A–Z)</string>
+    <string name="dictionarySortToLanguage">Vertimo kalba (A–Z)</string>
+    <string name="dictionarySortNewest">Naujausi pirmi</string>
+    <string name="dictionarySortOldest">Seniausi pirmi</string>
+    <string name="dictionaryListNoMatches">Nė vienas žodynas neatitinka filtrų</string>
     <!--Plurals-->
     <plurals name="dictionaryDetailsScreenWordListCount">
         <item quantity="one">%1$d žodis žodyne</item>

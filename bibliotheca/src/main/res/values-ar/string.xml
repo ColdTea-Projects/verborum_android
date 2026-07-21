@@ -133,6 +133,21 @@
     <string name="testResultTryAgain">حاول مرة أخرى</string>
     <string name="testResultCorrectLabel">صحيحة</string>
     <string name="testResultIncorrectLabel">خاطئة</string>
+    <string name="dictionaryListSearch">بحث</string>
+    <string name="dictionaryListSearchHint">البحث في القواميس</string>
+    <string name="dictionaryListFromChip">من: %1$s</string>
+    <string name="dictionaryListToChip">إلى: %1$s</string>
+    <string name="dictionaryListFilterAny">أي</string>
+    <string name="dictionaryListClear">مسح</string>
+    <string name="dictionaryListAnyLanguage">أي لغة</string>
+    <string name="dictionaryListSortTitle">ترتيب حسب</string>
+    <string name="dictionarySortNameAsc">الاسم (A–Z)</string>
+    <string name="dictionarySortNameDesc">الاسم (Z–A)</string>
+    <string name="dictionarySortFromLanguage">اللغة المصدر (A–Z)</string>
+    <string name="dictionarySortToLanguage">اللغة الهدف (A–Z)</string>
+    <string name="dictionarySortNewest">الأحدث أولاً</string>
+    <string name="dictionarySortOldest">الأقدم أولاً</string>
+    <string name="dictionaryListNoMatches">لا توجد قواميس مطابقة لعوامل التصفية</string>
     <!--Plurals-->
     <plurals name="dictionaryDetailsScreenWordListCount">
         <item quantity="zero">لا توجد كلمات في القاموس</item>

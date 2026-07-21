@@ -133,6 +133,21 @@
     <string name="testResultTryAgain">Спробувати ще раз</string>
     <string name="testResultCorrectLabel">Правильні</string>
     <string name="testResultIncorrectLabel">Неправильні</string>
+    <string name="dictionaryListSearch">Пошук</string>
+    <string name="dictionaryListSearchHint">Пошук словників</string>
+    <string name="dictionaryListFromChip">З: %1$s</string>
+    <string name="dictionaryListToChip">На: %1$s</string>
+    <string name="dictionaryListFilterAny">Будь-яка</string>
+    <string name="dictionaryListClear">Очистити</string>
+    <string name="dictionaryListAnyLanguage">Будь-яка мова</string>
+    <string name="dictionaryListSortTitle">Сортувати за</string>
+    <string name="dictionarySortNameAsc">Назва (A–Z)</string>
+    <string name="dictionarySortNameDesc">Назва (Z–A)</string>
+    <string name="dictionarySortFromLanguage">Мова оригіналу (A–Z)</string>
+    <string name="dictionarySortToLanguage">Мова перекладу (A–Z)</string>
+    <string name="dictionarySortNewest">Спочатку найновіші</string>
+    <string name="dictionarySortOldest">Спочатку найстаріші</string>
+    <string name="dictionaryListNoMatches">Жоден словник не відповідає фільтрам</string>
     <!--Plurals-->
     <plurals name="dictionaryDetailsScreenWordListCount">
         <item quantity="one">%1$d слово в словнику</item>

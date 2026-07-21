@@ -1,8 +1,10 @@
 package de.coldtea.verborum.bibliotheca.dictionary.ui
 
 import de.coldtea.verborum.bibliotheca.common.domain.SyncService
+import de.coldtea.verborum.bibliotheca.common.ui.model.SupportedLanguage
 import de.coldtea.verborum.bibliotheca.dictionary.domain.DictionaryService
 import de.coldtea.verborum.bibliotheca.dictionary.ui.model.DictionaryListState
+import de.coldtea.verborum.bibliotheca.dictionary.ui.model.DictionarySort
 import de.coldtea.verborum.bibliotheca.testDictionaryUi
 import de.coldtea.verborum.bibliotheca.word.domain.WordService
 import de.coldtea.verborum.core.BaseTest
@@ -17,6 +19,8 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
@@ -157,6 +161,123 @@ class DictionaryListViewModelTest : BaseTest() {
         viewModel.retry()
 
         assertTrue(viewModel.dictionariesState.first() is DictionaryListState.Loading)
+    }
+
+    // endregion
+
+    // region filtering & sorting
+
+    private fun DictionaryListViewModel.successNames(): List<String> =
+        (dictionariesState.value as DictionaryListState.Success).dictionaries.map { it.name }
+
+    @Test
+    fun `search filters dictionaries by name case-insensitively`() = runTest {
+        every { dictionaryService.observeDictionaries() } returns flowOf(
+            listOf(
+                testDictionaryUi(dictionaryId = "1", name = "German Basics"),
+                testDictionaryUi(dictionaryId = "2", name = "Spanish Verbs"),
+            )
+        )
+        val viewModel = buildViewModel()
+
+        viewModel.onSearchQueryChange("SPAN")
+
+        assertEquals(listOf("Spanish Verbs"), viewModel.successNames())
+    }
+
+    @Test
+    fun `from and to language filters keep only matching dictionaries`() = runTest {
+        every { dictionaryService.observeDictionaries() } returns flowOf(
+            listOf(
+                testDictionaryUi(dictionaryId = "1", name = "A", fromLang = "en", toLang = "de"),
+                testDictionaryUi(dictionaryId = "2", name = "B", fromLang = "de", toLang = "en"),
+                testDictionaryUi(dictionaryId = "3", name = "C", fromLang = "en", toLang = "fr"),
+            )
+        )
+        val viewModel = buildViewModel()
+
+        viewModel.onFromFilterChange(SupportedLanguage.ENGLISH)
+        assertEquals(listOf("A", "C"), viewModel.successNames().sorted())
+
+        viewModel.onToFilterChange(SupportedLanguage.FRENCH)
+        assertEquals(listOf("C"), viewModel.successNames())
+    }
+
+    @Test
+    fun `default sort is newest first`() = runTest {
+        every { dictionaryService.observeDictionaries() } returns flowOf(
+            listOf(
+                testDictionaryUi(dictionaryId = "1", name = "Old", createdAt = 100L),
+                testDictionaryUi(dictionaryId = "2", name = "New", createdAt = 200L),
+            )
+        )
+        val viewModel = buildViewModel()
+
+        assertEquals(listOf("New", "Old"), viewModel.successNames())
+    }
+
+    @Test
+    fun `sort by oldest first reverses the order`() = runTest {
+        every { dictionaryService.observeDictionaries() } returns flowOf(
+            listOf(
+                testDictionaryUi(dictionaryId = "1", name = "Old", createdAt = 100L),
+                testDictionaryUi(dictionaryId = "2", name = "New", createdAt = 200L),
+            )
+        )
+        val viewModel = buildViewModel()
+
+        viewModel.onSortChange(DictionarySort.OLDEST)
+
+        assertEquals(listOf("Old", "New"), viewModel.successNames())
+    }
+
+    @Test
+    fun `sort by name ascending orders alphabetically`() = runTest {
+        every { dictionaryService.observeDictionaries() } returns flowOf(
+            listOf(
+                testDictionaryUi(dictionaryId = "1", name = "Zebra", createdAt = 200L),
+                testDictionaryUi(dictionaryId = "2", name = "apple", createdAt = 100L),
+            )
+        )
+        val viewModel = buildViewModel()
+
+        viewModel.onSortChange(DictionarySort.NAME_ASC)
+
+        assertEquals(listOf("apple", "Zebra"), viewModel.successNames())
+    }
+
+    @Test
+    fun `toggleSearch expands, then collapsing clears the query`() = runTest {
+        every { dictionaryService.observeDictionaries() } returns emptyFlow()
+        val viewModel = buildViewModel()
+
+        viewModel.toggleSearch()
+        assertTrue(viewModel.searchExpanded.value)
+
+        viewModel.onSearchQueryChange("hello")
+        viewModel.toggleSearch()
+
+        assertFalse(viewModel.searchExpanded.value)
+        assertEquals("", viewModel.searchQuery.value)
+    }
+
+    @Test
+    fun `clearFilters resets query, language filters, sort, and search expansion`() = runTest {
+        every { dictionaryService.observeDictionaries() } returns emptyFlow()
+        val viewModel = buildViewModel()
+        viewModel.toggleSearch()
+        viewModel.onSearchQueryChange("x")
+        viewModel.onFromFilterChange(SupportedLanguage.GERMAN)
+        viewModel.onToFilterChange(SupportedLanguage.ENGLISH)
+        viewModel.onSortChange(DictionarySort.NAME_ASC)
+
+        viewModel.clearFilters()
+
+        assertEquals("", viewModel.searchQuery.value)
+        assertNull(viewModel.fromFilter.value)
+        assertNull(viewModel.toFilter.value)
+        assertEquals(DictionarySort.NEWEST, viewModel.sortOrder.value)
+        assertFalse(viewModel.searchExpanded.value)
     }
 
     // endregion

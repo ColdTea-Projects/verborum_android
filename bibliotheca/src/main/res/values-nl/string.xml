@@ -133,6 +133,21 @@
     <string name="testResultTryAgain">Opnieuw proberen</string>
     <string name="testResultCorrectLabel">Goed</string>
     <string name="testResultIncorrectLabel">Fout</string>
+    <string name="dictionaryListSearch">Zoeken</string>
+    <string name="dictionaryListSearchHint">Woordenboeken zoeken</string>
+    <string name="dictionaryListFromChip">Van: %1$s</string>
+    <string name="dictionaryListToChip">Naar: %1$s</string>
+    <string name="dictionaryListFilterAny">Alle</string>
+    <string name="dictionaryListClear">Wissen</string>
+    <string name="dictionaryListAnyLanguage">Elke taal</string>
+    <string name="dictionaryListSortTitle">Sorteren op</string>
+    <string name="dictionarySortNameAsc">Naam (A–Z)</string>
+    <string name="dictionarySortNameDesc">Naam (Z–A)</string>
+    <string name="dictionarySortFromLanguage">Brontaal (A–Z)</string>
+    <string name="dictionarySortToLanguage">Doeltaal (A–Z)</string>
+    <string name="dictionarySortNewest">Nieuwste eerst</string>
+    <string name="dictionarySortOldest">Oudste eerst</string>
+    <string name="dictionaryListNoMatches">Geen woordenboeken komen overeen met je filters</string>
     <!--Plurals-->
     <plurals name="dictionaryDetailsScreenWordListCount">
         <item quantity="one">%1$d woord in het woordenboek</item>

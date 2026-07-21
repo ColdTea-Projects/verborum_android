@@ -133,6 +133,21 @@
     <string name="testResultTryAgain">もう一度</string>
     <string name="testResultCorrectLabel">正解</string>
     <string name="testResultIncorrectLabel">不正解</string>
+    <string name="dictionaryListSearch">検索</string>
+    <string name="dictionaryListSearchHint">辞書を検索</string>
+    <string name="dictionaryListFromChip">元: %1$s</string>
+    <string name="dictionaryListToChip">先: %1$s</string>
+    <string name="dictionaryListFilterAny">すべて</string>
+    <string name="dictionaryListClear">クリア</string>
+    <string name="dictionaryListAnyLanguage">すべての言語</string>
+    <string name="dictionaryListSortTitle">並べ替え</string>
+    <string name="dictionarySortNameAsc">名前 (A–Z)</string>
+    <string name="dictionarySortNameDesc">名前 (Z–A)</string>
+    <string name="dictionarySortFromLanguage">元の言語 (A–Z)</string>
+    <string name="dictionarySortToLanguage">訳語の言語 (A–Z)</string>
+    <string name="dictionarySortNewest">新しい順</string>
+    <string name="dictionarySortOldest">古い順</string>
+    <string name="dictionaryListNoMatches">フィルターに一致する辞書はありません</string>
     <!--Plurals-->
     <plurals name="dictionaryDetailsScreenWordListCount">
         <item quantity="other">辞書に%1$d語</item>

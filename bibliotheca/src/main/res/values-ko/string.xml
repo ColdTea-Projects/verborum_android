@@ -133,6 +133,21 @@
     <string name="testResultTryAgain">다시 시도</string>
     <string name="testResultCorrectLabel">정답</string>
     <string name="testResultIncorrectLabel">오답</string>
+    <string name="dictionaryListSearch">검색</string>
+    <string name="dictionaryListSearchHint">사전 검색</string>
+    <string name="dictionaryListFromChip">출발: %1$s</string>
+    <string name="dictionaryListToChip">도착: %1$s</string>
+    <string name="dictionaryListFilterAny">모두</string>
+    <string name="dictionaryListClear">지우기</string>
+    <string name="dictionaryListAnyLanguage">모든 언어</string>
+    <string name="dictionaryListSortTitle">정렬 기준</string>
+    <string name="dictionarySortNameAsc">이름 (A–Z)</string>
+    <string name="dictionarySortNameDesc">이름 (Z–A)</string>
+    <string name="dictionarySortFromLanguage">출발 언어 (A–Z)</string>
+    <string name="dictionarySortToLanguage">도착 언어 (A–Z)</string>
+    <string name="dictionarySortNewest">최신순</string>
+    <string name="dictionarySortOldest">오래된순</string>
+    <string name="dictionaryListNoMatches">필터와 일치하는 사전이 없습니다</string>
     <!--Plurals-->
     <plurals name="dictionaryDetailsScreenWordListCount">
         <item quantity="other">사전에 %1$d개 단어</item>

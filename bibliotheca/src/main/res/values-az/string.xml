@@ -133,6 +133,21 @@
     <string name="testResultTryAgain">Yenidən cəhd et</string>
     <string name="testResultCorrectLabel">Düzgün</string>
     <string name="testResultIncorrectLabel">Səhv</string>
+    <string name="dictionaryListSearch">Axtar</string>
+    <string name="dictionaryListSearchHint">Lüğətlərdə axtar</string>
+    <string name="dictionaryListFromChip">Mənbə: %1$s</string>
+    <string name="dictionaryListToChip">Hədəf: %1$s</string>
+    <string name="dictionaryListFilterAny">İstənilən</string>
+    <string name="dictionaryListClear">Təmizlə</string>
+    <string name="dictionaryListAnyLanguage">İstənilən dil</string>
+    <string name="dictionaryListSortTitle">Sıralama</string>
+    <string name="dictionarySortNameAsc">Ad (A–Z)</string>
+    <string name="dictionarySortNameDesc">Ad (Z–A)</string>
+    <string name="dictionarySortFromLanguage">Mənbə dil (A–Z)</string>
+    <string name="dictionarySortToLanguage">Hədəf dil (A–Z)</string>
+    <string name="dictionarySortNewest">Əvvəlcə ən yenilər</string>
+    <string name="dictionarySortOldest">Əvvəlcə ən köhnələr</string>
+    <string name="dictionaryListNoMatches">Filtrlərinizə uyğun lüğət yoxdur</string>
     <!--Plurals-->
     <plurals name="dictionaryDetailsScreenWordListCount">
         <item quantity="one">lüğətdə %1$d söz</item>

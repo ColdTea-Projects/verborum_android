@@ -176,7 +176,7 @@ private fun VerborumTopBar(
             Spacer(modifier = Modifier.width(8.dp))
         }
 
-        Column {
+        Column(modifier = Modifier.weight(1f)) {
             Text(
                 text = state.title,
                 fontSize = 28.sp,
@@ -191,6 +191,17 @@ private fun VerborumTopBar(
                     fontSize = 14.sp,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.padding(top = 2.dp)
+                )
+            }
+        }
+
+        state.action?.let { action ->
+            IconButton(onClick = action.onClick) {
+                Icon(
+                    painter = painterResource(action.iconRes),
+                    contentDescription = action.contentDescription,
+                    tint = MaterialTheme.colorScheme.onBackground,
+                    modifier = Modifier.size(24.dp),
                 )
             }
         }

@@ -133,6 +133,21 @@
     <string name="testResultTryAgain">Δοκιμάστε ξανά</string>
     <string name="testResultCorrectLabel">Σωστά</string>
     <string name="testResultIncorrectLabel">Λάθος</string>
+    <string name="dictionaryListSearch">Αναζήτηση</string>
+    <string name="dictionaryListSearchHint">Αναζήτηση λεξικών</string>
+    <string name="dictionaryListFromChip">Από: %1$s</string>
+    <string name="dictionaryListToChip">Προς: %1$s</string>
+    <string name="dictionaryListFilterAny">Οποιαδήποτε</string>
+    <string name="dictionaryListClear">Καθαρισμός</string>
+    <string name="dictionaryListAnyLanguage">Οποιαδήποτε γλώσσα</string>
+    <string name="dictionaryListSortTitle">Ταξινόμηση κατά</string>
+    <string name="dictionarySortNameAsc">Όνομα (A–Z)</string>
+    <string name="dictionarySortNameDesc">Όνομα (Z–A)</string>
+    <string name="dictionarySortFromLanguage">Γλώσσα προέλευσης (A–Z)</string>
+    <string name="dictionarySortToLanguage">Γλώσσα προορισμού (A–Z)</string>
+    <string name="dictionarySortNewest">Νεότερα πρώτα</string>
+    <string name="dictionarySortOldest">Παλαιότερα πρώτα</string>
+    <string name="dictionaryListNoMatches">Κανένα λεξικό δεν ταιριάζει με τα φίλτρα σας</string>
     <!--Plurals-->
     <plurals name="dictionaryDetailsScreenWordListCount">
         <item quantity="one">%1$d λέξη στο λεξικό</item>

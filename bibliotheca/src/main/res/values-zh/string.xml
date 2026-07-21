@@ -133,6 +133,21 @@
     <string name="testResultTryAgain">再试一次</string>
     <string name="testResultCorrectLabel">正确</string>
     <string name="testResultIncorrectLabel">错误</string>
+    <string name="dictionaryListSearch">搜索</string>
+    <string name="dictionaryListSearchHint">搜索词典</string>
+    <string name="dictionaryListFromChip">从: %1$s</string>
+    <string name="dictionaryListToChip">到: %1$s</string>
+    <string name="dictionaryListFilterAny">任意</string>
+    <string name="dictionaryListClear">清除</string>
+    <string name="dictionaryListAnyLanguage">任意语言</string>
+    <string name="dictionaryListSortTitle">排序方式</string>
+    <string name="dictionarySortNameAsc">名称 (A–Z)</string>
+    <string name="dictionarySortNameDesc">名称 (Z–A)</string>
+    <string name="dictionarySortFromLanguage">源语言 (A–Z)</string>
+    <string name="dictionarySortToLanguage">目标语言 (A–Z)</string>
+    <string name="dictionarySortNewest">最新在前</string>
+    <string name="dictionarySortOldest">最早在前</string>
+    <string name="dictionaryListNoMatches">没有符合筛选条件的词典</string>
     <!--Plurals-->
     <plurals name="dictionaryDetailsScreenWordListCount">
         <item quantity="other">词典中有%1$d个单词</item>

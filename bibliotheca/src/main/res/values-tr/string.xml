@@ -133,6 +133,21 @@
     <string name="testResultTryAgain">Tekrar dene</string>
     <string name="testResultCorrectLabel">Doğru</string>
     <string name="testResultIncorrectLabel">Yanlış</string>
+    <string name="dictionaryListSearch">Ara</string>
+    <string name="dictionaryListSearchHint">Sözlüklerde ara</string>
+    <string name="dictionaryListFromChip">Kaynak: %1$s</string>
+    <string name="dictionaryListToChip">Hedef: %1$s</string>
+    <string name="dictionaryListFilterAny">Herhangi</string>
+    <string name="dictionaryListClear">Temizle</string>
+    <string name="dictionaryListAnyLanguage">Herhangi bir dil</string>
+    <string name="dictionaryListSortTitle">Sıralama ölçütü</string>
+    <string name="dictionarySortNameAsc">Ad (A–Z)</string>
+    <string name="dictionarySortNameDesc">Ad (Z–A)</string>
+    <string name="dictionarySortFromLanguage">Kaynak dil (A–Z)</string>
+    <string name="dictionarySortToLanguage">Hedef dil (A–Z)</string>
+    <string name="dictionarySortNewest">Önce en yeni</string>
+    <string name="dictionarySortOldest">Önce en eski</string>
+    <string name="dictionaryListNoMatches">Filtrelerinize uyan sözlük yok</string>
     <!--Plurals-->
     <plurals name="dictionaryDetailsScreenWordListCount">
         <item quantity="one">sözlükte %1$d kelime</item>
