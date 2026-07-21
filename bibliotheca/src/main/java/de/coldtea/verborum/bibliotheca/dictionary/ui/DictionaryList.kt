@@ -3,6 +3,7 @@ package de.coldtea.verborum.bibliotheca.dictionary.ui
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -130,6 +131,7 @@ fun DictionaryListScreen(
                 is DictionaryListState.Loading -> {
                     LazyColumn(
                         modifier = Modifier.weight(1f),
+                        contentPadding = PaddingValues(vertical = 8.dp),
                         verticalArrangement = Arrangement.spacedBy(16.dp)
                     ) {
                         items(count = 4) {
@@ -151,6 +153,10 @@ fun DictionaryListScreen(
                     LazyColumn(
                         state = listState,
                         modifier = Modifier.weight(1f),
+                        // spacedBy only pads between items; without content padding the first and
+                        // last cards' shadow and press-lift are clipped by the list bounds and look
+                        // cut off. This gives the edges un-clipped breathing room.
+                        contentPadding = PaddingValues(vertical = 8.dp),
                         verticalArrangement = Arrangement.spacedBy(16.dp)
                     ) {
                         itemsIndexed(
