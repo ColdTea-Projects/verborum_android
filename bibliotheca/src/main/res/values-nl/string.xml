@@ -148,6 +148,7 @@
     <string name="dictionarySortNewest">Nieuwste eerst</string>
     <string name="dictionarySortOldest">Oudste eerst</string>
     <string name="dictionaryListNoMatches">Geen woordenboeken komen overeen met je filters</string>
+    <string name="dictionaryListMoreOptions">Meer opties</string>
     <!--Plurals-->
     <plurals name="dictionaryDetailsScreenWordListCount">
         <item quantity="one">%1$d woord in het woordenboek</item>

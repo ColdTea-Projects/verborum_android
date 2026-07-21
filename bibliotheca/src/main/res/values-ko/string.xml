@@ -148,6 +148,7 @@
     <string name="dictionarySortNewest">최신순</string>
     <string name="dictionarySortOldest">오래된순</string>
     <string name="dictionaryListNoMatches">필터와 일치하는 사전이 없습니다</string>
+    <string name="dictionaryListMoreOptions">옵션 더보기</string>
     <!--Plurals-->
     <plurals name="dictionaryDetailsScreenWordListCount">
         <item quantity="other">사전에 %1$d개 단어</item>

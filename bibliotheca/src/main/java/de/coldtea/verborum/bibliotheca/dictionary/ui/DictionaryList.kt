@@ -257,7 +257,7 @@ fun DictionaryListScreen(
                                     dictionary = dictionary,
                                     index = index,
                                     onClick = onDictionaryClick,
-                                    onLongClick = { optionsFor = it },
+                                    onMenuClick = { optionsFor = it },
                                 )
                             }
                         }

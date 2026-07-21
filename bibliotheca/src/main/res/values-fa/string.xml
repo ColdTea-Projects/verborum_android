@@ -148,6 +148,7 @@
     <string name="dictionarySortNewest">ابتدا جدیدترین</string>
     <string name="dictionarySortOldest">ابتدا قدیمی‌ترین</string>
     <string name="dictionaryListNoMatches">هیچ واژه‌نامه‌ای با فیلترهای شما مطابقت ندارد</string>
+    <string name="dictionaryListMoreOptions">گزینه‌های بیشتر</string>
     <!--Plurals-->
     <plurals name="dictionaryDetailsScreenWordListCount">
         <item quantity="one">%1$d واژه در واژه‌نامه</item>

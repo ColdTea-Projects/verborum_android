@@ -148,6 +148,7 @@
     <string name="dictionarySortNewest">Сначала новые</string>
     <string name="dictionarySortOldest">Сначала старые</string>
     <string name="dictionaryListNoMatches">Нет словарей, соответствующих фильтрам</string>
+    <string name="dictionaryListMoreOptions">Ещё</string>
     <!--Plurals-->
     <plurals name="dictionaryDetailsScreenWordListCount">
         <item quantity="one">%1$d слово в словаре</item>

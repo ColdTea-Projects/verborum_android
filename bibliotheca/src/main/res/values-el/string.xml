@@ -148,6 +148,7 @@
     <string name="dictionarySortNewest">Νεότερα πρώτα</string>
     <string name="dictionarySortOldest">Παλαιότερα πρώτα</string>
     <string name="dictionaryListNoMatches">Κανένα λεξικό δεν ταιριάζει με τα φίλτρα σας</string>
+    <string name="dictionaryListMoreOptions">Περισσότερες επιλογές</string>
     <!--Plurals-->
     <plurals name="dictionaryDetailsScreenWordListCount">
         <item quantity="one">%1$d λέξη στο λεξικό</item>

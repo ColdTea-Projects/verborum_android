@@ -148,6 +148,7 @@
     <string name="dictionarySortNewest">Əvvəlcə ən yenilər</string>
     <string name="dictionarySortOldest">Əvvəlcə ən köhnələr</string>
     <string name="dictionaryListNoMatches">Filtrlərinizə uyğun lüğət yoxdur</string>
+    <string name="dictionaryListMoreOptions">Digər seçimlər</string>
     <!--Plurals-->
     <plurals name="dictionaryDetailsScreenWordListCount">
         <item quantity="one">lüğətdə %1$d söz</item>

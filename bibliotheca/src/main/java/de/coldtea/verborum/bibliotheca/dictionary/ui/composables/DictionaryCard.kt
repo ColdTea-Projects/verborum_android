@@ -3,9 +3,8 @@ package de.coldtea.verborum.bibliotheca.dictionary.ui.composables
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.spring
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -20,6 +19,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -35,23 +35,24 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import de.coldtea.verborum.bibliotheca.common.utils.ResDrawables
 import de.coldtea.verborum.bibliotheca.common.utils.ResPlurals
+import de.coldtea.verborum.bibliotheca.common.utils.ResStrings
 import de.coldtea.verborum.bibliotheca.dictionary.ui.model.DictionaryUi
 import de.coldtea.verborum.core.theme.VerborumTheme
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun DictionaryCard(
     modifier: Modifier = Modifier,
     dictionary: DictionaryUi,
     index: Int,
     onClick: (String) -> Unit,
-    onLongClick: (DictionaryUi) -> Unit = {},
+    onMenuClick: (DictionaryUi) -> Unit = {},
 ) {
     var isPressed by remember { mutableStateOf(false) }
 
@@ -67,14 +68,13 @@ fun DictionaryCard(
         modifier = modifier
             .fillMaxWidth()
             .offset(y = animatedOffset)
-            .combinedClickable(
+            .clickable(
                 interactionSource = remember { MutableInteractionSource() },
                 indication = ripple(), // Material 3 ripple
                 onClick = {
                     isPressed = !isPressed
                     onClick(dictionary.dictionaryId)
                 },
-                onLongClick = { onLongClick(dictionary) },
             ),
         shape = RoundedCornerShape(16.dp),
         color = MaterialTheme.colorScheme.surfaceVariant,
@@ -163,13 +163,15 @@ fun DictionaryCard(
                     }
                 }
 
-                // Chevron
-                Icon(
-                    painter = painterResource(ResDrawables.ic_chevron_right_24),
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.size(24.dp)
-                )
+                // Overflow menu — opens the edit/delete options sheet.
+                IconButton(onClick = { onMenuClick(dictionary) }) {
+                    Icon(
+                        painter = painterResource(ResDrawables.ic_more_vert_24),
+                        contentDescription = stringResource(ResStrings.dictionaryListMoreOptions),
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.size(24.dp)
+                    )
+                }
             }
         }
     }

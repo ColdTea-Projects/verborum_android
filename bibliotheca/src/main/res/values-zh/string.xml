@@ -148,6 +148,7 @@
     <string name="dictionarySortNewest">最新在前</string>
     <string name="dictionarySortOldest">最早在前</string>
     <string name="dictionaryListNoMatches">没有符合筛选条件的词典</string>
+    <string name="dictionaryListMoreOptions">更多选项</string>
     <!--Plurals-->
     <plurals name="dictionaryDetailsScreenWordListCount">
         <item quantity="other">词典中有%1$d个单词</item>

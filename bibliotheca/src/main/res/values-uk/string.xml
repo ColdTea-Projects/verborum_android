@@ -148,6 +148,7 @@
     <string name="dictionarySortNewest">Спочатку найновіші</string>
     <string name="dictionarySortOldest">Спочатку найстаріші</string>
     <string name="dictionaryListNoMatches">Жоден словник не відповідає фільтрам</string>
+    <string name="dictionaryListMoreOptions">Більше параметрів</string>
     <!--Plurals-->
     <plurals name="dictionaryDetailsScreenWordListCount">
         <item quantity="one">%1$d слово в словнику</item>

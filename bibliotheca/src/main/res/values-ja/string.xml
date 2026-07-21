@@ -148,6 +148,7 @@
     <string name="dictionarySortNewest">新しい順</string>
     <string name="dictionarySortOldest">古い順</string>
     <string name="dictionaryListNoMatches">フィルターに一致する辞書はありません</string>
+    <string name="dictionaryListMoreOptions">その他のオプション</string>
     <!--Plurals-->
     <plurals name="dictionaryDetailsScreenWordListCount">
         <item quantity="other">辞書に%1$d語</item>

@@ -148,6 +148,7 @@
     <string name="dictionarySortNewest">Mais recentes primeiro</string>
     <string name="dictionarySortOldest">Mais antigos primeiro</string>
     <string name="dictionaryListNoMatches">Nenhum dicionário corresponde aos seus filtros</string>
+    <string name="dictionaryListMoreOptions">Mais opções</string>
     <!--Plurals-->
     <plurals name="dictionaryDetailsScreenWordListCount">
         <item quantity="one">%1$d palavra no dicionário</item>

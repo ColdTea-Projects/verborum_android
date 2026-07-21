@@ -148,6 +148,7 @@
     <string name="dictionarySortNewest">Naujausi pirmi</string>
     <string name="dictionarySortOldest">Seniausi pirmi</string>
     <string name="dictionaryListNoMatches">Nė vienas žodynas neatitinka filtrų</string>
+    <string name="dictionaryListMoreOptions">Daugiau parinkčių</string>
     <!--Plurals-->
     <plurals name="dictionaryDetailsScreenWordListCount">
         <item quantity="one">%1$d žodis žodyne</item>

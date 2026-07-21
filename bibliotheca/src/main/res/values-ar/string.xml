@@ -148,6 +148,7 @@
     <string name="dictionarySortNewest">الأحدث أولاً</string>
     <string name="dictionarySortOldest">الأقدم أولاً</string>
     <string name="dictionaryListNoMatches">لا توجد قواميس مطابقة لعوامل التصفية</string>
+    <string name="dictionaryListMoreOptions">خيارات أخرى</string>
     <!--Plurals-->
     <plurals name="dictionaryDetailsScreenWordListCount">
         <item quantity="zero">لا توجد كلمات في القاموس</item>
