@@ -23,6 +23,9 @@ class WordRepository @Inject constructor(
     fun observeWordCounts(): Flow<List<DictionaryWordCount>> =
         bibliothecaDatabase.daoWord.observeWordCounts()
 
+    fun observePendingUploadCount(): Flow<Int> =
+        bibliothecaDatabase.daoWord.observePendingUploadCount()
+
     suspend fun getWord(wordId: String): WordEntity =
         bibliothecaDatabase.daoWord.getWord(wordId)
 

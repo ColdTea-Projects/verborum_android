@@ -24,6 +24,9 @@ class DictionaryRepository @Inject constructor(
     fun observeDictionary(dictionaryId: String): Flow<DictionaryEntity?> =
         bibliothecaDatabase.daoDictionary.observeDictionary(dictionaryId)
 
+    fun observePendingUploadCount(): Flow<Int> =
+        bibliothecaDatabase.daoDictionary.observePendingUploadCount()
+
     suspend fun saveDictionary(dictionaryEntity: DictionaryEntity) =
         bibliothecaDatabase.daoDictionary.insert(dictionaryEntity)
 

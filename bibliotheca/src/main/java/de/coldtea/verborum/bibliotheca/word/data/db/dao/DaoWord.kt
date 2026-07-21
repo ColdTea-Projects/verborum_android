@@ -45,6 +45,11 @@ interface DaoWord: DaoBase<WordEntity> {
     )
     fun observeWordCounts(): Flow<List<DictionaryWordCount>>
 
+    // Rows the server has not seen yet: never-synced/edited (isSynced = 0) or pending remote
+    // deletion (is_deleted = 1). Drives the immediate upload trigger.
+    @Query("SELECT COUNT(*) FROM word WHERE isSynced = 0 OR is_deleted = 1")
+    fun observePendingUploadCount(): Flow<Int>
+
     @Transaction
     @Query("UPDATE word SET is_deleted = 1 WHERE word_id = :wordId")
     suspend fun markWordDeleted(wordId: String)

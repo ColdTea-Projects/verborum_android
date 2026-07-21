@@ -13,6 +13,7 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.OutOfQuotaPolicy
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
+import androidx.work.workDataOf
 import dagger.hilt.android.qualifiers.ApplicationContext
 import de.coldtea.verborum.bibliotheca.common.data.sync.SyncWorker
 import java.util.concurrent.TimeUnit
@@ -84,12 +85,17 @@ class SyncScheduler @Inject constructor(
     }
 
     /**
-     * Fires a one-off sync as soon as the network allows. This is the hook a push-notification
-     * handler will call; concurrent requests coalesce onto the single in-flight run.
+     * Fires a one-off sync as soon as the network allows; concurrent requests coalesce onto the
+     * single in-flight run.
+     *
+     * [uploadOnly] pushes local changes without pulling the dataset back — used by the frequent,
+     * change-triggered sync so getting data *up* stays cheap. Callers that also want inbound data
+     * (reconnect, a future push handler) pass false for a full reconcile.
      */
-    fun requestImmediateSync() {
+    fun requestImmediateSync(uploadOnly: Boolean = false) {
         val request = OneTimeWorkRequestBuilder<SyncWorker>()
             .setConstraints(constraints)
+            .setInputData(workDataOf(SyncWorker.KEY_UPLOAD_ONLY to uploadOnly))
             .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
             .build()
 

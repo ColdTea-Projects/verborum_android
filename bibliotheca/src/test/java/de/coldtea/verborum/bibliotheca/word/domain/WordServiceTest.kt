@@ -1,7 +1,5 @@
 package de.coldtea.verborum.bibliotheca.word.domain
 
-import de.coldtea.verborum.bibliotheca.common.domain.SyncService
-import de.coldtea.verborum.bibliotheca.common.domain.UploadService
 import de.coldtea.verborum.bibliotheca.testWord
 import de.coldtea.verborum.bibliotheca.testWordUi
 import de.coldtea.verborum.bibliotheca.word.domain.model.Word
@@ -73,12 +71,6 @@ class WordServiceTest : BaseTest() {
     private val successResponse = mockk<Response<Unit>> { every { isSuccessful } returns true }
     private val failureResponse = mockk<Response<Unit>> { every { isSuccessful } returns false }
 
-    @MockK
-    private lateinit var syncService: SyncService
-
-    @MockK
-    private lateinit var uploadService: UploadService
-
     private lateinit var wordService: WordService
 
     override fun setUp() {
@@ -94,8 +86,6 @@ class WordServiceTest : BaseTest() {
             markWordDeletedUseCase = markWordDeletedUseCase,
             getWordUseCase = getWordUseCase,
             saveWordUseCase = saveWordUseCase,
-            syncService = syncService,
-            uploadService = uploadService,
         )
     }
 

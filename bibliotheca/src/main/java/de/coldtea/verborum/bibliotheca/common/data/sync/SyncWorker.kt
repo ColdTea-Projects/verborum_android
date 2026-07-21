@@ -9,10 +9,13 @@ import dagger.assisted.AssistedInject
 import de.coldtea.verborum.bibliotheca.common.domain.SyncService
 
 /**
- * Runs a full sync off the main thread. The trigger is deliberately decoupled from the work:
+ * Runs a sync off the main thread. The trigger is deliberately decoupled from the work:
  * [de.coldtea.verborum.bibliotheca.common.domain.SyncScheduler] enqueues this worker periodically
- * today and on demand (the seam a future push-notification handler will call), but the worker only
- * ever delegates to [SyncService].
+ * and on demand, but the worker only ever delegates to [SyncService].
+ *
+ * [KEY_UPLOAD_ONLY] selects the phase: the change-triggered immediate sync pushes local changes
+ * only (cheap, doesn't re-download the dataset every save), while periodic/reconnect runs do the
+ * full upload-then-download reconcile.
  */
 @HiltWorker
 class SyncWorker @AssistedInject constructor(
@@ -23,8 +26,16 @@ class SyncWorker @AssistedInject constructor(
 
     override suspend fun doWork(): Result {
         // SyncService swallows and logs its own failures per phase, so a run always completes;
-        // the next scheduled (or push-triggered) run retries anything that did not go through.
-        syncService.syncDictionaries()
+        // the next scheduled (or triggered) run retries anything that did not go through.
+        if (inputData.getBoolean(KEY_UPLOAD_ONLY, false)) {
+            syncService.uploadPendingChanges()
+        } else {
+            syncService.syncDictionaries()
+        }
         return Result.success()
+    }
+
+    companion object {
+        const val KEY_UPLOAD_ONLY = "upload_only"
     }
 }

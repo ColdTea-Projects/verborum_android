@@ -32,8 +32,6 @@ class WordService @Inject constructor(
     private val markWordDeletedUseCase: MarkWordDeletedUseCase,
     private val getWordUseCase: GetWordUseCase,
     private val saveWordUseCase: SaveWordUseCase,
-    private val syncService: SyncService,
-    private val uploadService: UploadService,
 ) {
 
     fun observeWordsByDictionary(dictionaryId: String): Flow<List<WordUi>> =

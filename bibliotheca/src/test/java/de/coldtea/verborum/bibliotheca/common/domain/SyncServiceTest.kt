@@ -78,4 +78,28 @@ class SyncServiceTest : BaseTest() {
     }
 
     // endregion
+
+    // region uploadPendingChanges
+
+    @Test
+    fun `uploadPendingChanges pushes local changes without downloading`() = runTest {
+        syncService.uploadPendingChanges()
+
+        coVerify(exactly = 1) { uploadPendingChangesUseCase.invoke() }
+        // The whole point of the immediate path: it must not pull the dataset back.
+        coVerify(exactly = 0) { syncUserDictionariesUseCase.invoke() }
+    }
+
+    @Test
+    fun `uploadPendingChanges swallows upload failures and logs them`() = runTest {
+        mockkStatic(Log::class)
+        every { Log.e(any(), any()) } returns 0
+        coEvery { uploadPendingChangesUseCase.invoke() } throws RuntimeException("upload down")
+
+        syncService.uploadPendingChanges() // must not throw
+
+        verify(exactly = 1) { Log.e("Upload error", "upload down") }
+    }
+
+    // endregion
 }

@@ -27,6 +27,11 @@ interface DaoDictionary: DaoBase<DictionaryEntity> {
     )
     fun observeAllDictionaries(): Flow<List<DictionaryEntity>>
 
+    // Rows the server has not seen yet: never-synced/edited (isSynced = 0) or pending remote
+    // deletion (is_deleted = 1). Drives the immediate upload trigger.
+    @Query("SELECT COUNT(*) FROM dictionary WHERE isSynced = 0 OR is_deleted = 1")
+    fun observePendingUploadCount(): Flow<Int>
+
     @Transaction
     @Query("UPDATE dictionary SET is_deleted = 1 WHERE dictionary_id = :dictionaryId")
     suspend fun markDictionaryDeleted(dictionaryId: String)
