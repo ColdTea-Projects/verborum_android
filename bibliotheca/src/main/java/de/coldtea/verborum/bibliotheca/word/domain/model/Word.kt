@@ -54,7 +54,8 @@ data class Word(
             wordMeta = wordMeta,
             translation = translation,
             translationMeta = translationMeta,
-            creationTimestamp = ApiTimestamp.format(createdAt),
-            updateTimestamp = ApiTimestamp.format(updatedAt),
+            level = level.coerceIn(0, 7),
+            createdAt = ApiTimestamp.format(createdAt),
+            updatedAt = ApiTimestamp.format(updatedAt),
         )
 }

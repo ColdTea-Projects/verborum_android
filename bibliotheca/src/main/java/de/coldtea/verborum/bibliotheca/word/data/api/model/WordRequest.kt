@@ -21,9 +21,13 @@ data class WordRequest(
     val translation: String,
     @SerialName("translationMeta")
     val translationMeta: String,
+    // Practice progress, 0..7. Now synced so it survives a reinstall and follows the user across
+    // devices; the local value is already clamped, so it is sent as-is.
+    @SerialName("level")
+    val level: Int,
     // ISO-8601. Server-owned like the dictionary's — sent for completeness, see DictionaryRequest.
-    @SerialName("creationTimestamp")
-    val creationTimestamp: String? = null,
-    @SerialName("updateTimestamp")
-    val updateTimestamp: String? = null,
+    @SerialName("createdAt")
+    val createdAt: String? = null,
+    @SerialName("updatedAt")
+    val updatedAt: String? = null,
 )

@@ -1,5 +1,6 @@
 package de.coldtea.verborum.bibliotheca.word.ui.multiplechoice
 
+import de.coldtea.verborum.bibliotheca.common.domain.PendingUploadSyncTrigger
 import de.coldtea.verborum.bibliotheca.testWordUi
 import de.coldtea.verborum.bibliotheca.word.domain.WordService
 import de.coldtea.verborum.bibliotheca.word.domain.model.Word
@@ -26,11 +27,15 @@ class MultipleChoiceViewModelTest : BaseTest() {
     @MockK
     private lateinit var wordService: WordService
 
+    // pause()/resume() return Unit — covered by relaxUnitFun.
+    @MockK
+    private lateinit var pendingUploadSyncTrigger: PendingUploadSyncTrigger
+
     private lateinit var viewModel: MultipleChoiceViewModel
 
     override fun setUp() {
         super.setUp()
-        viewModel = MultipleChoiceViewModel(wordService)
+        viewModel = MultipleChoiceViewModel(wordService, pendingUploadSyncTrigger)
     }
 
     /** Builds [count] words with pairwise distinct word/translation pairs. */

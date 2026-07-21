@@ -6,6 +6,7 @@ import de.coldtea.verborum.core.extensions.json
 import kotlinx.serialization.ExperimentalSerializationApi
 import org.junit.After
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import java.util.TimeZone
@@ -40,21 +41,21 @@ class ApiTimestampWireTest {
               "isPublic": false,
               "fromLang": "de",
               "toLang": "en",
-              "creationTimestamp": "2026-07-19T21:33:37.027968",
-              "updateTimestamp": "2026-07-19T21:33:37.03077"
+              "createdAt": "2026-07-19T19:27:20.400123Z",
+              "updatedAt": "2026-07-19T19:27:20.401999Z"
             }
         """.trimIndent()
 
         val dictionary = json.decodeFromString<DictionaryResponse>(payload)
             .convertToDictionary(fallbackCreatedAt = FALLBACK, fallbackUpdatedAt = FALLBACK)
 
-        // 2026-07-19T21:33:37.027 in Berlin (UTC+2 in July) == 19:33:37.027 UTC.
-        assertEquals(1_784_489_617_027L, dictionary.createdAt)
-        assertEquals(1_784_489_617_030L, dictionary.updatedAt)
+        // Microseconds are truncated to milliseconds; the trailing Z is read as UTC.
+        assertEquals(1_784_489_240_400L, dictionary.createdAt)
+        assertEquals(1_784_489_240_401L, dictionary.updatedAt)
     }
 
     @Test
-    fun `word response carries the server creation timestamp`() {
+    fun `word response carries the server timestamps and level`() {
         val payload = """
             {
               "wordId": "cc380c9d-2824-4c15-8734-6fad68f555c9",
@@ -63,8 +64,9 @@ class ApiTimestampWireTest {
               "wordMeta": "{}",
               "translation": "[\"b\"]",
               "translationMeta": "{}",
-              "creationTimestamp": "2026-07-19T21:34:11.858866",
-              "updateTimestamp": "2026-07-19T21:34:11.858899"
+              "level": 5,
+              "createdAt": "2026-07-19T19:27:20.400123Z",
+              "updatedAt": "2026-07-19T19:27:20.400123Z"
             }
         """.trimIndent()
 
@@ -75,8 +77,11 @@ class ApiTimestampWireTest {
                 fallbackUpdatedAt = FALLBACK,
             )
 
-        assertEquals(1_784_489_651_858L, word.createdAt)
-        assertEquals(1_784_489_651_858L, word.updatedAt)
+        assertEquals(1_784_489_240_400L, word.createdAt)
+        assertEquals(1_784_489_240_400L, word.updatedAt)
+        // A valid server level is adopted, and the row is considered in sync.
+        assertEquals(5, word.level)
+        assertTrue(word.isSynced)
     }
 
     @Test

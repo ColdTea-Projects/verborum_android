@@ -2,6 +2,7 @@ package de.coldtea.verborum.bibliotheca.word.ui.multiplechoice
 
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import de.coldtea.verborum.bibliotheca.common.domain.PendingUploadSyncTrigger
 import de.coldtea.verborum.bibliotheca.common.utils.ResStrings
 import de.coldtea.verborum.bibliotheca.word.domain.WordService
 import de.coldtea.verborum.bibliotheca.word.ui.createword.model.FieldKey
@@ -27,7 +28,19 @@ const val REQUIRED_WORDS_FOR_TEST = 4
 @HiltViewModel
 class MultipleChoiceViewModel @Inject constructor(
     private val wordService: WordService,
+    private val pendingUploadSyncTrigger: PendingUploadSyncTrigger,
 ) : BaseViewModel() {
+
+    // Hold back per-answer uploads while the test is open; the run of level changes is flushed to
+    // the server once, when the screen closes (onCleared).
+    init {
+        pendingUploadSyncTrigger.pause()
+    }
+
+    override fun onCleared() {
+        pendingUploadSyncTrigger.resume()
+        super.onCleared()
+    }
 
     private var currentQuestionIndex = 0
     private var score: Int = 0

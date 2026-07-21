@@ -2,6 +2,7 @@ package de.coldtea.verborum.bibliotheca.word.ui.selfpractice
 
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import de.coldtea.verborum.bibliotheca.common.domain.PendingUploadSyncTrigger
 import de.coldtea.verborum.bibliotheca.common.utils.ResStrings
 import de.coldtea.verborum.bibliotheca.dictionary.domain.DictionaryService
 import de.coldtea.verborum.bibliotheca.word.domain.WordService
@@ -20,7 +21,19 @@ import javax.inject.Inject
 class SelfPracticeViewModel @Inject constructor(
     private val dictionaryService: DictionaryService,
     private val wordService: WordService,
+    private val pendingUploadSyncTrigger: PendingUploadSyncTrigger,
 ) : BaseViewModel() {
+
+    // Batch the session's level changes into one upload on close instead of one per swipe.
+    init {
+        pendingUploadSyncTrigger.pause()
+    }
+
+    override fun onCleared() {
+        pendingUploadSyncTrigger.resume()
+        super.onCleared()
+    }
+
     private val _selfPracticeState =
         MutableStateFlow<SelfPracticeState>(SelfPracticeState.Loading)
     val selfPracticeState = _selfPracticeState.asSharedFlow()

@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import java.util.concurrent.atomic.AtomicBoolean
+import java.util.concurrent.atomic.AtomicInteger
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -32,6 +33,12 @@ class PendingUploadSyncTrigger @Inject constructor(
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
     private val started = AtomicBoolean(false)
 
+    // While paused (a practice screen is open), change-driven syncs are held back so a rapid run
+    // of level updates does not fire an API call each; [deferredWhilePaused] remembers that at
+    // least one was suppressed so [resume] can flush a single upload on close.
+    private val pauseDepth = AtomicInteger(0)
+    private val deferredWhilePaused = AtomicBoolean(false)
+
     /** Idempotent: begins observing on first call and ignores later ones. */
     fun start() {
         if (!started.compareAndSet(false, true)) return
@@ -42,8 +49,31 @@ class PendingUploadSyncTrigger @Inject constructor(
             // single request shortly after things settle, rather than one sync per write.
             .debounce(DEBOUNCE_MS)
             .filter { pending -> pending > 0 }
-            .onEach { syncScheduler.requestImmediateSync(uploadOnly = true) }
+            .onEach {
+                if (pauseDepth.get() > 0) deferredWhilePaused.set(true)
+                else syncScheduler.requestImmediateSync(uploadOnly = true)
+            }
             .launchIn(scope)
+    }
+
+    /**
+     * Suspends change-driven immediate syncs. Practice screens call this on open so a whole session
+     * of level changes reconciles once, on close, instead of hammering the API answer-by-answer.
+     * The changes are still persisted locally, so they upload on [resume] (or on the next launch if
+     * the process dies first, via the observer's initial emission).
+     *
+     * Reference-counted, so overlapping callers are balanced; [resume] must be paired with it.
+     */
+    fun pause() {
+        pauseDepth.incrementAndGet()
+    }
+
+    /** Releases a [pause]; when the last one lifts, flushes a single upload if any was suppressed. */
+    fun resume() {
+        val depth = pauseDepth.updateAndGet { (it - 1).coerceAtLeast(0) }
+        if (depth == 0 && deferredWhilePaused.getAndSet(false)) {
+            syncScheduler.requestImmediateSync(uploadOnly = true)
+        }
     }
 
     private companion object {

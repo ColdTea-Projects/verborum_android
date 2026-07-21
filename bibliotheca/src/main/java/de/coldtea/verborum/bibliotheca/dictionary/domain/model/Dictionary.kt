@@ -37,8 +37,8 @@ data class Dictionary(
         isPublic = isPublic,
         fromLang = fromLang,
         toLang = toLang,
-        creationTimestamp = ApiTimestamp.format(createdAt),
-        updateTimestamp = ApiTimestamp.format(updatedAt),
+        createdAt = ApiTimestamp.format(createdAt),
+        updatedAt = ApiTimestamp.format(updatedAt),
     )
 
     fun convertToUi() = DictionaryUi(

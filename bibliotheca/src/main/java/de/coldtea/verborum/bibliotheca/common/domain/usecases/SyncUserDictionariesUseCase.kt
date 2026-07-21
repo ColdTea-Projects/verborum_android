@@ -92,9 +92,6 @@ class SyncUserDictionariesUseCase @Inject constructor(
                     dictionaryId = dictionaryId,
                     fallbackCreatedAt = existing?.createdAt ?: now,
                     fallbackUpdatedAt = existing?.updatedAt ?: now,
-                    // Practice progress lives only on this device — carry it over so the merge
-                    // cannot reset it to zero.
-                    level = existing?.level ?: 0,
                 )
             }
             ?: return

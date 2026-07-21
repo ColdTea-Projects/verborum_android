@@ -1,5 +1,6 @@
 package de.coldtea.verborum.bibliotheca.word.ui.selfpractice
 
+import de.coldtea.verborum.bibliotheca.common.domain.PendingUploadSyncTrigger
 import de.coldtea.verborum.bibliotheca.dictionary.domain.DictionaryService
 import de.coldtea.verborum.bibliotheca.testDictionaryUi
 import de.coldtea.verborum.bibliotheca.testWordUi
@@ -26,11 +27,15 @@ class SelfPracticeViewModelTest : BaseTest() {
     @MockK
     private lateinit var wordService: WordService
 
+    // pause()/resume() return Unit — covered by relaxUnitFun.
+    @MockK
+    private lateinit var pendingUploadSyncTrigger: PendingUploadSyncTrigger
+
     private lateinit var viewModel: SelfPracticeViewModel
 
     override fun setUp() {
         super.setUp()
-        viewModel = SelfPracticeViewModel(dictionaryService, wordService)
+        viewModel = SelfPracticeViewModel(dictionaryService, wordService, pendingUploadSyncTrigger)
     }
 
     // region initial state

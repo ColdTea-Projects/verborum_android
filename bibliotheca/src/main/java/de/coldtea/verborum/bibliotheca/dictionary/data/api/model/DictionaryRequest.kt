@@ -25,8 +25,8 @@ data class DictionaryRequest(
     // @CreationTimestamp / @UpdateTimestamp overwrite whatever the client supplies (verified —
     // the request is accepted, the sent value is simply replaced). They matter here only if the
     // backend later honours a client value, e.g. to preserve a row created offline.
-    @SerialName("creationTimestamp")
-    val creationTimestamp: String? = null,
-    @SerialName("updateTimestamp")
-    val updateTimestamp: String? = null,
+    @SerialName("createdAt")
+    val createdAt: String? = null,
+    @SerialName("updatedAt")
+    val updatedAt: String? = null,
 )

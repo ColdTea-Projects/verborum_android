@@ -8,6 +8,8 @@ import de.coldtea.verborum.bibliotheca.word.data.api.model.WordResponse
 import de.coldtea.verborum.bibliotheca.word.data.db.entity.WordEntity
 import de.coldtea.verborum.bibliotheca.word.domain.model.Word
 import de.coldtea.verborum.bibliotheca.word.ui.model.WordUi
+import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.JsonPrimitive
 
 fun testWordEntity(
     wordId: String = "word-id",
@@ -89,12 +91,16 @@ fun testWordResponse(
     wordMeta: String? = "{en}",
     translation: String? = "der Apfel",
     translationMeta: String? = "{de}",
+    // Defaults to a valid level so responses look "synced"; pass null to simulate a backend that
+    // omits it, or an out-of-range JsonPrimitive to simulate bad data.
+    level: JsonElement? = JsonPrimitive(0),
 ) = WordResponse(
     wordId = wordId,
     word = word,
     wordMeta = wordMeta,
     translation = translation,
     translationMeta = translationMeta,
+    level = level,
 )
 
 fun testDictionary(

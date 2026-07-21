@@ -24,12 +24,12 @@ data class DictionaryResponse(
     @SerialName("toLang")
     val toLang: String,
     // Server-owned, written by Hibernate's @CreationTimestamp / @UpdateTimestamp and serialised as
-    // ISO-8601 without an offset ("2026-07-19T21:33:37.027968"). Nullable so a backend that does
-    // not expose them yet still deserialises — see the fallbacks in convertToDictionary.
-    @SerialName("creationTimestamp")
-    val creationTimestamp: String? = null,
-    @SerialName("updateTimestamp")
-    val updateTimestamp: String? = null,
+    // ISO-8601 in UTC ("2026-07-21T15:57:33.737279Z"). Nullable so a backend that does not expose
+    // them still deserialises — see the fallbacks in convertToDictionary.
+    @SerialName("createdAt")
+    val createdAt: String? = null,
+    @SerialName("updatedAt")
+    val updatedAt: String? = null,
 ) {
     /**
      * The server's own timestamps win when present — that is what makes a creation date survive a
@@ -44,7 +44,7 @@ data class DictionaryResponse(
         isSynced = true,
         fromLang = fromLang,
         toLang = toLang.orEmpty(),
-        createdAt = ApiTimestamp.parse(creationTimestamp) ?: fallbackCreatedAt,
-        updatedAt = ApiTimestamp.parse(updateTimestamp) ?: fallbackUpdatedAt,
+        createdAt = ApiTimestamp.parse(createdAt) ?: fallbackCreatedAt,
+        updatedAt = ApiTimestamp.parse(updatedAt) ?: fallbackUpdatedAt,
     )
 }

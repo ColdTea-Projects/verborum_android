@@ -23,7 +23,10 @@ import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.mockkStatic
 import kotlinx.coroutines.test.runTest
+import kotlinx.serialization.json.JsonPrimitive
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertTrue
 import org.junit.Test
 
 private const val FIXED_NOW = 1_700_000_000_000L
@@ -242,23 +245,41 @@ class SyncUserDictionariesUseCaseTest : BaseTest() {
     }
 
     @Test
-    fun `invoke preserves the local practice level when merging a remote word`() = runTest {
-        val wordResponse = testWordResponse(wordId = "word-1")
-        // Same content as the server, but this device has practice progress the backend
-        // does not store — a merge must not reset it.
-        val practiced = wordResponse
+    fun `invoke takes the server practice level when merging a remote word`() = runTest {
+        // The server now owns the level; a synced word adopts whatever valid value it sends.
+        val wordResponse = testWordResponse(wordId = "word-1", level = JsonPrimitive(5))
+        val localStale = wordResponse
             .convertToWord(dictionaryId = "dict-1", fallbackCreatedAt = 5_000L, fallbackUpdatedAt = 6_000L)
-            .copy(level = 4, word = "stale so the row is rewritten")
+            .copy(level = 2, word = "stale so the row is rewritten")
         coEvery { dictionaryApi.getAllDictionariesByUser(GUEST_USER_ID) } returns
             listOf(testDictionaryResponse(dictionaryId = "dict-1"))
         coEvery { wordApi.getWordsByDictionary("dict-1") } returns listOf(wordResponse)
-        coEvery { getWordsByDictionaryUseCase.invoke("dict-1") } returns listOf(practiced)
+        coEvery { getWordsByDictionaryUseCase.invoke("dict-1") } returns listOf(localStale)
         val upserted = mutableListOf<List<Word>>()
         coEvery { upsertWordsUseCase.invoke(capture(upserted)) } returns Unit
 
         useCase.invoke()
 
-        assertEquals(4, upserted.single().single().level)
+        val merged = upserted.single().single()
+        assertEquals(5, merged.level)
+        assertTrue(merged.isSynced)
+    }
+
+    @Test
+    fun `invoke resets an invalid server level to zero and marks the word for re-upload`() = runTest {
+        // 9 is out of the 0..7 range — reset to 0 and flag unsynced so the fix is pushed back.
+        val wordResponse = testWordResponse(wordId = "word-1", level = JsonPrimitive(9))
+        coEvery { dictionaryApi.getAllDictionariesByUser(GUEST_USER_ID) } returns
+            listOf(testDictionaryResponse(dictionaryId = "dict-1"))
+        coEvery { wordApi.getWordsByDictionary("dict-1") } returns listOf(wordResponse)
+        val upserted = mutableListOf<List<Word>>()
+        coEvery { upsertWordsUseCase.invoke(capture(upserted)) } returns Unit
+
+        useCase.invoke()
+
+        val merged = upserted.single().single()
+        assertEquals(0, merged.level)
+        assertFalse(merged.isSynced)
     }
 
     @Test
