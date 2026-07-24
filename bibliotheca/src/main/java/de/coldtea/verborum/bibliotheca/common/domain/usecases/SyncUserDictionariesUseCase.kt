@@ -1,8 +1,8 @@
 package de.coldtea.verborum.bibliotheca.common.domain.usecases
 
+import de.coldtea.verborum.bibliotheca.auth.domain.usecase.GetActiveUserUseCase
 import de.coldtea.verborum.bibliotheca.common.utils.getNowInMillis
 import de.coldtea.verborum.bibliotheca.dictionary.data.api.DictionaryApi
-import de.coldtea.verborum.bibliotheca.dictionary.data.db.entity.DictionaryEntity.Companion.GUEST_USER_ID
 import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.local.DeleteDictionaryUseCase
 import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.local.GetAllDictionariesUseCase
 import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.local.SaveDictionaryUseCase
@@ -31,11 +31,12 @@ class SyncUserDictionariesUseCase @Inject constructor(
     private val getWordsByDictionaryUseCase: GetWordsByDictionaryUseCase,
     private val upsertWordsUseCase: UpsertWordsUseCase,
     private val deleteWordUseCase: DeleteWordUseCase,
-    //TODO: getActiveUserUseCase
+    private val getActiveUserUseCase: GetActiveUserUseCase,
 ) {
 
     suspend fun invoke() = withContext(Dispatchers.IO) {
-        val activeUser = GUEST_USER_ID // TODO: getActiveUserUseCase.invoke()
+        // No signed-in user means nothing to reconcile against the server (guide §9.7).
+        val activeUser = getActiveUserUseCase.invoke() ?: return@withContext
         val remoteDictionaries = dictionaryApi.getAllDictionariesByUser(activeUser)
             ?: return@withContext
 

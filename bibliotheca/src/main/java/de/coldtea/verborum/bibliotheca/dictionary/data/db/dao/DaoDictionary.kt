@@ -36,6 +36,16 @@ interface DaoDictionary: DaoBase<DictionaryEntity> {
     @Query("UPDATE dictionary SET is_deleted = 1 WHERE dictionary_id = :dictionaryId")
     suspend fun markDictionaryDeleted(dictionaryId: String)
 
+    // Guest-data migration on first login (guide §9.7): re-own the guest's dictionaries under the
+    // signed-in subject and re-flag them unsynced so the normal upload pushes them to the server.
+    // The guest UUID must never reach the backend, so this runs before the first authenticated sync.
+    @Transaction
+    @Query(
+        "UPDATE dictionary SET fk_user_id = :newUserId, isSynced = 0 " +
+            "WHERE fk_user_id = :oldUserId"
+    )
+    suspend fun reassignOwner(oldUserId: String, newUserId: String): Int
+
     @Transaction
     @Query("SELECT * FROM dictionary WHERE fk_user_id = :userId")
     suspend fun getDictionariesByUser(userId: String): List<DictionaryEntity>

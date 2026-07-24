@@ -21,6 +21,10 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+
+        // AppAuth's RedirectUriReceiverActivity captures the OAuth redirect on this scheme
+        // (de.coldtea.verborum://oauth2redirect/...), matching OAUTH_REDIRECT_URI in core (guide §2).
+        manifestPlaceholders["appAuthRedirectScheme"] = "de.coldtea.verborum"
     }
 
     buildTypes {

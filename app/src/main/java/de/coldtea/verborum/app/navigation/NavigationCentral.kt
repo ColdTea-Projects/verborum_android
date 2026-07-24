@@ -60,7 +60,9 @@ fun NavigationCentral(showWelcome: Boolean = false) {
     val isOnWelcomeScreen = currentRoute == SCREEN_WELCOME
     // Only the tab roots get the bottom navigation; deeper screens are exited via the back button.
     val isRootScreen =
-        currentRoute == SCREEN_DICTIONARIES_LIST || currentRoute == SCREEN_FORUM_MAIN_SCREEN
+        currentRoute == SCREEN_DICTIONARIES_LIST ||
+            currentRoute == SCREEN_FORUM_MAIN_SCREEN ||
+            currentRoute == SCREEN_OPTIONS
 
     val topBarState = topBarController.state
     val isOnline = rememberIsOnline()
@@ -112,6 +114,9 @@ fun NavigationCentral(showWelcome: Boolean = false) {
                     }
                     navigation(startDestination = SCREEN_FORUM_MAIN_SCREEN, route = GROUP_FORUM) {
                         insertForumMain(navController)
+                    }
+                    navigation(startDestination = SCREEN_OPTIONS, route = GROUP_OPTIONS) {
+                        insertOptions(navController)
                     }
                 }
             }

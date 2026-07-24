@@ -149,6 +149,13 @@
     <string name="dictionarySortOldest">ابتدا قدیمی‌ترین</string>
     <string name="dictionaryListNoMatches">هیچ واژه‌نامه‌ای با فیلترهای شما مطابقت ندارد</string>
     <string name="dictionaryListMoreOptions">گزینه‌های بیشتر</string>
+    <string name="optionsScreenTitle">تنظیمات</string>
+    <string name="optionsLogout">خروج</string>
+    <string name="loginTitle">Verborum</string>
+    <string name="loginTagline">واژه‌نامه‌های خود را بسازید. بر هر واژه مسلط شوید.</string>
+    <string name="loginSignIn">ورود</string>
+    <string name="loginCreateAccount">ایجاد حساب</string>
+    <string name="loginFailed">ورود ناموفق بود. لطفاً دوباره تلاش کنید.</string>
     <!--Plurals-->
     <plurals name="dictionaryDetailsScreenWordListCount">
         <item quantity="one">%1$d واژه در واژه‌نامه</item>

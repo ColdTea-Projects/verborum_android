@@ -149,6 +149,13 @@
     <string name="dictionarySortOldest">Oldest first</string>
     <string name="dictionaryListNoMatches">No dictionaries match your filters</string>
     <string name="dictionaryListMoreOptions">More options</string>
+    <string name="optionsScreenTitle">Options</string>
+    <string name="optionsLogout">Log out</string>
+    <string name="loginTitle">Verborum</string>
+    <string name="loginTagline">Build your own dictionaries. Master every word.</string>
+    <string name="loginSignIn">Sign in</string>
+    <string name="loginCreateAccount">Create account</string>
+    <string name="loginFailed">Sign-in failed. Please try again.</string>
     <!--Plurals-->
     <plurals name="dictionaryDetailsScreenWordListCount">
         <item quantity="one">%1$d word in the dictionary</item>

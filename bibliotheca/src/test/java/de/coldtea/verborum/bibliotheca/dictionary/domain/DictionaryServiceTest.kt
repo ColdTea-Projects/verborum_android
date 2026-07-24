@@ -1,5 +1,6 @@
 package de.coldtea.verborum.bibliotheca.dictionary.domain
 
+import de.coldtea.verborum.bibliotheca.auth.domain.usecase.GetActiveUserUseCase
 import de.coldtea.verborum.bibliotheca.common.domain.SyncService
 import de.coldtea.verborum.bibliotheca.common.domain.UploadService
 import de.coldtea.verborum.bibliotheca.dictionary.data.db.entity.DictionaryEntity.Companion.GUEST_USER_ID
@@ -58,10 +59,15 @@ class DictionaryServiceTest : BaseTest() {
     @MockK
     private lateinit var uploadService: UploadService
 
+    // invoke returns String? — defaults to null (logged out) so createDictionary falls back to guest.
+    @MockK
+    private lateinit var getActiveUserUseCase: GetActiveUserUseCase
+
     private lateinit var dictionaryService: DictionaryService
 
     override fun setUp() {
         super.setUp()
+        every { getActiveUserUseCase.invoke() } returns null
         dictionaryService = DictionaryService(
             observeAllDictionariesUseCase = observeAllDictionariesUseCase,
             observeDictionaryUseCase = observeDictionaryUseCase,
@@ -71,6 +77,7 @@ class DictionaryServiceTest : BaseTest() {
             markDictionaryDeletedUseCase = markDictionaryDeletedUseCase,
             syncService = syncService,
             uploadService = uploadService,
+            getActiveUserUseCase = getActiveUserUseCase,
         )
     }
 
@@ -91,6 +98,17 @@ class DictionaryServiceTest : BaseTest() {
         assertEquals("en", saved.toLang)
         assertFalse(saved.isPublic)
         assertFalse(saved.isSynced)
+    }
+
+    @Test
+    fun `createDictionary stamps the signed-in subject as owner when logged in`() = runTest {
+        every { getActiveUserUseCase.invoke() } returns "subject-123"
+        val dictionarySlot = slot<Dictionary>()
+        coEvery { saveDictionaryUseCase.invoke(capture(dictionarySlot)) } returns "new-dict-id"
+
+        dictionaryService.createDictionary(name = "German Basics", fromLang = "de", toLang = "en")
+
+        assertEquals("subject-123", dictionarySlot.captured.userId)
     }
 
     @Test

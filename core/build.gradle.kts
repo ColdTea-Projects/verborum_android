@@ -37,7 +37,24 @@ android {
     buildTypes {
 
         debug {
+            // ms_dictionary
             buildConfigField("String", "ROOT_URL_VERBORUM_API", "\"http://10.0.2.2:8085/\"")
+            // ms_user
+            buildConfigField("String", "ROOT_URL_VERBORUM_USER_API", "\"http://10.0.2.2:8086/\"")
+            // Keycloak is pinned to localhost:8180 on the backend (KC_HOSTNAME_URL default), so it
+            // renders/redirects the browser to localhost — 10.0.2.2 would break the browser flow.
+            // Reach it via `adb reverse tcp:8180 tcp:8180` so the emulator's localhost hits the host.
+            buildConfigField(
+                "String",
+                "KEYCLOAK_ISSUER",
+                "\"http://localhost:8180/realms/verborum\""
+            )
+            buildConfigField("String", "OAUTH_CLIENT_ID", "\"verborum-app\"")
+            buildConfigField(
+                "String",
+                "OAUTH_REDIRECT_URI",
+                "\"de.coldtea.verborum://oauth2redirect/cb\""
+            )
 
             isMinifyEnabled = false
             isJniDebuggable = true
@@ -45,6 +62,18 @@ android {
 
         release {
             buildConfigField("String", "ROOT_URL_VERBORUM_API", "\"http://192.168.0.241:8085/\"")
+            buildConfigField("String", "ROOT_URL_VERBORUM_USER_API", "\"http://192.168.0.241:8086/\"")
+            buildConfigField(
+                "String",
+                "KEYCLOAK_ISSUER",
+                "\"http://192.168.0.241:8180/realms/verborum\""
+            )
+            buildConfigField("String", "OAUTH_CLIENT_ID", "\"verborum-app\"")
+            buildConfigField(
+                "String",
+                "OAUTH_REDIRECT_URI",
+                "\"de.coldtea.verborum://oauth2redirect/cb\""
+            )
 
             isMinifyEnabled = false
             proguardFiles(
@@ -78,6 +107,9 @@ dependencies {
     implementation(libs.hilt.android)
     implementation(libs.hilt.navigation.compose)
     ksp(libs.hilt.compiler)
+
+    //Auth — encrypted token storage (EncryptedSharedPreferences backed by the Android Keystore)
+    implementation(libs.androidx.security.crypto)
 
     //Test
     testImplementation(libs.junit)

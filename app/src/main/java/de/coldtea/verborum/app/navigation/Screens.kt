@@ -8,10 +8,12 @@ sealed class ScreenGroups(val route: String, @StringRes val textResourceId: Int,
 
 object GroupBibliotheca: ScreenGroups(GROUP_BIBLIOTHECA, R.string.group_bibliotheca_nav_title, R.drawable.baseline_book_24)
 object GroupForum: ScreenGroups(GROUP_FORUM, R.string.group_forum_nav_title, R.drawable.baseline_account_balance_24)
+object GroupOptions: ScreenGroups(GROUP_OPTIONS, R.string.group_options_nav_title, R.drawable.baseline_settings_24)
 
 val screenGroups = listOf(
     GroupBibliotheca,
-    GroupForum
+    GroupForum,
+    GroupOptions
 )
 
 const val GROUP_BIBLIOTHECA = "groupBibliotheca"
@@ -25,4 +27,7 @@ const val SCREEN_MULTIPLE_CHOCIE = "multipleChoiceScreen"
 
 const val GROUP_FORUM = "groupForum"
 const val SCREEN_FORUM_MAIN_SCREEN = "forumMainScreen"
+
+const val GROUP_OPTIONS = "groupOptions"
+const val SCREEN_OPTIONS = "optionsScreen"
 

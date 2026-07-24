@@ -149,6 +149,13 @@
     <string name="dictionarySortOldest">Спочатку найстаріші</string>
     <string name="dictionaryListNoMatches">Жоден словник не відповідає фільтрам</string>
     <string name="dictionaryListMoreOptions">Більше параметрів</string>
+    <string name="optionsScreenTitle">Параметри</string>
+    <string name="optionsLogout">Вийти</string>
+    <string name="loginTitle">Verborum</string>
+    <string name="loginTagline">Створюйте власні словники. Опановуйте кожне слово.</string>
+    <string name="loginSignIn">Увійти</string>
+    <string name="loginCreateAccount">Створити обліковий запис</string>
+    <string name="loginFailed">Не вдалося увійти. Спробуйте ще раз.</string>
     <!--Plurals-->
     <plurals name="dictionaryDetailsScreenWordListCount">
         <item quantity="one">%1$d слово в словнику</item>

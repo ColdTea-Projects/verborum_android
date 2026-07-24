@@ -149,6 +149,13 @@
     <string name="dictionarySortOldest">Najstarsze najpierw</string>
     <string name="dictionaryListNoMatches">Żaden słownik nie pasuje do filtrów</string>
     <string name="dictionaryListMoreOptions">Więcej opcji</string>
+    <string name="optionsScreenTitle">Opcje</string>
+    <string name="optionsLogout">Wyloguj się</string>
+    <string name="loginTitle">Verborum</string>
+    <string name="loginTagline">Twórz własne słowniki. Opanuj każde słowo.</string>
+    <string name="loginSignIn">Zaloguj się</string>
+    <string name="loginCreateAccount">Utwórz konto</string>
+    <string name="loginFailed">Logowanie nie powiodło się. Spróbuj ponownie.</string>
     <!--Plurals-->
     <plurals name="dictionaryDetailsScreenWordListCount">
         <item quantity="one">%1$d słowo w słowniku</item>

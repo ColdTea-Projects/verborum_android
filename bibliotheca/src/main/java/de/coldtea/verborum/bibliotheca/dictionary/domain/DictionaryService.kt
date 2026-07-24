@@ -1,5 +1,6 @@
 package de.coldtea.verborum.bibliotheca.dictionary.domain
 
+import de.coldtea.verborum.bibliotheca.auth.domain.usecase.GetActiveUserUseCase
 import de.coldtea.verborum.bibliotheca.common.domain.SyncService
 import de.coldtea.verborum.bibliotheca.common.domain.UploadService
 import de.coldtea.verborum.bibliotheca.common.utils.getNowInMillis
@@ -29,6 +30,7 @@ class DictionaryService @Inject constructor(
     private val markDictionaryDeletedUseCase: MarkDictionaryDeletedUseCase,
     private val syncService: SyncService,
     private val uploadService: UploadService,
+    private val getActiveUserUseCase: GetActiveUserUseCase,
 ) {
 
     /**
@@ -66,7 +68,8 @@ class DictionaryService @Inject constructor(
         val dictionary =
             Dictionary(
                 dictionaryId = "",
-                userId = GUEST_USER_ID,
+                // Stamp the signed-in owner; the guest UUID only survives as an offline fallback.
+                userId = getActiveUserUseCase.invoke() ?: GUEST_USER_ID,
                 name = name,
                 isPublic = false,
                 isSynced = false,

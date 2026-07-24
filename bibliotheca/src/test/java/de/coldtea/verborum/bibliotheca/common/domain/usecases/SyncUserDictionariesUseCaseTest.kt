@@ -1,5 +1,6 @@
 package de.coldtea.verborum.bibliotheca.common.domain.usecases
 
+import de.coldtea.verborum.bibliotheca.auth.domain.usecase.GetActiveUserUseCase
 import de.coldtea.verborum.bibliotheca.common.utils.getNowInMillis
 import de.coldtea.verborum.bibliotheca.dictionary.data.api.DictionaryApi
 import de.coldtea.verborum.bibliotheca.dictionary.data.db.entity.DictionaryEntity.Companion.GUEST_USER_ID
@@ -63,6 +64,10 @@ class SyncUserDictionariesUseCaseTest : BaseTest() {
     @MockK
     private lateinit var deleteWordUseCase: DeleteWordUseCase
 
+    // invoke returns String? — stubbed in setUp to the signed-in subject.
+    @MockK
+    private lateinit var getActiveUserUseCase: GetActiveUserUseCase
+
     private lateinit var useCase: SyncUserDictionariesUseCase
 
     override fun setUp() {
@@ -76,7 +81,10 @@ class SyncUserDictionariesUseCaseTest : BaseTest() {
             getWordsByDictionaryUseCase = getWordsByDictionaryUseCase,
             upsertWordsUseCase = upsertWordsUseCase,
             deleteWordUseCase = deleteWordUseCase,
+            getActiveUserUseCase = getActiveUserUseCase,
         )
+        // Existing cases stub the api against GUEST_USER_ID, so pin the active user to it.
+        every { getActiveUserUseCase.invoke() } returns GUEST_USER_ID
         coEvery { saveDictionaryUseCase.invoke(any()) } returns "saved-id"
         coEvery { getAllDictionariesUseCase.invoke() } returns emptyList()
         coEvery { getWordsByDictionaryUseCase.invoke(any()) } returns emptyList()
@@ -87,6 +95,15 @@ class SyncUserDictionariesUseCaseTest : BaseTest() {
     }
 
     // region no server information
+
+    @Test
+    fun `invoke does not call the api when no user is signed in`() = runTest {
+        every { getActiveUserUseCase.invoke() } returns null
+
+        useCase.invoke()
+
+        coVerify(exactly = 0) { dictionaryApi.getAllDictionariesByUser(any()) }
+    }
 
     @Test
     fun `invoke touches nothing when the api returns null`() = runTest {

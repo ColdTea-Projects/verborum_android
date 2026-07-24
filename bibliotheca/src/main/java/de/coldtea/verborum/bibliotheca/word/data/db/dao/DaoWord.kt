@@ -54,6 +54,15 @@ interface DaoWord: DaoBase<WordEntity> {
     @Query("UPDATE word SET is_deleted = 1 WHERE word_id = :wordId")
     suspend fun markWordDeleted(wordId: String)
 
+    // Guest-data migration companion to DaoDictionary.reassignOwner: re-flag every word in the
+    // now re-owned dictionaries unsynced so they upload under the signed-in subject (guide §9.7).
+    @Transaction
+    @Query(
+        "UPDATE word SET isSynced = 0 WHERE fk_dictionary_id IN " +
+            "(SELECT dictionary_id FROM dictionary WHERE fk_user_id = :userId)"
+    )
+    suspend fun markWordsUnsyncedForUser(userId: String)
+
     @Transaction
     @Query("SELECT * FROM word WHERE word_id = :wordId")
     suspend fun getWord(wordId: String): WordEntity
