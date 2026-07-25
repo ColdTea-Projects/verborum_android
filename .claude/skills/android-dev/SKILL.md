@@ -1,90 +1,51 @@
 ---
 name: android-dev
-description: Android development in the Verborum codebase — module layout, clean-architecture layering (entity/domain/UI models, use cases, services), Compose + Hilt + Room + Retrofit conventions, build toolchain (KSP, version catalog), and unit-testing patterns. Use when adding features, screens, ViewModels, DAOs, use cases, tests, or touching Gradle config in this project.
+description: Day-to-day feature development in the Verborum Android app — the working companion for writing data, domain, and UI code across Room/Retrofit/Hilt/Compose. Covers conventions, the edit→verify loop, cross-cutting rules (localization, resources, error handling), and which sibling skill to load for structure, language, UI, tests, security, or build. Load this whenever you write or change production code.
 ---
 
 # Verborum Android Development
 
-Follow the existing architecture exactly. When adding anything new, find the closest existing sibling (e.g. `word/` vs `dictionary/`) and mirror it.
+The practical companion for building features. It routes to the specialist skills and captures the conventions that span layers. Mirror the closest existing sibling — `word/` and `dictionary/` in `bibliotheca` are canon.
 
-## Modules & dependency direction
+## Load the right skill
 
-```
-app  →  bibliotheca, forum  →  core          (buildSrc: Configuration.kt for SDK versions)
-```
+| Doing… | Load |
+|---|---|
+| Deciding where code goes / adding a concept, screen, table, field | **android-app-architecture** (the law + scaffold procedure) |
+| Writing Kotlin — coroutines, Flow, sealed/data classes, immutability | **kotlin** |
+| Compose UI, theming, components, accessibility | **material-design** |
+| Unit tests (use cases, services, ViewModels) | **android-unit-test** |
+| Instrumented / Compose-UI / Room / Hilt tests | **android-integration-test** |
+| Tokens, auth, logging, secrets, network security | **android-app-sec** |
+| build.gradle.kts, libs.versions.toml, build failures | **gradle-toolchain** |
+| Creating/staging/committing files | **git-workflow** |
 
-- **`core`** — shared infrastructure: `theme/` (VerborumTheme, VerborumColors), `ui/BaseViewModel`, `di/NetworkModule`, `extensions/`. Also ships **testFixtures** (`BaseTest`, `MainDispatcherRule`).
-- **`bibliotheca`**, **`forum`** — feature library modules. Feature code lives here, never in `app`.
-- **`app`** — only `MainActivity`, `VerborumApplication`, and `navigation/` (route constants + nav graph wiring).
-- Modules reference each other via typesafe accessors: `api(projects.core)`, `testImplementation(testFixtures(projects.core))`.
+Load `android-app-architecture` before touching structure; the layering, model tiers, DI, and navigation rules live there and are not repeated here.
 
-## Feature package layout (inside a feature module)
+## The working loop
 
-Each domain concept (e.g. `word`, `dictionary`) is a vertical slice:
+1. Read the sibling that most resembles the task before writing.
+2. Make the change in the correct layer (data → domain → UI), keeping each tier's model on its own side of the converters.
+3. Verify (never claim done without this):
+   ```bash
+   JAVA_HOME="/Applications/Android Studio.app/Contents/jbr/Contents/Home" \
+     ./gradlew :<module>:testDebugUnitTest :app:assembleDebug
+   ```
+   `:app:assembleDebug` is what runs the AAR-metadata + manifest-merge checks; run it whenever you touch navigation, DI, manifests, or dependencies.
 
-```
-<feature>/
-  data/
-    api/            Retrofit interface (XApi)
-    api/model/      @Serializable request/response DTOs
-    db/dao/         Room DAO (DaoX : DaoBase<Entity>)
-    db/entity/      Room @Entity (XEntity)
-    XRepository.kt  wraps the database/DAO, @Inject constructor
-  domain/
-    model/          domain model (X) with convertToEntity()/convertToUi()/convertToRequest()
-    usecase/local/  one-verb use cases hitting the repository (SaveXUseCase, ObserveXByYUseCase…)
-    usecase/api/    one-verb use cases hitting the API (SaveXApiUseCase…)
-    XService.kt     orchestrates use cases; the only thing ViewModels talk to
-  ui/
-    X.kt            top-level @Composable XScreen(viewModel = hiltViewModel())
-    XViewModel.kt   @HiltViewModel, extends BaseViewModel
-    model/          UI model (XUi) with convertToX() back to domain
-    composables/    smaller stateless composables for that screen
-common/             cross-cutting for the module: data/db (Database, DaoBase), di/, domain/ (SyncService…), utils/
-```
+## Cross-cutting rules
 
-## Layer rules
+- **ViewModels talk only to Services** — never to use cases, repositories, or DAOs. Need new data? Add a method to the Service and use it; don't reach around it.
+- **Converters are methods on the model** (`convertToUi()` etc.), field-by-field with named arguments. When you add a field, update every tier + its converters + the `TestFixtures.kt` factories in the same change, or the build breaks in a distant file.
+- **Localization is mandatory and synchronized.** Every user-facing string is a resource with a camelCase name, resolved via `stringResource(ResStrings.name)`. It must exist in **all 19 `values-XX/string.xml` locales** (base + 18) with the key present in every file — a missing key in one locale is a latent crash. For a batch of strings, add them to all locales in one pass (a small script keyed on an anchor string is the reliable way). Codes/proper nouns (framework/exam names) stay literal; everything a user reads gets translated.
+- **Error handling**: load failures → `Failed` state + `ScreenError` with retry; mutation (CRUD) failures → an error snackbar via `UiText` while the screen stays put. Don't swallow exceptions silently.
+- **No-op writes**: Room's REPLACE churns rows and re-emits observers. Skip writes when the new value equals the existing one, and keep observation queries ordered by a stable column.
+- **Drawables** are hand-written vector XML in `res/drawable/`, named `ic_<name>_<size>.xml`.
 
-- **Three model tiers**: `XEntity` (Room) ↔ `X` (domain) ↔ `XUi` (Compose). Conversion functions are *methods on the model itself* (`convertToUi()`, `convertToEntity()`, `convertToWord()`), written field-by-field with named arguments — no mapper classes.
-- **DAOs** extend `DaoBase<T>` (generic insert/update/delete with `OnConflictStrategy.REPLACE`); add feature queries with `@Transaction @Query`. Observation queries return `Flow<List<Entity>>`, one-shot reads are `suspend`.
-- **Repositories** are thin: `@Inject constructor(private val db: BibliothecaDatabase)`, expression-body functions delegating to the DAO.
-- **Use cases** are single-purpose classes with `suspend fun invoke(...)` (or returning `Flow` for observation), named `<Verb><Noun>[Api]UseCase`, split into `local/` and `api/`.
-- **Services** (`WordService`, `DictionaryService`) take use cases + other services via constructor injection, map domain→UI models (`.map { it.map(X::convertToUi) }.distinctUntilChanged().flowOn(Dispatchers.IO)`), and are the ViewModel-facing API.
+## Boundaries & honesty
 
-## ViewModels & UI state
+- Don't redesign the sync engine (SyncService / SyncScheduler / UploadService / the upload-then-download reconcile) unilaterally — extend the existing try/catch + tombstone + `isSynced` patterns.
+- Schema changes need a Room migration and a `version` bump; call out any data-loss risk explicitly.
+- Report outcomes faithfully: if a build or test fails, quote the failure; if a step was skipped, say so.
 
-- Extend `core`'s `BaseViewModel` (provides `_snackbarMessages`, `exceptionHandler`, and `Flow<T>.observe(onSuccess, onCompleted, onError)` which collects in `viewModelScope`).
-- State: `private val _xState = MutableStateFlow<XState>(XState.Loading)` exposed as `val xState = _xState.asSharedFlow()`.
-- State type: sealed class in `ui/<screen>/model/` with `Loading` / `Success(data)` / `Failed` variants (`data object` for the empty ones).
-- Screens take `viewModel: XViewModel = hiltViewModel()`, read state with `collectAsState(initial = XState.Loading)`, and render per state branch. Include a `@Preview` composable wrapped in `VerborumTheme`.
-
-## Navigation (app module)
-
-- Route strings are `const val SCREEN_X = "xScreen"` in `app/.../navigation/Screens.kt`; groups are `ScreenGroups` sealed objects.
-- Each screen gets a `NavGraphBuilder` extension in `NavGroupBibliotheca.kt` / `NavGroupForum.kt`: `fun NavGraphBuilder.insertX(navController) = composable("$SCREEN_X/{arg}") { … }`, creating the ViewModel with `hiltViewModel()` and calling `viewModel.init(arg)` before the screen composable. Wire it in `NavigationCentral`.
-
-## DI (Hilt)
-
-- Modules: `@InstallIn(SingletonComponent::class) @Module` classes in `<module>/common/di/` (`DataModule` provides the Room database, `NetworkModule` provides Retrofit/OkHttp).
-- Everything else uses plain `@Inject constructor` — use cases, repositories, services need no module entries.
-- ViewModels: `@HiltViewModel class XViewModel @Inject constructor(...)`.
-
-## Build toolchain (do not regress these)
-
-- **KSP, never kapt** — `alias(libs.plugins.ksp)` + `ksp(libs.hilt.compiler)` / `ksp(libs.room.compiler)`. kapt is legacy on Kotlin 2.x and previously caused opaque, swallowed build crashes here.
-- All versions live in `gradle/libs.versions.toml`. Keep aligned: `kotlin` and the Kotlin android plugin share one `version.ref`; `ksp` must match the Kotlin version (`2.1.0` ↔ `2.1.0-1.0.29`); **all Hilt artifacts pinned to the same version** (currently 2.52).
-- API DTOs use kotlinx.serialization: `@Keep @Serializable` with explicit `@SerialName` on every field; Retrofit converter is `retrofit2-kotlinx-serialization-converter`.
-- `gradle.properties` has `android.experimental.enableTestFixturesKotlinSupport=true` — required for core's Kotlin testFixtures to compile. Core's testFixtures also need the Compose runtime on their classpath (module-wide Compose compiler).
-- SDK versions come from `buildSrc` `Configuration` (compileSdk 35, AGP 8.7) — check AAR-metadata compatibility before bumping any androidx dependency.
-- Never add the same artifact twice under two catalog aliases (this happened with core-ktx and broke `checkDebugAarMetadata`).
-
-## Unit testing
-
-- Test classes extend `core`'s **`BaseTest`** (testFixtures): it runs `MockKAnnotations.init(this, relaxUnitFun = true)`, applies `MainDispatcherRule` (`UnconfinedTestDispatcher` — Main-dispatcher coroutines run eagerly), and `unmockkAll()` after each test. Override `setUp()`, call `super.setUp()` first, then build the subject under test.
-- Mock annotation import is **`io.mockk.impl.annotations.MockK`** (NOT `io.mockk.MockK` — that's an object and produces "illegal annotation class").
-- `relaxUnitFun` covers only `Unit`-returning functions. For suspend functions returning values (`saveWord(): Long`, api calls returning `Response<Unit>`): stub with `coEvery { … } returns …`, or declare `@MockK(relaxed = true)` for verify-only mocks.
-- Test names: backtick sentences (`` fun `init emits Failed when dictionary flow throws`() ``), grouped with `// region … // endregion`.
-- Fixture data: top-level factory functions in `src/test/.../TestFixtures.kt` (`testWord(...)`, `testWordUi(...)`) with every field defaulted and overridable.
-- Asserting ViewModel state: the state flows are StateFlow-backed with replay, and `viewModelScope` work runs eagerly under the rule — so act, then assert with `viewModel.xState.first()`. Do **not** use the `launch { collect }` + `job.cancel()` pattern inside `runTest`; the collector never runs.
-- Flow assertions in services: `.first()` / `.toList()` inside `runTest`; MockK `every { … } returns flowOf(...)` or `flow { … }` for error cases.
-- Run with `./gradlew :<module>:testDebugUnitTest`. If `java` isn't on PATH, use `JAVA_HOME="/Applications/Android Studio.app/Contents/jbr/Contents/Home"`.
+Verify, then finish. When you're done, name the skills you used (see the announcement rule in the root `CLAUDE.md`).
