@@ -2,6 +2,7 @@ package de.coldtea.verborum.bibliotheca.common.domain.usecases
 
 import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.api.DeleteDictionaryApiUseCase
 import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.api.SaveDictionaryApiUseCase
+import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.api.SyncDictionaryTagsUseCase
 import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.local.DeleteDictionaryUseCase
 import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.local.GetAllDictionariesUseCase
 import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.local.SaveDictionaryUseCase
@@ -36,6 +37,10 @@ class UploadPendingChangesUseCaseTest : BaseTest() {
     // invoke returns Response<Unit> — stubbed per test with coEvery.
     @MockK
     private lateinit var saveDictionaryApiUseCase: SaveDictionaryApiUseCase
+
+    // push returns Boolean — defaults to a successful tag reconcile in setUp.
+    @MockK
+    private lateinit var syncDictionaryTagsUseCase: SyncDictionaryTagsUseCase
 
     // invoke returns Response<Unit> — stubbed per test with coEvery.
     @MockK
@@ -80,6 +85,7 @@ class UploadPendingChangesUseCaseTest : BaseTest() {
             getAllDictionariesUseCase = getAllDictionariesUseCase,
             getWordsByDictionaryUseCase = getWordsByDictionaryUseCase,
             saveDictionaryApiUseCase = saveDictionaryApiUseCase,
+            syncDictionaryTagsUseCase = syncDictionaryTagsUseCase,
             saveWordApiUseCase = saveWordApiUseCase,
             saveDictionaryUseCase = saveDictionaryUseCase,
             upsertWordsUseCase = upsertWordsUseCase,
@@ -91,6 +97,8 @@ class UploadPendingChangesUseCaseTest : BaseTest() {
         )
         coEvery { getWordsByDictionaryUseCase.invoke(any()) } returns emptyList()
         coEvery { saveDictionaryUseCase.invoke(any()) } returns "saved-id"
+        // Tag reconcile succeeds by default so dictionaries reach the synced state as before.
+        coEvery { syncDictionaryTagsUseCase.push(any(), any()) } returns true
     }
 
     // region dictionaries

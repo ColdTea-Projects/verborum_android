@@ -46,6 +46,7 @@ import de.coldtea.verborum.bibliotheca.common.utils.ResStrings
 import de.coldtea.verborum.bibliotheca.common.ui.components.ScreenError
 import de.coldtea.verborum.bibliotheca.dictionary.ui.composables.DeleteDictionaryDialog
 import de.coldtea.verborum.bibliotheca.dictionary.ui.composables.languagePairLabel
+import de.coldtea.verborum.bibliotheca.word.ui.dictionarydetails.composables.DictionaryTagsText
 import de.coldtea.verborum.bibliotheca.word.ui.dictionarydetails.composables.PracticeModeButton
 import de.coldtea.verborum.bibliotheca.word.ui.dictionarydetails.composables.WordListItem
 import de.coldtea.verborum.bibliotheca.word.ui.dictionarydetails.model.DictionaryDetailState
@@ -143,6 +144,12 @@ fun DictionaryDetailsScreen(
                             },
                             onClick = onSelfPracticeClicked
                         )
+                    }
+
+                    // Translated tag line under the practice buttons; hidden when there are none.
+                    if (dictionary.tags.isNotEmpty()) {
+                        Spacer(modifier = Modifier.height(12.dp))
+                        DictionaryTagsText(tagCodes = dictionary.tags)
                     }
 
                     Spacer(modifier = Modifier.height(32.dp))

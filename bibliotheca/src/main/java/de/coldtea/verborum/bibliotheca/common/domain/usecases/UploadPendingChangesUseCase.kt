@@ -3,6 +3,7 @@ package de.coldtea.verborum.bibliotheca.common.domain.usecases
 import de.coldtea.verborum.bibliotheca.dictionary.domain.model.Dictionary
 import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.api.DeleteDictionaryApiUseCase
 import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.api.SaveDictionaryApiUseCase
+import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.api.SyncDictionaryTagsUseCase
 import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.local.DeleteDictionaryUseCase
 import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.local.GetAllDictionariesUseCase
 import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.local.SaveDictionaryUseCase
@@ -26,6 +27,7 @@ class UploadPendingChangesUseCase @Inject constructor(
     private val getAllDictionariesUseCase: GetAllDictionariesUseCase,
     private val getWordsByDictionaryUseCase: GetWordsByDictionaryUseCase,
     private val saveDictionaryApiUseCase: SaveDictionaryApiUseCase,
+    private val syncDictionaryTagsUseCase: SyncDictionaryTagsUseCase,
     private val saveWordApiUseCase: SaveWordApiUseCase,
     private val saveDictionaryUseCase: SaveDictionaryUseCase,
     private val upsertWordsUseCase: UpsertWordsUseCase,
@@ -45,7 +47,12 @@ class UploadPendingChangesUseCase @Inject constructor(
         activeDictionaries
             .filterNot { it.isSynced }
             .forEach { dictionary ->
-                if (saveDictionaryApiUseCase.invoke(dictionary).isSuccessful) {
+                // The dictionary is only marked synced once both its payload and its tags land, so a
+                // failed tag reconcile retries next run instead of the download clobbering local tags.
+                val dictionaryUploaded = saveDictionaryApiUseCase.invoke(dictionary).isSuccessful
+                if (dictionaryUploaded &&
+                    syncDictionaryTagsUseCase.push(dictionary.dictionaryId, dictionary.tags)
+                ) {
                     saveDictionaryUseCase.invoke(dictionary.copy(isSynced = true))
                 }
             }

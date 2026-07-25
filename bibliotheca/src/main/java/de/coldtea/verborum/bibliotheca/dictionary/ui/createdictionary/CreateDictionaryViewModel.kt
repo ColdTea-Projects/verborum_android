@@ -41,7 +41,12 @@ class CreateDictionaryViewModel @Inject constructor(
         }
     }
 
-    fun save(name: String, fromLang: SupportedLanguage, toLang: SupportedLanguage) =
+    fun save(
+        name: String,
+        fromLang: SupportedLanguage,
+        toLang: SupportedLanguage,
+        tags: List<String>,
+    ) =
         viewModelScope.launch(exceptionHandler) {
             if (_createDictionaryState.value is CreateDictionaryState.Saving) return@launch
 
@@ -54,6 +59,7 @@ class CreateDictionaryViewModel @Inject constructor(
                         name = name.trim(),
                         fromLang = fromLang.code,
                         toLang = toLang.code,
+                        tags = tags,
                     )
                     CreateDictionaryState.Created(dictionaryId)
                 } else {
@@ -62,6 +68,7 @@ class CreateDictionaryViewModel @Inject constructor(
                             name = name.trim(),
                             fromLang = fromLang.code,
                             toLang = toLang.code,
+                            tags = tags,
                         )
                     )
                     CreateDictionaryState.Updated

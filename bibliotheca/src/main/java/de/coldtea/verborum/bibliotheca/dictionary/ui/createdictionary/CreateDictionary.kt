@@ -7,7 +7,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
@@ -17,6 +19,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -30,6 +33,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import de.coldtea.verborum.bibliotheca.common.ui.model.SupportedLanguage
 import de.coldtea.verborum.bibliotheca.common.utils.ResStrings
 import de.coldtea.verborum.bibliotheca.dictionary.ui.createdictionary.composables.LanguageDropdown
+import de.coldtea.verborum.bibliotheca.dictionary.ui.createdictionary.composables.TagSelector
 import de.coldtea.verborum.bibliotheca.dictionary.ui.createdictionary.model.CreateDictionaryState
 import de.coldtea.verborum.core.theme.VerborumTheme
 import de.coldtea.verborum.core.ui.RegisterTopBar
@@ -60,6 +64,7 @@ fun CreateDictionaryScreen(
     var name by remember { mutableStateOf("") }
     var fromLanguage by remember { mutableStateOf<SupportedLanguage?>(null) }
     var toLanguage by remember { mutableStateOf<SupportedLanguage?>(null) }
+    val selectedTags = remember { mutableStateListOf<String>() }
 
     // Edit mode: prefill the form from the loaded dictionary once it arrives.
     LaunchedEffect(editingDictionary) {
@@ -67,6 +72,8 @@ fun CreateDictionaryScreen(
             name = dictionary.name
             fromLanguage = SupportedLanguage.fromCode(dictionary.fromLang)
             toLanguage = SupportedLanguage.fromCode(dictionary.toLang)
+            selectedTags.clear()
+            selectedTags.addAll(dictionary.tags)
         }
     }
 
@@ -91,44 +98,63 @@ fun CreateDictionaryScreen(
             .background(MaterialTheme.colorScheme.background)
             .padding(horizontal = 24.dp)
     ) {
+        // Everything above the Create button scrolls: the expanded tag chips overflow the screen.
+        Column(
+            modifier = Modifier
+                .weight(1f)
+                .fillMaxWidth()
+                .verticalScroll(rememberScrollState())
+        ) {
+            Spacer(modifier = Modifier.height(16.dp))
+
+            OutlinedTextField(
+                value = name,
+                onValueChange = { name = it },
+                label = { Text(text = stringResource(ResStrings.createDictionaryScreenNameLabel)) },
+                singleLine = true,
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            LanguageDropdown(
+                label = stringResource(ResStrings.createDictionaryScreenFromLanguage),
+                selectedLanguage = fromLanguage,
+                onLanguageSelected = { fromLanguage = it },
+                // A dictionary's language pair is fixed once its words exist — locked in edit mode.
+                enabled = !isEditing,
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            LanguageDropdown(
+                label = stringResource(ResStrings.createDictionaryScreenToLanguage),
+                selectedLanguage = toLanguage,
+                onLanguageSelected = { toLanguage = it },
+                enabled = !isEditing,
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            TagSelector(
+                selectedTags = selectedTags.toSet(),
+                onToggleTag = { tag ->
+                    if (!selectedTags.remove(tag)) selectedTags.add(tag)
+                },
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+        }
+
         Spacer(modifier = Modifier.height(16.dp))
-
-        OutlinedTextField(
-            value = name,
-            onValueChange = { name = it },
-            label = { Text(text = stringResource(ResStrings.createDictionaryScreenNameLabel)) },
-            singleLine = true,
-            modifier = Modifier.fillMaxWidth()
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        LanguageDropdown(
-            label = stringResource(ResStrings.createDictionaryScreenFromLanguage),
-            selectedLanguage = fromLanguage,
-            onLanguageSelected = { fromLanguage = it },
-            // A dictionary's language pair is fixed once its words exist — locked in edit mode.
-            enabled = !isEditing,
-            modifier = Modifier.fillMaxWidth()
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        LanguageDropdown(
-            label = stringResource(ResStrings.createDictionaryScreenToLanguage),
-            selectedLanguage = toLanguage,
-            onLanguageSelected = { toLanguage = it },
-            enabled = !isEditing,
-            modifier = Modifier.fillMaxWidth()
-        )
-
-        Spacer(modifier = Modifier.weight(1f))
 
         Button(
             onClick = {
                 val fromLang = fromLanguage ?: return@Button
                 val toLang = toLanguage ?: return@Button
-                viewModel.save(name, fromLang, toLang)
+                viewModel.save(name, fromLang, toLang, selectedTags.toList())
             },
             enabled = isCreateEnabled,
             shape = RoundedCornerShape(16.dp),

@@ -47,6 +47,7 @@ class CreateDictionaryViewModelTest : BaseTest() {
             name = "German Basics",
             fromLang = SupportedLanguage.GERMAN,
             toLang = SupportedLanguage.ENGLISH,
+            tags = emptyList(),
         )
 
         assertEquals(
@@ -63,6 +64,7 @@ class CreateDictionaryViewModelTest : BaseTest() {
             name = "  German Basics  ",
             fromLang = SupportedLanguage.GERMAN,
             toLang = SupportedLanguage.ENGLISH,
+            tags = emptyList(),
         )
 
         coVerify(exactly = 1) {
@@ -84,6 +86,7 @@ class CreateDictionaryViewModelTest : BaseTest() {
             name = "German Basics",
             fromLang = SupportedLanguage.GERMAN,
             toLang = SupportedLanguage.ENGLISH,
+            tags = emptyList(),
         )
 
         assertEquals(CreateDictionaryState.Failed, viewModel.createDictionaryState.first())
@@ -128,6 +131,7 @@ class CreateDictionaryViewModelTest : BaseTest() {
             name = "  German Advanced  ",
             fromLang = SupportedLanguage.GERMAN,
             toLang = SupportedLanguage.SPANISH,
+            tags = emptyList(),
         )
 
         coVerify(exactly = 1) { dictionaryService.updateDictionary(capture(updatedSlot)) }

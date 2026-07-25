@@ -16,6 +16,9 @@ data class Dictionary(
     val toLang: String,
     val createdAt: Long,
     val updatedAt: Long,
+    // Tag codes (stable identifiers). The dictionary create/update payload does not carry them —
+    // tags are their own backend sub-resource, reconciled separately during sync.
+    val tags: List<String> = emptyList(),
 ) {
     fun convertToEntity() = DictionaryEntity(
         dictionaryId = dictionaryId,
@@ -28,6 +31,7 @@ data class Dictionary(
         toLang = toLang,
         createdAt = createdAt,
         updatedAt = updatedAt,
+        tags = DictionaryEntity.encodeTags(tags),
     )
 
     fun convertToRequest() = DictionaryRequest(
@@ -50,5 +54,6 @@ data class Dictionary(
         toLang = toLang,
         createdAt = createdAt,
         updatedAt = updatedAt,
+        tags = tags,
     )
 }

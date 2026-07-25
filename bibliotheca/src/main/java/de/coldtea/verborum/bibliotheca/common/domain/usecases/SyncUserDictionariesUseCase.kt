@@ -3,6 +3,7 @@ package de.coldtea.verborum.bibliotheca.common.domain.usecases
 import de.coldtea.verborum.bibliotheca.auth.domain.usecase.GetActiveUserUseCase
 import de.coldtea.verborum.bibliotheca.common.utils.getNowInMillis
 import de.coldtea.verborum.bibliotheca.dictionary.data.api.DictionaryApi
+import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.api.SyncDictionaryTagsUseCase
 import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.local.DeleteDictionaryUseCase
 import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.local.GetAllDictionariesUseCase
 import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.local.SaveDictionaryUseCase
@@ -32,6 +33,7 @@ class SyncUserDictionariesUseCase @Inject constructor(
     private val upsertWordsUseCase: UpsertWordsUseCase,
     private val deleteWordUseCase: DeleteWordUseCase,
     private val getActiveUserUseCase: GetActiveUserUseCase,
+    private val syncDictionaryTagsUseCase: SyncDictionaryTagsUseCase,
 ) {
 
     suspend fun invoke() = withContext(Dispatchers.IO) {
@@ -67,10 +69,14 @@ class SyncUserDictionariesUseCase @Inject constructor(
             if (dictionaryResponse.dictionaryId !in locallyModifiedDictionaryIds) {
                 val existing = localDictionaryById[dictionaryResponse.dictionaryId]
                 val now = getNowInMillis()
+                // Tags live in a separate sub-resource; fetch them so the local JSON list mirrors the
+                // server. A failed fetch keeps whatever we already had rather than wiping tags.
+                val tags = syncDictionaryTagsUseCase.pull(dictionaryResponse.dictionaryId)
+                    ?: existing?.tags.orEmpty()
                 val merged = dictionaryResponse.convertToDictionary(
                     fallbackCreatedAt = existing?.createdAt ?: now,
                     fallbackUpdatedAt = existing?.updatedAt ?: now,
-                )
+                ).copy(tags = tags)
                 // Only write when something actually changed: DaoBase.insert is REPLACE, which
                 // deletes and re-inserts the row, invalidating Room's observers for no reason.
                 if (merged != existing) {

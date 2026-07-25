@@ -1,6 +1,7 @@
 package de.coldtea.verborum.bibliotheca.common.domain.usecases
 
 import de.coldtea.verborum.bibliotheca.auth.domain.usecase.GetActiveUserUseCase
+import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.api.SyncDictionaryTagsUseCase
 import de.coldtea.verborum.bibliotheca.common.utils.getNowInMillis
 import de.coldtea.verborum.bibliotheca.dictionary.data.api.DictionaryApi
 import de.coldtea.verborum.bibliotheca.dictionary.data.db.entity.DictionaryEntity.Companion.GUEST_USER_ID
@@ -68,6 +69,10 @@ class SyncUserDictionariesUseCaseTest : BaseTest() {
     @MockK
     private lateinit var getActiveUserUseCase: GetActiveUserUseCase
 
+    // pull/push return values — stubbed per test; default to "no tags on the server".
+    @MockK
+    private lateinit var syncDictionaryTagsUseCase: SyncDictionaryTagsUseCase
+
     private lateinit var useCase: SyncUserDictionariesUseCase
 
     override fun setUp() {
@@ -82,9 +87,12 @@ class SyncUserDictionariesUseCaseTest : BaseTest() {
             upsertWordsUseCase = upsertWordsUseCase,
             deleteWordUseCase = deleteWordUseCase,
             getActiveUserUseCase = getActiveUserUseCase,
+            syncDictionaryTagsUseCase = syncDictionaryTagsUseCase,
         )
         // Existing cases stub the api against GUEST_USER_ID, so pin the active user to it.
         every { getActiveUserUseCase.invoke() } returns GUEST_USER_ID
+        // Default: the server has no tags, so merged dictionaries keep the empty default.
+        coEvery { syncDictionaryTagsUseCase.pull(any()) } returns emptyList()
         coEvery { saveDictionaryUseCase.invoke(any()) } returns "saved-id"
         coEvery { getAllDictionariesUseCase.invoke() } returns emptyList()
         coEvery { getWordsByDictionaryUseCase.invoke(any()) } returns emptyList()

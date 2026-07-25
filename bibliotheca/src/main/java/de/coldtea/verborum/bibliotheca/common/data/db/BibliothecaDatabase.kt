@@ -18,7 +18,7 @@ import de.coldtea.verborum.bibliotheca.word.data.db.entity.WordEntity
         WordEntity::class,
         DictionaryEntity::class,
     ],
-    version = 2,
+    version = 3,
     exportSchema = false
 )
 abstract class BibliothecaDatabase : RoomDatabase() {
@@ -38,6 +38,13 @@ abstract class BibliothecaDatabase : RoomDatabase() {
             }
         }
 
+        /** v3: dictionary tags — a JSON array of tag codes; existing rows default to empty. */
+        private val MIGRATION_2_3 = object : Migration(2, 3) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("ALTER TABLE dictionary ADD COLUMN tags TEXT NOT NULL DEFAULT '[]'")
+            }
+        }
+
         internal fun getInstance(context: Context): BibliothecaDatabase {
             synchronized(this) {
                 var instance = INSTANCE
@@ -48,7 +55,7 @@ abstract class BibliothecaDatabase : RoomDatabase() {
                         BibliothecaDatabase::class.java,
                         "db_verborum_bibliotheca"
                     )
-                        .addMigrations(MIGRATION_1_2)
+                        .addMigrations(MIGRATION_1_2, MIGRATION_2_3)
                         .build()
                     INSTANCE = instance
                 }

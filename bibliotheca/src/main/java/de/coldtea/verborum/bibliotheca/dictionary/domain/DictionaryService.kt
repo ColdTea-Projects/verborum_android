@@ -64,7 +64,12 @@ class DictionaryService @Inject constructor(
         return saveDictionaryUseCase.invoke(updated)
     }
 
-    suspend fun createDictionary(name: String, fromLang: String, toLang: String): String {
+    suspend fun createDictionary(
+        name: String,
+        fromLang: String,
+        toLang: String,
+        tags: List<String> = emptyList(),
+    ): String {
         val dictionary =
             Dictionary(
                 dictionaryId = "",
@@ -77,6 +82,7 @@ class DictionaryService @Inject constructor(
                 toLang = toLang,
                 createdAt = getNowInMillis(),
                 updatedAt = getNowInMillis(),
+                tags = tags,
             )
 
         return saveDictionaryUseCase.invoke(dictionary)

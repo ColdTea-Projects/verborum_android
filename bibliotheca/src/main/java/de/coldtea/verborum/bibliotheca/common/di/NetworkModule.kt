@@ -5,6 +5,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import de.coldtea.verborum.bibliotheca.dictionary.data.api.DictionaryApi
+import de.coldtea.verborum.bibliotheca.dictionary.data.api.DictionaryTagApi
 import de.coldtea.verborum.bibliotheca.word.data.api.WordApi
 import retrofit2.Retrofit
 import javax.inject.Singleton
@@ -17,6 +18,11 @@ object NetworkModule {
     @Provides
     @Singleton
     fun provideDictionaryApi(retrofit: Retrofit): DictionaryApi = retrofit.create(DictionaryApi::class.java)
+
+    @Provides
+    @Singleton
+    fun provideDictionaryTagApi(retrofit: Retrofit): DictionaryTagApi =
+        retrofit.create(DictionaryTagApi::class.java)
 
     @Provides
     @Singleton

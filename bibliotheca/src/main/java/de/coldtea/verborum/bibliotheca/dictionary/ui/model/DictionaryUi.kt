@@ -11,6 +11,7 @@ data class DictionaryUi(
     val toLang: String,
     val createdAt: Long,
     val updatedAt: Long,
+    val tags: List<String> = emptyList(),
     // UI-only: live word count, populated by combining with word data (0 when unknown).
     val wordCount: Int = 0,
 ) {
@@ -24,5 +25,6 @@ data class DictionaryUi(
         toLang = toLang,
         createdAt = createdAt,
         updatedAt = updatedAt,
+        tags = tags,
     )
 }
