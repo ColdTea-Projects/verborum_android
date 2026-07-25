@@ -31,6 +31,8 @@
     <string name="createDictionaryTagsLevel">Seviye</string>
     <string name="createDictionaryTagsTopic">Konu</string>
     <string name="createDictionaryTagsExams">Sınavlar</string>
+    <string name="tagSelectorExpanded">Genişletildi</string>
+    <string name="tagSelectorCollapsed">Daraltıldı</string>
     <string name="tagLevelBasic">Temel</string>
     <string name="tagLevelIntermediate">Orta</string>
     <string name="tagLevelAdvanced">İleri</string>

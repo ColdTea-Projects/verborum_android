@@ -31,6 +31,8 @@
     <string name="createDictionaryTagsLevel">Poziom</string>
     <string name="createDictionaryTagsTopic">Temat</string>
     <string name="createDictionaryTagsExams">Egzaminy</string>
+    <string name="tagSelectorExpanded">Rozwinięto</string>
+    <string name="tagSelectorCollapsed">Zwinięto</string>
     <string name="tagLevelBasic">Podstawowy</string>
     <string name="tagLevelIntermediate">Średni</string>
     <string name="tagLevelAdvanced">Zaawansowany</string>

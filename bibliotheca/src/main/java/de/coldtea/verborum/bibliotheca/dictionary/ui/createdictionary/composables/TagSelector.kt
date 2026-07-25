@@ -26,6 +26,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -57,12 +59,17 @@ fun TagSelector(
         targetValue = if (expanded) 90f else 0f,
         label = "tagSelectorChevron",
     )
+    // Announced by TalkBack so the expand/collapse state of the header is perceivable.
+    val stateLabel = stringResource(
+        if (expanded) ResStrings.tagSelectorExpanded else ResStrings.tagSelectorCollapsed
+    )
 
     Column(modifier = modifier.fillMaxWidth()) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .clickable { expanded = !expanded }
+                .semantics { stateDescription = stateLabel }
                 .padding(vertical = 8.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {

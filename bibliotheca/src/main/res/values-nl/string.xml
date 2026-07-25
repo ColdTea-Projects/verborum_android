@@ -31,6 +31,8 @@
     <string name="createDictionaryTagsLevel">Niveau</string>
     <string name="createDictionaryTagsTopic">Onderwerp</string>
     <string name="createDictionaryTagsExams">Examens</string>
+    <string name="tagSelectorExpanded">Uitgevouwen</string>
+    <string name="tagSelectorCollapsed">Samengevouwen</string>
     <string name="tagLevelBasic">Basis</string>
     <string name="tagLevelIntermediate">Gemiddeld</string>
     <string name="tagLevelAdvanced">Gevorderd</string>

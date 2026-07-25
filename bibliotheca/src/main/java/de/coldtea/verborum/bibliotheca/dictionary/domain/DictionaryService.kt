@@ -34,13 +34,14 @@ class DictionaryService @Inject constructor(
 ) {
 
     /**
-     * Deduplicated on the *UI* model on purpose: sync flips domain-only fields like `isSynced`,
-     * which the list never renders. Comparing after the mapping means those writes produce no
-     * emission at all, so the screen does not recompose for changes it cannot show.
+     * Deduplicated on the *UI* model on purpose: sync flips fields the list never renders
+     * (`isSynced`, and tags — shown only on the detail screen). Comparing after the mapping means
+     * those writes produce no emission at all, so the list does not recompose for changes it
+     * cannot show. Tags are dropped from the projection so a tag-only edit can't re-emit the list.
      */
     fun observeDictionaries(): Flow<List<DictionaryUi>> = observeAllDictionariesUseCase
         .invoke()
-        .map { it.map(Dictionary::convertToUi) }
+        .map { it.map { dictionary -> dictionary.convertToUi().copy(tags = emptyList()) } }
         .distinctUntilChanged()
         .flowOn(Dispatchers.IO)
 

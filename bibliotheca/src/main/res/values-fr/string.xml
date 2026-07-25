@@ -31,6 +31,8 @@
     <string name="createDictionaryTagsLevel">Niveau</string>
     <string name="createDictionaryTagsTopic">Thème</string>
     <string name="createDictionaryTagsExams">Examens</string>
+    <string name="tagSelectorExpanded">Développé</string>
+    <string name="tagSelectorCollapsed">Réduit</string>
     <string name="tagLevelBasic">Débutant</string>
     <string name="tagLevelIntermediate">Intermédiaire</string>
     <string name="tagLevelAdvanced">Avancé</string>

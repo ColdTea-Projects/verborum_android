@@ -31,6 +31,8 @@
     <string name="createDictionaryTagsLevel">레벨</string>
     <string name="createDictionaryTagsTopic">주제</string>
     <string name="createDictionaryTagsExams">시험</string>
+    <string name="tagSelectorExpanded">펼침</string>
+    <string name="tagSelectorCollapsed">접힘</string>
     <string name="tagLevelBasic">초급</string>
     <string name="tagLevelIntermediate">중급</string>
     <string name="tagLevelAdvanced">고급</string>

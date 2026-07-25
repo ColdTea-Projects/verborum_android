@@ -31,6 +31,8 @@
     <string name="createDictionaryTagsLevel">Επίπεδο</string>
     <string name="createDictionaryTagsTopic">Θέμα</string>
     <string name="createDictionaryTagsExams">Εξετάσεις</string>
+    <string name="tagSelectorExpanded">Αναπτύχθηκε</string>
+    <string name="tagSelectorCollapsed">Συμπτύχθηκε</string>
     <string name="tagLevelBasic">Βασικό</string>
     <string name="tagLevelIntermediate">Μεσαίο</string>
     <string name="tagLevelAdvanced">Προχωρημένο</string>

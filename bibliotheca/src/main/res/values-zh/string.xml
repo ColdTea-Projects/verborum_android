@@ -31,6 +31,8 @@
     <string name="createDictionaryTagsLevel">级别</string>
     <string name="createDictionaryTagsTopic">主题</string>
     <string name="createDictionaryTagsExams">考试</string>
+    <string name="tagSelectorExpanded">已展开</string>
+    <string name="tagSelectorCollapsed">已折叠</string>
     <string name="tagLevelBasic">初级</string>
     <string name="tagLevelIntermediate">中级</string>
     <string name="tagLevelAdvanced">高级</string>

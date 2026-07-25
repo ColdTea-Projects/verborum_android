@@ -31,6 +31,8 @@
     <string name="createDictionaryTagsLevel">レベル</string>
     <string name="createDictionaryTagsTopic">トピック</string>
     <string name="createDictionaryTagsExams">試験</string>
+    <string name="tagSelectorExpanded">展開済み</string>
+    <string name="tagSelectorCollapsed">折りたたみ済み</string>
     <string name="tagLevelBasic">初級</string>
     <string name="tagLevelIntermediate">中級</string>
     <string name="tagLevelAdvanced">上級</string>

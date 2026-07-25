@@ -31,6 +31,8 @@
     <string name="createDictionaryTagsLevel">Səviyyə</string>
     <string name="createDictionaryTagsTopic">Mövzu</string>
     <string name="createDictionaryTagsExams">İmtahanlar</string>
+    <string name="tagSelectorExpanded">Genişləndirildi</string>
+    <string name="tagSelectorCollapsed">Yığcamlaşdırıldı</string>
     <string name="tagLevelBasic">Əsas</string>
     <string name="tagLevelIntermediate">Orta</string>
     <string name="tagLevelAdvanced">Qabaqcıl</string>

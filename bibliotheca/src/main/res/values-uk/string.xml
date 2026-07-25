@@ -31,6 +31,8 @@
     <string name="createDictionaryTagsLevel">Рівень</string>
     <string name="createDictionaryTagsTopic">Тема</string>
     <string name="createDictionaryTagsExams">Іспити</string>
+    <string name="tagSelectorExpanded">Розгорнуто</string>
+    <string name="tagSelectorCollapsed">Згорнуто</string>
     <string name="tagLevelBasic">Початковий</string>
     <string name="tagLevelIntermediate">Середній</string>
     <string name="tagLevelAdvanced">Просунутий</string>

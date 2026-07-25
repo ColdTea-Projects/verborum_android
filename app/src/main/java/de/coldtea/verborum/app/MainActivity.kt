@@ -29,12 +29,14 @@ class MainActivity : ComponentActivity() {
         setContent {
             VerborumTheme {
                 // The login wall gates the whole app: a failed refresh clears the session and
-                // flips this back to false, returning the user here (guide §5).
+                // flips this back to false, returning the user here (guide §5). null means the
+                // encrypted store is still being read off-main — render nothing rather than flash
+                // the login screen at an already-signed-in user.
                 val loggedIn by authTokenStore.isLoggedIn.collectAsState()
-                if (loggedIn) {
-                    NavigationCentral(showWelcome = showWelcome)
-                } else {
-                    LoginScreen()
+                when (loggedIn) {
+                    true -> NavigationCentral(showWelcome = showWelcome)
+                    false -> LoginScreen()
+                    null -> Unit
                 }
             }
         }

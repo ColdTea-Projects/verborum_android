@@ -31,6 +31,8 @@
     <string name="createDictionaryTagsLevel">Livello</string>
     <string name="createDictionaryTagsTopic">Argomento</string>
     <string name="createDictionaryTagsExams">Esami</string>
+    <string name="tagSelectorExpanded">Espanso</string>
+    <string name="tagSelectorCollapsed">Compresso</string>
     <string name="tagLevelBasic">Base</string>
     <string name="tagLevelIntermediate">Intermedio</string>
     <string name="tagLevelAdvanced">Avanzato</string>

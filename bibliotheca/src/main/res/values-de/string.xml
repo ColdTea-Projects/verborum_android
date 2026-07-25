@@ -31,6 +31,8 @@
     <string name="createDictionaryTagsLevel">Niveau</string>
     <string name="createDictionaryTagsTopic">Thema</string>
     <string name="createDictionaryTagsExams">Prüfungen</string>
+    <string name="tagSelectorExpanded">Ausgeklappt</string>
+    <string name="tagSelectorCollapsed">Eingeklappt</string>
     <string name="tagLevelBasic">Grundstufe</string>
     <string name="tagLevelIntermediate">Mittelstufe</string>
     <string name="tagLevelAdvanced">Fortgeschritten</string>

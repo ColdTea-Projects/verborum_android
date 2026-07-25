@@ -31,6 +31,8 @@
     <string name="createDictionaryTagsLevel">سطح</string>
     <string name="createDictionaryTagsTopic">موضوع</string>
     <string name="createDictionaryTagsExams">آزمون‌ها</string>
+    <string name="tagSelectorExpanded">باز شده</string>
+    <string name="tagSelectorCollapsed">جمع شده</string>
     <string name="tagLevelBasic">مقدماتی</string>
     <string name="tagLevelIntermediate">متوسط</string>
     <string name="tagLevelAdvanced">پیشرفته</string>

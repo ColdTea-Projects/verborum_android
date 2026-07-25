@@ -31,6 +31,8 @@
     <string name="createDictionaryTagsLevel">المستوى</string>
     <string name="createDictionaryTagsTopic">الموضوع</string>
     <string name="createDictionaryTagsExams">الامتحانات</string>
+    <string name="tagSelectorExpanded">موسّع</string>
+    <string name="tagSelectorCollapsed">مطوي</string>
     <string name="tagLevelBasic">أساسي</string>
     <string name="tagLevelIntermediate">متوسط</string>
     <string name="tagLevelAdvanced">متقدم</string>

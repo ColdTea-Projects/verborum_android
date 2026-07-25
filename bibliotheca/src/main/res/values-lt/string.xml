@@ -31,6 +31,8 @@
     <string name="createDictionaryTagsLevel">Lygis</string>
     <string name="createDictionaryTagsTopic">Tema</string>
     <string name="createDictionaryTagsExams">Egzaminai</string>
+    <string name="tagSelectorExpanded">Išskleista</string>
+    <string name="tagSelectorCollapsed">Sutraukta</string>
     <string name="tagLevelBasic">Pradinis</string>
     <string name="tagLevelIntermediate">Vidutinis</string>
     <string name="tagLevelAdvanced">Pažengęs</string>
