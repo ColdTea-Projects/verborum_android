@@ -189,13 +189,6 @@
     <string name="dictionarySortOldest">Prima i più vecchi</string>
     <string name="dictionaryListNoMatches">Nessun dizionario corrisponde ai filtri</string>
     <string name="dictionaryListMoreOptions">Altre opzioni</string>
-    <string name="optionsScreenTitle">Opzioni</string>
-    <string name="optionsLogout">Esci</string>
-    <string name="loginTitle">Verborum</string>
-    <string name="loginTagline">Crea i tuoi dizionari. Padroneggia ogni parola.</string>
-    <string name="loginSignIn">Accedi</string>
-    <string name="loginCreateAccount">Crea account</string>
-    <string name="loginFailed">Accesso non riuscito. Riprova.</string>
     <!--Plurals-->
     <plurals name="dictionaryDetailsScreenWordListCount">
         <item quantity="one">%1$d parola nel dizionario</item>

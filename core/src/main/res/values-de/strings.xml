@@ -1,0 +1,9 @@
+<resources>
+    <string name="loginTitle">Verborum</string>
+    <string name="loginTagline">Erstelle deine eigenen Wörterbücher. Meistere jedes Wort.</string>
+    <string name="loginSignIn">Anmelden</string>
+    <string name="loginCreateAccount">Konto erstellen</string>
+    <string name="loginFailed">Anmeldung fehlgeschlagen. Bitte versuche es erneut.</string>
+    <string name="optionsScreenTitle">Optionen</string>
+    <string name="optionsLogout">Abmelden</string>
+</resources>

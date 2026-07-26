@@ -189,13 +189,6 @@
     <string name="dictionarySortOldest">最早在前</string>
     <string name="dictionaryListNoMatches">没有符合筛选条件的词典</string>
     <string name="dictionaryListMoreOptions">更多选项</string>
-    <string name="optionsScreenTitle">选项</string>
-    <string name="optionsLogout">退出登录</string>
-    <string name="loginTitle">Verborum</string>
-    <string name="loginTagline">创建你自己的词典。掌握每一个单词。</string>
-    <string name="loginSignIn">登录</string>
-    <string name="loginCreateAccount">创建账户</string>
-    <string name="loginFailed">登录失败，请重试。</string>
     <!--Plurals-->
     <plurals name="dictionaryDetailsScreenWordListCount">
         <item quantity="other">词典中有%1$d个单词</item>

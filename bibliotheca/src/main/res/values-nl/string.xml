@@ -189,13 +189,6 @@
     <string name="dictionarySortOldest">Oudste eerst</string>
     <string name="dictionaryListNoMatches">Geen woordenboeken komen overeen met je filters</string>
     <string name="dictionaryListMoreOptions">Meer opties</string>
-    <string name="optionsScreenTitle">Opties</string>
-    <string name="optionsLogout">Uitloggen</string>
-    <string name="loginTitle">Verborum</string>
-    <string name="loginTagline">Maak je eigen woordenboeken. Beheers elk woord.</string>
-    <string name="loginSignIn">Inloggen</string>
-    <string name="loginCreateAccount">Account aanmaken</string>
-    <string name="loginFailed">Inloggen mislukt. Probeer het opnieuw.</string>
     <!--Plurals-->
     <plurals name="dictionaryDetailsScreenWordListCount">
         <item quantity="one">%1$d woord in het woordenboek</item>

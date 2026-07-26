@@ -189,13 +189,6 @@
     <string name="dictionarySortOldest">Παλαιότερα πρώτα</string>
     <string name="dictionaryListNoMatches">Κανένα λεξικό δεν ταιριάζει με τα φίλτρα σας</string>
     <string name="dictionaryListMoreOptions">Περισσότερες επιλογές</string>
-    <string name="optionsScreenTitle">Επιλογές</string>
-    <string name="optionsLogout">Αποσύνδεση</string>
-    <string name="loginTitle">Verborum</string>
-    <string name="loginTagline">Δημιουργήστε τα δικά σας λεξικά. Κατακτήστε κάθε λέξη.</string>
-    <string name="loginSignIn">Σύνδεση</string>
-    <string name="loginCreateAccount">Δημιουργία λογαριασμού</string>
-    <string name="loginFailed">Η σύνδεση απέτυχε. Δοκιμάστε ξανά.</string>
     <!--Plurals-->
     <plurals name="dictionaryDetailsScreenWordListCount">
         <item quantity="one">%1$d λέξη στο λεξικό</item>

@@ -1,0 +1,9 @@
+<resources>
+    <string name="loginTitle">Verborum</string>
+    <string name="loginTagline">自分だけの辞書を作ろう。すべての単語をマスター。</string>
+    <string name="loginSignIn">ログイン</string>
+    <string name="loginCreateAccount">アカウントを作成</string>
+    <string name="loginFailed">ログインに失敗しました。もう一度お試しください。</string>
+    <string name="optionsScreenTitle">オプション</string>
+    <string name="optionsLogout">ログアウト</string>
+</resources>

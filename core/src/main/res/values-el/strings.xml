@@ -1,0 +1,9 @@
+<resources>
+    <string name="loginTitle">Verborum</string>
+    <string name="loginTagline">Δημιουργήστε τα δικά σας λεξικά. Κατακτήστε κάθε λέξη.</string>
+    <string name="loginSignIn">Σύνδεση</string>
+    <string name="loginCreateAccount">Δημιουργία λογαριασμού</string>
+    <string name="loginFailed">Η σύνδεση απέτυχε. Δοκιμάστε ξανά.</string>
+    <string name="optionsScreenTitle">Επιλογές</string>
+    <string name="optionsLogout">Αποσύνδεση</string>
+</resources>

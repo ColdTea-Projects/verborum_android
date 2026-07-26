@@ -1,0 +1,9 @@
+<resources>
+    <string name="loginTitle">Verborum</string>
+    <string name="loginTagline">Створюйте власні словники. Опановуйте кожне слово.</string>
+    <string name="loginSignIn">Увійти</string>
+    <string name="loginCreateAccount">Створити обліковий запис</string>
+    <string name="loginFailed">Не вдалося увійти. Спробуйте ще раз.</string>
+    <string name="optionsScreenTitle">Параметри</string>
+    <string name="optionsLogout">Вийти</string>
+</resources>

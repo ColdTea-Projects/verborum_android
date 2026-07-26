@@ -1,6 +1,6 @@
 package de.coldtea.verborum.bibliotheca.dictionary.domain
 
-import de.coldtea.verborum.bibliotheca.auth.domain.usecase.GetActiveUserUseCase
+import de.coldtea.verborum.core.auth.domain.usecase.GetActiveUserUseCase
 import de.coldtea.verborum.bibliotheca.common.domain.SyncService
 import de.coldtea.verborum.bibliotheca.common.domain.UploadService
 import de.coldtea.verborum.bibliotheca.dictionary.data.db.entity.DictionaryEntity.Companion.GUEST_USER_ID

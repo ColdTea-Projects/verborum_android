@@ -189,13 +189,6 @@
     <string name="dictionarySortOldest">Seniausi pirmi</string>
     <string name="dictionaryListNoMatches">Nė vienas žodynas neatitinka filtrų</string>
     <string name="dictionaryListMoreOptions">Daugiau parinkčių</string>
-    <string name="optionsScreenTitle">Parinktys</string>
-    <string name="optionsLogout">Atsijungti</string>
-    <string name="loginTitle">Verborum</string>
-    <string name="loginTagline">Kurkite savo žodynus. Įvaldykite kiekvieną žodį.</string>
-    <string name="loginSignIn">Prisijungti</string>
-    <string name="loginCreateAccount">Sukurti paskyrą</string>
-    <string name="loginFailed">Prisijungti nepavyko. Bandykite dar kartą.</string>
     <!--Plurals-->
     <plurals name="dictionaryDetailsScreenWordListCount">
         <item quantity="one">%1$d žodis žodyne</item>

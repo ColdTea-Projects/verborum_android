@@ -7,7 +7,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import dagger.hilt.android.AndroidEntryPoint
 import de.coldtea.verborum.app.navigation.NavigationCentral
-import de.coldtea.verborum.bibliotheca.auth.ui.LoginScreen
+import de.coldtea.verborum.core.auth.ui.LoginScreen
 import de.coldtea.verborum.bibliotheca.onboarding.domain.OnboardingService
 import de.coldtea.verborum.core.auth.AuthTokenStore
 import de.coldtea.verborum.core.theme.VerborumTheme

@@ -8,7 +8,7 @@ Personal vocabulary platform: users build dictionaries of word pairs between two
 app  →  bibliotheca, forum  →  core        (buildSrc: Configuration.kt for SDK versions)
 ```
 
-Feature code lives in `bibliotheca`/`forum` (vertical slices: `data/` → `domain/` → `ui/`), never in `app` (only MainActivity, Application, navigation). `core` holds theme, BaseViewModel, network DI, testFixtures. Versions only in `gradle/libs.versions.toml`; KSP, never kapt.
+Domain feature code lives in `bibliotheca`/`forum` (vertical slices: `data/` → `domain/` → `ui/`), never in `app` (only MainActivity, Application, navigation). `core` holds theme, BaseViewModel, network DI, testFixtures, plus the two app-wide slices — `auth/` (token layer, AppAuth, login screen) and `options/`. Since `core` cannot depend on a feature module, feature work triggered by login is contributed through the `PostLoginHook` multibinding. Versions only in `gradle/libs.versions.toml`; KSP, never kapt.
 
 Build/test (JAVA_HOME required):
 

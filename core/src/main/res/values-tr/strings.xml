@@ -1,0 +1,9 @@
+<resources>
+    <string name="loginTitle">Verborum</string>
+    <string name="loginTagline">Kendi sözlüklerini oluştur. Her kelimede ustalaş.</string>
+    <string name="loginSignIn">Giriş yap</string>
+    <string name="loginCreateAccount">Hesap oluştur</string>
+    <string name="loginFailed">Giriş başarısız. Lütfen tekrar deneyin.</string>
+    <string name="optionsScreenTitle">Seçenekler</string>
+    <string name="optionsLogout">Çıkış yap</string>
+</resources>

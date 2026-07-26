@@ -31,6 +31,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import de.coldtea.verborum.bibliotheca.common.utils.CoreResDrawables
 import de.coldtea.verborum.bibliotheca.common.utils.ResDrawables
 import de.coldtea.verborum.core.theme.VerborumTheme
 
@@ -48,7 +49,7 @@ fun IntroVisual(modifier: Modifier = Modifier) {
     ) {
         Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
             Icon(
-                painter = painterResource(ResDrawables.ic_book_24_black),
+                painter = painterResource(CoreResDrawables.ic_book_24_black),
                 contentDescription = null,
                 tint = Color.White,
                 modifier = Modifier.size(56.dp)
@@ -76,7 +77,7 @@ fun LibraryVisual(modifier: Modifier = Modifier) {
                 ) {
                     Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
                         Icon(
-                            painter = painterResource(ResDrawables.ic_book_24_black),
+                            painter = painterResource(CoreResDrawables.ic_book_24_black),
                             contentDescription = null,
                             tint = Color.White,
                             modifier = Modifier.size(18.dp)

@@ -189,13 +189,6 @@
     <string name="dictionarySortOldest">Älteste zuerst</string>
     <string name="dictionaryListNoMatches">Keine Wörterbücher entsprechen deinen Filtern</string>
     <string name="dictionaryListMoreOptions">Weitere Optionen</string>
-    <string name="optionsScreenTitle">Optionen</string>
-    <string name="optionsLogout">Abmelden</string>
-    <string name="loginTitle">Verborum</string>
-    <string name="loginTagline">Erstelle deine eigenen Wörterbücher. Meistere jedes Wort.</string>
-    <string name="loginSignIn">Anmelden</string>
-    <string name="loginCreateAccount">Konto erstellen</string>
-    <string name="loginFailed">Anmeldung fehlgeschlagen. Bitte versuche es erneut.</string>
     <!--Plurals-->
     <plurals name="dictionaryDetailsScreenWordListCount">
         <item quantity="one">%1$d Wort im Wörterbuch</item>

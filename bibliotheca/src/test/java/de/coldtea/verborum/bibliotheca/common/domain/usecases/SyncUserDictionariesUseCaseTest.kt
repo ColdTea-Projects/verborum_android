@@ -1,6 +1,6 @@
 package de.coldtea.verborum.bibliotheca.common.domain.usecases
 
-import de.coldtea.verborum.bibliotheca.auth.domain.usecase.GetActiveUserUseCase
+import de.coldtea.verborum.core.auth.domain.usecase.GetActiveUserUseCase
 import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.api.SyncDictionaryTagsUseCase
 import de.coldtea.verborum.bibliotheca.common.utils.getNowInMillis
 import de.coldtea.verborum.bibliotheca.dictionary.data.api.DictionaryApi

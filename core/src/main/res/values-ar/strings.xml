@@ -1,0 +1,9 @@
+<resources>
+    <string name="loginTitle">Verborum</string>
+    <string name="loginTagline">أنشئ قواميسك الخاصة. أتقن كل كلمة.</string>
+    <string name="loginSignIn">تسجيل الدخول</string>
+    <string name="loginCreateAccount">إنشاء حساب</string>
+    <string name="loginFailed">فشل تسجيل الدخول. حاول مرة أخرى.</string>
+    <string name="optionsScreenTitle">الخيارات</string>
+    <string name="optionsLogout">تسجيل الخروج</string>
+</resources>

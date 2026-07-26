@@ -189,13 +189,6 @@
     <string name="dictionarySortOldest">오래된순</string>
     <string name="dictionaryListNoMatches">필터와 일치하는 사전이 없습니다</string>
     <string name="dictionaryListMoreOptions">옵션 더보기</string>
-    <string name="optionsScreenTitle">옵션</string>
-    <string name="optionsLogout">로그아웃</string>
-    <string name="loginTitle">Verborum</string>
-    <string name="loginTagline">나만의 사전을 만드세요. 모든 단어를 마스터하세요.</string>
-    <string name="loginSignIn">로그인</string>
-    <string name="loginCreateAccount">계정 만들기</string>
-    <string name="loginFailed">로그인에 실패했습니다. 다시 시도해 주세요.</string>
     <!--Plurals-->
     <plurals name="dictionaryDetailsScreenWordListCount">
         <item quantity="other">사전에 %1$d개 단어</item>

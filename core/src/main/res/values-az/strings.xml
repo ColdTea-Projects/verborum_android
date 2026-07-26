@@ -1,0 +1,9 @@
+<resources>
+    <string name="loginTitle">Verborum</string>
+    <string name="loginTagline">Öz lüğətlərini yarat. Hər sözü mənimsə.</string>
+    <string name="loginSignIn">Daxil ol</string>
+    <string name="loginCreateAccount">Hesab yarat</string>
+    <string name="loginFailed">Giriş alınmadı. Zəhmət olmasa yenidən cəhd edin.</string>
+    <string name="optionsScreenTitle">Seçimlər</string>
+    <string name="optionsLogout">Çıxış</string>
+</resources>

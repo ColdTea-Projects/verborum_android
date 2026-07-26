@@ -189,13 +189,6 @@
     <string name="dictionarySortOldest">الأقدم أولاً</string>
     <string name="dictionaryListNoMatches">لا توجد قواميس مطابقة لعوامل التصفية</string>
     <string name="dictionaryListMoreOptions">خيارات أخرى</string>
-    <string name="optionsScreenTitle">الخيارات</string>
-    <string name="optionsLogout">تسجيل الخروج</string>
-    <string name="loginTitle">Verborum</string>
-    <string name="loginTagline">أنشئ قواميسك الخاصة. أتقن كل كلمة.</string>
-    <string name="loginSignIn">تسجيل الدخول</string>
-    <string name="loginCreateAccount">إنشاء حساب</string>
-    <string name="loginFailed">فشل تسجيل الدخول. حاول مرة أخرى.</string>
     <!--Plurals-->
     <plurals name="dictionaryDetailsScreenWordListCount">
         <item quantity="zero">لا توجد كلمات في القاموس</item>

@@ -1,0 +1,9 @@
+<resources>
+    <string name="loginTitle">Verborum</string>
+    <string name="loginTagline">Создавайте свои словари. Осваивайте каждое слово.</string>
+    <string name="loginSignIn">Войти</string>
+    <string name="loginCreateAccount">Создать аккаунт</string>
+    <string name="loginFailed">Не удалось войти. Попробуйте ещё раз.</string>
+    <string name="optionsScreenTitle">Настройки</string>
+    <string name="optionsLogout">Выйти</string>
+</resources>

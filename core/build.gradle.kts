@@ -110,6 +110,8 @@ dependencies {
 
     //Auth — encrypted token storage (EncryptedSharedPreferences backed by the Android Keystore)
     implementation(libs.androidx.security.crypto)
+    //Auth — AppAuth drives the Authorization Code + PKCE flow via Custom Tabs
+    implementation(libs.appauth)
 
     //Test
     testImplementation(libs.junit)

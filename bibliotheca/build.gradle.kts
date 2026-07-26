@@ -100,9 +100,6 @@ dependencies {
     implementation(libs.hilt.navigation.compose)
     ksp(libs.hilt.compiler)
 
-    //Auth — AppAuth drives the Authorization Code + PKCE flow via Custom Tabs
-    implementation(libs.appauth)
-
     //WorkManager (background/periodic sync; Hilt-injected workers)
     implementation(libs.androidx.work.runtime)
     implementation(libs.androidx.hilt.work)

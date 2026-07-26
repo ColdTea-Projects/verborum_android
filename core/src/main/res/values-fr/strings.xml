@@ -1,0 +1,9 @@
+<resources>
+    <string name="loginTitle">Verborum</string>
+    <string name="loginTagline">Créez vos propres dictionnaires. Maîtrisez chaque mot.</string>
+    <string name="loginSignIn">Se connecter</string>
+    <string name="loginCreateAccount">Créer un compte</string>
+    <string name="loginFailed">Échec de la connexion. Veuillez réessayer.</string>
+    <string name="optionsScreenTitle">Options</string>
+    <string name="optionsLogout">Se déconnecter</string>
+</resources>
