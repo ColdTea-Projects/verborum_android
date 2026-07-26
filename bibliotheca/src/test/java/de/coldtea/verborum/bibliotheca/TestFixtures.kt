@@ -138,6 +138,7 @@ fun testDictionaryEntity(
     toLang: String = "de",
     createdAt: Long = 1_000L,
     updatedAt: Long = 2_000L,
+    tags: String = DictionaryEntity.EMPTY_TAGS,
 ) = DictionaryEntity(
     dictionaryId = dictionaryId,
     userId = userId,
@@ -149,6 +150,7 @@ fun testDictionaryEntity(
     toLang = toLang,
     createdAt = createdAt,
     updatedAt = updatedAt,
+    tags = tags,
 )
 
 fun testDictionaryResponse(

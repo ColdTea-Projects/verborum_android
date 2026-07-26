@@ -35,6 +35,8 @@ work = "2.9.1"
 androidx-hilt = "1.2.0"
 appauth = "0.11.1"
 security-crypto = "1.0.0"
+robolectric = "4.14.1"
+androidx-test-core = "1.6.1"
 
 [libraries]
 androidx_core_ktx = { module = "androidx.core:core-ktx", version.ref = "androidx_core_ktx" }
@@ -78,6 +80,9 @@ androidx_hilt_work = { module = "androidx.hilt:hilt-work", version.ref = "androi
 androidx_hilt_compiler = { module = "androidx.hilt:hilt-compiler", version.ref = "androidx-hilt" }
 appauth = { module = "net.openid:appauth", version.ref = "appauth" }
 androidx_security_crypto = { module = "androidx.security:security-crypto", version.ref = "security-crypto" }
+robolectric = { module = "org.robolectric:robolectric", version.ref = "robolectric" }
+androidx_test_core = { module = "androidx.test:core", version.ref = "androidx-test-core" }
+okhttp3_mockwebserver = { module = "com.squareup.okhttp3:mockwebserver", version.ref = "okhttp" }
 
 
 [plugins]

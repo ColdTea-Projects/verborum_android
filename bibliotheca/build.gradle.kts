@@ -15,6 +15,11 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
+
+        // AppAuth (a transitive dependency) contributes a manifest entry with this placeholder.
+        // The app module supplies the real value; the library needs one too so its own manifest —
+        // now merged for Robolectric unit tests — resolves. Not used at runtime from here.
+        manifestPlaceholders["appAuthRedirectScheme"] = "de.coldtea.verborum"
     }
 
     compileOptions {
@@ -30,6 +35,13 @@ android {
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.1"
+    }
+    testOptions {
+        unitTests {
+            // Robolectric needs the merged Android resources/manifest to run Room DAO/migration
+            // integration tests in the local JVM (no emulator).
+            isIncludeAndroidResources = true
+        }
     }
 
     buildTypes {
@@ -62,6 +74,11 @@ dependencies {
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.mockk)
     testImplementation(testFixtures(projects.core))
+    // Integration testing: Robolectric (in-JVM Android) for Room DAO/migration tests,
+    // MockWebServer for driving the Retrofit APIs against canned responses.
+    testImplementation(libs.robolectric)
+    testImplementation(libs.androidx.test.core)
+    testImplementation(libs.okhttp3.mockwebserver)
     androidTestImplementation(libs.androidx.test.ext.junit)
     androidTestImplementation(libs.androidx.test.espresso.core)
 

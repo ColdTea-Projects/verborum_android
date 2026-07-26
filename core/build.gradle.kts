@@ -115,6 +115,8 @@ dependencies {
     testImplementation(libs.junit)
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.mockk)
+    // MockWebServer drives the OkHttp auth stack (interceptor + 401→refresh authenticator).
+    testImplementation(libs.okhttp3.mockwebserver)
     testFixturesImplementation(libs.junit)
     testFixturesImplementation(libs.kotlinx.coroutines.test)
     testFixturesImplementation(libs.mockk)
