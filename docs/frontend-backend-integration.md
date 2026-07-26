@@ -1,7 +1,7 @@
 # Verborum — Frontend–Backend Integration
 
 **Target location of this file:** backend repo `verborum_ms/docs/integration/frontend-backend-integration.md`
-(referenced from the Android and future KMP repos — single copy, no duplicates)
+(referenced from the Android and future KMP repo — single copy, no duplicates)
 **Related:** *Verborum Android Development* (`verborum_android/docs/android-development.md`),
 backend agent docs (`verborum_ms/docs/agent/`)
 
@@ -9,18 +9,36 @@ backend agent docs (`verborum_ms/docs/agent/`)
 
 ## 1. The Platform Picture
 
-One backend, three client applications in **three separate repositories**:
+One backend, three client applications across **two client repositories** — Android native, and
+a single Compose Multiplatform project shared by web and iOS:
 
 | Client | Technology | Repo | Status |
 |---|---|---|---|
 | Android | **Native** Kotlin, Jetpack Compose | `verborum_android` | Working (pre-auth) |
-| WebApp | **KMP**, Compose Multiplatform | (to be created) | Planned — next client |
-| iOS | **KMP**, Compose Multiplatform | (to be created) | Planned — after web |
+| WebApp | **KMP**, Compose Multiplatform (Wasm/Canvas) | `verborum_kmp` (to be created) | Planned — next client |
+| iOS | **KMP**, Compose Multiplatform | `verborum_kmp` (to be created) | Planned — after web |
 
-Android stays native permanently. The two KMP projects are independent of the Android
-codebase — **nothing is shared between clients except the contracts in this document.** That
-is precisely why this document exists: with three independent implementations, whatever is not
-specified here will be invented three times, differently.
+Android stays native permanently and is the one genuinely independent client. **Web and iOS are
+two targets of a single Compose Multiplatform project** (`verborum_kmp`), not two codebases:
+shared domain, data, networking, DI, and the sync engine live in `commonMain`; only platform
+leaves differ — the iOS Keychain vs. web token storage (§6.3), the online-only web store (§5),
+the per-target HTTP engine, and a small number of screens where form factor demands a different
+UI over the *same* ViewModel. Screen-resolution differences between web and mobile are handled as
+adaptive layout (`WindowSizeClass`), not as forks.
+
+So the contract in this document is implemented **twice, not three times** — once by native
+Android, once by the shared CMP codebase — and **nothing is shared across that native/CMP
+boundary except the contracts here.** That boundary is why this document exists: whatever is not
+specified here gets invented on both sides, differently. Within the CMP project, web and iOS
+share by construction and cannot drift on anything kept in `commonMain`.
+
+⚠️ **Divergent-UI rule.** Where a screen legitimately differs per target, only its composable
+diverges; the ViewModel, use cases, and any backend-synced field it writes stay shared. Example:
+*Self Practice* renders as an expandable list with a slide-to-set-level gesture on iOS, and as a
+flip-card grid with I-was-right / I-was-wrong buttons on web — but both drive one shared
+ViewModel, and the result→`level` mapping (word `level`, BE `P0-19`) is a shared `commonMain`
+rule so the same word practiced on two clients cannot diverge. UI shape is per-target; behavior
+is not.
 
 Delivery policy: work streams run in parallel and must not block each other, but **nothing is
 released until Android + Backend are ready as a pair.** Web-required infrastructure (CORS,
@@ -146,6 +164,11 @@ upserts via `PUT`.
 - **Web** is expected online-only (no durable local store; browser storage is not trusted).
 - **At release Android is online + login required.** Offline-first remains as the resilience
   layer under a logged-in session — it is not an anonymous mode.
+- In the **shared CMP project** (`verborum_kmp`), this split is a `commonMain` store interface:
+  an online-only binding on web, and — *if iOS goes offline-capable* — a real offline-first
+  binding on iOS. The sync engine and the ViewModels above it stay shared; only the binding
+  differs per target. **Whether iOS ships the offline binding or stays online-only like web is
+  still an open decision.**
 
 ## 6. Authentication Contract (normative for all three clients)
 
@@ -174,8 +197,9 @@ once, then surface login.
 Browsers have no secure token storage. Two options:
 
 1. **BFF (recommended):** a thin server component of the web app holds tokens; the browser
-   gets an httpOnly session cookie. Most secure; means the KMP web repo ships with a small
-   server — this shapes that repo's structure and should be decided before it is created.
+   gets an httpOnly session cookie. Most secure; means the CMP project ships a small server
+   component alongside its web target — this shapes the `verborum_kmp` repo layout and should be
+   decided before it is created.
 2. **Pure SPA:** tokens in memory only (never localStorage), silent re-auth on reload.
 
 The gateway must therefore accept standard `Authorization: Bearer` (mobile, BFF-to-gateway)
@@ -208,8 +232,8 @@ whether Android releases first:
 | staging | gateway origin, HTTPS | staging realm | HTTPS only |
 | prod | gateway origin, HTTPS | prod realm | HTTPS only |
 
-Per-platform mechanics: Android build types / product flavors (`BuildConfig`); KMP projects
-use build-time configuration per target. The current Android hardcoded LAN URL
+Per-platform mechanics: Android build types / product flavors (`BuildConfig`); the KMP project
+uses build-time configuration per target (web, iOS). The current Android hardcoded LAN URL
 (`192.168.0.241:8085`, cleartext in release) is a dev artifact scheduled for removal
 (Android roadmap A3).
 
