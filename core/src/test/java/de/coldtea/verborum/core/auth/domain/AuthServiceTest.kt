@@ -4,6 +4,7 @@ import android.content.Intent
 import de.coldtea.verborum.core.BaseTest
 import de.coldtea.verborum.core.auth.AuthTokenStore
 import de.coldtea.verborum.core.auth.JwtDecoder
+import de.coldtea.verborum.core.auth.domain.model.LoginOutcome
 import de.coldtea.verborum.core.auth.domain.model.TokenBundle
 import de.coldtea.verborum.core.auth.domain.usecase.EnsureUserProfileUseCase
 import io.mockk.coEvery
@@ -15,8 +16,7 @@ import io.mockk.mockk
 import io.mockk.mockkObject
 import io.mockk.verify
 import kotlinx.coroutines.test.runTest
-import org.junit.Assert.assertFalse
-import org.junit.Assert.assertTrue
+import org.junit.Assert.assertEquals
 import org.junit.Test
 
 class AuthServiceTest : BaseTest() {
@@ -47,6 +47,7 @@ class AuthServiceTest : BaseTest() {
         every { JwtDecoder.subject(ACCESS_TOKEN) } returns SUBJECT
         every { JwtDecoder.email(ID_TOKEN) } returns EMAIL
         every { JwtDecoder.displayName(ID_TOKEN) } returns DISPLAY_NAME
+        every { JwtDecoder.emailVerified(ID_TOKEN) } returns true
         coEvery { authManager.exchangeCode(redirectData) } returns tokenBundle
 
         // LinkedHashSet so hook order is deterministic — the production set is Dagger-built.
@@ -62,7 +63,7 @@ class AuthServiceTest : BaseTest() {
     @Test
     fun `completeLogin persists tokens before ensuring the profile and running the hooks`() =
         runTest {
-            assertTrue(authService.completeLogin(redirectData))
+            assertEquals(LoginOutcome.Success, authService.completeLogin(redirectData))
 
             coVerifyOrder {
                 tokenStore.saveTokens(
@@ -94,7 +95,7 @@ class AuthServiceTest : BaseTest() {
     fun `completeLogin runs the remaining hooks when an earlier one throws`() = runTest {
         coEvery { firstHook.onLoginCompleted(SUBJECT) } throws RuntimeException("migration blew up")
 
-        assertTrue(authService.completeLogin(redirectData))
+        assertEquals(LoginOutcome.Success, authService.completeLogin(redirectData))
 
         coVerify(exactly = 1) { secondHook.onLoginCompleted(SUBJECT) }
     }
@@ -105,7 +106,7 @@ class AuthServiceTest : BaseTest() {
             ensureUserProfileUseCase.invoke(any(), any(), any())
         } throws RuntimeException("ms_user unreachable")
 
-        assertTrue(authService.completeLogin(redirectData))
+        assertEquals(LoginOutcome.Success, authService.completeLogin(redirectData))
 
         coVerify(exactly = 1) { firstHook.onLoginCompleted(SUBJECT) }
     }
@@ -113,26 +114,35 @@ class AuthServiceTest : BaseTest() {
 
     // region completeLogin — failure paths
     @Test
-    fun `completeLogin returns false without touching the session when the code exchange fails`() =
+    fun `completeLogin fails without touching the session when the code exchange fails`() =
         runTest {
             coEvery { authManager.exchangeCode(redirectData) } returns null
 
-            assertFalse(authService.completeLogin(redirectData))
+            assertEquals(LoginOutcome.Failed, authService.completeLogin(redirectData))
 
             verify(exactly = 0) { tokenStore.saveTokens(any(), any(), any()) }
             coVerify(exactly = 0) { firstHook.onLoginCompleted(any()) }
         }
 
     @Test
-    fun `completeLogin returns false without touching the session when the token carries no subject`() =
+    fun `completeLogin fails without touching the session when the token carries no subject`() =
         runTest {
             every { JwtDecoder.subject(ACCESS_TOKEN) } returns null
 
-            assertFalse(authService.completeLogin(redirectData))
+            assertEquals(LoginOutcome.Failed, authService.completeLogin(redirectData))
 
             verify(exactly = 0) { tokenStore.saveTokens(any(), any(), any()) }
             coVerify(exactly = 0) { firstHook.onLoginCompleted(any()) }
         }
+    @Test
+    fun `completeLogin reports an unverified email without establishing the session`() = runTest {
+        every { JwtDecoder.emailVerified(ID_TOKEN) } returns false
+
+        assertEquals(LoginOutcome.EmailNotVerified, authService.completeLogin(redirectData))
+
+        verify(exactly = 0) { tokenStore.saveTokens(any(), any(), any()) }
+        coVerify(exactly = 0) { firstHook.onLoginCompleted(any()) }
+    }
     // endregion
 
     // region logout

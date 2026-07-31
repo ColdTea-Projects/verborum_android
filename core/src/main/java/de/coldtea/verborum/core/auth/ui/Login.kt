@@ -115,6 +115,38 @@ private fun LoginContent(
 
             Spacer(modifier = Modifier.height(48.dp))
 
+            // Hosted sign-up cannot hand out tokens before the address is confirmed, so the user
+            // is sent back here with instructions rather than an error.
+            if (state == LoginState.AwaitingEmailVerification) {
+                Surface(
+                    shape = RoundedCornerShape(14.dp),
+                    color = MaterialTheme.colorScheme.secondaryContainer,
+                    modifier = Modifier.fillMaxWidth(),
+                ) {
+                    Column(
+                        modifier = Modifier.padding(16.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                    ) {
+                        Text(
+                            text = stringResource(ResStrings.loginVerifyEmailTitle),
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            color = MaterialTheme.colorScheme.onSecondaryContainer,
+                            textAlign = TextAlign.Center,
+                        )
+                        Spacer(modifier = Modifier.height(4.dp))
+                        Text(
+                            text = stringResource(ResStrings.loginVerifyEmailMessage),
+                            fontSize = 14.sp,
+                            color = MaterialTheme.colorScheme.onSecondaryContainer,
+                            textAlign = TextAlign.Center,
+                        )
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(24.dp))
+            }
+
             Button(
                 onClick = onSignIn,
                 enabled = !busy,
@@ -183,5 +215,17 @@ private fun LoginContent(
 private fun PreviewLoginScreen() {
     VerborumTheme {
         LoginContent(state = LoginState.Idle, onSignIn = {}, onCreateAccount = {})
+    }
+}
+
+@PreviewLightDark
+@Composable
+private fun PreviewLoginScreenAwaitingVerification() {
+    VerborumTheme {
+        LoginContent(
+            state = LoginState.AwaitingEmailVerification,
+            onSignIn = {},
+            onCreateAccount = {},
+        )
     }
 }

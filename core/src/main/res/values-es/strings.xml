@@ -4,6 +4,8 @@
     <string name="loginSignIn">Iniciar sesión</string>
     <string name="loginCreateAccount">Crear cuenta</string>
     <string name="loginFailed">Error al iniciar sesión. Inténtalo de nuevo.</string>
+    <string name="loginVerifyEmailTitle">Revisa tu correo</string>
+    <string name="loginVerifyEmailMessage">Enviamos un enlace de verificación a tu bandeja de entrada. Confírmalo para terminar el registro y luego inicia sesión.</string>
     <string name="optionsScreenTitle">Opciones</string>
     <string name="optionsLogout">Cerrar sesión</string>
 </resources>

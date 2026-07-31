@@ -4,6 +4,8 @@
     <string name="loginSignIn">Войти</string>
     <string name="loginCreateAccount">Создать аккаунт</string>
     <string name="loginFailed">Не удалось войти. Попробуйте ещё раз.</string>
+    <string name="loginVerifyEmailTitle">Проверьте почту</string>
+    <string name="loginVerifyEmailMessage">Мы отправили ссылку для подтверждения на вашу почту. Подтвердите её, чтобы завершить регистрацию, затем войдите.</string>
     <string name="optionsScreenTitle">Настройки</string>
     <string name="optionsLogout">Выйти</string>
 </resources>

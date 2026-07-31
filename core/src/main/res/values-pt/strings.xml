@@ -4,6 +4,8 @@
     <string name="loginSignIn">Entrar</string>
     <string name="loginCreateAccount">Criar conta</string>
     <string name="loginFailed">Falha ao entrar. Tente novamente.</string>
+    <string name="loginVerifyEmailTitle">Verifique o seu e-mail</string>
+    <string name="loginVerifyEmailMessage">Enviámos um link de verificação para a sua caixa de entrada. Confirme-o para concluir o registo e depois inicie sessão.</string>
     <string name="optionsScreenTitle">Opções</string>
     <string name="optionsLogout">Sair</string>
 </resources>

@@ -4,6 +4,8 @@
     <string name="loginSignIn">Anmelden</string>
     <string name="loginCreateAccount">Konto erstellen</string>
     <string name="loginFailed">Anmeldung fehlgeschlagen. Bitte versuche es erneut.</string>
+    <string name="loginVerifyEmailTitle">Prüfe deine E-Mails</string>
+    <string name="loginVerifyEmailMessage">Wir haben dir einen Bestätigungslink geschickt. Bestätige ihn, um die Registrierung abzuschließen, und melde dich dann an.</string>
     <string name="optionsScreenTitle">Optionen</string>
     <string name="optionsLogout">Abmelden</string>
 </resources>

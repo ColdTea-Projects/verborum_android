@@ -4,6 +4,8 @@
     <string name="loginSignIn">로그인</string>
     <string name="loginCreateAccount">계정 만들기</string>
     <string name="loginFailed">로그인에 실패했습니다. 다시 시도해 주세요.</string>
+    <string name="loginVerifyEmailTitle">이메일을 확인하세요</string>
+    <string name="loginVerifyEmailMessage">확인 링크를 메일로 보냈습니다. 링크를 확인해 가입을 완료한 후 로그인하세요.</string>
     <string name="optionsScreenTitle">옵션</string>
     <string name="optionsLogout">로그아웃</string>
 </resources>

@@ -4,6 +4,8 @@
     <string name="loginSignIn">登录</string>
     <string name="loginCreateAccount">创建账户</string>
     <string name="loginFailed">登录失败，请重试。</string>
+    <string name="loginVerifyEmailTitle">请查收邮件</string>
+    <string name="loginVerifyEmailMessage">我们已向你的邮箱发送验证链接。确认后即可完成注册，然后登录。</string>
     <string name="optionsScreenTitle">选项</string>
     <string name="optionsLogout">退出登录</string>
 </resources>

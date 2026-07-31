@@ -4,6 +4,8 @@
     <string name="loginSignIn">Prisijungti</string>
     <string name="loginCreateAccount">Sukurti paskyrą</string>
     <string name="loginFailed">Prisijungti nepavyko. Bandykite dar kartą.</string>
+    <string name="loginVerifyEmailTitle">Patikrinkite el. paštą</string>
+    <string name="loginVerifyEmailMessage">Išsiuntėme patvirtinimo nuorodą į jūsų pašto dėžutę. Patvirtinkite ją, kad užbaigtumėte registraciją, tada prisijunkite.</string>
     <string name="optionsScreenTitle">Parinktys</string>
     <string name="optionsLogout">Atsijungti</string>
 </resources>

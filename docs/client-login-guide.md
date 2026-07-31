@@ -5,6 +5,8 @@ the contract is; this file says *how to build against it* and records the answer
 client teams actually asked. If the two ever disagree, §6 wins and this file is the bug.
 
 Last verified against a running stack: **2026-07-23** (backend roadmap P3-01/P3-02/P3-07 done).
+Amended **2026-08-28** with the backend login update (`docs/verborum_instructions28_08_26.md`):
+mandatory email verification, Mailpit, and Google/Facebook on the hosted page.
 
 ---
 
@@ -16,11 +18,12 @@ Last verified against a running stack: **2026-07-23** (backend roadmap P3-01/P3-
 | Realm config | Code, not console clicks — `keycloak/import/verborum-realm.json` |
 | `verborum-app` (mobile) | Public client, Authorization Code + **PKCE S256 enforced** |
 | `verborum-web` | Public client, PKCE S256, redirect `http://localhost:3000/*` |
-| Hosted sign-up | **Enabled** — clients build no registration form |
-| Password reset | Enabled (hosted "Forgot Password"); **no SMTP in local dev**, so mail does not send |
+| Hosted sign-up | **Enabled** — clients build no registration form. **Email verification required (2026-08-28)** before the account can get tokens |
+| Password reset | Enabled (hosted "Forgot Password"); mail is captured by Mailpit at `http://localhost:8025` (2026-08-28) |
+| Email-code sign-in | Passwordless "email me a sign-in code" on the hosted page — read the code in Mailpit |
 | ms_user (`:8086`) | Secured. All endpoints require a valid JWT |
 | ms_dictionary (`:8085`) | **Secured as of 2026-07-23 (P3-03)** — every call needs a bearer token. Still trusts a client-supplied `userId` (P3-05) |
-| Google sign-in | **Not configured** — needs real Google OAuth2 credentials |
+| Google / Facebook sign-in | **Configured (2026-08-28)** as Keycloak identity providers — buttons render on the hosted login page, no client code. Local dev needs backend `.env` credentials and an allow-listed account |
 | API gateway | Not built (backend Phase 5). Talk to services directly for now |
 
 ---
@@ -69,6 +72,18 @@ identical PKCE parameters:
 It returns Keycloak's account-creation form and finishes with the same code exchange as login — one
 auth flow in the client, not two. With AppAuth, reuse the `AuthorizationRequest` and swap the
 endpoint.
+
+**Email verification is required** (backend update 2026-08-28). A freshly registered account cannot
+get tokens until its address is confirmed, so the hosted flow ends on Keycloak's "verify your email"
+page and never redirects back — to the client that looks exactly like a cancel. The Android client
+therefore remembers that the *sign-up* endpoint was the one launched (`LoginViewModel`) and shows a
+"check your email" state instead of returning silently to the login wall; it also treats an
+`email_verified: false` id-token claim as `LoginOutcome.EmailNotVerified` and establishes no
+session. Locally the verification mail lands in Mailpit (http://localhost:8025), never a real inbox.
+
+**Google / Facebook sign-in needs no client code.** The social buttons render inside the same hosted
+login page the client already opens; they are enabled by backend `.env` credentials. See
+`docs/verborum_instructions28_08_26.md` for the local setup and per-account allow-listing.
 
 **Why not a native registration screen:** `POST /users/` does **not** create a Keycloak identity. It
 creates the *profile row* keyed on `keycloakId`. Creating the identity needs ms_user's Keycloak Admin
@@ -209,11 +224,18 @@ clients are PKCE-only. Dev users: `testuser`/`testuser` (role `user`),
    Practical upshot for sync: keep uploading your own `sub` as `userId` and nothing changes. If you
    see 403s after this lands, you are sending the wrong owner id — most likely the guest UUID
    (`00000000-...`) that §6.4 says must be rewritten at first login.
-3. **Google sign-in is not configured.** Federated-behind-Keycloak is still the design (never
-   integrate Google SDK directly), but the button cannot work until real credentials exist.
+3. ~~**Google sign-in is not configured.**~~ **Resolved 2026-08-28** — Google *and* Facebook are
+   configured as Keycloak identity providers and render as buttons on the hosted login page.
+   Federated-behind-Keycloak remains the design (never integrate a Google/Facebook SDK directly),
+   so the client needs no code for them. Locally they need backend `.env` credentials, and each
+   tester's account must be allow-listed (Google) / added as a Tester (Facebook) — see
+   `docs/verborum_instructions28_08_26.md` §5–§6.
 4. **No API gateway** until backend Phase 5. Clients address services directly and must carry per-
    service base URLs.
-5. **No SMTP**, so hosted password reset and email verification do not deliver mail locally.
+5. ~~**No SMTP**~~ **Resolved 2026-08-28** — mail is captured by Mailpit (http://localhost:8025)
+   locally, so password reset, email verification, and the passwordless "email me a sign-in code"
+   flow all work; nothing is delivered to a real inbox. Email verification is now **mandatory**
+   before an account can obtain tokens (§3).
 6. **Roles are not enforced on any endpoint yet.** Realm roles map correctly to
    `ROLE_user` / `ROLE_admin`, but no endpoint requires one, so do not build UI that depends on
    role-based 403s.

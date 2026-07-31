@@ -4,6 +4,8 @@
     <string name="loginSignIn">Σύνδεση</string>
     <string name="loginCreateAccount">Δημιουργία λογαριασμού</string>
     <string name="loginFailed">Η σύνδεση απέτυχε. Δοκιμάστε ξανά.</string>
+    <string name="loginVerifyEmailTitle">Ελέγξτε το email σας</string>
+    <string name="loginVerifyEmailMessage">Στείλαμε έναν σύνδεσμο επαλήθευσης στα εισερχόμενά σας. Επιβεβαιώστε τον για να ολοκληρώσετε την εγγραφή και μετά συνδεθείτε.</string>
     <string name="optionsScreenTitle">Επιλογές</string>
     <string name="optionsLogout">Αποσύνδεση</string>
 </resources>

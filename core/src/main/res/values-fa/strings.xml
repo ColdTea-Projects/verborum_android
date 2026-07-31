@@ -4,6 +4,8 @@
     <string name="loginSignIn">ورود</string>
     <string name="loginCreateAccount">ایجاد حساب</string>
     <string name="loginFailed">ورود ناموفق بود. لطفاً دوباره تلاش کنید.</string>
+    <string name="loginVerifyEmailTitle">ایمیل خود را بررسی کنید</string>
+    <string name="loginVerifyEmailMessage">یک پیوند تأیید به ایمیل شما ارسال شد. برای تکمیل ثبت‌نام آن را تأیید کنید و سپس وارد شوید.</string>
     <string name="optionsScreenTitle">تنظیمات</string>
     <string name="optionsLogout">خروج</string>
 </resources>

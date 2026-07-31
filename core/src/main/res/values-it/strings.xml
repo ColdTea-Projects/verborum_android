@@ -4,6 +4,8 @@
     <string name="loginSignIn">Accedi</string>
     <string name="loginCreateAccount">Crea account</string>
     <string name="loginFailed">Accesso non riuscito. Riprova.</string>
+    <string name="loginVerifyEmailTitle">Controlla la tua email</string>
+    <string name="loginVerifyEmailMessage">Abbiamo inviato un link di verifica alla tua casella. Confermalo per completare la registrazione, poi accedi.</string>
     <string name="optionsScreenTitle">Opzioni</string>
     <string name="optionsLogout">Esci</string>
 </resources>

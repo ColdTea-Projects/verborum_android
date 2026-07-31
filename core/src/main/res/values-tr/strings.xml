@@ -4,6 +4,8 @@
     <string name="loginSignIn">Giriş yap</string>
     <string name="loginCreateAccount">Hesap oluştur</string>
     <string name="loginFailed">Giriş başarısız. Lütfen tekrar deneyin.</string>
+    <string name="loginVerifyEmailTitle">E-postanı kontrol et</string>
+    <string name="loginVerifyEmailMessage">Gelen kutuna bir doğrulama bağlantısı gönderdik. Kaydı tamamlamak için onayla, sonra giriş yap.</string>
     <string name="optionsScreenTitle">Seçenekler</string>
     <string name="optionsLogout">Çıkış yap</string>
 </resources>

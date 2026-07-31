@@ -4,6 +4,7 @@ import android.content.Intent
 import de.coldtea.verborum.core.auth.domain.usecase.EnsureUserProfileUseCase
 import de.coldtea.verborum.core.auth.AuthTokenStore
 import de.coldtea.verborum.core.auth.JwtDecoder
+import de.coldtea.verborum.core.auth.domain.model.LoginOutcome
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -26,10 +27,15 @@ class AuthService @Inject constructor(
     fun loginIntent(): Intent = authManager.loginIntent()
     fun signUpIntent(): Intent = authManager.signUpIntent()
 
-    /** Handles the AppAuth redirect result. Returns true once the session is established. */
-    suspend fun completeLogin(responseData: Intent): Boolean {
-        val tokens = authManager.exchangeCode(responseData) ?: return false
-        val subject = JwtDecoder.subject(tokens.accessToken) ?: return false
+    /** Handles the AppAuth redirect result. [LoginOutcome.Success] once the session is established. */
+    suspend fun completeLogin(responseData: Intent): LoginOutcome {
+        val tokens = authManager.exchangeCode(responseData) ?: return LoginOutcome.Failed
+        val subject = JwtDecoder.subject(tokens.accessToken) ?: return LoginOutcome.Failed
+
+        // Keycloak normally withholds tokens until the address is confirmed; this is the belt-and-
+        // braces check for realms/IdPs that hand them out anyway. Nothing is persisted, so the user
+        // stays on the login wall with a "check your inbox" message instead of a half-live session.
+        if (!JwtDecoder.emailVerified(tokens.idToken)) return LoginOutcome.EmailNotVerified
 
         tokenStore.saveTokens(
             accessToken = tokens.accessToken,
@@ -46,7 +52,7 @@ class AuthService @Inject constructor(
         }
         // Each hook is isolated: one feature's failure must not skip another's.
         postLoginHooks.forEach { hook -> runCatching { hook.onLoginCompleted(subject) } }
-        return true
+        return LoginOutcome.Success
     }
 
     /** Ends the Keycloak session and clears local tokens (guide §6). */

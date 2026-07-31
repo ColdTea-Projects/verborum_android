@@ -4,6 +4,8 @@
     <string name="loginSignIn">Se connecter</string>
     <string name="loginCreateAccount">Créer un compte</string>
     <string name="loginFailed">Échec de la connexion. Veuillez réessayer.</string>
+    <string name="loginVerifyEmailTitle">Vérifiez vos e-mails</string>
+    <string name="loginVerifyEmailMessage">Nous avons envoyé un lien de vérification dans votre boîte de réception. Confirmez-le pour terminer l’inscription, puis connectez-vous.</string>
     <string name="optionsScreenTitle">Options</string>
     <string name="optionsLogout">Se déconnecter</string>
 </resources>

@@ -4,6 +4,7 @@ import android.util.Base64
 import de.coldtea.verborum.core.extensions.json
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.booleanOrNull
 import kotlinx.serialization.json.contentOrNull
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
@@ -36,6 +37,15 @@ object JwtDecoder {
     fun subject(jwt: String?): String? = claims(jwt)?.string("sub")
 
     fun email(jwt: String?): String? = claims(jwt)?.string("email")
+
+    /**
+     * The `email_verified` claim. Keycloak now requires a verified address before an account is
+     * usable, so an unverified subject must not be let into the app shell. Absent claim → true:
+     * the realm may hand out tokens without it (social sign-in, a realm with verification off) and
+     * a missing claim must never lock out an otherwise valid session.
+     */
+    fun emailVerified(jwt: String?): Boolean =
+        claims(jwt)?.get("email_verified")?.jsonPrimitive?.booleanOrNull ?: true
 
     fun displayName(jwt: String?): String? {
         val claims = claims(jwt) ?: return null

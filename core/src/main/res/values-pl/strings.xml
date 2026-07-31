@@ -4,6 +4,8 @@
     <string name="loginSignIn">Zaloguj się</string>
     <string name="loginCreateAccount">Utwórz konto</string>
     <string name="loginFailed">Logowanie nie powiodło się. Spróbuj ponownie.</string>
+    <string name="loginVerifyEmailTitle">Sprawdź swoją pocztę</string>
+    <string name="loginVerifyEmailMessage">Wysłaliśmy link weryfikacyjny na Twoją skrzynkę. Potwierdź go, aby dokończyć rejestrację, a następnie zaloguj się.</string>
     <string name="optionsScreenTitle">Opcje</string>
     <string name="optionsLogout">Wyloguj się</string>
 </resources>

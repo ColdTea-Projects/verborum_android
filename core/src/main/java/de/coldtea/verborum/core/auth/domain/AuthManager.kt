@@ -3,12 +3,14 @@ package de.coldtea.verborum.core.auth.domain
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.util.Log
 import dagger.hilt.android.qualifiers.ApplicationContext
 import de.coldtea.verborum.core.auth.domain.model.TokenBundle
 import de.coldtea.verborum.core.BuildConfig
 import de.coldtea.verborum.core.auth.AuthConfig
 import kotlinx.coroutines.suspendCancellableCoroutine
 import net.openid.appauth.AppAuthConfiguration
+import net.openid.appauth.AuthorizationException
 import net.openid.appauth.AuthorizationRequest
 import net.openid.appauth.AuthorizationResponse
 import net.openid.appauth.AuthorizationService
@@ -67,7 +69,13 @@ class AuthManager @Inject constructor(
 
     /** Exchanges the auth code carried in the redirect result for tokens; null on error/cancel. */
     suspend fun exchangeCode(responseData: Intent): TokenBundle? {
-        val response = AuthorizationResponse.fromIntent(responseData) ?: return null
+        val response = AuthorizationResponse.fromIntent(responseData)
+        if (response == null) {
+            // No response means the redirect carried an error (or a stale/unmatched request) —
+            // AppAuth puts the reason in the same Intent.
+            logFailure("authorization", AuthorizationException.fromIntent(responseData))
+            return null
+        }
         val tokenResponse = performTokenRequest(response.createTokenExchangeRequest()) ?: return null
         return TokenBundle(
             accessToken = tokenResponse.accessToken,
@@ -78,10 +86,25 @@ class AuthManager @Inject constructor(
 
     private suspend fun performTokenRequest(request: TokenRequest): net.openid.appauth.TokenResponse? =
         suspendCancellableCoroutine { continuation ->
-            authService.performTokenRequest(request) { response, _ ->
+            authService.performTokenRequest(request) { response, exception ->
+                if (response == null) logFailure("token exchange", exception)
                 continuation.resume(response)
             }
         }
+
+    /**
+     * Debug-only. [AuthorizationException] carries the OAuth error code and Keycloak's description —
+     * never a token or a code — so it is safe to print, but it stays out of release builds anyway:
+     * a login failure reason is diagnostic noise for users and a hint for anyone reading logcat.
+     */
+    private fun logFailure(stage: String, exception: AuthorizationException?) {
+        if (!BuildConfig.DEBUG) return
+        Log.e(
+            "AuthManager",
+            "Login failed at $stage: type=${exception?.type} code=${exception?.code} " +
+                "error=${exception?.error} description=${exception?.errorDescription}",
+        )
+    }
 
     /**
      * Ends the Keycloak SSO session with a back-channel logout (guide §6). Dropping local tokens

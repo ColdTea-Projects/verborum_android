@@ -4,6 +4,8 @@
     <string name="loginSignIn">Увійти</string>
     <string name="loginCreateAccount">Створити обліковий запис</string>
     <string name="loginFailed">Не вдалося увійти. Спробуйте ще раз.</string>
+    <string name="loginVerifyEmailTitle">Перевірте пошту</string>
+    <string name="loginVerifyEmailMessage">Ми надіслали посилання для підтвердження на вашу пошту. Підтвердьте його, щоб завершити реєстрацію, потім увійдіть.</string>
     <string name="optionsScreenTitle">Параметри</string>
     <string name="optionsLogout">Вийти</string>
 </resources>

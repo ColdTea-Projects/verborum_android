@@ -4,6 +4,8 @@
     <string name="loginSignIn">Sign in</string>
     <string name="loginCreateAccount">Create account</string>
     <string name="loginFailed">Sign-in failed. Please try again.</string>
+    <string name="loginVerifyEmailTitle">Check your email</string>
+    <string name="loginVerifyEmailMessage">We sent a verification link to your inbox. Confirm it to finish signing up, then sign in.</string>
     <string name="optionsScreenTitle">Options</string>
     <string name="optionsLogout">Log out</string>
 </resources>
