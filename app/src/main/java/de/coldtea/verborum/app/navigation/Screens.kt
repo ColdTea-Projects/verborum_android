@@ -3,12 +3,16 @@ package de.coldtea.verborum.app.navigation
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import de.coldtea.verborum.app.R
+import de.coldtea.verborum.core.R as CoreR
 
 sealed class ScreenGroups(val route: String, @StringRes val textResourceId: Int, @DrawableRes val iconResourceId: Int)
 
+// Bibliotheca and Forum are the product's own (Latin) names and stay untranslated; "Options" is an
+// ordinary word, so the tab borrows the Options screen's own localized title rather than carrying a
+// second, English-only copy of it.
 object GroupBibliotheca: ScreenGroups(GROUP_BIBLIOTHECA, R.string.group_bibliotheca_nav_title, R.drawable.baseline_book_24)
 object GroupForum: ScreenGroups(GROUP_FORUM, R.string.group_forum_nav_title, R.drawable.baseline_account_balance_24)
-object GroupOptions: ScreenGroups(GROUP_OPTIONS, R.string.group_options_nav_title, R.drawable.baseline_settings_24)
+object GroupOptions: ScreenGroups(GROUP_OPTIONS, CoreR.string.optionsScreenTitle, R.drawable.baseline_settings_24)
 
 val screenGroups = listOf(
     GroupBibliotheca,
