@@ -147,6 +147,7 @@
     <string name="createWordScreenClassIAdjective">صفة い</string>
     <string name="createWordScreenClassNaAdjective">صفة な</string>
     <string name="createWordScreenScriptRestriction">يمكن إدخال حروف %1$s فقط هنا.</string>
+    <string name="createWordScreenLettersOnlyRestriction">يمكن إدخال الحروف فقط هنا.</string>
     <string name="dictionaryListScreenLoadError">تعذّر تحميل قواميسك</string>
     <string name="dictionaryDetailsScreenNoWordsToPractice">أضف كلمة أولاً — لا يوجد شيء للتدرب عليه بعد</string>
     <string name="dictionaryDetailsScreenNotEnoughWordsForTest">يحتاج الاختبار إلى 4 كلمات على الأقل في زوج اللغات هذا</string>

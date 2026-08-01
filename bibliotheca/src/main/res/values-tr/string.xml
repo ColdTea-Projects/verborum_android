@@ -147,6 +147,7 @@
     <string name="createWordScreenClassIAdjective">い-adjective</string>
     <string name="createWordScreenClassNaAdjective">な-adjective</string>
     <string name="createWordScreenScriptRestriction">Burada yalnızca %1$s harfleri yazılabilir.</string>
+    <string name="createWordScreenLettersOnlyRestriction">Burada yalnızca harfler yazılabilir.</string>
     <string name="dictionaryListScreenLoadError">Sözlükleriniz yüklenemedi</string>
     <string name="dictionaryDetailsScreenNoWordsToPractice">Önce bir kelime ekleyin — henüz çalışılacak bir şey yok</string>
     <string name="dictionaryDetailsScreenNotEnoughWordsForTest">Test için bu dil çiftinde en az 4 kelime gerekir</string>

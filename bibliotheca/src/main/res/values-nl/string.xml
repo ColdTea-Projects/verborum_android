@@ -147,6 +147,7 @@
     <string name="createWordScreenClassIAdjective">い-adjective</string>
     <string name="createWordScreenClassNaAdjective">な-adjective</string>
     <string name="createWordScreenScriptRestriction">Hier zijn alleen letters in het %1$s toegestaan.</string>
+    <string name="createWordScreenLettersOnlyRestriction">Hier zijn alleen letters toegestaan.</string>
     <string name="dictionaryListScreenLoadError">Je woordenboeken konden niet worden geladen</string>
     <string name="dictionaryDetailsScreenNoWordsToPractice">Voeg eerst een woord toe — er is nog niets om te oefenen</string>
     <string name="dictionaryDetailsScreenNotEnoughWordsForTest">Een test heeft minstens 4 woorden in dit taalpaar nodig</string>

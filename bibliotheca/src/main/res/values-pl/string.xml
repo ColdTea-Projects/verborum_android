@@ -147,6 +147,7 @@
     <string name="createWordScreenClassIAdjective">Przymiotnik い</string>
     <string name="createWordScreenClassNaAdjective">Przymiotnik な</string>
     <string name="createWordScreenScriptRestriction">Tutaj można wpisać tylko litery: %1$s.</string>
+    <string name="createWordScreenLettersOnlyRestriction">Tutaj można wpisywać tylko litery.</string>
     <string name="dictionaryListScreenLoadError">Nie udało się wczytać Twoich słowników</string>
     <string name="dictionaryDetailsScreenNoWordsToPractice">Najpierw dodaj słowo — nie ma jeszcze czego ćwiczyć</string>
     <string name="dictionaryDetailsScreenNotEnoughWordsForTest">Test wymaga co najmniej 4 słów w tej parze językowej</string>

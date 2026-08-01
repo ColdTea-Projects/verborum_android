@@ -1,56 +1,62 @@
 package de.coldtea.verborum.bibliotheca.word.ui.createword.model
 
-import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class LanguageScriptTest {
 
+    /** Every letter of [text] is one this language writes with. */
+    private fun allowsAll(languageCode: String, text: String): Boolean =
+        text.codePoints().allMatch { LanguageScript.allowsLetter(languageCode, it) }
+
+    private fun allowsNone(languageCode: String, text: String): Boolean =
+        text.codePoints().noneMatch { LanguageScript.allowsLetter(languageCode, it) }
+
     @Test
-    fun `greek keeps greek letters and drops latin ones`() {
-        assertEquals("άνθρωπος", LanguageScript.sanitize("el", "άνθρωποςabc"))
-        assertEquals("", LanguageScript.sanitize("el", "hello"))
+    fun `greek accepts greek letters and rejects latin ones`() {
+        assertTrue(allowsAll("el", "άνθρωπος"))
+        assertTrue(allowsNone("el", "hello"))
     }
 
     @Test
-    fun `non-letters always survive so spaces hyphens digits and diacritics pass`() {
-        assertEquals("ο άνθρωπος", LanguageScript.sanitize("el", "ο άνθρωπος"))
-        assertEquals("ك ت ب", LanguageScript.sanitize("ar", "ك ت ب"))
-        // digits and punctuation are script-neutral
-        assertEquals("книга-2", LanguageScript.sanitize("ru", "книга-2xyz"))
+    fun `non-letters are not this object's business and always pass`() {
+        // Whether a space or a digit may be typed is WordInputFilter's call, not the script's.
+        assertTrue(allowsAll("el", " -2.'"))
     }
 
     @Test
-    fun `latin languages keep their accented letters and reject other scripts`() {
-        assertEquals("Größe", LanguageScript.sanitize("de", "Größe"))
-        assertEquals("Çətənə", LanguageScript.sanitize("az", "Çətənə")) // ə is IPA-extensions Latin
-        assertEquals("apple", LanguageScript.sanitize("en", "appleкнига"))
+    fun `latin languages accept their accented letters and reject other scripts`() {
+        assertTrue(allowsAll("de", "Größe"))
+        assertTrue(allowsAll("az", "Çətənə")) // ə is IPA-extensions Latin
+        assertTrue(allowsNone("en", "книга"))
     }
 
     @Test
-    fun `arabic keeps arabic and farsi letters and drops latin`() {
-        assertEquals("كتاب", LanguageScript.sanitize("ar", "كتابbook"))
-        assertEquals("خریدن", LanguageScript.sanitize("fa", "خریدنbuy")) // Persian letters live in the Arabic block
+    fun `arabic accepts arabic and farsi letters and rejects latin`() {
+        assertTrue(allowsAll("ar", "كتاب"))
+        assertTrue(allowsAll("fa", "خریدن")) // Persian letters live in the Arabic block
+        assertTrue(allowsNone("ar", "book"))
     }
 
     @Test
-    fun `korean keeps hangul and drops latin`() {
-        assertEquals("책", LanguageScript.sanitize("ko", "책book"))
+    fun `korean accepts hangul and rejects latin`() {
+        assertTrue(allowsAll("ko", "책"))
+        assertTrue(allowsNone("ko", "book"))
     }
 
     @Test
-    fun `japanese and chinese keep native script AND latin composition letters`() {
+    fun `japanese and chinese accept native script AND latin composition letters`() {
         // romaji/pinyin (Latin) must pass so the IME can convert it
-        assertEquals("犬inu", LanguageScript.sanitize("ja", "犬inu"))
-        assertEquals("书shu", LanguageScript.sanitize("zh", "书shu"))
+        assertTrue(allowsAll("ja", "犬inu"))
+        assertTrue(allowsAll("zh", "书shu"))
         // but a genuinely foreign script is still rejected
-        assertEquals("书", LanguageScript.sanitize("zh", "书книга"))
+        assertTrue(allowsNone("zh", "книга"))
     }
 
     @Test
-    fun `unknown language code is left untouched`() {
-        assertEquals("anything123абв", LanguageScript.sanitize("xx", "anything123абв"))
+    fun `unknown language code accepts every letter`() {
+        assertTrue(allowsAll("xx", "anythingабв"))
         assertFalse(LanguageScript.isRestricted("xx"))
         assertTrue(LanguageScript.isRestricted("el"))
     }

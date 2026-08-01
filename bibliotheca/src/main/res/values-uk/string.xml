@@ -147,6 +147,7 @@
     <string name="createWordScreenClassIAdjective">い-прикметник</string>
     <string name="createWordScreenClassNaAdjective">な-прикметник</string>
     <string name="createWordScreenScriptRestriction">Тут можна вводити лише літери: %1$s.</string>
+    <string name="createWordScreenLettersOnlyRestriction">Тут можна вводити лише літери.</string>
     <string name="dictionaryListScreenLoadError">Не вдалося завантажити ваші словники</string>
     <string name="dictionaryDetailsScreenNoWordsToPractice">Спершу додайте слово — поки немає що практикувати</string>
     <string name="dictionaryDetailsScreenNotEnoughWordsForTest">Для тесту потрібно щонайменше 4 слова в цій мовній парі</string>

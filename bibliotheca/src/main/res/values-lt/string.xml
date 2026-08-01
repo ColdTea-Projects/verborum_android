@@ -147,6 +147,7 @@
     <string name="createWordScreenClassIAdjective">い-adjective</string>
     <string name="createWordScreenClassNaAdjective">な-adjective</string>
     <string name="createWordScreenScriptRestriction">Čia galima rašyti tik %1$s raidėmis.</string>
+    <string name="createWordScreenLettersOnlyRestriction">Čia galima rašyti tik raides.</string>
     <string name="dictionaryListScreenLoadError">Nepavyko įkelti jūsų žodynų</string>
     <string name="dictionaryDetailsScreenNoWordsToPractice">Pirmiausia pridėkite žodį – dar nėra ko mokytis</string>
     <string name="dictionaryDetailsScreenNotEnoughWordsForTest">Testui reikia bent 4 žodžių šioje kalbų poroje</string>

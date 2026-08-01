@@ -147,6 +147,7 @@
     <string name="createWordScreenClassIAdjective">い-adjective</string>
     <string name="createWordScreenClassNaAdjective">な-adjective</string>
     <string name="createWordScreenScriptRestriction">Aqui só podem ser escritas letras em %1$s.</string>
+    <string name="createWordScreenLettersOnlyRestriction">Aqui só podem ser escritas letras.</string>
     <string name="dictionaryListScreenLoadError">Não foi possível carregar os seus dicionários</string>
     <string name="dictionaryDetailsScreenNoWordsToPractice">Adicione primeiro uma palavra — ainda não há nada para praticar</string>
     <string name="dictionaryDetailsScreenNotEnoughWordsForTest">Um teste precisa de pelo menos 4 palavras neste par de idiomas</string>

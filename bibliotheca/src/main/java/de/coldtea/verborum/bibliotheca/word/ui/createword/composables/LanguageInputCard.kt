@@ -38,8 +38,10 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.text.intl.LocaleList
 import androidx.compose.ui.tooling.preview.Preview
@@ -54,8 +56,9 @@ import de.coldtea.verborum.bibliotheca.word.ui.createword.model.FormField
 import de.coldtea.verborum.bibliotheca.word.ui.createword.model.Gender
 import de.coldtea.verborum.bibliotheca.word.ui.createword.model.LanguageFormSpec
 import de.coldtea.verborum.bibliotheca.word.ui.createword.model.LanguageGrammar
-import de.coldtea.verborum.bibliotheca.word.ui.createword.model.LanguageScript
 import de.coldtea.verborum.bibliotheca.word.ui.createword.model.WordFormInput
+import de.coldtea.verborum.bibliotheca.word.ui.createword.model.WordInputFilter
+import de.coldtea.verborum.bibliotheca.word.ui.createword.model.WordType
 import de.coldtea.verborum.bibliotheca.word.ui.model.displayLine
 import de.coldtea.verborum.core.theme.VerborumTheme
 
@@ -69,6 +72,9 @@ fun LanguageInputCard(
     languageName: String,
     languageCode: String,
     barColor: Color,
+    // Drives input filtering alongside [spec]: free text accepts anything, every other type is
+    // restricted to its language's letters (docs/word-input-filtering-android.md §3, §5).
+    wordType: WordType,
     spec: LanguageFormSpec,
     inputs: List<WordFormInput>,
     onInputChange: (Int, WordFormInput) -> Unit,
@@ -117,6 +123,7 @@ fun LanguageInputCard(
                     }
                     MeaningFields(
                         languageCode = languageCode,
+                        wordType = wordType,
                         spec = spec,
                         input = input,
                         onInputChange = { onInputChange(index, it) },
@@ -157,6 +164,7 @@ fun LanguageInputCard(
 @Composable
 private fun MeaningFields(
     languageCode: String,
+    wordType: WordType,
     spec: LanguageFormSpec,
     input: WordFormInput,
     onInputChange: (WordFormInput) -> Unit,
@@ -190,6 +198,9 @@ private fun MeaningFields(
 
     ScriptTextField(
         languageCode = languageCode,
+        wordType = wordType,
+        // The base word has no meta key of its own.
+        fieldKey = null,
         value = input.text,
         onValueChange = { onInputChange(input.copy(text = it)) },
         label = stringResource(ResStrings.createWordScreenTextLabel),
@@ -204,6 +215,8 @@ private fun MeaningFields(
                 val slot = slotOffset + 1 + textFormKeys.indexOf(field.key)
                 ScriptTextField(
                     languageCode = languageCode,
+                    wordType = wordType,
+                    fieldKey = field.key,
                     value = input.field(field.key),
                     onValueChange = { onInputChange(input.withField(field.key, it)) },
                     label = stringResource(field.labelRes),
@@ -265,13 +278,20 @@ private val RTL_LANGUAGE_CODES = setOf("ar", "fa")
 
 /**
  * A single-line text field bound to a dictionary language's script: it hints the IME to open that
- * language's keyboard, lays itself out right-to-left for RTL scripts, and wires the IME action so
- * "Next" advances to [nextFocusRequester]. When there is no next field, the action becomes "Done"
- * and dismisses the keyboard.
+ * language's keyboard, lays itself out right-to-left for RTL scripts, filters what may be typed
+ * through [WordInputFilter], and wires the IME action so "Next" advances to [nextFocusRequester].
+ * When there is no next field, the action becomes "Done" and dismisses the keyboard.
+ *
+ * It drives a [TextFieldValue] rather than a plain String because the filter has to see the IME's
+ * composition state: for Japanese/Chinese/Korean the field holds candidate text that a
+ * per-keystroke filter would corrupt, so those languages are only validated once composition ends
+ * (docs/word-input-filtering-android.md §6).
  */
 @Composable
 private fun ScriptTextField(
     languageCode: String,
+    wordType: WordType,
+    fieldKey: FieldKey?,
     value: String,
     onValueChange: (String) -> Unit,
     label: String,
@@ -284,9 +304,16 @@ private fun ScriptTextField(
     } else {
         LayoutDirection.Ltr
     }
-    // Latched true when the last keystroke introduced a wrong-script letter (which we drop);
-    // cleared as soon as an accepted change comes through, so the hint only shows on a rejection.
-    var rejectedForeignScript by remember { mutableStateOf(false) }
+    // Set when the last change carried something the field rejects; cleared as soon as an accepted
+    // change comes through, so the hint only shows on a rejection.
+    var rejection by remember { mutableStateOf<WordInputFilter.Rejection?>(null) }
+    var fieldValue by remember { mutableStateOf(TextFieldValue(value)) }
+    // Re-sync whenever the hoisted value moves on its own — a rejected keystroke bouncing back, a
+    // word loaded for editing, the form cleared after a save — and park the cursor at the end.
+    if (fieldValue.text != value) {
+        fieldValue = TextFieldValue(text = value, selection = TextRange(value.length))
+    }
+    val deferToCommit = WordInputFilter.defersToCommit(languageCode)
     val focusManager = LocalFocusManager.current
 
     // Ask the IME for this dictionary language's script (Arabic keyboard for ar/fa, Greek for el…);
@@ -302,27 +329,52 @@ private fun ScriptTextField(
 
     CompositionLocalProvider(LocalLayoutDirection provides direction) {
         OutlinedTextField(
-            value = value,
-            onValueChange = { raw ->
-                val sanitized = LanguageScript.sanitize(languageCode, raw)
-                rejectedForeignScript = sanitized != raw
-                onValueChange(sanitized)
+            value = fieldValue,
+            onValueChange = { changed ->
+                if (deferToCommit && changed.composition != null) {
+                    // Mid-composition: the IME owns this text until it commits. Let it through
+                    // untouched — the filter runs on the committed result a keystroke later.
+                    fieldValue = changed
+                    onValueChange(changed.text)
+                } else {
+                    val filtered = WordInputFilter.apply(
+                        languageCode = languageCode,
+                        wordType = wordType,
+                        fieldKey = fieldKey,
+                        text = changed.text,
+                    )
+                    rejection = filtered.rejection
+                    fieldValue = if (filtered.text == changed.text) {
+                        changed
+                    } else {
+                        // Characters were dropped, so the IME's selection no longer maps onto the
+                        // text; collapse the cursor to the end of what survived.
+                        changed.copy(
+                            text = filtered.text,
+                            selection = TextRange(filtered.text.length),
+                        )
+                    }
+                    onValueChange(filtered.text)
+                }
             },
             label = { Text(text = label) },
             placeholder = placeholder?.let { { Text(text = it) } },
             singleLine = true,
-            isError = rejectedForeignScript,
-            supportingText = if (rejectedForeignScript) {
+            isError = rejection != null,
+            supportingText = rejection?.let { reason ->
                 {
                     Text(
-                        text = stringResource(
-                            ResStrings.createWordScreenScriptRestriction,
-                            scriptDisplayName(languageCode),
-                        )
+                        text = when (reason) {
+                            WordInputFilter.Rejection.FOREIGN_SCRIPT -> stringResource(
+                                ResStrings.createWordScreenScriptRestriction,
+                                scriptDisplayName(languageCode),
+                            )
+
+                            WordInputFilter.Rejection.NON_LETTER ->
+                                stringResource(ResStrings.createWordScreenLettersOnlyRestriction)
+                        },
                     )
                 }
-            } else {
-                null
             },
             keyboardOptions = keyboardOptions,
             keyboardActions = keyboardActions,
@@ -375,10 +427,8 @@ fun LanguageInputCardPreview() {
             languageName = "German",
             languageCode = "de",
             barColor = Color(0xFFC41E3A),
-            spec = LanguageGrammar.formSpec(
-                "de",
-                de.coldtea.verborum.bibliotheca.word.ui.createword.model.WordType.NOUN,
-            ),
+            wordType = WordType.NOUN,
+            spec = LanguageGrammar.formSpec("de", WordType.NOUN),
             inputs = listOf(
                 WordFormInput(
                     text = "Apfel",

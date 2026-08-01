@@ -147,6 +147,7 @@
     <string name="createWordScreenClassIAdjective">い形容詞</string>
     <string name="createWordScreenClassNaAdjective">な形容詞</string>
     <string name="createWordScreenScriptRestriction">ここには%1$sの文字のみ入力できます。</string>
+    <string name="createWordScreenLettersOnlyRestriction">ここには文字のみ入力できます。</string>
     <string name="dictionaryListScreenLoadError">辞書を読み込めませんでした</string>
     <string name="dictionaryDetailsScreenNoWordsToPractice">まず単語を追加してください — 練習できるものがありません</string>
     <string name="dictionaryDetailsScreenNotEnoughWordsForTest">テストにはこの言語ペアで少なくとも4語が必要です</string>

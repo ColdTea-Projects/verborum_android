@@ -147,6 +147,7 @@
     <string name="createWordScreenClassIAdjective">صفت い</string>
     <string name="createWordScreenClassNaAdjective">صفت な</string>
     <string name="createWordScreenScriptRestriction">در اینجا فقط می‌توان حروف %1$s را وارد کرد.</string>
+    <string name="createWordScreenLettersOnlyRestriction">در اینجا فقط می‌توان حروف را وارد کرد.</string>
     <string name="dictionaryListScreenLoadError">بارگیری واژه‌نامه‌های شما ممکن نشد</string>
     <string name="dictionaryDetailsScreenNoWordsToPractice">ابتدا واژه‌ای بیفزایید — هنوز چیزی برای تمرین نیست</string>
     <string name="dictionaryDetailsScreenNotEnoughWordsForTest">آزمون به دست‌کم ۴ واژه در این جفت زبان نیاز دارد</string>

@@ -3,14 +3,14 @@ package de.coldtea.verborum.bibliotheca.word.ui.createword.model
 import java.lang.Character.UnicodeBlock
 
 /**
- * Restricts word input to the script of each dictionary language, so a Greek side accepts only
- * Greek letters, an Arabic side only Arabic letters, and so on. Only *letters* are constrained —
- * whitespace, digits, punctuation and combining marks are script-neutral and always pass, so
- * spaces, hyphens and diacritics keep working everywhere.
+ * Which script each dictionary language writes in: a Greek side accepts only Greek letters, an
+ * Arabic side only Arabic letters, and so on. This object rules on **letters only** — it is the
+ * script half of the input contract; [WordInputFilter] owns the rest (which non-letters, if any,
+ * a given field accepts) and is what the UI calls.
  *
  * Japanese and Chinese are special: their keyboards type romaji/pinyin (Latin) that the IME
  * converts to kana/hanzi, so Latin is permitted there as the composition alphabet — other foreign
- * scripts are still rejected. Unknown language codes are left unfiltered.
+ * scripts are still rejected. Unknown language codes are left unrestricted.
  */
 object LanguageScript {
 
@@ -67,26 +67,20 @@ object LanguageScript {
         "zh" to CJK_BLOCKS + LATIN_BLOCKS,
     )
 
-    /** True when the language enforces a script (i.e. input to it should be sanitized). */
+    /** True when the language enforces a script (i.e. its letters are constrained). */
     fun isRestricted(languageCode: String): Boolean =
         languageCode.lowercase() in allowedByLanguage
 
-    /** Drops every letter that is outside [languageCode]'s script; non-letters always survive. */
-    fun sanitize(languageCode: String, text: String): String {
-        val allowed = allowedByLanguage[languageCode.lowercase()] ?: return text
-        if (text.isEmpty()) return text
-
-        val out = StringBuilder(text.length)
-        var i = 0
-        while (i < text.length) {
-            val cp = text.codePointAt(i)
-            val count = Character.charCount(cp)
-            if (isAllowed(cp, allowed)) out.append(text, i, i + count)
-            i += count
-        }
-        return out.toString()
+    /**
+     * True when [codePoint] is a letter [languageCode] is written with. Anything that is not a
+     * letter is not this object's business and always passes; an unknown language code accepts
+     * every letter.
+     */
+    fun allowsLetter(languageCode: String, codePoint: Int): Boolean {
+        if (!Character.isLetter(codePoint)) return true
+        val allowed = allowedByLanguage[languageCode.lowercase()] ?: return true
+        // Unassigned code points have no block; nothing is written with them, so reject.
+        val block = UnicodeBlock.of(codePoint) ?: return false
+        return block in allowed
     }
-
-    private fun isAllowed(codePoint: Int, allowed: Set<UnicodeBlock>): Boolean =
-        !Character.isLetter(codePoint) || UnicodeBlock.of(codePoint) in allowed
 }

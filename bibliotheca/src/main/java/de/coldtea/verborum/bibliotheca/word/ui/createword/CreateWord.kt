@@ -179,6 +179,7 @@ fun CreateWordScreen(
                     languageName = languageDisplayName(dictionary.fromLang),
                     languageCode = dictionary.fromLang,
                     barColor = MaterialTheme.colorScheme.primary,
+                    wordType = wordType,
                     spec = sourceSpec,
                     inputs = sourceInputs,
                     onInputChange = { index, updated ->
@@ -201,6 +202,7 @@ fun CreateWordScreen(
                     languageName = languageDisplayName(dictionary.toLang),
                     languageCode = dictionary.toLang,
                     barColor = MaterialTheme.colorScheme.secondary,
+                    wordType = wordType,
                     spec = targetSpec,
                     inputs = targetInputs,
                     onInputChange = { index, updated ->
