@@ -8,11 +8,11 @@ package de.coldtea.verborum.bibliotheca.word.ui.createword.model
  * article composition, which the app performs afterwards, so it never has to survive typing (§4).
  * Digits and punctuation appear in no surface in the data model and are rejected outright.
  *
- * Of the two field-level exceptions in §7, only one needs a rule here: Arabic `root` is stored with
- * spaces between the letters (`ك ت ب`). Chinese `reading` needs none — a pinyin tone mark is either
- * a precomposed Latin letter (`ū`) or a letter plus a combining mark, and Latin is already this
- * side's composition alphabet, so `shū`/`mǎi` pass without a special case. The chip fields (`aux`,
- * `class`) never reach this object because they carry no keyboard.
+ * Two fields sit outside the rule. Arabic `root` is stored with spaces between the letters
+ * (`ك ت ب`), so it keeps them. And `reading` is unfiltered in every language: it is the user's own
+ * pronunciation note — pinyin with tone marks, kana, or whatever transcription they find useful —
+ * so they type it in their own keyboard and nothing is rejected. The chip fields (`aux`, `class`)
+ * never reach this object because they carry no keyboard.
  *
  * Filtering the field is the only lever available — the on-screen keyboard belongs to the user's
  * IME and cannot be altered (§2). Note the mirrored-contract risk in §8: the webapp's
@@ -46,6 +46,14 @@ object WordInputFilter {
         languageCode.lowercase() in composingImeLanguages
 
     /**
+     * True when [fieldKey] accepts anything at all. The reading is a free transcription the user
+     * writes for themselves, so it takes no script and no letters-only rule — and, being typed in
+     * the user's own keyboard rather than the dictionary language's, it would fight the filter
+     * constantly if it did.
+     */
+    fun isUnfiltered(fieldKey: FieldKey?): Boolean = fieldKey == FieldKey.READING
+
+    /**
      * Applies the rule for one field. [fieldKey] is null for the base word; a [FieldKey] for a
      * grammatical form. Free text passes through untouched — it is arbitrary content in any script
      * with any punctuation (§5).
@@ -56,7 +64,9 @@ object WordInputFilter {
         fieldKey: FieldKey?,
         text: String,
     ): Filtered {
-        if (wordType == WordType.FREE_TEXT || text.isEmpty()) return Filtered(text, null)
+        if (wordType == WordType.FREE_TEXT || isUnfiltered(fieldKey) || text.isEmpty()) {
+            return Filtered(text, null)
+        }
 
         val code = languageCode.lowercase()
         val accepted = StringBuilder(text.length)

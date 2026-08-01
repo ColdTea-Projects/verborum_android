@@ -159,17 +159,28 @@ class WordInputFilterTest {
     }
 
     @Test
-    fun `chinese pinyin readings keep their tone marks`() {
-        // Precomposed (ū) and decomposed (u + combining macron) both pass.
-        assertEquals("shū", filter("zh", "shū", fieldKey = FieldKey.READING).text)
-        assertEquals("mǎi", filter("zh", "mǎi", fieldKey = FieldKey.READING).text)
-        val decomposed = "shu\u0304"
-        assertEquals(decomposed, filter("zh", decomposed, fieldKey = FieldKey.READING).text)
+    fun `the reading field accepts anything the user types`() {
+        // A pronunciation note the user writes for themselves, in their own keyboard: no script,
+        // no letters-only rule. Tone-marked pinyin, kana, Latin, punctuation, all of it stands.
+        val messy = "shū / mǎi (books!) 本"
+
+        val result = filter("zh", messy, fieldKey = FieldKey.READING)
+
+        assertEquals(messy, result.text)
+        assertNull(result.rejection)
     }
 
     @Test
-    fun `japanese kana readings pass`() {
-        assertEquals("いぬ", filter("ja", "いぬ", fieldKey = FieldKey.READING).text)
+    fun `the reading field is unfiltered in every language`() {
+        FieldKey.entries.forEach { key ->
+            assertEquals(
+                "only READING may be unfiltered",
+                key == FieldKey.READING,
+                WordInputFilter.isUnfiltered(key),
+            )
+        }
+        assertFalse(WordInputFilter.isUnfiltered(null))
+        assertEquals("kana かな 123", filter("ja", "kana かな 123", fieldKey = FieldKey.READING).text)
     }
 
     @Test

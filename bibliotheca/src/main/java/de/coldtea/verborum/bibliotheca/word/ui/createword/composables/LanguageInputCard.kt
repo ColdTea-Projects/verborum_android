@@ -316,10 +316,13 @@ private fun ScriptTextField(
     val deferToCommit = WordInputFilter.defersToCommit(languageCode)
     val focusManager = LocalFocusManager.current
 
-    // Ask the IME for this dictionary language's script (Arabic keyboard for ar/fa, Greek for el…);
-    // the last field on the form uses Done, every earlier one Next.
+    // Ask the IME for this dictionary language's script (Arabic keyboard for ar/fa, Greek for el…),
+    // except on the reading, which the user writes as a pronunciation note in their own language —
+    // there we hint the app's current locale instead. The last field on the form uses Done, every
+    // earlier one Next.
+    val imeLocale = if (fieldKey == FieldKey.READING) Locale.current else Locale(languageCode)
     val keyboardOptions = KeyboardOptions(
-        hintLocales = LocaleList(Locale(languageCode)),
+        hintLocales = LocaleList(imeLocale),
         imeAction = if (nextFocusRequester != null) ImeAction.Next else ImeAction.Done,
     )
     val keyboardActions = KeyboardActions(

@@ -127,8 +127,11 @@ The filter should be **field-aware**, because the typed meta fields differ from 
 
 Two typed meta fields need characters a bare letters-only rule would wrongly reject:
 
-- **`reading` for Chinese (pinyin)** carries **tone marks** — `shū`, `mǎi`. The allowed set for
-  that field must include tone-marked vowels, not just plain letters.
+- **`reading` is unfiltered entirely** (product decision, 2026-08-01, superseding this section's
+  tone-mark rule). It is a pronunciation note the user writes for themselves — pinyin with tone
+  marks, kana, or any transcription they prefer — so it takes no script and no letters-only rule,
+  and its keyboard is hinted to the **app's current locale** rather than the dictionary language's.
+  Filtering it would fight the user's own keyboard on every keystroke.
 - **`root` for Arabic** is stored **with spaces between the letters** — `ك ت ب`. That field must
   allow the space, even though the surface's space comes from composition.
 
@@ -168,10 +171,9 @@ Android filter must make the same call for the same languages, or the two diverg
       `TextFieldValue` and skips filtering while `composition != null`.
       **Not yet tested against a real IME** (§6's warning stands; needs a device pass with a
       Japanese and a Chinese keyboard).
-- [x] Field-aware exceptions: `root` allows space (ar); chip fields (`aux`, `class`) are not
-      filtered because they render as chips, not text fields. `reading` tone marks (zh) need no
-      rule — precomposed `ū` is a Latin letter and Latin is already zh's composition alphabet;
-      decomposed input passes as letter + combining mark.
+- [x] Field-aware exceptions: `root` allows space (ar); `reading` is unfiltered in every language
+      and hints the app's locale to the IME (§7, revised 2026-08-01); chip fields (`aux`, `class`)
+      are not filtered because they render as chips, not text fields.
 - [ ] Allowed set kept equal to the webapp `KeyboardLayout` letter keys for each language
       (§8) — ideally via a shared contract in the Integration doc. **Open** — cross-repo, and the
       Integration doc still has no "typeable characters per language" section.
