@@ -30,6 +30,17 @@
             </intent-filter>
         </activity>
 
+        <!-- Per-app language storage for API < 33: AppCompat persists the locale picked in
+             Options and re-applies it at launch. Harmless on 33+, where the system owns it. -->
+        <service
+            android:name="androidx.appcompat.app.AppLocalesMetadataHolderService"
+            android:enabled="false"
+            android:exported="false">
+            <meta-data
+                android:name="autoStoreLocales"
+                android:value="true" />
+        </service>
+
         <!-- Disable WorkManager's default on-startup initializer; VerborumApplication provides its
              own Hilt-aware Configuration via Configuration.Provider (on-demand initialization). -->
         <provider

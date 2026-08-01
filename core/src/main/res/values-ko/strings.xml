@@ -7,5 +7,7 @@
     <string name="loginVerifyEmailTitle">이메일을 확인하세요</string>
     <string name="loginVerifyEmailMessage">확인 링크를 메일로 보냈습니다. 링크를 확인해 가입을 완료한 후 로그인하세요.</string>
     <string name="optionsScreenTitle">옵션</string>
+    <string name="optionsLanguage">언어</string>
+    <string name="optionsLanguageSystemDefault">시스템 기본값</string>
     <string name="optionsLogout">로그아웃</string>
 </resources>

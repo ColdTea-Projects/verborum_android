@@ -7,5 +7,7 @@
     <string name="loginVerifyEmailTitle">E-poçtunuzu yoxlayın</string>
     <string name="loginVerifyEmailMessage">Poçtunuza təsdiq linki göndərdik. Qeydiyyatı tamamlamaq üçün onu təsdiqləyin, sonra daxil olun.</string>
     <string name="optionsScreenTitle">Seçimlər</string>
+    <string name="optionsLanguage">Dil</string>
+    <string name="optionsLanguageSystemDefault">Sistem defoltu</string>
     <string name="optionsLogout">Çıxış</string>
 </resources>

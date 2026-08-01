@@ -37,7 +37,10 @@ import de.coldtea.verborum.core.ui.RegisterTopBar
  * as a list of [OptionRow]s so future entries (profile, preferences, about…) are a one-line add.
  */
 @Composable
-fun OptionsScreen(viewModel: OptionsViewModel = hiltViewModel()) {
+fun OptionsScreen(
+    onLanguageClick: () -> Unit,
+    viewModel: OptionsViewModel = hiltViewModel(),
+) {
     val isLoggingOut by viewModel.isLoggingOut.collectAsState()
 
     RegisterTopBar(
@@ -47,6 +50,7 @@ fun OptionsScreen(viewModel: OptionsViewModel = hiltViewModel()) {
 
     OptionsContent(
         isLoggingOut = isLoggingOut,
+        onLanguageClick = onLanguageClick,
         onLogout = viewModel::logout,
     )
 }
@@ -54,6 +58,7 @@ fun OptionsScreen(viewModel: OptionsViewModel = hiltViewModel()) {
 @Composable
 private fun OptionsContent(
     isLoggingOut: Boolean,
+    onLanguageClick: () -> Unit,
     onLogout: () -> Unit,
 ) {
     Column(
@@ -62,6 +67,12 @@ private fun OptionsContent(
             .padding(horizontal = 16.dp, vertical = 8.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
+        OptionRow(
+            iconRes = ResDrawables.ic_language_24,
+            label = stringResource(ResStrings.optionsLanguage),
+            onClick = onLanguageClick,
+        )
+
         OptionRow(
             iconRes = ResDrawables.ic_logout_24,
             label = stringResource(ResStrings.optionsLogout),
@@ -122,6 +133,6 @@ private fun OptionRow(
 @Composable
 private fun PreviewOptionsScreen() {
     VerborumTheme {
-        OptionsContent(isLoggingOut = false, onLogout = {})
+        OptionsContent(isLoggingOut = false, onLanguageClick = {}, onLogout = {})
     }
 }

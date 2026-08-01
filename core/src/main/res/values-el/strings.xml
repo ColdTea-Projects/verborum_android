@@ -7,5 +7,7 @@
     <string name="loginVerifyEmailTitle">Ελέγξτε το email σας</string>
     <string name="loginVerifyEmailMessage">Στείλαμε έναν σύνδεσμο επαλήθευσης στα εισερχόμενά σας. Επιβεβαιώστε τον για να ολοκληρώσετε την εγγραφή και μετά συνδεθείτε.</string>
     <string name="optionsScreenTitle">Επιλογές</string>
+    <string name="optionsLanguage">Γλώσσα</string>
+    <string name="optionsLanguageSystemDefault">Προεπιλογή συστήματος</string>
     <string name="optionsLogout">Αποσύνδεση</string>
 </resources>

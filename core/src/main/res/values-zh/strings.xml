@@ -7,5 +7,7 @@
     <string name="loginVerifyEmailTitle">请查收邮件</string>
     <string name="loginVerifyEmailMessage">我们已向你的邮箱发送验证链接。确认后即可完成注册，然后登录。</string>
     <string name="optionsScreenTitle">选项</string>
+    <string name="optionsLanguage">语言</string>
+    <string name="optionsLanguageSystemDefault">系统默认</string>
     <string name="optionsLogout">退出登录</string>
 </resources>

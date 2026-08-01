@@ -7,5 +7,7 @@
     <string name="loginVerifyEmailTitle">تحقق من بريدك الإلكتروني</string>
     <string name="loginVerifyEmailMessage">أرسلنا رابط تحقق إلى بريدك. أكِّده لإكمال إنشاء الحساب، ثم سجّل الدخول.</string>
     <string name="optionsScreenTitle">الخيارات</string>
+    <string name="optionsLanguage">اللغة</string>
+    <string name="optionsLanguageSystemDefault">الإعداد الافتراضي للنظام</string>
     <string name="optionsLogout">تسجيل الخروج</string>
 </resources>

@@ -7,5 +7,7 @@
     <string name="loginVerifyEmailTitle">Patikrinkite el. paštą</string>
     <string name="loginVerifyEmailMessage">Išsiuntėme patvirtinimo nuorodą į jūsų pašto dėžutę. Patvirtinkite ją, kad užbaigtumėte registraciją, tada prisijunkite.</string>
     <string name="optionsScreenTitle">Parinktys</string>
+    <string name="optionsLanguage">Kalba</string>
+    <string name="optionsLanguageSystemDefault">Sistemos numatytoji</string>
     <string name="optionsLogout">Atsijungti</string>
 </resources>

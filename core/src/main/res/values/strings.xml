@@ -7,5 +7,7 @@
     <string name="loginVerifyEmailTitle">Check your email</string>
     <string name="loginVerifyEmailMessage">We sent a verification link to your inbox. Confirm it to finish signing up, then sign in.</string>
     <string name="optionsScreenTitle">Options</string>
+    <string name="optionsLanguage">Language</string>
+    <string name="optionsLanguageSystemDefault">System default</string>
     <string name="optionsLogout">Log out</string>
 </resources>

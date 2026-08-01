@@ -7,5 +7,7 @@
     <string name="loginVerifyEmailTitle">メールをご確認ください</string>
     <string name="loginVerifyEmailMessage">確認リンクをメールで送信しました。リンクを確認して登録を完了し、その後サインインしてください。</string>
     <string name="optionsScreenTitle">オプション</string>
+    <string name="optionsLanguage">言語</string>
+    <string name="optionsLanguageSystemDefault">システムのデフォルト</string>
     <string name="optionsLogout">ログアウト</string>
 </resources>

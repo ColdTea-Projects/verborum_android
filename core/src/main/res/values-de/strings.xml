@@ -7,5 +7,7 @@
     <string name="loginVerifyEmailTitle">Prüfe deine E-Mails</string>
     <string name="loginVerifyEmailMessage">Wir haben dir einen Bestätigungslink geschickt. Bestätige ihn, um die Registrierung abzuschließen, und melde dich dann an.</string>
     <string name="optionsScreenTitle">Optionen</string>
+    <string name="optionsLanguage">Sprache</string>
+    <string name="optionsLanguageSystemDefault">Systemstandard</string>
     <string name="optionsLogout">Abmelden</string>
 </resources>

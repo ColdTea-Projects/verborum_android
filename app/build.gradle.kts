@@ -70,6 +70,8 @@ dependencies {
     implementation(projects.bibliotheca)
     implementation(projects.forum)
     implementation(libs.androidx.core.ktx)
+    // AppCompatActivity + the AppCompat theme MainActivity needs for per-app locales below API 33.
+    implementation(libs.appcompat)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext.junit)

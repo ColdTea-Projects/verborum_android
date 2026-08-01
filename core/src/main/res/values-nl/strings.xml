@@ -7,5 +7,7 @@
     <string name="loginVerifyEmailTitle">Controleer je e-mail</string>
     <string name="loginVerifyEmailMessage">We hebben een verificatielink naar je inbox gestuurd. Bevestig deze om je registratie te voltooien en log daarna in.</string>
     <string name="optionsScreenTitle">Opties</string>
+    <string name="optionsLanguage">Taal</string>
+    <string name="optionsLanguageSystemDefault">Systeemstandaard</string>
     <string name="optionsLogout">Uitloggen</string>
 </resources>

@@ -7,5 +7,7 @@
     <string name="loginVerifyEmailTitle">ایمیل خود را بررسی کنید</string>
     <string name="loginVerifyEmailMessage">یک پیوند تأیید به ایمیل شما ارسال شد. برای تکمیل ثبت‌نام آن را تأیید کنید و سپس وارد شوید.</string>
     <string name="optionsScreenTitle">تنظیمات</string>
+    <string name="optionsLanguage">زبان</string>
+    <string name="optionsLanguageSystemDefault">پیش‌فرض سیستم</string>
     <string name="optionsLogout">خروج</string>
 </resources>

@@ -7,5 +7,7 @@
     <string name="loginVerifyEmailTitle">Verifique o seu e-mail</string>
     <string name="loginVerifyEmailMessage">Enviámos um link de verificação para a sua caixa de entrada. Confirme-o para concluir o registo e depois inicie sessão.</string>
     <string name="optionsScreenTitle">Opções</string>
+    <string name="optionsLanguage">Idioma</string>
+    <string name="optionsLanguageSystemDefault">Predefinição do sistema</string>
     <string name="optionsLogout">Sair</string>
 </resources>

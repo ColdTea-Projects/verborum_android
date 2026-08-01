@@ -7,5 +7,7 @@
     <string name="loginVerifyEmailTitle">Sprawdź swoją pocztę</string>
     <string name="loginVerifyEmailMessage">Wysłaliśmy link weryfikacyjny na Twoją skrzynkę. Potwierdź go, aby dokończyć rejestrację, a następnie zaloguj się.</string>
     <string name="optionsScreenTitle">Opcje</string>
+    <string name="optionsLanguage">Język</string>
+    <string name="optionsLanguageSystemDefault">Domyślny systemowy</string>
     <string name="optionsLogout">Wyloguj się</string>
 </resources>

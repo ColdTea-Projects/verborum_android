@@ -1,8 +1,8 @@
 package de.coldtea.verborum.app
 
 import android.os.Bundle
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import dagger.hilt.android.AndroidEntryPoint
@@ -13,8 +13,12 @@ import de.coldtea.verborum.core.auth.AuthTokenStore
 import de.coldtea.verborum.core.theme.VerborumTheme
 import javax.inject.Inject
 
+/**
+ * [AppCompatActivity] rather than ComponentActivity so the per-app language chosen in Options is
+ * re-applied at launch on API < 33, where AppCompat — not the framework — owns that override.
+ */
 @AndroidEntryPoint
-class MainActivity : ComponentActivity() {
+class MainActivity : AppCompatActivity() {
 
     @Inject
     lateinit var onboardingService: OnboardingService

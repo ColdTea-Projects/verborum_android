@@ -30,4 +30,5 @@ const val SCREEN_FORUM_MAIN_SCREEN = "forumMainScreen"
 
 const val GROUP_OPTIONS = "groupOptions"
 const val SCREEN_OPTIONS = "optionsScreen"
+const val SCREEN_LANGUAGE = "languageScreen"
 

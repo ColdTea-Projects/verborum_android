@@ -7,5 +7,7 @@
     <string name="loginVerifyEmailTitle">Перевірте пошту</string>
     <string name="loginVerifyEmailMessage">Ми надіслали посилання для підтвердження на вашу пошту. Підтвердьте його, щоб завершити реєстрацію, потім увійдіть.</string>
     <string name="optionsScreenTitle">Параметри</string>
+    <string name="optionsLanguage">Мова</string>
+    <string name="optionsLanguageSystemDefault">Системна за замовчуванням</string>
     <string name="optionsLogout">Вийти</string>
 </resources>
