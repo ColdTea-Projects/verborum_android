@@ -3,6 +3,8 @@ package de.coldtea.verborum.bibliotheca.word.ui.multiplechoice.composables
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -50,6 +52,7 @@ fun MultipleChoiceContent(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
+            .verticalScroll(rememberScrollState())
             .padding(horizontal = 24.dp)
     ) {
         Spacer(modifier = Modifier.height(8.dp))
@@ -64,11 +67,9 @@ fun MultipleChoiceContent(
             onAnswerSelected = onAnswerSelected
         )
 
-        Spacer(modifier = Modifier.weight(1f))
+        Spacer(modifier = Modifier.height(16.dp))
 
-        // Inline result, shown right above the actions. The flexible spacer above absorbs its
-        // height, so the buttons stay put — and unlike the old bottom snackbar it never covers
-        // them, so the user can hit "Next" immediately without waiting for it to dismiss.
+        // Inline result, shown right above the actions.
         val question = currentQuestionState.multipleChoiceCurrentQuestion.question
         if (answered) {
             AnswerFeedback(
