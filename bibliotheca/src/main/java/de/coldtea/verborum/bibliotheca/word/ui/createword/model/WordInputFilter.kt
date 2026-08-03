@@ -32,6 +32,12 @@ object WordInputFilter {
     /** The accepted text plus the reason it differs from the input, if it does. */
     data class Filtered(val text: String, val rejection: Rejection?)
 
+    /** Cap for typed words and grammatical forms: a word and its forms stay short. */
+    const val MAX_TEXT_LENGTH = 40
+
+    /** Cap for free text (the reading field and the free-text word type): room for a note. */
+    const val FREE_TEXT_MAX_LENGTH = 150
+
     private const val AR = "ar"
     private const val ZH = "zh"
 
@@ -56,7 +62,8 @@ object WordInputFilter {
     /**
      * Applies the rule for one field. [fieldKey] is null for the base word; a [FieldKey] for a
      * grammatical form. Free text passes through untouched — it is arbitrary content in any script
-     * with any punctuation (§5).
+     * with any punctuation (§5). Every field is capped: [MAX_TEXT_LENGTH] for words and forms,
+     * [FREE_TEXT_MAX_LENGTH] for free text.
      */
     fun apply(
         languageCode: String,
@@ -64,28 +71,31 @@ object WordInputFilter {
         fieldKey: FieldKey?,
         text: String,
     ): Filtered {
-        if (wordType == WordType.FREE_TEXT || isUnfiltered(fieldKey) || text.isEmpty()) {
-            return Filtered(text, null)
+        val isFreeText = wordType == WordType.FREE_TEXT || isUnfiltered(fieldKey)
+        val limited = truncate(text, if (isFreeText) FREE_TEXT_MAX_LENGTH else MAX_TEXT_LENGTH)
+
+        if (isFreeText || limited.isEmpty()) {
+            return Filtered(limited, null)
         }
 
         val code = languageCode.lowercase()
-        val accepted = StringBuilder(text.length)
+        val accepted = StringBuilder(limited.length)
         var droppedLetter = false
         var droppedOther = false
 
         var i = 0
-        while (i < text.length) {
-            val codePoint = text.codePointAt(i)
+        while (i < limited.length) {
+            val codePoint = limited.codePointAt(i)
             val width = Character.charCount(codePoint)
             when {
                 Character.isLetter(codePoint) ->
                     if (LanguageScript.allowsLetter(code, codePoint)) {
-                        accepted.append(text, i, i + width)
+                        accepted.append(limited, i, i + width)
                     } else {
                         droppedLetter = true
                     }
 
-                isAllowedNonLetter(codePoint, code, fieldKey) -> accepted.append(text, i, i + width)
+                isAllowedNonLetter(codePoint, code, fieldKey) -> accepted.append(limited, i, i + width)
 
                 else -> droppedOther = true
             }
@@ -100,6 +110,18 @@ object WordInputFilter {
             else -> null
         }
         return Filtered(accepted.toString(), rejection)
+    }
+
+    /** Cuts [text] to [max] code points, never splitting a surrogate pair or combining mark. */
+    private fun truncate(text: String, max: Int): String {
+        if (text.length <= max) return text
+        var i = 0
+        var count = 0
+        while (i < text.length && count < max) {
+            i += Character.charCount(text.codePointAt(i))
+            count++
+        }
+        return text.substring(0, i)
     }
 
     private fun isAllowedNonLetter(codePoint: Int, code: String, fieldKey: FieldKey?): Boolean =

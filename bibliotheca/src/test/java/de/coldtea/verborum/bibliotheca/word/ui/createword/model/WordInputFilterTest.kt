@@ -192,6 +192,58 @@ class WordInputFilterTest {
     }
     // endregion
 
+    // region character limits
+    @Test
+    fun `words and forms are capped at 40 characters`() {
+        val long = "a".repeat(41)
+
+        val baseWord = filter("de", long)
+        assertEquals(WordInputFilter.MAX_TEXT_LENGTH, baseWord.text.length)
+        assertEquals(long.take(40), baseWord.text)
+
+        val plural = filter("de", long, fieldKey = FieldKey.PLURAL)
+        assertEquals(WordInputFilter.MAX_TEXT_LENGTH, plural.text.length)
+    }
+
+    @Test
+    fun `a cap does not trim within the limit`() {
+        assertEquals("Apfel", filter("de", "Apfel").text)
+    }
+
+    @Test
+    fun `free text is capped at 150 characters`() {
+        val long = "x".repeat(151)
+
+        val reading = filter("de", long, fieldKey = FieldKey.READING)
+        assertEquals(WordInputFilter.FREE_TEXT_MAX_LENGTH, reading.text.length)
+
+        val freeText = filter("de", long, wordType = WordType.FREE_TEXT)
+        assertEquals(WordInputFilter.FREE_TEXT_MAX_LENGTH, freeText.text.length)
+    }
+
+    @Test
+    fun `free text within the limit passes untouched`() {
+        val messy = "Anything! 123 — книга + 犬 \n".repeat(3)
+        assertTrue(messy.length <= WordInputFilter.FREE_TEXT_MAX_LENGTH)
+
+        val result = filter("de", messy, wordType = WordType.FREE_TEXT)
+
+        assertEquals(messy, result.text)
+        assertNull(result.rejection)
+    }
+
+    @Test
+    fun `a cap never splits a surrogate pair`() {
+        val result = filter("en", "🙂".repeat(151), wordType = WordType.FREE_TEXT)
+
+        assertEquals(
+            WordInputFilter.FREE_TEXT_MAX_LENGTH,
+            result.text.codePointCount(0, result.text.length),
+        )
+        assertEquals("🙂".repeat(150), result.text)
+    }
+    // endregion
+
     @Test
     fun `empty input is accepted so the field can be cleared`() {
         val result = filter("de", "")
