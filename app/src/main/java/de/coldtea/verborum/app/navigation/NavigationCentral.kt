@@ -45,6 +45,7 @@ import de.coldtea.verborum.bibliotheca.R as BibliothecaR
 import de.coldtea.verborum.core.ui.LocalSnackbarHostState
 import de.coldtea.verborum.core.ui.LocalVerborumTopBarController
 import de.coldtea.verborum.core.ui.VerborumTopBarController
+import de.coldtea.verborum.core.ui.TopBarSubtitle
 import de.coldtea.verborum.core.ui.VerborumTopBarState
 import de.coldtea.verborum.core.ui.rememberIsOnline
 
@@ -191,11 +192,10 @@ private fun VerborumTopBar(
             )
 
             state.subtitle?.let { subtitle ->
-                Text(
-                    text = subtitle,
-                    fontSize = 14.sp,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.padding(top = 2.dp)
+                TopBarSubtitle(
+                    subtitle = subtitle,
+                    highlight = state.subtitleHighlight,
+                    modifier = Modifier.padding(top = 2.dp),
                 )
             }
         }

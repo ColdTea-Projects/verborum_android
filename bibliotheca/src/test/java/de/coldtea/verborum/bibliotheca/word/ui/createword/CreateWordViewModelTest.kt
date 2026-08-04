@@ -36,6 +36,9 @@ class CreateWordViewModelTest : BaseTest() {
 
     override fun setUp() {
         super.setUp()
+        // Every state emission now combines the dictionary with the live word counts; individual
+        // tests override this when the count is what they are about.
+        every { wordService.observeWordCounts() } returns flowOf(emptyMap())
         viewModel = CreateWordViewModel(dictionaryService, wordService)
     }
 
@@ -44,6 +47,48 @@ class CreateWordViewModelTest : BaseTest() {
     @Test
     fun `initial createWordState is Loading`() = runTest {
         assertEquals(CreateWordState.Loading, viewModel.createWordState.first())
+    }
+
+    // endregion
+
+    // region word count
+    @Test
+    fun `the observed word count rides along on the dictionary`() = runTest {
+        val dictionary = testDictionaryUi(dictionaryId = "dict-1")
+        every { dictionaryService.observeDictionary("dict-1") } returns flowOf(dictionary)
+        every { wordService.observeWordCounts() } returns flowOf(mapOf("dict-1" to 9))
+
+        viewModel.init("dict-1")
+
+        val state = viewModel.createWordState.first() as CreateWordState.Success
+        assertEquals(9, state.dictionaryUi.wordCount)
+    }
+
+    @Test
+    fun `a dictionary with no words counts zero rather than going missing`() = runTest {
+        val dictionary = testDictionaryUi(dictionaryId = "dict-1")
+        every { dictionaryService.observeDictionary("dict-1") } returns flowOf(dictionary)
+        every { wordService.observeWordCounts() } returns flowOf(mapOf("other-dict" to 4))
+
+        viewModel.init("dict-1")
+
+        val state = viewModel.createWordState.first() as CreateWordState.Success
+        assertEquals(0, state.dictionaryUi.wordCount)
+    }
+
+    @Test
+    fun `the edited word is read once, not again on every count change`() = runTest {
+        val dictionary = testDictionaryUi(dictionaryId = "dict-1")
+        val word = testWordUi(wordId = "word-1", dictionaryId = "dict-1")
+        every { dictionaryService.observeDictionary("dict-1") } returns flowOf(dictionary)
+        every { wordService.observeWordCounts() } returns flowOf(mapOf("dict-1" to 1), mapOf("dict-1" to 2))
+        coEvery { wordService.getWord("word-1") } returns word
+
+        viewModel.init("dict-1", "word-1")
+        viewModel.createWordState.first()
+
+        // Re-reading would hand the screen a new instance and re-run its prefill mid-edit.
+        coVerify(exactly = 1) { wordService.getWord("word-1") }
     }
 
     // endregion

@@ -23,6 +23,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -31,6 +32,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import de.coldtea.verborum.bibliotheca.common.ui.components.ScreenError
 import de.coldtea.verborum.bibliotheca.common.ui.model.SupportedLanguage
+import de.coldtea.verborum.bibliotheca.common.utils.ResPlurals
 import de.coldtea.verborum.bibliotheca.common.utils.ResStrings
 import de.coldtea.verborum.bibliotheca.word.ui.createword.composables.LanguageInputCard
 import de.coldtea.verborum.bibliotheca.word.ui.createword.composables.OtherTypeDropdown
@@ -120,6 +122,13 @@ fun CreateWordScreen(
                 else ResStrings.createWordScreenHeader
             ),
             subtitle = dictionary.name,
+            // Flashes the accent colour and fades back whenever the count moves, so a save
+            // registers even though the form itself just quietly clears.
+            subtitleHighlight = pluralStringResource(
+                ResPlurals.dictionaryListScreenWordCount,
+                dictionary.wordCount,
+                dictionary.wordCount,
+            ),
             showBackButton = true,
         )
 

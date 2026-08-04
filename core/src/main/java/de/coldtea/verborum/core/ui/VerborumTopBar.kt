@@ -23,6 +23,7 @@ data class VerborumTopBarAction(
 data class VerborumTopBarState(
     val title: String = "",
     val subtitle: String? = null,
+    val subtitleHighlight: String? = null,
     val showBackButton: Boolean = false,
     val action: VerborumTopBarAction? = null,
 )
@@ -35,10 +36,11 @@ class VerborumTopBarController {
     fun update(
         title: String,
         subtitle: String?,
+        subtitleHighlight: String?,
         showBackButton: Boolean,
         action: VerborumTopBarAction?,
     ) {
-        state = VerborumTopBarState(title, subtitle, showBackButton, action)
+        state = VerborumTopBarState(title, subtitle, subtitleHighlight, showBackButton, action)
     }
 }
 
@@ -57,13 +59,14 @@ val LocalVerborumTopBarController = staticCompositionLocalOf { VerborumTopBarCon
 fun RegisterTopBar(
     title: String,
     subtitle: String? = null,
+    subtitleHighlight: String? = null,
     showBackButton: Boolean = true,
     action: VerborumTopBarAction? = null,
 ) {
     val controller = LocalVerborumTopBarController.current
     // Keyed on the action's icon (not the object) since its onClick is a fresh lambda each
     // recomposition; that lambda closes over remembered state, so a "stale" one still works.
-    LaunchedEffect(title, subtitle, showBackButton, action?.iconRes) {
-        controller.update(title, subtitle, showBackButton, action)
+    LaunchedEffect(title, subtitle, subtitleHighlight, showBackButton, action?.iconRes) {
+        controller.update(title, subtitle, subtitleHighlight, showBackButton, action)
     }
 }
