@@ -1,6 +1,5 @@
 package de.coldtea.verborum.core.ui
 
-import android.content.Context
 import android.net.ConnectivityManager
 import android.net.Network
 import android.net.NetworkCapabilities
@@ -12,6 +11,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
+import de.coldtea.verborum.core.extensions.connectivityManager
+import de.coldtea.verborum.core.extensions.hasInternet
 
 /**
  * Tracks whether the device currently has usable internet, for the offline banner.
@@ -63,20 +64,4 @@ fun rememberIsOnline(): Boolean {
     }
 
     return isOnline
-}
-
-private fun Context.connectivityManager(): ConnectivityManager? =
-    getSystemService(Context.CONNECTIVITY_SERVICE) as? ConnectivityManager
-
-/**
- * Requires VALIDATED as well as INTERNET so a Wi-Fi network that cannot actually reach the
- * internet (captive portals, dead hotspots) is reported as offline — which is what sync sees.
- */
-private fun Context.hasInternet(): Boolean {
-    val manager = connectivityManager() ?: return true
-    val network = manager.activeNetwork ?: return false
-    val capabilities = manager.getNetworkCapabilities(network) ?: return false
-
-    return capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) &&
-        capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED)
 }

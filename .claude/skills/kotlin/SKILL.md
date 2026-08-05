@@ -32,7 +32,9 @@ Idiomatic, defensive Kotlin. These are the conventions the codebase already foll
 
 - **Expression bodies** for thin delegates (repositories, use cases): `fun getX() = dao.getX()`.
 - **Scope functions** by intent: `let` (nullable transform), `apply` (configure-and-return, e.g. OkHttp builder), `also` (side effect), `run`/`with` (grouped calls). Don't nest them into puzzles.
-- **Extension functions** for cross-cutting helpers on existing types (`Flow<T>.observe`, `String` surface parsing) — keep them discoverable in `extensions/`/`utils/`.
+- **Extension functions** for cross-cutting helpers on existing types (`Flow<T>.observe`, `String` surface parsing). **Group them by topic into `extensions/`, one file per logical group, named `<Subject>+<Group>.kt`** — `Context+Connectivity.kt`, `Data+Objects.kt`, `User+Interaction.kt` in `core/extensions/`. Never a catch-all `Extensions.kt`, and never one file per function.
+  - Don't leave a helper as a `private fun` at the bottom of the class or composable that happened to need it first. If a second caller could ever want it, it goes in the group file as a public extension — that is why `Context.hasInternet()` / `Context.connectivityManager()` moved out of `ui/ConnectivityState.kt` into `core/extensions/Context+Connectivity.kt`.
+  - No matching group file yet? Create one named for the group, not for the caller that prompted it.
 - Destructure `partition`/`associateBy`/`groupBy` for set reconciliation (sync diffing) instead of manual loops.
 - Multiline strings/URLs and SQL: concatenate readably; keep `@Query` SQL formatted.
 

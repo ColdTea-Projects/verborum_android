@@ -1,7 +1,5 @@
 package de.coldtea.verborum.bibliotheca.dictionary.domain
 
-import de.coldtea.verborum.core.auth.domain.usecase.GetActiveUserUseCase
-import de.coldtea.verborum.bibliotheca.common.domain.SyncService
 import de.coldtea.verborum.bibliotheca.common.domain.UploadService
 import de.coldtea.verborum.bibliotheca.common.utils.getNowInMillis
 import de.coldtea.verborum.bibliotheca.dictionary.data.db.entity.DictionaryEntity.Companion.GUEST_USER_ID
@@ -13,13 +11,13 @@ import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.local.ObserveAl
 import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.local.ObserveDictionaryUseCase
 import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.local.SaveDictionaryUseCase
 import de.coldtea.verborum.bibliotheca.dictionary.ui.model.DictionaryUi
+import de.coldtea.verborum.core.auth.domain.usecase.GetActiveUserUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
-import kotlin.collections.map
 
 class DictionaryService @Inject constructor(
     private val observeAllDictionariesUseCase: ObserveAllDictionariesUseCase,
@@ -28,7 +26,6 @@ class DictionaryService @Inject constructor(
     private val saveDictionaryUseCase: SaveDictionaryUseCase,
     private val deleteDictionaryUseCase: DeleteDictionaryUseCase,
     private val markDictionaryDeletedUseCase: MarkDictionaryDeletedUseCase,
-    private val syncService: SyncService,
     private val uploadService: UploadService,
     private val getActiveUserUseCase: GetActiveUserUseCase,
 ) {

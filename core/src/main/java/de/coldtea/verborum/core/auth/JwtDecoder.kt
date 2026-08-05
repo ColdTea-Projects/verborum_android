@@ -2,10 +2,10 @@ package de.coldtea.verborum.core.auth
 
 import android.util.Base64
 import de.coldtea.verborum.core.extensions.json
+import de.coldtea.verborum.core.extensions.stringOrNull
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.booleanOrNull
-import kotlinx.serialization.json.contentOrNull
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 
@@ -30,13 +30,10 @@ object JwtDecoder {
         }.getOrNull()
     }
 
-    private fun JsonObject.string(key: String): String? =
-        this[key]?.jsonPrimitive?.contentOrNull
-
     /** The Keycloak subject — the identity every service stores as the row owner (guide §4). */
-    fun subject(jwt: String?): String? = claims(jwt)?.string("sub")
+    fun subject(jwt: String?): String? = claims(jwt)?.stringOrNull("sub")
 
-    fun email(jwt: String?): String? = claims(jwt)?.string("email")
+    fun email(jwt: String?): String? = claims(jwt)?.stringOrNull("email")
 
     /**
      * The `email_verified` claim. Keycloak now requires a verified address before an account is
@@ -49,6 +46,6 @@ object JwtDecoder {
 
     fun displayName(jwt: String?): String? {
         val claims = claims(jwt) ?: return null
-        return claims.string("name") ?: claims.string("preferred_username")
+        return claims.stringOrNull("name") ?: claims.stringOrNull("preferred_username")
     }
 }

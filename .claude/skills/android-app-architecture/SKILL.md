@@ -13,7 +13,7 @@ This skill is the **law and the procedure**: it defines how the app is structure
 app  →  bibliotheca, forum  →  core          (buildSrc: Configuration.kt for SDK versions)
 ```
 
-- **`core`** — shared infrastructure: `theme/` (VerborumTheme, VerborumColors), `ui/BaseViewModel`, `di/NetworkModule`, `auth/` (token store, interceptor/authenticator), `extensions/`. Ships **testFixtures** (`BaseTest`, `MainDispatcherRule`).
+- **`core`** — shared infrastructure: `theme/` (VerborumTheme, VerborumColors), `ui/BaseViewModel`, `di/NetworkModule`, `auth/` (token store, interceptor/authenticator), `extensions/` (shared extension functions, grouped one file per topic as `<Subject>+<Group>.kt` — see the `kotlin` skill). Ships **testFixtures** (`BaseTest`, `MainDispatcherRule`).
 - **`bibliotheca`**, **`forum`** — feature library modules. Feature code lives here, never in `app`.
 - **`app`** — only `MainActivity`, `VerborumApplication`, and `navigation/` (route constants + nav graph wiring).
 - Cross-module references use typesafe accessors: `api(projects.core)`, `testImplementation(testFixtures(projects.core))`. Dependencies point **inward only** — `core` never imports a feature module.
