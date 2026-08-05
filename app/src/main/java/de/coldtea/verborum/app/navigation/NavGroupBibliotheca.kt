@@ -6,7 +6,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import de.coldtea.verborum.bibliotheca.dictionary.ui.DictionaryListScreen
+import de.coldtea.verborum.bibliotheca.dictionary.ui.dictionarylist.DictionaryListScreen
 import de.coldtea.verborum.bibliotheca.dictionary.ui.createdictionary.CreateDictionaryScreen
 import de.coldtea.verborum.bibliotheca.dictionary.ui.createdictionary.CreateDictionaryViewModel
 import de.coldtea.verborum.bibliotheca.onboarding.ui.WelcomeScreen

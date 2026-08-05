@@ -44,8 +44,8 @@ import de.coldtea.verborum.bibliotheca.common.utils.ResDrawables
 import de.coldtea.verborum.bibliotheca.common.utils.ResPlurals
 import de.coldtea.verborum.bibliotheca.common.utils.ResStrings
 import de.coldtea.verborum.bibliotheca.common.ui.components.ScreenError
-import de.coldtea.verborum.bibliotheca.dictionary.ui.composables.DeleteDictionaryDialog
-import de.coldtea.verborum.bibliotheca.dictionary.ui.composables.languagePairLabel
+import de.coldtea.verborum.bibliotheca.dictionary.ui.dictionarylist.composables.DeleteDictionaryDialog
+import de.coldtea.verborum.bibliotheca.dictionary.ui.dictionarylist.composables.languagePairLabel
 import de.coldtea.verborum.bibliotheca.word.ui.dictionarydetails.composables.DictionaryTagsText
 import de.coldtea.verborum.bibliotheca.word.ui.dictionarydetails.composables.PracticeModeButton
 import de.coldtea.verborum.bibliotheca.word.ui.dictionarydetails.composables.WordListItem

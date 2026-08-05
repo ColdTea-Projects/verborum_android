@@ -1,4 +1,4 @@
-package de.coldtea.verborum.bibliotheca.dictionary.ui
+package de.coldtea.verborum.bibliotheca.dictionary.ui.dictionarylist
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.layout.size
@@ -26,14 +25,10 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.SnackbarDuration
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -52,17 +47,17 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import de.coldtea.verborum.bibliotheca.common.ui.model.SupportedLanguage
 import de.coldtea.verborum.bibliotheca.common.utils.ResDrawables
 import de.coldtea.verborum.bibliotheca.common.utils.ResStrings
-import de.coldtea.verborum.bibliotheca.dictionary.ui.composables.DeleteDictionaryDialog
-import de.coldtea.verborum.bibliotheca.dictionary.ui.composables.DictionaryCard
+import de.coldtea.verborum.bibliotheca.dictionary.ui.dictionarylist.composables.DeleteDictionaryDialog
+import de.coldtea.verborum.bibliotheca.dictionary.ui.dictionarylist.composables.DictionaryCard
 import de.coldtea.verborum.bibliotheca.common.ui.components.ScreenError
-import de.coldtea.verborum.bibliotheca.dictionary.ui.composables.DictionaryCardSkeleton
-import de.coldtea.verborum.bibliotheca.dictionary.ui.composables.DictionaryFilterBar
-import de.coldtea.verborum.bibliotheca.dictionary.ui.composables.DictionarySearchField
-import de.coldtea.verborum.bibliotheca.dictionary.ui.composables.SelectionBottomSheet
-import de.coldtea.verborum.bibliotheca.dictionary.ui.composables.SelectionOption
-import de.coldtea.verborum.bibliotheca.dictionary.ui.model.DictionaryListState
-import de.coldtea.verborum.bibliotheca.dictionary.ui.model.DictionarySort
-import de.coldtea.verborum.bibliotheca.dictionary.ui.model.DictionaryUi
+import de.coldtea.verborum.bibliotheca.dictionary.ui.dictionarylist.composables.DictionaryCardSkeleton
+import de.coldtea.verborum.bibliotheca.dictionary.ui.dictionarylist.composables.DictionaryFilterBar
+import de.coldtea.verborum.bibliotheca.dictionary.ui.dictionarylist.composables.DictionarySearchField
+import de.coldtea.verborum.bibliotheca.dictionary.ui.dictionarylist.composables.SelectionBottomSheet
+import de.coldtea.verborum.bibliotheca.dictionary.ui.dictionarylist.composables.SelectionOption
+import de.coldtea.verborum.bibliotheca.dictionary.ui.dictionarylist.model.DictionaryListState
+import de.coldtea.verborum.bibliotheca.dictionary.ui.dictionarylist.model.DictionarySort
+import de.coldtea.verborum.bibliotheca.dictionary.ui.dictionarylist.model.DictionaryUi
 import de.coldtea.verborum.core.theme.VerborumTheme
 import de.coldtea.verborum.core.ui.RegisterTopBar
 import de.coldtea.verborum.core.ui.ShowSnackbarMessages

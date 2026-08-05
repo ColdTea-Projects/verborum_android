@@ -1,7 +1,6 @@
 package de.coldtea.verborum.bibliotheca.dictionary.domain
 
 import de.coldtea.verborum.core.auth.domain.usecase.GetActiveUserUseCase
-import de.coldtea.verborum.bibliotheca.common.domain.SyncService
 import de.coldtea.verborum.bibliotheca.common.domain.UploadService
 import de.coldtea.verborum.bibliotheca.dictionary.data.db.entity.DictionaryEntity.Companion.GUEST_USER_ID
 import de.coldtea.verborum.bibliotheca.dictionary.domain.model.Dictionary
@@ -54,9 +53,6 @@ class DictionaryServiceTest : BaseTest() {
     private lateinit var markDictionaryDeletedUseCase: MarkDictionaryDeletedUseCase
 
     @MockK
-    private lateinit var syncService: SyncService
-
-    @MockK
     private lateinit var uploadService: UploadService
 
     // invoke returns String? — defaults to null (logged out) so createDictionary falls back to guest.
@@ -75,7 +71,6 @@ class DictionaryServiceTest : BaseTest() {
             saveDictionaryUseCase = saveDictionaryUseCase,
             deleteDictionaryUseCase = deleteDictionaryUseCase,
             markDictionaryDeletedUseCase = markDictionaryDeletedUseCase,
-            syncService = syncService,
             uploadService = uploadService,
             getActiveUserUseCase = getActiveUserUseCase,
         )
@@ -125,13 +120,12 @@ class DictionaryServiceTest : BaseTest() {
     }
 
     @Test
-    fun `createDictionary does not upload or sync`() = runTest {
+    fun `createDictionary does not upload`() = runTest {
         coEvery { saveDictionaryUseCase.invoke(any()) } returns "new-dict-id"
 
         dictionaryService.createDictionary(name = "German Basics", fromLang = "de", toLang = "en")
 
         coVerify(exactly = 0) { uploadService.createDictionary(any()) }
-        coVerify(exactly = 0) { syncService.syncDictionaries() }
     }
 
     // endregion

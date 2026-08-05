@@ -1,4 +1,4 @@
-package de.coldtea.verborum.bibliotheca.dictionary.ui.composables
+package de.coldtea.verborum.bibliotheca.dictionary.ui.dictionarylist.composables
 
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateDpAsState
@@ -44,7 +44,7 @@ import de.coldtea.verborum.bibliotheca.common.utils.CoreResDrawables
 import de.coldtea.verborum.bibliotheca.common.utils.ResDrawables
 import de.coldtea.verborum.bibliotheca.common.utils.ResPlurals
 import de.coldtea.verborum.bibliotheca.common.utils.ResStrings
-import de.coldtea.verborum.bibliotheca.dictionary.ui.model.DictionaryUi
+import de.coldtea.verborum.bibliotheca.dictionary.ui.dictionarylist.model.DictionaryUi
 import de.coldtea.verborum.core.theme.VerborumTheme
 
 @Composable

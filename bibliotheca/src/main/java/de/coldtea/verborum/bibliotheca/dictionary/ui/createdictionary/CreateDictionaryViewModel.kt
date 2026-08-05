@@ -6,7 +6,7 @@ import de.coldtea.verborum.bibliotheca.common.ui.model.SupportedLanguage
 import de.coldtea.verborum.bibliotheca.common.utils.ResStrings
 import de.coldtea.verborum.bibliotheca.dictionary.domain.DictionaryService
 import de.coldtea.verborum.bibliotheca.dictionary.ui.createdictionary.model.CreateDictionaryState
-import de.coldtea.verborum.bibliotheca.dictionary.ui.model.DictionaryUi
+import de.coldtea.verborum.bibliotheca.dictionary.ui.dictionarylist.model.DictionaryUi
 import de.coldtea.verborum.core.ui.BaseViewModel
 import de.coldtea.verborum.core.ui.UiText
 import kotlinx.coroutines.flow.MutableStateFlow

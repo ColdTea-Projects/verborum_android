@@ -1,4 +1,4 @@
-package de.coldtea.verborum.bibliotheca.dictionary.ui.composables
+package de.coldtea.verborum.bibliotheca.dictionary.ui.dictionarylist.composables
 
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
@@ -22,6 +22,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import de.coldtea.verborum.core.theme.VerborumTheme
@@ -78,7 +79,7 @@ fun DictionaryCardSkeleton(modifier: Modifier = Modifier) {
 
 @Composable
 private fun SkeletonBlock(
-    color: androidx.compose.ui.graphics.Color,
+    color: Color,
     modifier: Modifier = Modifier,
     shape: RoundedCornerShape = RoundedCornerShape(6.dp),
 ) {

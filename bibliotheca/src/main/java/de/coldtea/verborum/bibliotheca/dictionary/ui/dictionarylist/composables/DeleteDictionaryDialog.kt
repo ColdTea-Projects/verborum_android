@@ -1,4 +1,4 @@
-package de.coldtea.verborum.bibliotheca.dictionary.ui.composables
+package de.coldtea.verborum.bibliotheca.dictionary.ui.dictionarylist.composables
 
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.MaterialTheme

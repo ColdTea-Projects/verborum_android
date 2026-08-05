@@ -1,4 +1,4 @@
-package de.coldtea.verborum.bibliotheca.dictionary.ui.model
+package de.coldtea.verborum.bibliotheca.dictionary.ui.dictionarylist.model
 
 sealed class DictionaryListState {
     data object Loading : DictionaryListState()

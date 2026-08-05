@@ -1,4 +1,4 @@
-package de.coldtea.verborum.bibliotheca.dictionary.ui.composables
+package de.coldtea.verborum.bibliotheca.dictionary.ui.dictionarylist.composables
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
@@ -31,7 +31,7 @@ import androidx.compose.ui.unit.sp
 import de.coldtea.verborum.bibliotheca.common.ui.model.SupportedLanguage
 import de.coldtea.verborum.bibliotheca.common.utils.ResDrawables
 import de.coldtea.verborum.bibliotheca.common.utils.ResStrings
-import de.coldtea.verborum.bibliotheca.dictionary.ui.model.DictionarySort
+import de.coldtea.verborum.bibliotheca.dictionary.ui.dictionarylist.model.DictionarySort
 
 /** The expandable "Search dictionaries" field shown above the filter chips. */
 @Composable

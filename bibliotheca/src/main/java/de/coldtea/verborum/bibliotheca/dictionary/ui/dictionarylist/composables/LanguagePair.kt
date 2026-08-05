@@ -1,4 +1,4 @@
-package de.coldtea.verborum.bibliotheca.dictionary.ui.composables
+package de.coldtea.verborum.bibliotheca.dictionary.ui.dictionarylist.composables
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource

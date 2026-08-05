@@ -1,4 +1,4 @@
-package de.coldtea.verborum.bibliotheca.dictionary.ui.model
+package de.coldtea.verborum.bibliotheca.dictionary.ui.dictionarylist.model
 
 import androidx.annotation.StringRes
 import de.coldtea.verborum.bibliotheca.common.utils.ResStrings

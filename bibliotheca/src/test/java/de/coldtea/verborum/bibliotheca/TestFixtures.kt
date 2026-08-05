@@ -3,7 +3,7 @@ package de.coldtea.verborum.bibliotheca
 import de.coldtea.verborum.bibliotheca.dictionary.data.api.model.DictionaryResponse
 import de.coldtea.verborum.bibliotheca.dictionary.data.db.entity.DictionaryEntity
 import de.coldtea.verborum.bibliotheca.dictionary.domain.model.Dictionary
-import de.coldtea.verborum.bibliotheca.dictionary.ui.model.DictionaryUi
+import de.coldtea.verborum.bibliotheca.dictionary.ui.dictionarylist.model.DictionaryUi
 import de.coldtea.verborum.bibliotheca.word.data.api.model.WordResponse
 import de.coldtea.verborum.bibliotheca.word.data.db.entity.WordEntity
 import de.coldtea.verborum.bibliotheca.word.domain.model.Word

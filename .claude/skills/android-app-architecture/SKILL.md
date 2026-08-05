@@ -36,12 +36,18 @@ Each domain concept (`word`, `dictionary`, `auth`, `options`) is a self-containe
     usecase/api/    one-verb use cases hitting the API (SaveXApiUseCase…)
     XService.kt     orchestrates use cases; the only thing ViewModels talk to
   ui/
-    X.kt            top-level @Composable XScreen(viewModel = hiltViewModel())
-    XViewModel.kt   @HiltViewModel, extends BaseViewModel
-    model/          UI model (XUi) with convertToX() back to domain
-    composables/    smaller stateless composables for that screen
+    <screen>/       ONE DIRECTORY PER SCREEN (dictionarylist/, createdictionary/, dictionarydetails/…)
+      X.kt          top-level @Composable XScreen(viewModel = hiltViewModel())
+      XViewModel.kt @HiltViewModel, extends BaseViewModel
+      model/        that screen's state + UI models (XUi with convertToX() back to domain)
+      composables/  smaller stateless composables for that screen
+    model/          ONLY for UI models several screens of the slice share (word/ui/model/: WordUi, WordMeta)
 common/             cross-cutting for the module: data/db (Database, DaoBase), di/, domain/ (SyncService, SyncScheduler…), utils/
 ```
+
+- **Nothing loose under `ui/`.** No screen file, ViewModel, or `composables/` directly in `ui/` — each belongs to its screen directory. A screen is a directory even when it starts as two files.
+- A UI model owned by one screen lives in that screen's `model/`, and other screens import it from there (`DictionaryUi` sits in `dictionarylist/model/`; `CreateDictionaryViewModel` and the domain converters import it). Promote to the slice-level `ui/model/` only once several screens genuinely share it, as `WordUi`/`WordMeta` do.
+- `src/test/java/` mirrors this exactly: a test for `ui/dictionarylist/DictionaryListViewModel.kt` goes in `ui/dictionarylist/`, not `ui/`.
 
 ## Layer rules
 

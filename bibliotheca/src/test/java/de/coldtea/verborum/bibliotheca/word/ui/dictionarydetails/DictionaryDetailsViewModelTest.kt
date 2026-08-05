@@ -1,7 +1,7 @@
 package de.coldtea.verborum.bibliotheca.word.ui.dictionarydetails
 
 import de.coldtea.verborum.bibliotheca.dictionary.domain.DictionaryService
-import de.coldtea.verborum.bibliotheca.dictionary.ui.model.DictionaryUi
+import de.coldtea.verborum.bibliotheca.dictionary.ui.dictionarylist.model.DictionaryUi
 import de.coldtea.verborum.bibliotheca.testDictionaryUi
 import de.coldtea.verborum.bibliotheca.testWordUi
 import de.coldtea.verborum.bibliotheca.word.domain.WordService
