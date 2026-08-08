@@ -1,6 +1,6 @@
 ---
 name: android-unit-test
-description: Write or fix JVM unit tests in the Verborum Android app — BaseTest/MainDispatcherRule setup, MockK conventions, test fixtures, ViewModel/Flow state-assertion patterns, and the pitfalls this project has actually hit. Load when adding or debugging unit tests for use cases, services, repositories, or ViewModels. For instrumented/Compose/Room/Hilt tests, use android-integration-test instead.
+description: Write and fix JVM unit tests in the Verborum Android app — BaseTest/MainDispatcherRule setup, MockK conventions, test fixtures, ViewModel and Flow state-assertion patterns, and the pitfalls this project has hit. Use when adding or debugging unit tests for use cases, services, repositories, or ViewModels; for instrumented, Compose, Room, or Hilt tests use android-integration-test instead.
 ---
 
 # Unit Tests (Verborum)

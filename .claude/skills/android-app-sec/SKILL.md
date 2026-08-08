@@ -1,11 +1,30 @@
 ---
 name: android-app-sec
-description: Application security for the Verborum Android app — OAuth/OIDC via Keycloak (Authorization Code + PKCE), token storage and refresh, secrets handling, safe logging, network security config / cleartext, and release hardening. Load when touching auth, tokens, the network layer, logging, or preparing for production; and as the security lens during code review.
+description: Review and implement application security in the Verborum Android app — OAuth/OIDC via Keycloak (Authorization Code + PKCE), token storage and refresh, secrets handling, safe logging, network-security config and cleartext, owner-keyed data, and release hardening. Use when touching auth, tokens, the network layer, logging, or release configuration, and as the security lens during code review.
 ---
 
 # App Security (Verborum)
 
 The auth layer already follows these rules — preserve them, and apply the same standard to new code. Cross-refs: `docs/client-login-guide.md` (auth contract) and `docs/production-cutover.md` (go-live hardening).
+
+## Quick start — the two shapes that matter most
+
+```kotlin
+// Verbose/network logging and dev-only affordances stay behind the debug guard.
+if (BuildConfig.DEBUG) {
+    addInterceptor(HttpLoggingInterceptor().apply { level = Level.BODY })
+}
+
+// Tokens live only in EncryptedSharedPreferences (Keystore-backed) — never plain prefs,
+// never a log line, never a file.
+EncryptedSharedPreferences.create(
+    context,
+    AUTH_PREFS,
+    MasterKey.Builder(context).setKeyScheme(KeyScheme.AES256_GCM).build(),
+    PrefKeyEncryptionScheme.AES256_SIV,
+    PrefValueEncryptionScheme.AES256_GCM,
+)
+```
 
 ## Authentication (OAuth2 / OIDC)
 

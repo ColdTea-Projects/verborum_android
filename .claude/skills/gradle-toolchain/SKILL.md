@@ -1,6 +1,6 @@
 ---
 name: gradle-toolchain
-description: Manage Gradle configuration, dependencies, and build toolchain for the Verborum Android project — version catalog rules, Kotlin/KSP/Hilt version alignment, adding dependencies safely, and diagnosing build failures (including swallowed annotation-processor errors). Use when touching build.gradle.kts, libs.versions.toml, gradle.properties, or when the build breaks.
+description: Manage Gradle configuration, dependencies, and the build toolchain for the Verborum Android project — version-catalog rules, Kotlin/KSP/Hilt version alignment, adding dependencies safely, build variants, and diagnosing build failures including swallowed annotation-processor errors. Use when touching build.gradle.kts, libs.versions.toml, gradle.properties, or buildSrc, and when a build or Gradle task fails.
 ---
 
 # Gradle & Toolchain (Verborum)
@@ -25,6 +25,20 @@ description: Manage Gradle configuration, dependencies, and build toolchain for 
 Why no kapt: it's legacy on Kotlin 2.x (falls back to language level 1.9) and its stub layer caused opaque, KGP-swallowed crashes here (including "Provided Metadata instance has version X" errors). If someone adds a `kapt(...)` line, convert it to `ksp(...)`.
 
 ## Adding a dependency
+
+```toml
+# gradle/libs.versions.toml
+[versions]
+turbine = "1.2.0"
+
+[libraries]
+turbine = { group = "app.cash.turbine", name = "turbine", version.ref = "turbine" }
+```
+
+```kotlin
+// <module>/build.gradle.kts
+testImplementation(libs.turbine)
+```
 
 1. Add the version under `[versions]` and the alias under `[libraries]` in the catalog. Watch the naming quirk: catalog uses both `snake_case` and `kebab-case` aliases; follow neighboring entries.
 2. **Check it doesn't already exist under another alias** — a duplicate artifact at two versions broke `checkDebugAarMetadata` before (core-ktx declared twice).

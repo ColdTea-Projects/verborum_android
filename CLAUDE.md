@@ -32,6 +32,7 @@ The skills in `.claude/skills/` are the project's rulebook. Read the matching SK
 | `android-app-sec` | Auth, tokens, the network layer, logging/secrets, network-security config, or release hardening. |
 | `gradle-toolchain` | Touching build.gradle.kts, libs.versions.toml, gradle.properties, or diagnosing build failures. |
 | `git-workflow` | Creating files, staging, or committing — this repo auto-stages Write-created files via a hook. |
+| `write-a-skill` | Authoring, expanding, splitting, or auditing anything in `.claude/skills/` — the six quality gates + the validators that enforce them. |
 
 A single task usually spans several skills — e.g. a new screen pulls `android-dev` + `android-app-architecture` + `kotlin` + `material-design` + `android-unit-test`. Load all that apply.
 
@@ -62,3 +63,8 @@ At the end of any response where you applied one or more skills, add a one-line 
 - `BibliothecaDatabase` schema changes need a `version` bump **and** a matching `Migration` in `addMigrations(...)` — a missed migration is a data-loss/crash risk; flag them.
 - Never commit or push unless explicitly asked. `local.properties`, `build/`, keystores stay out of git.
 - UI strings go through resources and must be kept in sync across all 19 `values-XX/` locales.
+- Never add or expand a skill without loading `write-a-skill` first. Every `SKILL.md` must PASS all six gates — description with a `Use when …` trigger, ≤100 lines, no time-sensitive info, consistent terminology, ≥1 concrete example, `references/` flat — verified with:
+  ```bash
+  python3 .claude/skills/write-a-skill/scripts/skill_review_checklist_runner.py .claude/skills/<name>/
+  ```
+  Detail beyond 100 lines goes to `.claude/skills/<name>/references/<topic>.md`, and a new production-code skill must also be added to the table above and to `android-dev`'s routing table.

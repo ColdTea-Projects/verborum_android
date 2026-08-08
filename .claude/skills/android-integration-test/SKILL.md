@@ -1,6 +1,6 @@
 ---
 name: android-integration-test
-description: Integration and instrumented testing for the Verborum Android app — Room DAO/migration tests, Compose UI tests, Hilt test harness, and Retrofit-against-MockWebServer. Load when asked to test real component wiring (DB queries, migrations, screen behavior, DI graph) rather than isolated logic. Note the project has no instrumented setup yet; this skill also covers standing it up.
+description: Write integration and instrumented tests for the Verborum Android app — Room DAO and migration tests, Compose UI tests, the Hilt test harness, and Retrofit against MockWebServer, including standing up the missing infrastructure. Use when testing real component wiring (DB queries, migrations, screen behavior, DI graph) rather than isolated logic; for plain JVM unit tests use android-unit-test instead.
 ---
 
 # Integration & Instrumented Tests (Verborum)
@@ -15,7 +15,20 @@ The project has **no working integration/instrumented tests**: only generated `E
 
 Room DAO logic (the `@Query`s, `ORDER BY`, tombstone filters, `reassignOwner`, tag JSON) is real integration risk that unit tests can't cover.
 
-- Build an **in-memory** database: `Room.inMemoryDatabaseBuilder(context, BibliothecaDatabase::class.java).allowMainThreadQueries().build()`; get `context` from `ApplicationProvider` (Robolectric under `testDebugUnitTest`, or `androidTest`).
+- Build an **in-memory** database; get `context` from `ApplicationProvider` (Robolectric under `testDebugUnitTest`, or `androidTest`):
+
+  ```kotlin
+  private lateinit var db: BibliothecaDatabase
+
+  @Before fun setUp() {
+      db = Room.inMemoryDatabaseBuilder(
+          ApplicationProvider.getApplicationContext(), BibliothecaDatabase::class.java,
+      ).allowMainThreadQueries().build()
+  }
+
+  @After fun tearDown() = db.close()
+  ```
+
 - **Migrations must be tested** — this DB has real migrations (`MIGRATION_1_2`, `MIGRATION_2_3`) and version bumps are data-loss risks. Use `androidx.room.testing.MigrationTestHelper`: create at the old version with seed rows, run the migration, assert columns/data survived. Every new migration gets a test.
 - Assert Flow-returning queries with Turbine or by collecting the first emission on a test dispatcher.
 

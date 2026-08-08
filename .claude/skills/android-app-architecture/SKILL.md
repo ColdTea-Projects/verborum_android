@@ -1,11 +1,11 @@
 ---
 name: android-app-architecture
-description: The architecture of the Verborum Android app — module layout and dependency direction, the vertical feature-slice structure, the three model tiers (Entity/Domain/UI) and their converters, layer rules (DAO/Repository/UseCase/Service/ViewModel), Hilt DI, navigation, and the step-by-step procedure for scaffolding a new feature, screen, table, or field. Load this before adding or restructuring any production code, or when deciding where something belongs.
+description: Apply the structural law of the Verborum Android app — module layout and dependency direction, vertical feature slices, the three model tiers (Entity/Domain/UI) and their converters, layer rules (DAO/Repository/UseCase/Service/ViewModel), Hilt DI, navigation, and the scaffold procedure. Use when deciding where code belongs, adding or restructuring a feature, screen, Room table, or field, or reviewing layering and package placement.
 ---
 
 # Verborum App Architecture
 
-This skill is the **law and the procedure**: it defines how the app is structured and how to extend it. `android-dev` is the day-to-day working companion; this is what it defers to for structure. When adding anything, find the closest existing sibling — `word/` and `dictionary/` in `bibliotheca` are canon — and mirror it rather than inventing a new shape.
+The **structural law**: how the app is put together and how to extend it. `android-dev` is the day-to-day working companion; this is what it defers to for structure. When adding anything, find the closest existing sibling — `word/` and `dictionary/` in `bibliotheca` are canon — and mirror it rather than inventing a new shape.
 
 ## Modules & dependency direction
 
@@ -75,49 +75,12 @@ common/             cross-cutting for the module: data/db (Database, DaoBase), d
 - Route strings: `const val SCREEN_X = "xScreen"` in `app/.../navigation/Screens.kt`; tab roots are `ScreenGroups` sealed objects registered in `screenGroups`.
 - Each screen gets a `NavGraphBuilder` extension in `NavGroupBibliotheca.kt`/`NavGroupForum.kt`/`NavGroupOptions.kt`: `fun NavGraphBuilder.insertX(navController) = composable("$SCREEN_X/{arg}") { … }`, creating the ViewModel with `hiltViewModel()` and calling `viewModel.init(arg)` before the screen. Wire it into `NavigationCentral`.
 
----
+## Quick start — scaffolding
 
-# Procedure: scaffold a feature
+Find the closest existing sibling, mirror it, then follow the ordered steps in
+[references/scaffold_procedure.md](references/scaffold_procedure.md) (new concept, new
+screen, or new field — it says which steps apply to which). Verify with:
 
-Decide scope first, then run only the needed steps in order:
-
-- **New domain concept** (new table/API resource): all steps.
-- **New screen over existing data**: steps 4–6.
-- **New field on an existing concept**: touch every model tier + converters + fixtures (step 7); add a Room migration + bump `version` if the entity changed.
-
-### 1. Data — local (Room)
-1. `data/db/entity/XEntity.kt` — `@Entity(tableName = "x", primaryKeys = ["x_id"])`, snake_case `@ColumnInfo`, defaults (`isSynced = false`, `createdAt = getNowInMillis()`).
-2. `data/db/dao/DaoX.kt` — `@Dao interface DaoX : DaoBase<XEntity>`; `Flow<List<XEntity>>` for observation (with explicit `ORDER BY`), `suspend` for one-shots.
-3. Register in `common/data/db/BibliothecaDatabase.kt`: add to `@Database(entities=[...])`, add the `daoX` accessor, **bump `version`** and add a `Migration(n, n+1)` to `addMigrations(...)` when the schema changes (there are real migrations here — never drop data silently; flag the risk).
-4. `data/XRepository.kt` — thin `@Inject constructor(db)` delegates.
-
-### 2. Data — remote (Retrofit), only if it syncs
-1. `data/api/model/XRequest.kt`/`XResponse.kt` — `@Keep @Serializable`, explicit `@SerialName` per field, nullable + defaulted for fields the backend may omit.
-2. `data/api/XApi.kt` — one Retrofit interface **per backend controller** (a distinct controller = a distinct interface, even on the same origin), `suspend` returning `Response<T>` (or a nullable body for GET lists).
-
-### 3. Domain
-1. `domain/model/X.kt` — data class with `convertToEntity()`/`convertToUi()`/`convertToRequest()`.
-2. `domain/usecase/local/` + `usecase/api/` — one verb per class.
-3. `domain/XService.kt` — orchestrates; the ViewModel-facing API.
-
-### 4. UI
-1. `ui/<screen>/model/XScreenState.kt` — sealed `Loading`/`Success`/`Failed`.
-2. `ui/<screen>/XViewModel.kt` — `@HiltViewModel : BaseViewModel`, `MutableStateFlow(Loading)`, `init(id)` using `Flow.observe(...)`.
-3. `ui/<screen>/X.kt` — the screen + a `@Preview` in `VerborumTheme` (see the `material-design` skill for component/theming rules).
-4. `ui/<screen>/composables/` — stateless children; hoist state, pass lambdas down.
-
-### 5. Navigation (app module)
-Add `SCREEN_X`, an `insertX(...)` extension, and wire it into `NavigationCentral`.
-
-### 6. Resources
-- Strings: module `res/values/string.xml` (singular filename in bibliotheca), **camelCase** names, via `stringResource(ResStrings.name)`. **Every user-facing string must be added to all 19 `values-XX/` locales in sync** (see `android-dev`).
-- Drawables: hand-written vector XML in `res/drawable/`, `ic_<name>_<size>.xml`.
-
-### 7. Tests & fixtures
-Add `testX*` factories to `TestFixtures.kt`; write unit tests per the `android-unit-test` skill.
-
-### 8. Verify
 ```bash
 JAVA_HOME="/Applications/Android Studio.app/Contents/jbr/Contents/Home" ./gradlew :<module>:testDebugUnitTest :app:assembleDebug
 ```
-Both must pass before the feature is done.

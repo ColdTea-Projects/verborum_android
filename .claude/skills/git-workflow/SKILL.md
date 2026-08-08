@@ -1,6 +1,6 @@
 ---
 name: git-workflow
-description: Git workflow for the Verborum Android project — automatic staging of newly created files via the project hook, staging/commit conventions, and what must never be committed. Use when creating files, staging, committing, or reasoning about git state in this repo.
+description: Manage git state in the Verborum Android repo — verify the project hook's automatic staging of newly created files, stage Edit-modified files, write commit messages in the project's style, and keep build outputs, local.properties, keystores, and scratch files out of history. Use when creating files, staging, committing, or checking repo state.
 ---
 
 # Git Workflow (Verborum)

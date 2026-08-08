@@ -1,6 +1,6 @@
 ---
 name: android-dev
-description: Day-to-day feature development in the Verborum Android app — the working companion for writing data, domain, and UI code across Room/Retrofit/Hilt/Compose. Covers conventions, the edit→verify loop, cross-cutting rules (localization, resources, error handling), and which sibling skill to load for structure, language, UI, tests, security, or build. Load this whenever you write or change production code.
+description: Build and change production code in the Verborum Android app — conventions across Room/Retrofit/Hilt/Compose, the edit→verify loop, and the cross-cutting rules for localization, resources, and error handling, plus routing to the right sibling skill for structure, language, UI, tests, security, or build. Use when writing or modifying any production code, and as the entry point when it is unclear which skill applies.
 ---
 
 # Verborum Android Development
@@ -19,6 +19,7 @@ The practical companion for building features. It routes to the specialist skill
 | Tokens, auth, logging, secrets, network security | **android-app-sec** |
 | build.gradle.kts, libs.versions.toml, build failures | **gradle-toolchain** |
 | Creating/staging/committing files | **git-workflow** |
+| Writing, expanding, or auditing a skill in `.claude/skills/` | **write-a-skill** |
 
 Load `android-app-architecture` before touching structure; the layering, model tiers, DI, and navigation rules live there and are not repeated here.
 

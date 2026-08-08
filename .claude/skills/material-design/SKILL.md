@@ -1,11 +1,32 @@
 ---
 name: material-design
-description: Material 3 + Jetpack Compose UI conventions for the Verborum app — theming through VerborumTheme/colorScheme, typography, the shared component patterns (top bar, bottom nav, buttons, FilterChip, ModalBottomSheet, Scaffold), light/dark + RTL support, and accessibility. Load when building or reviewing any Compose screen or composable.
+description: Build and review Material 3 Jetpack Compose UI for the Verborum app — theming through VerborumTheme/colorScheme, typography and spacing, the shared component patterns (top bar, bottom nav, buttons, FilterChip, ModalBottomSheet, Scaffold, snackbar), light/dark and RTL support, accessibility, and recomposition hygiene. Use when writing or reviewing any Compose screen, composable, or preview.
 ---
 
 # Material Design & Compose (Verborum)
 
 Compose-only, Material 3, no XML layouts. Match the existing look and the theming discipline below.
+
+## Quick start — a screen's shape
+
+```kotlin
+@Composable
+fun WordListScreen(viewModel: WordListViewModel = hiltViewModel()) {
+    RegisterTopBar(title = stringResource(ResStrings.wordListTitle), showBackButton = true)
+    val state by viewModel.state.collectAsState(initial = WordListState.Loading)
+    when (val s = state) {
+        WordListState.Loading -> LoadingIndicator()
+        is WordListState.Success -> WordListContent(words = s.words, onWordClick = viewModel::onWordClick)
+        WordListState.Failed -> ScreenError(onRetry = viewModel::retry)
+    }
+}
+
+@PreviewLightDark
+@Composable
+private fun WordListPreview() = VerborumTheme {
+    WordListContent(words = emptyList(), onWordClick = {})
+}
+```
 
 ## Theming — never hardcode colors
 

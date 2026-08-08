@@ -1,11 +1,32 @@
 ---
 name: kotlin
-description: Kotlin language conventions and best practices as applied in the Verborum Android app — immutability and data/sealed classes, null-safety, coroutines and Flow, structured concurrency and dispatchers, expression bodies and scope functions, kotlinx.serialization, and the idioms this codebase standardizes on. Load when writing or reviewing Kotlin regardless of layer.
+description: Write and review idiomatic Kotlin the way the Verborum Android app does — immutability and data/sealed classes, null-safety, coroutines and Flow, structured concurrency and dispatchers, expression bodies and scope functions, kotlinx.serialization. Use when writing or reviewing Kotlin in any layer, and when choosing between Flow operators, dispatchers, scope functions, or nullability strategies.
 ---
 
 # Kotlin (Verborum)
 
 Idiomatic, defensive Kotlin. These are the conventions the codebase already follows — match them.
+
+## Quick start — the canonical shapes
+
+```kotlin
+data class Word(val id: String, val surfaces: List<String>)          // immutable model
+sealed class WordListState {                                          // closed hierarchy
+    data object Loading : WordListState()
+    data class Success(val words: List<WordUi>) : WordListState()
+    data object Failed : WordListState()
+}
+
+class WordRepository @Inject constructor(private val db: BibliothecaDatabase) {
+    fun observeWords(owner: String) = db.daoWord().observeByOwner(owner)   // expression body
+}
+
+fun observeWordUi(owner: String): Flow<List<WordUi>> =
+    repository.observeWords(owner)
+        .map { entities -> entities.map { it.convertToUi() } }
+        .distinctUntilChanged()                                       // after UI mapping
+        .flowOn(Dispatchers.IO)
+```
 
 ## Types & immutability
 
