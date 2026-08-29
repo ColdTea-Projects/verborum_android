@@ -97,6 +97,20 @@ class TokenAuthenticatorIntegrationTest {
     }
 
     @Test
+    fun `keeps the session when the refresh fails with a server error`() {
+        server.enqueue(MockResponse().setResponseCode(401)) // original call
+        server.enqueue(MockResponse().setResponseCode(503)) // Keycloak briefly down
+
+        val response = get()
+        assertEquals(401, response.code)
+        response.close()
+
+        // The refresh token is still valid — a transient outage must not force a re-login.
+        assertEquals(2, server.requestCount) // no retry
+        verify(exactly = 0) { tokenStore.clear() }
+    }
+
+    @Test
     fun `does not refresh more than once for a single call`() {
         server.enqueue(MockResponse().setResponseCode(401)) // original call
         server.enqueue(tokenResponse())                     // refresh (succeeds once)

@@ -70,8 +70,10 @@ class TokenAuthenticator @Inject constructor(
         return runCatching {
             refreshClient.newCall(request).execute().use { resp ->
                 if (!resp.isSuccessful) {
-                    // The refresh token is rejected — the session is genuinely over.
-                    tokenStore.clear()
+                    // Only a definitive rejection (invalid_grant arrives as 400/401) means the
+                    // refresh token is dead and the session is over. A 5xx or proxy error is the
+                    // server's hiccup: keep the tokens so a later call can retry.
+                    if (resp.code == 400 || resp.code == 401) tokenStore.clear()
                     return null
                 }
                 val payload = resp.body?.string().orEmpty()
