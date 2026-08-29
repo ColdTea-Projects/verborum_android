@@ -41,4 +41,7 @@ class DictionaryRepository @Inject constructor(
 
     suspend fun deleteDictionary(dictionaryId: String) =
         bibliothecaDatabase.daoDictionary.deleteDictionary(dictionaryId)
+
+    suspend fun deleteAllDictionaries() =
+        bibliothecaDatabase.daoDictionary.deleteAllDictionaries()
 }

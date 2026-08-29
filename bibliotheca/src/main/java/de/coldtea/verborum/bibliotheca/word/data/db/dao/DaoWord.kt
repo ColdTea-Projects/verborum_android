@@ -74,4 +74,9 @@ interface DaoWord: DaoBase<WordEntity> {
     @Transaction
     @Query("DELETE FROM word WHERE fk_dictionary_id = :dictionaryId")
     suspend fun deleteWordsByDictionary(dictionaryId: String)
+
+    // Post-logout wipe: owner-keyed data must never survive into the next account's session.
+    @Transaction
+    @Query("DELETE FROM word")
+    suspend fun deleteAllWords()
 }

@@ -23,6 +23,7 @@ class AuthService @Inject constructor(
     private val tokenStore: AuthTokenStore,
     private val ensureUserProfileUseCase: EnsureUserProfileUseCase,
     private val postLoginHooks: Set<@JvmSuppressWildcards PostLoginHook>,
+    private val postLogoutHooks: Set<@JvmSuppressWildcards PostLogoutHook>,
 ) {
     fun loginIntent(): Intent = authManager.loginIntent()
     fun signUpIntent(): Intent = authManager.signUpIntent()
@@ -55,10 +56,16 @@ class AuthService @Inject constructor(
         return LoginOutcome.Success
     }
 
-    /** Ends the Keycloak session and clears local tokens (guide §6). */
+    /**
+     * Ends the Keycloak session, clears local tokens (guide §6), then lets the feature modules run
+     * their [PostLogoutHook]s — the local data wipe that keeps one account's rows from ever being
+     * seen or synced by the next account on this device.
+     */
     suspend fun logout() = withContext(Dispatchers.IO) {
         // Back-channel logout is a blocking network call — keep it off the main thread.
         runCatching { authManager.endSession(tokenStore.currentRefreshToken()) }
         tokenStore.clear()
+        // Each hook is isolated: one feature's failure must not skip another's cleanup.
+        postLogoutHooks.forEach { hook -> runCatching { hook.onLoggedOut() } }
     }
 }

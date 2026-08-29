@@ -36,6 +36,12 @@ class AuthServiceTest : BaseTest() {
     @MockK
     private lateinit var secondHook: PostLoginHook
 
+    @MockK
+    private lateinit var firstLogoutHook: PostLogoutHook
+
+    @MockK
+    private lateinit var secondLogoutHook: PostLogoutHook
+
     private val redirectData = mockk<Intent>()
 
     private lateinit var authService: AuthService
@@ -56,6 +62,7 @@ class AuthServiceTest : BaseTest() {
             tokenStore = tokenStore,
             ensureUserProfileUseCase = ensureUserProfileUseCase,
             postLoginHooks = linkedSetOf(firstHook, secondHook),
+            postLogoutHooks = linkedSetOf(firstLogoutHook, secondLogoutHook),
         )
     }
 
@@ -166,6 +173,30 @@ class AuthServiceTest : BaseTest() {
         authService.logout()
 
         verify(exactly = 1) { tokenStore.clear() }
+    }
+
+    @Test
+    fun `logout runs every post-logout hook after clearing the tokens`() = runTest {
+        every { tokenStore.currentRefreshToken() } returns REFRESH_TOKEN
+
+        authService.logout()
+
+        // Tokens go first so a hook can never run against a half-live session.
+        coVerifyOrder {
+            tokenStore.clear()
+            firstLogoutHook.onLoggedOut()
+            secondLogoutHook.onLoggedOut()
+        }
+    }
+
+    @Test
+    fun `logout runs the remaining post-logout hooks when an earlier one throws`() = runTest {
+        every { tokenStore.currentRefreshToken() } returns REFRESH_TOKEN
+        coEvery { firstLogoutHook.onLoggedOut() } throws RuntimeException("wipe blew up")
+
+        authService.logout()
+
+        coVerify(exactly = 1) { secondLogoutHook.onLoggedOut() }
     }
     // endregion
 

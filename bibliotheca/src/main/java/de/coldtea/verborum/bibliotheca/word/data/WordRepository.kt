@@ -50,4 +50,6 @@ class WordRepository @Inject constructor(
     suspend fun deleteWordsByDictionary(dictionaryId: String) =
         bibliothecaDatabase.daoWord.deleteWordsByDictionary(dictionaryId)
 
+    suspend fun deleteAllWords() =
+        bibliothecaDatabase.daoWord.deleteAllWords()
 }

@@ -61,4 +61,9 @@ interface DaoDictionary: DaoBase<DictionaryEntity> {
     @Transaction
     @Query("DELETE FROM dictionary WHERE dictionary_id = :dictionaryId")
     suspend fun deleteDictionary(dictionaryId: String)
+
+    // Post-logout wipe: owner-keyed data must never survive into the next account's session.
+    @Transaction
+    @Query("DELETE FROM dictionary")
+    suspend fun deleteAllDictionaries()
 }
