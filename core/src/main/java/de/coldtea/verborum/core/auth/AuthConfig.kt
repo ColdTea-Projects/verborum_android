@@ -15,6 +15,11 @@ class AuthConfig @Inject constructor() {
     val clientId: String = BuildConfig.OAUTH_CLIENT_ID
     val redirectUri: String = BuildConfig.OAUTH_REDIRECT_URI
 
+    // Drives the AppAuth connection builder: the issuer's scheme — not the build type — says
+    // whether the endpoints need the http-permitting builder, so the environment is defined in
+    // exactly one place (the KEYCLOAK_ISSUER buildConfigField next to the other URLs).
+    val isHttpIssuer: Boolean = issuer.startsWith("http://")
+
     // offline_access is requested explicitly — without it Keycloak issues no long-lived refresh
     // token and a device offline for days is forced back to the login screen (guide §2).
     val scope: String = "openid profile email offline_access"
