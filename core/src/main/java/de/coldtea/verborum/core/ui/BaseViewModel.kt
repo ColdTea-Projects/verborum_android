@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onEach
@@ -32,12 +33,15 @@ abstract class BaseViewModel : ViewModel() {
         onError: (suspend (Throwable) -> Unit)? = null,
     ): Job = viewModelScope.launch(exceptionHandler) {
         this@observe
+            // onSuccess runs upstream of catch on purpose: catch is exception-transparent, so a
+            // throw inside a collect block would bypass onError and silently kill the collection.
+            .onEach { onSuccess(it) }
             .onCompletion {
                 onCompleted?.invoke()
             }
             .catch { e ->
                 onError?.invoke(e) ?: throw e
             }
-            .collect { onSuccess(it) }
+            .collect()
     }
 }
