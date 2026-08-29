@@ -5,9 +5,9 @@ import de.coldtea.verborum.core.extensions.json
 import de.coldtea.verborum.core.extensions.stringOrNull
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.booleanOrNull
 import kotlinx.serialization.json.jsonObject
-import kotlinx.serialization.json.jsonPrimitive
 
 /**
  * Reads standard claims out of a JWT without verifying its signature — the client only needs the
@@ -42,7 +42,7 @@ object JwtDecoder {
      * a missing claim must never lock out an otherwise valid session.
      */
     fun emailVerified(jwt: String?): Boolean =
-        claims(jwt)?.get("email_verified")?.jsonPrimitive?.booleanOrNull ?: true
+        (claims(jwt)?.get("email_verified") as? JsonPrimitive)?.booleanOrNull ?: true
 
     fun displayName(jwt: String?): String? {
         val claims = claims(jwt) ?: return null
