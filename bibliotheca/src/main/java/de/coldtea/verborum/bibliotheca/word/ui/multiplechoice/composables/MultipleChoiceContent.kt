@@ -35,7 +35,7 @@ import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import de.coldtea.verborum.bibliotheca.word.ui.multiplechoice.model.MultipleChoiceCurrentQuestionState
-import de.coldtea.verborum.core.extensions.debounce
+import de.coldtea.verborum.core.extensions.rememberDebounced
 import de.coldtea.verborum.core.theme.VerborumTheme
 
 @Composable
@@ -81,7 +81,7 @@ fun MultipleChoiceContent(
 
         // Check answer (active until the answer is submitted)
         Button(
-            onClick = debounce(onAnswerGiven),
+            onClick = rememberDebounced(onAnswerGiven),
             modifier = Modifier
                 .fillMaxWidth()
                 .height(56.dp),
@@ -105,7 +105,7 @@ fun MultipleChoiceContent(
 
         // Next question (active once the answer has been checked)
         Button(
-            onClick = debounce(onNextQuestionRequested),
+            onClick = rememberDebounced(onNextQuestionRequested),
             modifier = Modifier
                 .fillMaxWidth()
                 .height(56.dp),
