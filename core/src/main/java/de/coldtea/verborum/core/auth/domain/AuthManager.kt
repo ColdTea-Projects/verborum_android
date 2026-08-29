@@ -35,13 +35,10 @@ class AuthManager @Inject constructor(
     private val config: AuthConfig,
 ) {
     private val authService by lazy {
-        // The issuer's scheme — not the build type — decides the builder: the current dev stack is
-        // plain http even in release builds (see core/build.gradle.kts), and AppAuth's default
-        // builder rejects http on the token exchange, failing every login. Keying on the scheme
-        // keeps the environment in one place; once production-cutover moves the issuer to https,
-        // the http-permitting builder becomes unreachable in that build.
+        // In debug the endpoints are plain http (local Keycloak); AppAuth's default builder rejects
+        // that on the token exchange, so swap in an http-permitting builder. Release stays https.
         val configuration = AppAuthConfiguration.Builder().apply {
-            if (config.isHttpIssuer) setConnectionBuilder(InsecureConnectionBuilder)
+            if (BuildConfig.DEBUG) setConnectionBuilder(InsecureConnectionBuilder)
         }.build()
         AuthorizationService(context, configuration)
     }
