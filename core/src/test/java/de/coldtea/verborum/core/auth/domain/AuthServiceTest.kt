@@ -142,6 +142,19 @@ class AuthServiceTest : BaseTest() {
             coVerify(exactly = 0) { firstHook.onLoginCompleted(any()) }
         }
     @Test
+    fun `completeLogin fails without touching the session when no refresh token is returned`() =
+        runTest {
+            coEvery {
+                authManager.exchangeCode(redirectData)
+            } returns tokenBundle.copy(refreshToken = null)
+
+            assertEquals(LoginOutcome.Failed, authService.completeLogin(redirectData))
+
+            verify(exactly = 0) { tokenStore.saveTokens(any(), any(), any()) }
+            coVerify(exactly = 0) { firstHook.onLoginCompleted(any()) }
+        }
+
+    @Test
     fun `completeLogin reports an unverified email without establishing the session`() = runTest {
         every { JwtDecoder.emailVerified(ID_TOKEN) } returns false
 

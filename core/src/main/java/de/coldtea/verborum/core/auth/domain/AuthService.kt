@@ -33,6 +33,11 @@ class AuthService @Inject constructor(
         val tokens = authManager.exchangeCode(responseData) ?: return LoginOutcome.Failed
         val subject = JwtDecoder.subject(tokens.accessToken) ?: return LoginOutcome.Failed
 
+        // A session only exists once a refresh token is on file (AuthTokenStore.hasSession), and
+        // saveTokens skips a null one — reporting Success here would strand the user in a silent
+        // login loop. A realm that withholds refresh tokens is a misconfiguration; fail visibly.
+        val refreshToken = tokens.refreshToken ?: return LoginOutcome.Failed
+
         // Keycloak normally withholds tokens until the address is confirmed; this is the belt-and-
         // braces check for realms/IdPs that hand them out anyway. Nothing is persisted, so the user
         // stays on the login wall with a "check your inbox" message instead of a half-live session.
@@ -40,7 +45,7 @@ class AuthService @Inject constructor(
 
         tokenStore.saveTokens(
             accessToken = tokens.accessToken,
-            refreshToken = tokens.refreshToken,
+            refreshToken = refreshToken,
             subject = subject,
         )
 
