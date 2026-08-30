@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?><!--
-   Sample backup rules file; uncomment and customize as necessary.
-   See https://developer.android.com/guide/topics/data/autobackup
-   for details.
-   Note: This file is ignored for devices older that API 31
-   See https://developer.android.com/about/versions/12/backup-restore
+   Auto Backup rules for API 30 and below (android:fullBackupContent).
+   API 31+ uses data_extraction_rules.xml — keep the two in sync.
 -->
 <full-backup-content>
     <!--
-   <include domain="sharedpref" path="."/>
-   <exclude domain="sharedpref" path="device.xml"/>
--->
+       The auth prefs are EncryptedSharedPreferences: the values *and* the Tink keyset live in this
+       file, but the master key lives in the Android Keystore, which is device-bound and never
+       backed up. Restoring the file onto another device (or after a reinstall) therefore yields
+       ciphertext nothing can decrypt. Excluding it means a restored install simply starts signed
+       out, which is the correct outcome for a credential store — see AuthTokenStore.
+    -->
+    <exclude domain="sharedpref" path="verborum_auth_prefs.xml" />
 </full-backup-content>

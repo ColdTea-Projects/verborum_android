@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?><!--
-   Sample data extraction rules file; uncomment and customize as necessary.
-   See https://developer.android.com/about/versions/12/backup-restore#xml-changes
-   for details.
+   Backup / transfer rules for API 31+ (android:dataExtractionRules).
+   API 30 and below use backup_rules.xml — keep the two in sync.
 -->
 <data-extraction-rules>
-    <cloud-backup>
-        <!-- TODO: Use <include> and <exclude> to control what is backed up.
-        <include .../>
-        <exclude .../>
-        -->
-    </cloud-backup>
     <!--
-    <device-transfer>
-        <include .../>
-        <exclude .../>
-    </device-transfer>
+       The auth prefs are EncryptedSharedPreferences: the values *and* the Tink keyset live in this
+       file, but the master key lives in the Android Keystore, which is device-bound and never
+       leaves the device — not in a cloud backup, and not in a direct device-to-device transfer.
+       Carrying the file across either way would restore ciphertext nothing can decrypt, so it is
+       excluded from both and a restored install starts signed out — see AuthTokenStore.
     -->
+    <cloud-backup>
+        <exclude domain="sharedpref" path="verborum_auth_prefs.xml" />
+    </cloud-backup>
+    <device-transfer>
+        <exclude domain="sharedpref" path="verborum_auth_prefs.xml" />
+    </device-transfer>
 </data-extraction-rules>
