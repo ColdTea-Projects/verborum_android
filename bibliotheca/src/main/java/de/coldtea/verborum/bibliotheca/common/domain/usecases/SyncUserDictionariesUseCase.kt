@@ -23,7 +23,9 @@ import javax.inject.Inject
  *   tombstone (local wins until [UploadPendingChangesUseCase] pushes it),
  * - local rows are deleted only when they are synced yet absent remotely (deleted on the server),
  * - tombstoned local rows absent remotely are hard-deleted (the server no longer has them),
- * - a null API response means "no information" and leaves the local state untouched.
+ * - a null API response means "no information" and leaves the local state untouched,
+ * - an empty dictionary list is not trusted to delete live rows either (see the guard below); a
+ *   dictionary's empty *word* list still is, since an empty dictionary is a normal state.
  */
 class SyncUserDictionariesUseCase @Inject constructor(
     private val dictionaryApi: DictionaryApi,
@@ -57,10 +59,19 @@ class SyncUserDictionariesUseCase @Inject constructor(
             .map { it.dictionaryId }
             .toSet()
 
-        activeDictionaries
-            .filter { it.isSynced && it.dictionaryId !in remoteDictionaryIds }
-            .forEach { deleteDictionaryUseCase.invoke(it.dictionaryId) }
+        // An empty remote list is ambiguous — "this user owns nothing" and "the server lost the
+        // data" look identical — so it is not trusted to delete live rows: that loss is
+        // unrecoverable, while keeping a dictionary the user deleted on another device leaves a
+        // stale row they can remove by hand. Only a list that names at least one dictionary is
+        // treated as authoritative about what is missing from it.
+        if (remoteDictionaries.isNotEmpty()) {
+            activeDictionaries
+                .filter { it.isSynced && it.dictionaryId !in remoteDictionaryIds }
+                .forEach { deleteDictionaryUseCase.invoke(it.dictionaryId) }
+        }
 
+        // Tombstones are exempt from the guard above: the row is already deleted locally and the
+        // upload phase has pushed that deletion, so dropping it loses nothing either way.
         // The server no longer has these either — the tombstone has served its purpose.
         tombstonedDictionaries
             .filter { it.dictionaryId !in remoteDictionaryIds }

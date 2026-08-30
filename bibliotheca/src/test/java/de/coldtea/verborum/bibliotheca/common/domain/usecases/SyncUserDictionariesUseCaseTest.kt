@@ -207,14 +207,48 @@ class SyncUserDictionariesUseCaseTest : BaseTest() {
 
     @Test
     fun `invoke deletes local synced dictionaries that are gone remotely`() = runTest {
-        coEvery { dictionaryApi.getAllDictionariesByUser(GUEST_USER_ID) } returns emptyList()
+        // The remote list still names another dictionary, so it is authoritative about what is
+        // missing from it — unlike the all-empty response covered below.
+        coEvery { dictionaryApi.getAllDictionariesByUser(GUEST_USER_ID) } returns
+            listOf(testDictionaryResponse(dictionaryId = "still-there"))
         coEvery { getDictionariesByUserUseCase.invoke(GUEST_USER_ID) } returns
             listOf(testDictionary(dictionaryId = "deleted-remotely", isSynced = true))
+        coEvery { wordApi.getWordsByDictionary("still-there") } returns null
 
         useCase.invoke()
 
         coVerify(exactly = 1) { deleteDictionaryUseCase.invoke("deleted-remotely") }
     }
+
+    @Test
+    fun `invoke keeps synced dictionaries when the server returns an empty list`() = runTest {
+        // "You own nothing" and "the server lost your data" are indistinguishable, so an empty
+        // list must never trigger the unrecoverable bulk delete.
+        coEvery { dictionaryApi.getAllDictionariesByUser(GUEST_USER_ID) } returns emptyList()
+        coEvery { getDictionariesByUserUseCase.invoke(GUEST_USER_ID) } returns
+            listOf(testDictionary(dictionaryId = "synced-locally", isSynced = true))
+
+        useCase.invoke()
+
+        coVerify(exactly = 0) { deleteDictionaryUseCase.invoke(any()) }
+    }
+
+    @Test
+    fun `invoke still hard-deletes tombstoned dictionaries when the server returns an empty list`() =
+        runTest {
+            // Exempt from the guard: the row is already deleted locally, so dropping it is safe.
+            coEvery { dictionaryApi.getAllDictionariesByUser(GUEST_USER_ID) } returns emptyList()
+            coEvery { getDictionariesByUserUseCase.invoke(GUEST_USER_ID) } returns
+                listOf(
+                    testDictionary(dictionaryId = "tombstoned", isSynced = true, isDeleted = true),
+                    testDictionary(dictionaryId = "synced-locally", isSynced = true),
+                )
+
+            useCase.invoke()
+
+            coVerify(exactly = 1) { deleteDictionaryUseCase.invoke("tombstoned") }
+            coVerify(exactly = 0) { deleteDictionaryUseCase.invoke("synced-locally") }
+        }
 
     @Test
     fun `invoke only reconciles the signed-in user's own dictionaries`() = runTest {
