@@ -33,7 +33,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavDestination.Companion.hierarchy
-import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -218,6 +217,8 @@ fun VerborumNavigationBar(navController: NavHostController) {
     NavigationBar {
         val navBackStackEntry by navController.currentBackStackEntryAsState()
         val currentDestination = navBackStackEntry?.destination
+        // The first tab is home — the same list that draws the bar defines where a switch pops to.
+        val homeRoute = screenGroups.first().route
 
         screenGroups.forEach { group ->
             NavigationBarItem(
@@ -231,10 +232,13 @@ fun VerborumNavigationBar(navController: NavHostController) {
                 selected = currentDestination?.hierarchy?.any { it.route == group.route } == true,
                 onClick = {
                     navController.navigate(group.route) {
-                        // Pop up to the start destination of the graph to
-                        // avoid building up a large stack of destinations
-                        // on the back stack as users select items
-                        popUpTo(navController.graph.findStartDestination().id) {
+                        // Pop back to the home tab so switching tabs does not stack graphs on the
+                        // back stack. Deliberately the home tab's route rather than the graph's
+                        // start destination: on a first run the graph starts at the welcome
+                        // screen, which is popped inclusively once the tour ends, so popping up
+                        // to it would match nothing on the back stack — leaving every visited tab
+                        // stacked and saveState/restoreState below never engaging.
+                        popUpTo(homeRoute) {
                             saveState = true
                         }
                         // Avoid multiple copies of the same destination when
