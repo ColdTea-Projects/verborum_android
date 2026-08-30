@@ -1,5 +1,6 @@
 package de.coldtea.verborum.app.navigation
 
+import androidx.compose.runtime.LaunchedEffect
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
@@ -62,7 +63,9 @@ fun NavGraphBuilder.insertCreateDictionary(navController: NavHostController) = c
     val viewModel = hiltViewModel<CreateDictionaryViewModel>()
     val dictionaryId: String? = navBackStackEntry.arguments?.getString("dictionaryId")
 
-    viewModel.init(dictionaryId)
+    // Keyed on the destination's arguments so the screen is initialised once per navigation, not
+    // on every recomposition of this destination.
+    LaunchedEffect(dictionaryId) { viewModel.init(dictionaryId) }
 
     CreateDictionaryScreen(
         viewModel = viewModel,
@@ -89,7 +92,7 @@ fun NavGraphBuilder.insertCreateWord(navController: NavHostController) = composa
     val dictionaryId: String = navBackStackEntry.arguments?.getString("dictionaryId").orEmpty()
     val wordId: String? = navBackStackEntry.arguments?.getString("wordId")
 
-    viewModel.init(dictionaryId, wordId)
+    LaunchedEffect(dictionaryId, wordId) { viewModel.init(dictionaryId, wordId) }
 
     CreateWordScreen(
         viewModel = viewModel,
@@ -103,7 +106,7 @@ fun NavGraphBuilder.insertDictionariesDetails(navController: NavHostController) 
     val viewModel = hiltViewModel<DictionaryDetailsViewModel>()
     val dictionaryId: String = navBackStackEntry.arguments?.getString("dictionaryId").orEmpty()
 
-    viewModel.init(dictionaryId)
+    LaunchedEffect(dictionaryId) { viewModel.init(dictionaryId) }
 
     DictionaryDetailsScreen(
         viewModel = viewModel,
@@ -131,7 +134,7 @@ fun NavGraphBuilder.insertSelfPractice(navController: NavHostController) = compo
     val viewModel = hiltViewModel<SelfPracticeViewModel>()
     val dictionaryId: String = navBackStackEntry.arguments?.getString("dictionaryId").orEmpty()
 
-    viewModel.init(dictionaryId)
+    LaunchedEffect(dictionaryId) { viewModel.init(dictionaryId) }
 
     SelfPracticeScreen(viewModel)
 }
@@ -142,7 +145,7 @@ fun NavGraphBuilder.insertMultipleChoiceScreen(navController: NavHostController)
     val viewModel = hiltViewModel<MultipleChoiceViewModel>()
     val dictionaryId: String = navBackStackEntry.arguments?.getString("dictionaryId").orEmpty()
 
-    viewModel.init(dictionaryId)
+    LaunchedEffect(dictionaryId) { viewModel.init(dictionaryId) }
 
     MultipleChoiceQuestionScreen(viewModel){
         navController.popBackStack()
