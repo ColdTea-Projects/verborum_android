@@ -124,8 +124,7 @@ class SelfPracticeViewModelTest : BaseTest() {
 
         viewModel.onProgressUpdated(wordId = wordId, progress = 4)
 
-        val expectedWord = originalWordUi.copy(level = 4).convertToWord()
-        coVerify(exactly = 1) { wordService.saveWord(expectedWord) }
+        coVerify(exactly = 1) { wordService.updateWordLevel(wordId = wordId, level = 4) }
     }
 
     @Test
@@ -143,7 +142,7 @@ class SelfPracticeViewModelTest : BaseTest() {
 
         // A stray id must not tear down an active practice session, and nothing is persisted.
         assertTrue(viewModel.selfPracticeState.first() is SelfPracticeState.Success)
-        coVerify(exactly = 0) { wordService.saveWord(any()) }
+        coVerify(exactly = 0) { wordService.updateWordLevel(any(), any()) }
     }
 
     @Test
@@ -157,12 +156,12 @@ class SelfPracticeViewModelTest : BaseTest() {
         every { dictionaryService.observeDictionary(dictionaryId) } returns flowOf(testDictionaryUi())
         every { wordService.observeWordsByDictionary(dictionaryId) } returns
             flowOf(listOf(testWordUi(wordId = wordId)))
-        coEvery { wordService.saveWord(any()) } throws RuntimeException("db error")
+        coEvery { wordService.updateWordLevel(any(), any()) } throws RuntimeException("db error")
 
         viewModel.init(dictionaryId)
         viewModel.onProgressUpdated(wordId = wordId, progress = 4)
 
-        coVerify(exactly = 1) { wordService.saveWord(any()) }
+        coVerify(exactly = 1) { wordService.updateWordLevel(any(), any()) }
         assertTrue(viewModel.selfPracticeState.first() is SelfPracticeState.Success)
     }
 
@@ -171,7 +170,7 @@ class SelfPracticeViewModelTest : BaseTest() {
         // ViewModel is in Loading state — init() was never called.
         viewModel.onProgressUpdated(wordId = "w-1", progress = 3)
 
-        coVerify(exactly = 0) { wordService.saveWord(any()) }
+        coVerify(exactly = 0) { wordService.updateWordLevel(any(), any()) }
     }
 
     // endregion

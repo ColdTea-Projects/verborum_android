@@ -117,6 +117,35 @@ class DaoWordTest {
         }
 
     @Test
+    fun `updateWordLevel writes the level and flags the word for upload`() = runTest {
+        dao.insert(
+            testWordEntity(wordId = "w1", dictionaryId = "d1", level = 2, isSynced = true)
+        )
+
+        dao.updateWordLevel("w1", level = 3, updatedAt = 500L)
+
+        val stored = dao.getWord("w1")
+        assertEquals(3, stored.level)
+        assertEquals(500L, stored.updatedAt)
+        assertFalse(stored.isSynced)
+    }
+
+    @Test
+    fun `updateWordLevel never resurrects a tombstoned word`() = runTest {
+        // A practice session started before the word was deleted still holds it in its snapshot;
+        // answering it must not clear the tombstone or revive the row.
+        dao.insert(
+            testWordEntity(wordId = "w1", dictionaryId = "d1", level = 2, isDeleted = true)
+        )
+
+        dao.updateWordLevel("w1", level = 3, updatedAt = 500L)
+
+        val stored = dao.getWord("w1")
+        assertTrue(stored.isDeleted)
+        assertEquals(2, stored.level)
+    }
+
+    @Test
     fun `markWordSynced flips only the flag for the version that was uploaded`() = runTest {
         dao.insert(
             testWordEntity(

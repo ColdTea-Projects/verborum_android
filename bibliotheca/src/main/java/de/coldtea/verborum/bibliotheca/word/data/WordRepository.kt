@@ -44,6 +44,9 @@ class WordRepository @Inject constructor(
     suspend fun markWordSynced(wordId: String, updatedAt: Long) =
         bibliothecaDatabase.daoWord.markWordSynced(wordId, updatedAt)
 
+    suspend fun updateWordLevel(wordId: String, level: Int, updatedAt: Long) =
+        bibliothecaDatabase.daoWord.updateWordLevel(wordId, level, updatedAt)
+
     suspend fun markWordsUnsyncedInDictionaries(dictionaryIds: List<String>) =
         bibliothecaDatabase.daoWord.markWordsUnsyncedInDictionaries(dictionaryIds)
 

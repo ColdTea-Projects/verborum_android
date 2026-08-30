@@ -259,7 +259,7 @@ class MultipleChoiceViewModel @Inject constructor(
                 (if (wordId in raisedWordIds) 1 else 0) + (if (wordId in loweredWordIds) -1 else 0)
             val newLevel = (wordUi.level + delta).coerceIn(0, 7)
 
-            wordService.saveWord(wordUi.convertToWord().copy(level = newLevel))
+            wordService.updateWordLevel(wordId = wordId, level = newLevel)
         } catch (e: Exception) {
             // The answer already counted toward the score; only persisting the level failed.
             _snackbarMessages.emit(UiText.Resource(ResStrings.errorSaveFailed))

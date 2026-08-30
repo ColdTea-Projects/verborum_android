@@ -13,6 +13,7 @@ import de.coldtea.verborum.bibliotheca.word.domain.usecase.local.ObserveWordCoun
 import de.coldtea.verborum.bibliotheca.word.domain.usecase.local.ObserveWordsByDictionaryUseCase
 import de.coldtea.verborum.bibliotheca.word.domain.usecase.local.ObserveWordsInLanguagePairUseCase
 import de.coldtea.verborum.bibliotheca.word.domain.usecase.local.SaveWordUseCase
+import de.coldtea.verborum.bibliotheca.word.domain.usecase.local.UpdateWordLevelUseCase
 import de.coldtea.verborum.bibliotheca.word.ui.model.WordUi
 import de.coldtea.verborum.core.BaseTest
 import io.mockk.impl.annotations.MockK
@@ -68,6 +69,9 @@ class WordServiceTest : BaseTest() {
     @MockK
     private lateinit var saveWordUseCase: SaveWordUseCase
 
+    @MockK
+    private lateinit var updateWordLevelUseCase: UpdateWordLevelUseCase
+
     private val successResponse = mockk<Response<Unit>> { every { isSuccessful } returns true }
     private val failureResponse = mockk<Response<Unit>> { every { isSuccessful } returns false }
 
@@ -86,6 +90,7 @@ class WordServiceTest : BaseTest() {
             markWordDeletedUseCase = markWordDeletedUseCase,
             getWordUseCase = getWordUseCase,
             saveWordUseCase = saveWordUseCase,
+            updateWordLevelUseCase = updateWordLevelUseCase,
         )
     }
 

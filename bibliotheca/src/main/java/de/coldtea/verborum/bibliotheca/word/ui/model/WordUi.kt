@@ -1,7 +1,12 @@
 package de.coldtea.verborum.bibliotheca.word.ui.model
 
-import de.coldtea.verborum.bibliotheca.word.domain.model.Word
-
+/**
+ * The UI tier's view of a word. Deliberately one-way: it carries no `isSynced`/`isDeleted`, so it
+ * has no `convertToWord()` — converting back would invent those flags and clear a deletion
+ * tombstone. Screens that change a word persist the specific field they changed (see
+ * `WordService.updateWordLevel`); [de.coldtea.verborum.bibliotheca.word.domain.model.Word] is built
+ * from the edit form's own inputs.
+ */
 data class WordUi(
     val wordId: String,
     val dictionaryId: String,
@@ -12,18 +17,4 @@ data class WordUi(
     val level: Int,
     val createdAt: Long,
     val updatedAt: Long,
-) {
-    fun convertToWord(): Word =
-        Word(
-            wordId = wordId,
-            dictionaryId = dictionaryId,
-            word = word,
-            wordMeta = wordMeta,
-            translation = translation,
-            translationMeta = translationMeta,
-            isSynced = false,
-            createdAt = createdAt,
-            updatedAt = updatedAt,
-            level = level,
-        )
-}
+)

@@ -55,6 +55,22 @@ interface DaoWord: DaoBase<WordEntity> {
     suspend fun markWordDeleted(wordId: String)
 
     /**
+     * Persists practice progress and nothing else.
+     *
+     * A level change is a one-column edit, so it is written as one: round-tripping the word through
+     * the UI model and re-saving it whole would carry the UI tier's defaults back into the row and
+     * clear the deletion tombstone, resurrecting a word the user deleted. `is_deleted = 0` makes
+     * that impossible — a tombstoned word simply takes no level update — and bumping `updated_at`
+     * keeps [markWordSynced]'s version check honest.
+     */
+    @Transaction
+    @Query(
+        "UPDATE word SET level = :level, isSynced = 0, updated_at = :updatedAt " +
+            "WHERE word_id = :wordId AND is_deleted = 0"
+    )
+    suspend fun updateWordLevel(wordId: String, level: Int, updatedAt: Long)
+
+    /**
      * Flips the synced flag after a successful upload, touching no other column — the word-side
      * counterpart to DaoDictionary.markDictionarySynced. [updatedAt] pins the uploaded version so
      * an edit made while the request was in flight is neither reverted nor wrongly marked synced.

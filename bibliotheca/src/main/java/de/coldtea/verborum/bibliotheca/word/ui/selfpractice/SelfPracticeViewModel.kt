@@ -73,10 +73,10 @@ class SelfPracticeViewModel @Inject constructor(
      *  session intact rather than replacing it with an error screen. */
     fun onProgressUpdated(wordId: String, progress: Int) = viewModelScope.launch {
         val state = _selfPracticeState.value as? SelfPracticeState.Success ?: return@launch
-        val wordUi = state.wordsUi.firstOrNull { it.wordId == wordId } ?: return@launch
+        state.wordsUi.firstOrNull { it.wordId == wordId } ?: return@launch
 
         try {
-            wordService.saveWord(wordUi.copy(level = progress).convertToWord())
+            wordService.updateWordLevel(wordId = wordId, level = progress)
         } catch (e: Exception) {
             _snackbarMessages.emit(UiText.Resource(ResStrings.errorSaveFailed))
         }

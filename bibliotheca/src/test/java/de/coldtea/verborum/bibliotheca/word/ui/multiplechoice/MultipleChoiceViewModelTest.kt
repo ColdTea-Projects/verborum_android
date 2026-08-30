@@ -341,9 +341,9 @@ class MultipleChoiceViewModelTest : BaseTest() {
 
         answerCurrentQuestion(correctly = true)
 
-        val savedWord = slot<Word>()
-        coVerify(exactly = 1) { wordService.saveWord(capture(savedWord)) }
-        assertEquals(source.convertToWord().copy(level = 3), savedWord.captured)
+        coVerify(exactly = 1) {
+            wordService.updateWordLevel(wordId = source.wordId, level = 3)
+        }
         assertTrue(viewModel.answered.first())
     }
 
@@ -355,9 +355,9 @@ class MultipleChoiceViewModelTest : BaseTest() {
 
         answerCurrentQuestion(correctly = false)
 
-        val savedWord = slot<Word>()
-        coVerify(exactly = 1) { wordService.saveWord(capture(savedWord)) }
-        assertEquals(source.convertToWord().copy(level = 2), savedWord.captured)
+        coVerify(exactly = 1) {
+            wordService.updateWordLevel(wordId = source.wordId, level = 2)
+        }
         assertTrue(viewModel.answered.first())
     }
 
@@ -367,9 +367,9 @@ class MultipleChoiceViewModelTest : BaseTest() {
 
         answerCurrentQuestion(correctly = true)
 
-        val savedWord = slot<Word>()
-        coVerify(exactly = 1) { wordService.saveWord(capture(savedWord)) }
-        assertEquals(7, savedWord.captured.level)
+        val savedLevel = slot<Int>()
+        coVerify(exactly = 1) { wordService.updateWordLevel(any(), capture(savedLevel)) }
+        assertEquals(7, savedLevel.captured)
     }
 
     @Test
@@ -378,9 +378,9 @@ class MultipleChoiceViewModelTest : BaseTest() {
 
         answerCurrentQuestion(correctly = false)
 
-        val savedWord = slot<Word>()
-        coVerify(exactly = 1) { wordService.saveWord(capture(savedWord)) }
-        assertEquals(0, savedWord.captured.level)
+        val savedLevel = slot<Int>()
+        coVerify(exactly = 1) { wordService.updateWordLevel(any(), capture(savedLevel)) }
+        assertEquals(0, savedLevel.captured)
     }
 
     @Test
@@ -389,7 +389,7 @@ class MultipleChoiceViewModelTest : BaseTest() {
         viewModel.onAnswerReceived("translation-1")
         viewModel.onAnswerGiven()
 
-        coVerify(exactly = 0) { wordService.saveWord(any()) }
+        coVerify(exactly = 0) { wordService.updateWordLevel(any(), any()) }
         assertFalse(viewModel.answered.first())
     }
 
@@ -418,10 +418,13 @@ class MultipleChoiceViewModelTest : BaseTest() {
         // w-1 produces three questions (base, past, participle); answer all of them correctly.
         walkAnswering { if (it.wordId == "w-1") true else null }
 
-        val saved = mutableListOf<Word>()
-        coVerify(exactly = 1) { wordService.saveWord(capture(saved)) }
-        assertEquals("w-1", saved.single().wordId)
-        assertEquals(3, saved.single().level)
+        val savedIds = mutableListOf<String>()
+        val savedLevels = mutableListOf<Int>()
+        coVerify(exactly = 1) {
+            wordService.updateWordLevel(capture(savedIds), capture(savedLevels))
+        }
+        assertEquals("w-1", savedIds.single())
+        assertEquals(3, savedLevels.single())
     }
 
     @Test
@@ -430,9 +433,9 @@ class MultipleChoiceViewModelTest : BaseTest() {
 
         walkAnswering { if (it.wordId == "w-1") false else null }
 
-        val saved = mutableListOf<Word>()
-        coVerify(exactly = 1) { wordService.saveWord(capture(saved)) }
-        assertEquals(1, saved.single().level)
+        val savedLevels = mutableListOf<Int>()
+        coVerify(exactly = 1) { wordService.updateWordLevel(any(), capture(savedLevels)) }
+        assertEquals(1, savedLevels.single())
     }
 
     @Test
@@ -449,10 +452,11 @@ class MultipleChoiceViewModelTest : BaseTest() {
         }
 
         // One raise and one lower for the same word settle back to its stored level, whatever order.
-        val saved = mutableListOf<Word>()
-        coVerify { wordService.saveWord(capture(saved)) }
-        assertEquals("w-1", saved.last().wordId)
-        assertEquals(4, saved.last().level)
+        val savedIds = mutableListOf<String>()
+        val savedLevels = mutableListOf<Int>()
+        coVerify { wordService.updateWordLevel(capture(savedIds), capture(savedLevels)) }
+        assertEquals("w-1", savedIds.last())
+        assertEquals(4, savedLevels.last())
     }
 
     @Test

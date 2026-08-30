@@ -13,6 +13,8 @@ import de.coldtea.verborum.bibliotheca.word.domain.usecase.local.ObserveWordCoun
 import de.coldtea.verborum.bibliotheca.word.domain.usecase.local.ObserveWordsByDictionaryUseCase
 import de.coldtea.verborum.bibliotheca.word.domain.usecase.local.ObserveWordsInLanguagePairUseCase
 import de.coldtea.verborum.bibliotheca.word.domain.usecase.local.SaveWordUseCase
+import de.coldtea.verborum.bibliotheca.word.domain.usecase.local.UpdateWordLevelUseCase
+import de.coldtea.verborum.bibliotheca.common.utils.getNowInMillis
 import de.coldtea.verborum.bibliotheca.word.ui.model.WordUi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -32,6 +34,7 @@ class WordService @Inject constructor(
     private val markWordDeletedUseCase: MarkWordDeletedUseCase,
     private val getWordUseCase: GetWordUseCase,
     private val saveWordUseCase: SaveWordUseCase,
+    private val updateWordLevelUseCase: UpdateWordLevelUseCase,
 ) {
 
     fun observeWordsByDictionary(dictionaryId: String): Flow<List<WordUi>> =
@@ -64,6 +67,19 @@ class WordService @Inject constructor(
 
     suspend fun saveWord(word: Word){
         saveWordUseCase.invoke(word)
+    }
+
+    /**
+     * Saves practice progress without rewriting the rest of the word. Practice screens work from a
+     * snapshot that can go stale mid-session, so only the level column is touched — a word deleted
+     * while the session was open stays deleted.
+     */
+    suspend fun updateWordLevel(wordId: String, level: Int) {
+        updateWordLevelUseCase.invoke(
+            wordId = wordId,
+            level = level,
+            updatedAt = getNowInMillis(),
+        )
     }
 
     /**
