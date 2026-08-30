@@ -24,6 +24,7 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.runTest
+import java.io.IOException
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Test
@@ -244,6 +245,16 @@ class DictionaryServiceTest : BaseTest() {
     fun `deleteDictionary keeps the local row when the api delete fails`() = runTest {
         coEvery { uploadService.deleteDictionary("dict-1") } returns
             mockk { every { isSuccessful } returns false }
+
+        dictionaryService.deleteDictionary("dict-1")
+
+        coVerify(exactly = 0) { deleteDictionaryUseCase.invoke(any()) }
+    }
+
+    @Test
+    fun `deleteDictionary keeps the local row and does not throw when offline`() = runTest {
+        // The tombstone is already written; an offline API call must not read as a failed delete.
+        coEvery { uploadService.deleteDictionary("dict-1") } throws IOException("offline")
 
         dictionaryService.deleteDictionary("dict-1")
 

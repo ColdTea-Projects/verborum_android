@@ -15,6 +15,7 @@ import de.coldtea.verborum.bibliotheca.word.domain.usecase.local.ObserveWordsInL
 import de.coldtea.verborum.bibliotheca.word.domain.usecase.local.SaveWordUseCase
 import de.coldtea.verborum.bibliotheca.word.domain.usecase.local.UpdateWordLevelUseCase
 import de.coldtea.verborum.bibliotheca.common.utils.getNowInMillis
+import de.coldtea.verborum.bibliotheca.common.utils.succeededRemotely
 import de.coldtea.verborum.bibliotheca.word.ui.model.WordUi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -89,13 +90,13 @@ class WordService @Inject constructor(
      */
     suspend fun deleteWord(wordId: String) {
         markWordDeletedUseCase.invoke(wordId)
-        if (deleteWordApiUseCase.invoke(wordId).isSuccessful) {
+        if (succeededRemotely { deleteWordApiUseCase.invoke(wordId) }) {
             deleteWordUseCase.invoke(wordId)
         }
     }
 
     suspend fun cleanWordsInDictionary(dictionaryId: String) {
-        if (deleteWordByDictionaryIdApiUseCase.invoke(dictionaryId).isSuccessful) {
+        if (succeededRemotely { deleteWordByDictionaryIdApiUseCase.invoke(dictionaryId) }) {
             deleteWordByDictionaryIdUseCase.invoke(dictionaryId)
         }
     }

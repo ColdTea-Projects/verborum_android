@@ -28,6 +28,7 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.runTest
+import java.io.IOException
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
@@ -222,6 +223,18 @@ class WordServiceTest : BaseTest() {
         coVerify(exactly = 0) { deleteWordUseCase.invoke(any()) }
     }
 
+    @Test
+    fun `deleteWord keeps the tombstone and does not throw when offline`() = runTest {
+        // Offline a suspend Retrofit call throws rather than returning an unsuccessful response;
+        // the delete still succeeded locally, so this must not surface as a failure to the caller.
+        coEvery { deleteWordApiUseCase.invoke("word-1") } throws IOException("offline")
+
+        wordService.deleteWord("word-1")
+
+        coVerify(exactly = 1) { markWordDeletedUseCase.invoke("word-1") }
+        coVerify(exactly = 0) { deleteWordUseCase.invoke(any()) }
+    }
+
     // endregion
 
     // region cleanWordsInDictionary
@@ -239,6 +252,15 @@ class WordServiceTest : BaseTest() {
     @Test
     fun `cleanWordsInDictionary skips the local delete when the api fails`() = runTest {
         coEvery { deleteWordByDictionaryIdApiUseCase.invoke("dict-1") } returns failureResponse
+
+        wordService.cleanWordsInDictionary("dict-1")
+
+        coVerify(exactly = 0) { deleteWordByDictionaryIdUseCase.invoke(any()) }
+    }
+
+    @Test
+    fun `cleanWordsInDictionary does not throw when offline`() = runTest {
+        coEvery { deleteWordByDictionaryIdApiUseCase.invoke("dict-1") } throws IOException("offline")
 
         wordService.cleanWordsInDictionary("dict-1")
 

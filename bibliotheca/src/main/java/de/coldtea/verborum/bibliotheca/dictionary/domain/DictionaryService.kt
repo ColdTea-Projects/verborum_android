@@ -2,6 +2,7 @@ package de.coldtea.verborum.bibliotheca.dictionary.domain
 
 import de.coldtea.verborum.bibliotheca.common.domain.UploadService
 import de.coldtea.verborum.bibliotheca.common.utils.getNowInMillis
+import de.coldtea.verborum.bibliotheca.common.utils.succeededRemotely
 import de.coldtea.verborum.bibliotheca.dictionary.data.db.entity.DictionaryEntity.Companion.GUEST_USER_ID
 import de.coldtea.verborum.bibliotheca.dictionary.domain.model.Dictionary
 import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.local.DeleteDictionaryUseCase
@@ -90,9 +91,12 @@ class DictionaryService @Inject constructor(
     suspend fun markDictionaryDeleted(dictionaryId: String) =
         markDictionaryDeletedUseCase.invoke(dictionaryId)
 
-    /** Hard-deletes locally only when the server confirms; otherwise the tombstone remains. */
+    /**
+     * Hard-deletes locally only when the server confirms; otherwise the tombstone remains and the
+     * sync upload phase retries it — including when the device is offline and the call throws.
+     */
     suspend fun deleteDictionary(dictionaryId: String) {
-        if (uploadService.deleteDictionary(dictionaryId).isSuccessful) {
+        if (succeededRemotely { uploadService.deleteDictionary(dictionaryId) }) {
             deleteDictionaryUseCase.invoke(dictionaryId)
         }
     }
