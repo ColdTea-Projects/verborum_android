@@ -5,8 +5,9 @@ import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.api.DeleteDicti
 import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.api.SaveDictionaryApiUseCase
 import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.api.SyncDictionaryTagsUseCase
 import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.local.DeleteDictionaryUseCase
-import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.local.GetAllDictionariesUseCase
+import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.local.GetDictionariesByUserUseCase
 import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.local.MarkDictionarySyncedUseCase
+import de.coldtea.verborum.core.auth.domain.usecase.GetActiveUserUseCase
 import de.coldtea.verborum.bibliotheca.word.domain.usecase.api.DeleteWordApiUseCase
 import de.coldtea.verborum.bibliotheca.word.domain.usecase.api.DeleteWordByDictionaryIdApiUseCase
 import de.coldtea.verborum.bibliotheca.word.domain.usecase.api.SaveWordApiUseCase
@@ -18,7 +19,7 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 /**
- * Pushes every local change the server has not seen yet and reconciles the local state on
+ * Pushes the signed-in user's local changes and reconciles the local state on
  * success: tombstoned rows (`isDeleted = true`) are deleted remotely then hard-deleted locally;
  * unsynced rows (`isSynced = false`) are uploaded then marked synced. Must run before
  * [SyncUserDictionariesUseCase] so a subsequent download cannot drop or resurrect local data.
@@ -29,7 +30,8 @@ import javax.inject.Inject
  * goes up on the next run.
  */
 class UploadPendingChangesUseCase @Inject constructor(
-    private val getAllDictionariesUseCase: GetAllDictionariesUseCase,
+    private val getActiveUserUseCase: GetActiveUserUseCase,
+    private val getDictionariesByUserUseCase: GetDictionariesByUserUseCase,
     private val getWordsByDictionaryUseCase: GetWordsByDictionaryUseCase,
     private val saveDictionaryApiUseCase: SaveDictionaryApiUseCase,
     private val syncDictionaryTagsUseCase: SyncDictionaryTagsUseCase,
@@ -44,8 +46,15 @@ class UploadPendingChangesUseCase @Inject constructor(
 ) {
 
     suspend fun invoke() = withContext(Dispatchers.IO) {
+        // Nothing may go up while signed out: guest rows carry GUEST_USER_ID, and that UUID must
+        // never reach the server (guide §9.7). Their turn comes after login, once
+        // MigrateGuestDataUseCase has re-owned them under the real subject.
+        val activeUser = getActiveUserUseCase.invoke() ?: return@withContext
+
+        // Scoped to the active user for the same reason: a row still owned by anyone else — a
+        // guest dictionary a failed migration left behind — is not this session's to upload.
         val (deletedDictionaries, activeDictionaries) =
-            getAllDictionariesUseCase.invoke().partition { it.isDeleted }
+            getDictionariesByUserUseCase.invoke(activeUser).partition { it.isDeleted }
 
         deletedDictionaries.forEach { uploadDictionaryDeletion(it) }
 
