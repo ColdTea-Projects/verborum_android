@@ -10,4 +10,6 @@
     <string name="optionsLanguage">Dil</string>
     <string name="optionsLanguageSystemDefault">Sistem defoltu</string>
     <string name="optionsLogout">Çıxış</string>
+    <string name="topBarBack">Geri</string>
+    <string name="forumComingSoon">Tezliklə</string>
 </resources>

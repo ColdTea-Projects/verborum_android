@@ -10,4 +10,6 @@
     <string name="optionsLanguage">Taal</string>
     <string name="optionsLanguageSystemDefault">Systeemstandaard</string>
     <string name="optionsLogout">Uitloggen</string>
+    <string name="topBarBack">Terug</string>
+    <string name="forumComingSoon">Binnenkort</string>
 </resources>

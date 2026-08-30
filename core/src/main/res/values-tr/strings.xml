@@ -10,4 +10,6 @@
     <string name="optionsLanguage">Dil</string>
     <string name="optionsLanguageSystemDefault">Sistem varsayılanı</string>
     <string name="optionsLogout">Çıkış yap</string>
+    <string name="topBarBack">Geri</string>
+    <string name="forumComingSoon">Yakında</string>
 </resources>

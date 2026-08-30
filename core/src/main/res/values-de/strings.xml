@@ -10,4 +10,6 @@
     <string name="optionsLanguage">Sprache</string>
     <string name="optionsLanguageSystemDefault">Systemstandard</string>
     <string name="optionsLogout">Abmelden</string>
+    <string name="topBarBack">Zurück</string>
+    <string name="forumComingSoon">Demnächst</string>
 </resources>

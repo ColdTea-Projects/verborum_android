@@ -10,4 +10,6 @@
     <string name="optionsLanguage">Idioma</string>
     <string name="optionsLanguageSystemDefault">Predefinição do sistema</string>
     <string name="optionsLogout">Sair</string>
+    <string name="topBarBack">Voltar</string>
+    <string name="forumComingSoon">Em breve</string>
 </resources>

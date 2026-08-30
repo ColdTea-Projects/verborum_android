@@ -10,4 +10,6 @@
     <string name="optionsLanguage">言語</string>
     <string name="optionsLanguageSystemDefault">システムのデフォルト</string>
     <string name="optionsLogout">ログアウト</string>
+    <string name="topBarBack">戻る</string>
+    <string name="forumComingSoon">近日公開</string>
 </resources>

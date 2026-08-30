@@ -10,4 +10,6 @@
     <string name="optionsLanguage">语言</string>
     <string name="optionsLanguageSystemDefault">系统默认</string>
     <string name="optionsLogout">退出登录</string>
+    <string name="topBarBack">返回</string>
+    <string name="forumComingSoon">敬请期待</string>
 </resources>

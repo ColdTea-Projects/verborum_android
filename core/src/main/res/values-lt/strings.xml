@@ -10,4 +10,6 @@
     <string name="optionsLanguage">Kalba</string>
     <string name="optionsLanguageSystemDefault">Sistemos numatytoji</string>
     <string name="optionsLogout">Atsijungti</string>
+    <string name="topBarBack">Atgal</string>
+    <string name="forumComingSoon">Netrukus</string>
 </resources>

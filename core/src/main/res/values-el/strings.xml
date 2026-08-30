@@ -10,4 +10,6 @@
     <string name="optionsLanguage">Γλώσσα</string>
     <string name="optionsLanguageSystemDefault">Προεπιλογή συστήματος</string>
     <string name="optionsLogout">Αποσύνδεση</string>
+    <string name="topBarBack">Πίσω</string>
+    <string name="forumComingSoon">Έρχεται σύντομα</string>
 </resources>

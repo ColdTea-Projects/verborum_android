@@ -10,4 +10,6 @@
     <string name="optionsLanguage">Langue</string>
     <string name="optionsLanguageSystemDefault">Paramètre système</string>
     <string name="optionsLogout">Se déconnecter</string>
+    <string name="topBarBack">Retour</string>
+    <string name="forumComingSoon">Bientôt disponible</string>
 </resources>

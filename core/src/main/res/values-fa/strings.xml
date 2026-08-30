@@ -10,4 +10,6 @@
     <string name="optionsLanguage">زبان</string>
     <string name="optionsLanguageSystemDefault">پیش‌فرض سیستم</string>
     <string name="optionsLogout">خروج</string>
+    <string name="topBarBack">بازگشت</string>
+    <string name="forumComingSoon">به‌زودی</string>
 </resources>

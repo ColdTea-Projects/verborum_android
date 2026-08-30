@@ -10,4 +10,6 @@
     <string name="optionsLanguage">언어</string>
     <string name="optionsLanguageSystemDefault">시스템 기본값</string>
     <string name="optionsLogout">로그아웃</string>
+    <string name="topBarBack">뒤로</string>
+    <string name="forumComingSoon">곧 출시</string>
 </resources>

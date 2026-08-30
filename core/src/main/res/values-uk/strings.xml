@@ -10,4 +10,6 @@
     <string name="optionsLanguage">Мова</string>
     <string name="optionsLanguageSystemDefault">Системна за замовчуванням</string>
     <string name="optionsLogout">Вийти</string>
+    <string name="topBarBack">Назад</string>
+    <string name="forumComingSoon">Незабаром</string>
 </resources>

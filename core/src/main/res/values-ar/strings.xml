@@ -10,4 +10,6 @@
     <string name="optionsLanguage">اللغة</string>
     <string name="optionsLanguageSystemDefault">الإعداد الافتراضي للنظام</string>
     <string name="optionsLogout">تسجيل الخروج</string>
+    <string name="topBarBack">رجوع</string>
+    <string name="forumComingSoon">قريباً</string>
 </resources>

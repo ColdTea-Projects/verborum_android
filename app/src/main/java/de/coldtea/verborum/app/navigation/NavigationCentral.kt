@@ -41,6 +41,7 @@ import androidx.navigation.compose.rememberNavController
 import de.coldtea.verborum.app.R
 // Translations live in bibliotheca, which carries all 19 locales; the app module has none.
 import de.coldtea.verborum.bibliotheca.R as BibliothecaR
+import de.coldtea.verborum.core.R as CoreR
 import de.coldtea.verborum.core.ui.LocalSnackbarHostState
 import de.coldtea.verborum.core.ui.LocalVerborumTopBarController
 import de.coldtea.verborum.core.ui.VerborumTopBarController
@@ -173,7 +174,7 @@ private fun VerborumTopBar(
             IconButton(onClick = onBackClick) {
                 Icon(
                     painter = painterResource(R.drawable.ic_arrow_back_24),
-                    contentDescription = "Back",
+                    contentDescription = stringResource(CoreR.string.topBarBack),
                     tint = MaterialTheme.colorScheme.onBackground,
                     modifier = Modifier.size(24.dp)
                 )

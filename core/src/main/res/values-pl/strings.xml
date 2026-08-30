@@ -10,4 +10,6 @@
     <string name="optionsLanguage">Język</string>
     <string name="optionsLanguageSystemDefault">Domyślny systemowy</string>
     <string name="optionsLogout">Wyloguj się</string>
+    <string name="topBarBack">Wstecz</string>
+    <string name="forumComingSoon">Wkrótce</string>
 </resources>
