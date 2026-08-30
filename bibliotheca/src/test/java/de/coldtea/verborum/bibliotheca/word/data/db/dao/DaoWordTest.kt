@@ -101,14 +101,16 @@ class DaoWordTest {
     }
 
     @Test
-    fun `markWordsUnsyncedForUser resets isSynced only for words in that owner's dictionaries`() =
+    fun `markWordsUnsyncedInDictionaries resets isSynced only for the named dictionaries`() =
         runTest {
-            db.daoDictionary.insert(testDictionaryEntity(dictionaryId = "mine", userId = "me"))
-            db.daoDictionary.insert(testDictionaryEntity(dictionaryId = "theirs", userId = "you"))
-            dao.insert(testWordEntity(wordId = "w1", dictionaryId = "mine", isSynced = true))
-            dao.insert(testWordEntity(wordId = "w2", dictionaryId = "theirs", isSynced = true))
+            // The migrated dictionary and one the user already owned — only the former's words
+            // may be re-flagged, or the whole corpus would re-upload.
+            db.daoDictionary.insert(testDictionaryEntity(dictionaryId = "migrated", userId = "me"))
+            db.daoDictionary.insert(testDictionaryEntity(dictionaryId = "existing", userId = "me"))
+            dao.insert(testWordEntity(wordId = "w1", dictionaryId = "migrated", isSynced = true))
+            dao.insert(testWordEntity(wordId = "w2", dictionaryId = "existing", isSynced = true))
 
-            dao.markWordsUnsyncedForUser("me")
+            dao.markWordsUnsyncedInDictionaries(listOf("migrated"))
 
             assertFalse(dao.getWord("w1").isSynced)
             assertTrue(dao.getWord("w2").isSynced)

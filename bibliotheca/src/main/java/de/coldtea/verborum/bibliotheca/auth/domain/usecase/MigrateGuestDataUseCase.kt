@@ -19,9 +19,15 @@ class MigrateGuestDataUseCase @Inject constructor(
 ) {
     suspend fun invoke(subject: String) = withContext(Dispatchers.IO) {
         if (subject == GUEST_USER_ID) return@withContext
-        val reassigned = dictionaryRepository.reassignOwner(GUEST_USER_ID, subject)
-        if (reassigned > 0) {
-            wordRepository.markWordsUnsyncedForUser(subject)
-        }
+        // Capture the guest-owned ids *before* re-owning them: afterwards they look exactly like
+        // dictionaries the subject already had, and re-flagging those would re-upload the user's
+        // whole corpus word by word — stale local rows overwriting newer server copies.
+        val migratedDictionaryIds = dictionaryRepository
+            .getAllDictionariesByUser(GUEST_USER_ID)
+            .map { it.dictionaryId }
+        if (migratedDictionaryIds.isEmpty()) return@withContext
+
+        dictionaryRepository.reassignOwner(GUEST_USER_ID, subject)
+        wordRepository.markWordsUnsyncedInDictionaries(migratedDictionaryIds)
     }
 }
