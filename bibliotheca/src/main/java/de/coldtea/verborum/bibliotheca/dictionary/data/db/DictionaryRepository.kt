@@ -36,6 +36,9 @@ class DictionaryRepository @Inject constructor(
     suspend fun markDictionaryDeleted(dictionaryId: String) =
         bibliothecaDatabase.daoDictionary.markDictionaryDeleted(dictionaryId)
 
+    suspend fun markDictionarySynced(dictionaryId: String, updatedAt: Long) =
+        bibliothecaDatabase.daoDictionary.markDictionarySynced(dictionaryId, updatedAt)
+
     suspend fun reassignOwner(oldUserId: String, newUserId: String): Int =
         bibliothecaDatabase.daoDictionary.reassignOwner(oldUserId, newUserId)
 

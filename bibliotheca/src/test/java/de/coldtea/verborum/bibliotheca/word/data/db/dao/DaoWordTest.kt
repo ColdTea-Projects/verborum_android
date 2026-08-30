@@ -117,6 +117,46 @@ class DaoWordTest {
         }
 
     @Test
+    fun `markWordSynced flips only the flag for the version that was uploaded`() = runTest {
+        dao.insert(
+            testWordEntity(
+                wordId = "w1",
+                dictionaryId = "d1",
+                word = "uploaded",
+                isSynced = false,
+                updatedAt = 100L,
+            )
+        )
+
+        dao.markWordSynced("w1", updatedAt = 100L)
+
+        val stored = dao.getWord("w1")
+        assertTrue(stored.isSynced)
+        assertEquals("uploaded", stored.word)
+    }
+
+    @Test
+    fun `markWordSynced leaves a word edited mid-upload unsynced`() = runTest {
+        // The upload snapshotted updated_at = 100, but the user edited the row while the request
+        // was in flight — the edit must survive and stay queued for the next sync.
+        dao.insert(
+            testWordEntity(
+                wordId = "w1",
+                dictionaryId = "d1",
+                word = "edited during upload",
+                isSynced = false,
+                updatedAt = 200L,
+            )
+        )
+
+        dao.markWordSynced("w1", updatedAt = 100L)
+
+        val stored = dao.getWord("w1")
+        assertFalse(stored.isSynced)
+        assertEquals("edited during upload", stored.word)
+    }
+
+    @Test
     fun `deleteWordsByDictionary removes every word of the dictionary`() = runTest {
         dao.insert(testWordEntity(wordId = "w1", dictionaryId = "d1"))
         dao.insert(testWordEntity(wordId = "w2", dictionaryId = "d1"))

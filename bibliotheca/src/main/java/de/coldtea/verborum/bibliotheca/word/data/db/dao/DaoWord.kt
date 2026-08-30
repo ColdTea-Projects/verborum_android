@@ -54,6 +54,18 @@ interface DaoWord: DaoBase<WordEntity> {
     @Query("UPDATE word SET is_deleted = 1 WHERE word_id = :wordId")
     suspend fun markWordDeleted(wordId: String)
 
+    /**
+     * Flips the synced flag after a successful upload, touching no other column — the word-side
+     * counterpart to DaoDictionary.markDictionarySynced. [updatedAt] pins the uploaded version so
+     * an edit made while the request was in flight is neither reverted nor wrongly marked synced.
+     */
+    @Transaction
+    @Query(
+        "UPDATE word SET isSynced = 1 " +
+            "WHERE word_id = :wordId AND updated_at = :updatedAt AND is_deleted = 0"
+    )
+    suspend fun markWordSynced(wordId: String, updatedAt: Long)
+
     // Guest-data migration companion to DaoDictionary.reassignOwner: re-flag the words of the
     // dictionaries that were just re-owned so they upload under the signed-in subject (guide §9.7).
     //

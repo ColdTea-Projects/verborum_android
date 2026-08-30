@@ -6,13 +6,13 @@ import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.api.SaveDiction
 import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.api.SyncDictionaryTagsUseCase
 import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.local.DeleteDictionaryUseCase
 import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.local.GetAllDictionariesUseCase
-import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.local.SaveDictionaryUseCase
+import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.local.MarkDictionarySyncedUseCase
 import de.coldtea.verborum.bibliotheca.word.domain.usecase.api.DeleteWordApiUseCase
 import de.coldtea.verborum.bibliotheca.word.domain.usecase.api.DeleteWordByDictionaryIdApiUseCase
 import de.coldtea.verborum.bibliotheca.word.domain.usecase.api.SaveWordApiUseCase
 import de.coldtea.verborum.bibliotheca.word.domain.usecase.local.DeleteWordUseCase
 import de.coldtea.verborum.bibliotheca.word.domain.usecase.local.GetWordsByDictionaryUseCase
-import de.coldtea.verborum.bibliotheca.word.domain.usecase.local.UpsertWordsUseCase
+import de.coldtea.verborum.bibliotheca.word.domain.usecase.local.MarkWordSyncedUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -22,6 +22,11 @@ import javax.inject.Inject
  * success: tombstoned rows (`isDeleted = true`) are deleted remotely then hard-deleted locally;
  * unsynced rows (`isSynced = false`) are uploaded then marked synced. Must run before
  * [SyncUserDictionariesUseCase] so a subsequent download cannot drop or resurrect local data.
+ *
+ * Success is recorded with a targeted flag update keyed on the uploaded `updatedAt`, never by
+ * writing the snapshot back: the row is read before network I/O, so re-saving it whole would
+ * revert anything the user changed meanwhile. A row edited mid-flight simply stays unsynced and
+ * goes up on the next run.
  */
 class UploadPendingChangesUseCase @Inject constructor(
     private val getAllDictionariesUseCase: GetAllDictionariesUseCase,
@@ -29,8 +34,8 @@ class UploadPendingChangesUseCase @Inject constructor(
     private val saveDictionaryApiUseCase: SaveDictionaryApiUseCase,
     private val syncDictionaryTagsUseCase: SyncDictionaryTagsUseCase,
     private val saveWordApiUseCase: SaveWordApiUseCase,
-    private val saveDictionaryUseCase: SaveDictionaryUseCase,
-    private val upsertWordsUseCase: UpsertWordsUseCase,
+    private val markDictionarySyncedUseCase: MarkDictionarySyncedUseCase,
+    private val markWordSyncedUseCase: MarkWordSyncedUseCase,
     private val deleteDictionaryApiUseCase: DeleteDictionaryApiUseCase,
     private val deleteWordApiUseCase: DeleteWordApiUseCase,
     private val deleteWordByDictionaryIdApiUseCase: DeleteWordByDictionaryIdApiUseCase,
@@ -53,7 +58,10 @@ class UploadPendingChangesUseCase @Inject constructor(
                 if (dictionaryUploaded &&
                     syncDictionaryTagsUseCase.push(dictionary.dictionaryId, dictionary.tags)
                 ) {
-                    saveDictionaryUseCase.invoke(dictionary.copy(isSynced = true))
+                    markDictionarySyncedUseCase.invoke(
+                        dictionaryId = dictionary.dictionaryId,
+                        updatedAt = dictionary.updatedAt,
+                    )
                 }
             }
 
@@ -72,7 +80,10 @@ class UploadPendingChangesUseCase @Inject constructor(
                 .filterNot { it.isSynced }
                 .forEach { word ->
                     if (saveWordApiUseCase.invoke(word).isSuccessful) {
-                        upsertWordsUseCase.invoke(listOf(word.copy(isSynced = true)))
+                        markWordSyncedUseCase.invoke(
+                            wordId = word.wordId,
+                            updatedAt = word.updatedAt,
+                        )
                     }
                 }
         }

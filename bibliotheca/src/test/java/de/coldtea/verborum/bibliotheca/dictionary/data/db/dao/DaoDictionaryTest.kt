@@ -74,6 +74,44 @@ class DaoDictionaryTest {
     }
 
     @Test
+    fun `markDictionarySynced flips only the flag for the version that was uploaded`() = runTest {
+        dao.insert(
+            testDictionaryEntity(
+                dictionaryId = "1",
+                name = "uploaded",
+                isSynced = false,
+                updatedAt = 100L,
+            )
+        )
+
+        dao.markDictionarySynced("1", updatedAt = 100L)
+
+        val stored = dao.getDictionary("1")
+        assertTrue(stored.isSynced)
+        assertEquals("uploaded", stored.name)
+    }
+
+    @Test
+    fun `markDictionarySynced leaves a dictionary edited mid-upload unsynced`() = runTest {
+        // The upload snapshotted updated_at = 100; the rename landed while the request was in
+        // flight, so the new name must survive and stay queued for the next sync.
+        dao.insert(
+            testDictionaryEntity(
+                dictionaryId = "1",
+                name = "renamed during upload",
+                isSynced = false,
+                updatedAt = 200L,
+            )
+        )
+
+        dao.markDictionarySynced("1", updatedAt = 100L)
+
+        val stored = dao.getDictionary("1")
+        assertFalse(stored.isSynced)
+        assertEquals("renamed during upload", stored.name)
+    }
+
+    @Test
     fun `reassignOwner rewrites the owner, resets isSynced, and returns the affected count`() =
         runTest {
             dao.insert(testDictionaryEntity(dictionaryId = "1", userId = "guest", isSynced = true))

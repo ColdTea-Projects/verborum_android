@@ -36,6 +36,22 @@ interface DaoDictionary: DaoBase<DictionaryEntity> {
     @Query("UPDATE dictionary SET is_deleted = 1 WHERE dictionary_id = :dictionaryId")
     suspend fun markDictionaryDeleted(dictionaryId: String)
 
+    /**
+     * Flips the synced flag after a successful upload, touching no other column.
+     *
+     * The upload snapshots the row, does network I/O, then comes back to record success — writing
+     * the whole snapshot back (DaoBase.insert is REPLACE) would revert any edit the user made in
+     * between. [updatedAt] pins the version that was actually uploaded: if the row changed while
+     * the request was in flight the update matches nothing, the row stays unsynced, and the next
+     * sync uploads the newer content.
+     */
+    @Transaction
+    @Query(
+        "UPDATE dictionary SET isSynced = 1 " +
+            "WHERE dictionary_id = :dictionaryId AND updated_at = :updatedAt AND is_deleted = 0"
+    )
+    suspend fun markDictionarySynced(dictionaryId: String, updatedAt: Long)
+
     // Guest-data migration on first login (guide §9.7): re-own the guest's dictionaries under the
     // signed-in subject and re-flag them unsynced so the normal upload pushes them to the server.
     // The guest UUID must never reach the backend, so this runs before the first authenticated sync.

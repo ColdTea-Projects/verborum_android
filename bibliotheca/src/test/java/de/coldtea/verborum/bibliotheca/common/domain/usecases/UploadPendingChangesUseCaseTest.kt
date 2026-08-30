@@ -5,7 +5,7 @@ import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.api.SaveDiction
 import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.api.SyncDictionaryTagsUseCase
 import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.local.DeleteDictionaryUseCase
 import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.local.GetAllDictionariesUseCase
-import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.local.SaveDictionaryUseCase
+import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.local.MarkDictionarySyncedUseCase
 import de.coldtea.verborum.bibliotheca.testDictionary
 import de.coldtea.verborum.bibliotheca.testWord
 import de.coldtea.verborum.bibliotheca.word.domain.usecase.api.DeleteWordApiUseCase
@@ -13,7 +13,7 @@ import de.coldtea.verborum.bibliotheca.word.domain.usecase.api.DeleteWordByDicti
 import de.coldtea.verborum.bibliotheca.word.domain.usecase.api.SaveWordApiUseCase
 import de.coldtea.verborum.bibliotheca.word.domain.usecase.local.DeleteWordUseCase
 import de.coldtea.verborum.bibliotheca.word.domain.usecase.local.GetWordsByDictionaryUseCase
-import de.coldtea.verborum.bibliotheca.word.domain.usecase.local.UpsertWordsUseCase
+import de.coldtea.verborum.bibliotheca.word.domain.usecase.local.MarkWordSyncedUseCase
 import de.coldtea.verborum.core.BaseTest
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -48,11 +48,11 @@ class UploadPendingChangesUseCaseTest : BaseTest() {
 
     // invoke returns String — stubbed per test with coEvery.
     @MockK
-    private lateinit var saveDictionaryUseCase: SaveDictionaryUseCase
+    private lateinit var markDictionarySyncedUseCase: MarkDictionarySyncedUseCase
 
     // invoke returns Unit — covered by relaxUnitFun.
     @MockK
-    private lateinit var upsertWordsUseCase: UpsertWordsUseCase
+    private lateinit var markWordSyncedUseCase: MarkWordSyncedUseCase
 
     // invoke returns Response<Unit> — stubbed per test with coEvery.
     @MockK
@@ -87,8 +87,8 @@ class UploadPendingChangesUseCaseTest : BaseTest() {
             saveDictionaryApiUseCase = saveDictionaryApiUseCase,
             syncDictionaryTagsUseCase = syncDictionaryTagsUseCase,
             saveWordApiUseCase = saveWordApiUseCase,
-            saveDictionaryUseCase = saveDictionaryUseCase,
-            upsertWordsUseCase = upsertWordsUseCase,
+            markDictionarySyncedUseCase = markDictionarySyncedUseCase,
+            markWordSyncedUseCase = markWordSyncedUseCase,
             deleteDictionaryApiUseCase = deleteDictionaryApiUseCase,
             deleteWordApiUseCase = deleteWordApiUseCase,
             deleteWordByDictionaryIdApiUseCase = deleteWordByDictionaryIdApiUseCase,
@@ -96,7 +96,6 @@ class UploadPendingChangesUseCaseTest : BaseTest() {
             deleteWordUseCase = deleteWordUseCase,
         )
         coEvery { getWordsByDictionaryUseCase.invoke(any()) } returns emptyList()
-        coEvery { saveDictionaryUseCase.invoke(any()) } returns "saved-id"
         // Tag reconcile succeeds by default so dictionaries reach the synced state as before.
         coEvery { syncDictionaryTagsUseCase.push(any(), any()) } returns true
     }
@@ -112,7 +111,12 @@ class UploadPendingChangesUseCaseTest : BaseTest() {
         useCase.invoke()
 
         coVerify(exactly = 1) { saveDictionaryApiUseCase.invoke(pending) }
-        coVerify(exactly = 1) { saveDictionaryUseCase.invoke(pending.copy(isSynced = true)) }
+        coVerify(exactly = 1) {
+            markDictionarySyncedUseCase.invoke(
+                dictionaryId = pending.dictionaryId,
+                updatedAt = pending.updatedAt,
+            )
+        }
     }
 
     @Test
@@ -123,7 +127,7 @@ class UploadPendingChangesUseCaseTest : BaseTest() {
 
         useCase.invoke()
 
-        coVerify(exactly = 0) { saveDictionaryUseCase.invoke(any()) }
+        coVerify(exactly = 0) { markDictionarySyncedUseCase.invoke(any(), any()) }
     }
 
     @Test
@@ -151,7 +155,12 @@ class UploadPendingChangesUseCaseTest : BaseTest() {
         useCase.invoke()
 
         coVerify(exactly = 1) { saveWordApiUseCase.invoke(pendingWord) }
-        coVerify(exactly = 1) { upsertWordsUseCase.invoke(listOf(pendingWord.copy(isSynced = true))) }
+        coVerify(exactly = 1) {
+            markWordSyncedUseCase.invoke(
+                wordId = pendingWord.wordId,
+                updatedAt = pendingWord.updatedAt,
+            )
+        }
     }
 
     @Test
@@ -164,7 +173,7 @@ class UploadPendingChangesUseCaseTest : BaseTest() {
 
         useCase.invoke()
 
-        coVerify(exactly = 0) { upsertWordsUseCase.invoke(any()) }
+        coVerify(exactly = 0) { markWordSyncedUseCase.invoke(any(), any()) }
     }
 
     @Test
