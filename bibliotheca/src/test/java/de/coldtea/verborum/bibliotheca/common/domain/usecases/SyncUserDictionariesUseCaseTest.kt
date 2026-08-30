@@ -7,7 +7,7 @@ import de.coldtea.verborum.bibliotheca.dictionary.data.api.DictionaryApi
 import de.coldtea.verborum.bibliotheca.dictionary.data.db.entity.DictionaryEntity.Companion.GUEST_USER_ID
 import de.coldtea.verborum.bibliotheca.dictionary.domain.model.Dictionary
 import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.local.DeleteDictionaryUseCase
-import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.local.GetAllDictionariesUseCase
+import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.local.GetDictionariesByUserUseCase
 import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.local.SaveDictionaryUseCase
 import de.coldtea.verborum.bibliotheca.testDictionary
 import de.coldtea.verborum.bibliotheca.testDictionaryResponse
@@ -47,7 +47,7 @@ class SyncUserDictionariesUseCaseTest : BaseTest() {
 
     // invoke returns List<Dictionary> — stubbed per test with coEvery.
     @MockK
-    private lateinit var getAllDictionariesUseCase: GetAllDictionariesUseCase
+    private lateinit var getDictionariesByUserUseCase: GetDictionariesByUserUseCase
 
     // invoke returns Unit — covered by relaxUnitFun.
     @MockK
@@ -81,7 +81,7 @@ class SyncUserDictionariesUseCaseTest : BaseTest() {
             dictionaryApi = dictionaryApi,
             wordApi = wordApi,
             saveDictionaryUseCase = saveDictionaryUseCase,
-            getAllDictionariesUseCase = getAllDictionariesUseCase,
+            getDictionariesByUserUseCase = getDictionariesByUserUseCase,
             deleteDictionaryUseCase = deleteDictionaryUseCase,
             getWordsByDictionaryUseCase = getWordsByDictionaryUseCase,
             upsertWordsUseCase = upsertWordsUseCase,
@@ -94,7 +94,7 @@ class SyncUserDictionariesUseCaseTest : BaseTest() {
         // Default: the server has no tags, so merged dictionaries keep the empty default.
         coEvery { syncDictionaryTagsUseCase.pull(any()) } returns emptyList()
         coEvery { saveDictionaryUseCase.invoke(any()) } returns "saved-id"
-        coEvery { getAllDictionariesUseCase.invoke() } returns emptyList()
+        coEvery { getDictionariesByUserUseCase.invoke(GUEST_USER_ID) } returns emptyList()
         coEvery { getWordsByDictionaryUseCase.invoke(any()) } returns emptyList()
 
         // Newly downloaded rows stamp the current time; pin it so timestamp assertions are stable.
@@ -167,7 +167,7 @@ class SyncUserDictionariesUseCaseTest : BaseTest() {
         val identicalLocal =
             response.convertToDictionary(fallbackCreatedAt = 5_000L, fallbackUpdatedAt = 6_000L)
         coEvery { dictionaryApi.getAllDictionariesByUser(GUEST_USER_ID) } returns listOf(response)
-        coEvery { getAllDictionariesUseCase.invoke() } returns listOf(identicalLocal)
+        coEvery { getDictionariesByUserUseCase.invoke(GUEST_USER_ID) } returns listOf(identicalLocal)
         coEvery { wordApi.getWordsByDictionary(any()) } returns null
 
         useCase.invoke()
@@ -182,7 +182,7 @@ class SyncUserDictionariesUseCaseTest : BaseTest() {
             .convertToDictionary(fallbackCreatedAt = 5_000L, fallbackUpdatedAt = 6_000L)
             .copy(name = "Old name")
         coEvery { dictionaryApi.getAllDictionariesByUser(GUEST_USER_ID) } returns listOf(response)
-        coEvery { getAllDictionariesUseCase.invoke() } returns listOf(staleLocal)
+        coEvery { getDictionariesByUserUseCase.invoke(GUEST_USER_ID) } returns listOf(staleLocal)
         coEvery { wordApi.getWordsByDictionary(any()) } returns null
 
         useCase.invoke()
@@ -197,7 +197,7 @@ class SyncUserDictionariesUseCaseTest : BaseTest() {
     @Test
     fun `invoke keeps local unsynced dictionaries that the server does not know`() = runTest {
         coEvery { dictionaryApi.getAllDictionariesByUser(GUEST_USER_ID) } returns emptyList()
-        coEvery { getAllDictionariesUseCase.invoke() } returns
+        coEvery { getDictionariesByUserUseCase.invoke(GUEST_USER_ID) } returns
             listOf(testDictionary(dictionaryId = "local-only", isSynced = false))
 
         useCase.invoke()
@@ -208,7 +208,7 @@ class SyncUserDictionariesUseCaseTest : BaseTest() {
     @Test
     fun `invoke deletes local synced dictionaries that are gone remotely`() = runTest {
         coEvery { dictionaryApi.getAllDictionariesByUser(GUEST_USER_ID) } returns emptyList()
-        coEvery { getAllDictionariesUseCase.invoke() } returns
+        coEvery { getDictionariesByUserUseCase.invoke(GUEST_USER_ID) } returns
             listOf(testDictionary(dictionaryId = "deleted-remotely", isSynced = true))
 
         useCase.invoke()
@@ -217,10 +217,22 @@ class SyncUserDictionariesUseCaseTest : BaseTest() {
     }
 
     @Test
+    fun `invoke only reconciles the signed-in user's own dictionaries`() = runTest {
+        // The remote list covers one owner, so the local side must be read for that owner too —
+        // reading every row would see another account's dictionaries as "deleted on the server".
+        coEvery { dictionaryApi.getAllDictionariesByUser(GUEST_USER_ID) } returns emptyList()
+
+        useCase.invoke()
+
+        coVerify(exactly = 1) { getDictionariesByUserUseCase.invoke(GUEST_USER_ID) }
+        coVerify(exactly = 0) { deleteDictionaryUseCase.invoke(any()) }
+    }
+
+    @Test
     fun `invoke does not overwrite a dictionary with unsynced local changes`() = runTest {
         coEvery { dictionaryApi.getAllDictionariesByUser(GUEST_USER_ID) } returns
             listOf(testDictionaryResponse(dictionaryId = "dict-1"))
-        coEvery { getAllDictionariesUseCase.invoke() } returns
+        coEvery { getDictionariesByUserUseCase.invoke(GUEST_USER_ID) } returns
             listOf(testDictionary(dictionaryId = "dict-1", isSynced = false))
         coEvery { wordApi.getWordsByDictionary("dict-1") } returns null
 
@@ -356,7 +368,7 @@ class SyncUserDictionariesUseCaseTest : BaseTest() {
     fun `invoke never resurrects a tombstoned dictionary or its words`() = runTest {
         coEvery { dictionaryApi.getAllDictionariesByUser(GUEST_USER_ID) } returns
             listOf(testDictionaryResponse(dictionaryId = "dict-1"))
-        coEvery { getAllDictionariesUseCase.invoke() } returns
+        coEvery { getDictionariesByUserUseCase.invoke(GUEST_USER_ID) } returns
             listOf(testDictionary(dictionaryId = "dict-1", isSynced = true, isDeleted = true))
 
         useCase.invoke()
@@ -370,7 +382,7 @@ class SyncUserDictionariesUseCaseTest : BaseTest() {
     @Test
     fun `invoke hard-deletes a tombstoned dictionary once it is gone remotely`() = runTest {
         coEvery { dictionaryApi.getAllDictionariesByUser(GUEST_USER_ID) } returns emptyList()
-        coEvery { getAllDictionariesUseCase.invoke() } returns
+        coEvery { getDictionariesByUserUseCase.invoke(GUEST_USER_ID) } returns
             listOf(testDictionary(dictionaryId = "dict-1", isSynced = true, isDeleted = true))
 
         useCase.invoke()

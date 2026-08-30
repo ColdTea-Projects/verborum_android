@@ -5,7 +5,7 @@ import de.coldtea.verborum.bibliotheca.common.utils.getNowInMillis
 import de.coldtea.verborum.bibliotheca.dictionary.data.api.DictionaryApi
 import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.api.SyncDictionaryTagsUseCase
 import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.local.DeleteDictionaryUseCase
-import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.local.GetAllDictionariesUseCase
+import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.local.GetDictionariesByUserUseCase
 import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.local.SaveDictionaryUseCase
 import de.coldtea.verborum.bibliotheca.word.data.api.WordApi
 import de.coldtea.verborum.bibliotheca.word.domain.usecase.local.DeleteWordUseCase
@@ -16,7 +16,9 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 /**
- * Merges the server state into the local database without destroying local-only data:
+ * Merges the server state into the local database without destroying local-only data. The whole
+ * reconcile is scoped to the signed-in user — the remote list covers only their dictionaries, so
+ * every local comparison must be drawn from the same owner:
  * - remote rows are upserted, except where the local copy has unsynced changes or a deletion
  *   tombstone (local wins until [UploadPendingChangesUseCase] pushes it),
  * - local rows are deleted only when they are synced yet absent remotely (deleted on the server),
@@ -27,7 +29,7 @@ class SyncUserDictionariesUseCase @Inject constructor(
     private val dictionaryApi: DictionaryApi,
     private val wordApi: WordApi,
     private val saveDictionaryUseCase: SaveDictionaryUseCase,
-    private val getAllDictionariesUseCase: GetAllDictionariesUseCase,
+    private val getDictionariesByUserUseCase: GetDictionariesByUserUseCase,
     private val deleteDictionaryUseCase: DeleteDictionaryUseCase,
     private val getWordsByDictionaryUseCase: GetWordsByDictionaryUseCase,
     private val upsertWordsUseCase: UpsertWordsUseCase,
@@ -42,7 +44,9 @@ class SyncUserDictionariesUseCase @Inject constructor(
         val remoteDictionaries = dictionaryApi.getAllDictionariesByUser(activeUser)
             ?: return@withContext
 
-        val localDictionaries = getAllDictionariesUseCase.invoke()
+        // Scoped to the active user: the remote list only covers their dictionaries, so comparing
+        // it against every local row would read another owner's rows as "deleted on the server".
+        val localDictionaries = getDictionariesByUserUseCase.invoke(activeUser)
         val (tombstonedDictionaries, activeDictionaries) =
             localDictionaries.partition { it.isDeleted }
         val localDictionaryById = localDictionaries.associateBy { it.dictionaryId }
