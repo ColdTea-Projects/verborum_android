@@ -33,9 +33,6 @@ android {
         compose = true
         buildConfig = true
     }
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.1"
-    }
     testOptions {
         unitTests {
             // Robolectric needs the merged Android resources/manifest to run Room DAO/migration
