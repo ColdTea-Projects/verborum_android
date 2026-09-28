@@ -14,7 +14,7 @@ app  →  bibliotheca, forum  →  core          (buildSrc: Configuration.kt for
 ```
 
 - **`core`** — shared infrastructure: `theme/` (VerborumTheme, VerborumColors), `ui/BaseViewModel`, `di/NetworkModule`, `auth/` (token store, interceptor/authenticator), `extensions/` (shared extension functions, grouped one file per topic as `<Subject>+<Group>.kt` — see the `kotlin` skill). Ships **testFixtures** (`BaseTest`, `MainDispatcherRule`).
-- **`bibliotheca`**, **`forum`** — feature library modules. Feature code lives here, never in `app`.
+- **`bibliotheca`**, **`forum`** — feature library modules. Feature code lives here, never in `app`. `forum` is the Forum tab, backed by ms_marketplace — its contract is `docs/marketplace-client-guide.md` (browse via Paging 3 over `PageResponse`, import, vault). Imported dictionaries get their **own** Room tables, never the owned-dictionary tables, so sync can't upload them.
 - **`app`** — only `MainActivity`, `VerborumApplication`, and `navigation/` (route constants + nav graph wiring).
 - Cross-module references use typesafe accessors: `api(projects.core)`, `testImplementation(testFixtures(projects.core))`. Dependencies point **inward only** — `core` never imports a feature module.
 

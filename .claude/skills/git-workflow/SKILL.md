@@ -22,8 +22,8 @@ This repo has a **PostToolUse hook** in `.claude/settings.json`: every file crea
 
 - **Never commit or push unless the user explicitly asks.** Auto-staging ≠ auto-committing.
 - Before committing: `git status` + `git diff --staged` — review what's actually going in; stage Edit-modified files deliberately.
-- Commit messages: imperative, concise, lowercase style matching history (`implement logo`, `fix test screen & implement debouncer`). End with:
-  `Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>`
+- Commit messages: imperative, concise, lowercase style matching history (`implement logo`, `fix test screen & implement debouncer`). End with the `Co-Authored-By:` trailer naming the model actually making the commit — use the attribution line the harness supplies for the session, never a hard-coded model name, e.g.
+  `Co-Authored-By: Claude <current model name> <noreply@anthropic.com>`
 - One logical change per commit (feature, fix, or build change — not a mix).
 - Branching: work lands on `main` (solo project); branch first if asked to prepare a PR.
 

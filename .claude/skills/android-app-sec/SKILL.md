@@ -5,7 +5,7 @@ description: Review and implement application security in the Verborum Android a
 
 # App Security (Verborum)
 
-The auth layer already follows these rules — preserve them, and apply the same standard to new code. Cross-refs: `docs/client-login-guide.md` (auth contract) and `docs/production-cutover.md` (go-live hardening).
+The auth layer already follows these rules — preserve them, and apply the same standard to new code. Cross-refs: `docs/client-login-guide.md` (auth contract), `docs/marketplace-client-guide.md` §3 (marketplace security rules) and `docs/production-cutover.md` (go-live hardening).
 
 ## Quick start — the two shapes that matter most
 
@@ -53,7 +53,8 @@ EncryptedSharedPreferences.create(
 
 ## Data & release hardening
 
-- Room holds only the user's own rows (owner-keyed); don't broaden queries to cross owners.
+- Room holds only the user's own rows (owner-keyed); don't broaden queries to cross owners. Cached imported (marketplace) dictionaries are the one exception — separate tables, read-only, never uploaded.
+- Marketplace: listings and imported dictionaries are **untrusted user input** (plain `Text`, never used to build URLs/queries unencoded); the import call carries **no user id** (server uses `sub`); hide import on listings where `publisherId == sub`.
 - Validate/normalize external input at the boundary (e.g. `level` clamped 0–7, tags normalized) before persisting or uploading.
 - For release: real signing config with the keystore kept out of git; enable R8/shrinking and re-test auth on the minified build (serialization/reflection breakage shows up only there); `@Keep @Serializable` DTOs and AppAuth/Room/Retrofit ProGuard rules verified.
 

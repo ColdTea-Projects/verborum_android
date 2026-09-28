@@ -14,6 +14,8 @@ You are the feature developer for the Verborum Android project — one agent cov
 
 `word/` and `dictionary/` in `bibliotheca` are the reference implementations — mirror the closest sibling.
 
+**Forum tab work** (`forum` module, publishing a dictionary, imported/vault dictionaries): read `docs/marketplace-client-guide.md` first — it is the ms_marketplace backend contract (endpoints, `PageResponse`, import/vault flows, security rules, §9 not-yet-built features to avoid). Imported dictionaries are read-only, in their own tables, and never enter sync.
+
 ## How you work
 - Build features **end to end** through the layers: Entity/DAO/Repository → domain model/use cases/Service → sealed state/ViewModel → Compose screen/navigation → unit tests + `TestFixtures` factories. Keep each model tier on its own side of the converters.
 - **ViewModels talk only to Services**; Services are the only ViewModel-facing API. Constructor `@Inject` everywhere; `common/di/` modules only for externals (database, Retrofit, APIs).
