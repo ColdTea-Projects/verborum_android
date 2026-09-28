@@ -33,6 +33,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavDestination.Companion.hierarchy
+import androidx.navigation.NavGraph
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -220,6 +222,13 @@ fun VerborumNavigationBar(navController: NavHostController) {
         val currentDestination = navBackStackEntry?.destination
         // The first tab is home — the same list that draws the bar defines where a switch pops to.
         val homeRoute = screenGroups.first().route
+        // Pop target: the home tab's start *screen*, never its graph. Popping to a graph leaves its
+        // graph entry last on the stack, and navigating into another tab's graph then discards it as
+        // orphaned — the next switch back finds nothing to pop, and restoreState crashes rebuilding
+        // the home screen from inside the other tab.
+        val homeStartId = navController.graph.findNode(homeRoute)
+            ?.let { (it as? NavGraph)?.findStartDestination() ?: it }
+            ?.id
 
         screenGroups.forEach { group ->
             NavigationBarItem(
@@ -234,13 +243,15 @@ fun VerborumNavigationBar(navController: NavHostController) {
                 onClick = {
                     navController.navigate(group.route) {
                         // Pop back to the home tab so switching tabs does not stack graphs on the
-                        // back stack. Deliberately the home tab's route rather than the graph's
-                        // start destination: on a first run the graph starts at the welcome
+                        // back stack. Deliberately the home tab's start screen rather than the root
+                        // graph's start destination: on a first run the root starts at the welcome
                         // screen, which is popped inclusively once the tour ends, so popping up
                         // to it would match nothing on the back stack — leaving every visited tab
                         // stacked and saveState/restoreState below never engaging.
-                        popUpTo(homeRoute) {
-                            saveState = true
+                        homeStartId?.let {
+                            popUpTo(it) {
+                                saveState = true
+                            }
                         }
                         // Avoid multiple copies of the same destination when
                         // reselecting the same item
