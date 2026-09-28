@@ -3,7 +3,6 @@
     <!--String-->
     <string name="dictionaryListScreenHeader">Bibliotheca</string>
     <string name="dictionaryListScreenSubtitle">Vos dictionnaires</string>
-    <string name="dictionaryLanguagePair">%1$s vers %2$s</string>
     <string name="dictionaryDetailsScreenTest">Test</string>
     <string name="dictionaryDetailsScreenSelf">Entraînement libre</string>
     <string name="dictionaryDetailsScreenWordListHeader">Liste de mots</string>
@@ -115,25 +114,6 @@
     <string name="welcomeScreenTitlePractice">Entraînez-vous d\'un glissement</string>
     <string name="welcomeScreenDescriptionPractice">En entraînement libre, touchez une carte pour révéler la traduction. Glissez vers la droite si vous connaissez le mot, vers la gauche s\'il vous faut plus de pratique.</string>
     <string name="welcomeScreenDone">J\'ai terminé</string>
-    <string name="languageEnglish">Anglais</string>
-    <string name="languageGerman">Allemand</string>
-    <string name="languageFrench">Français</string>
-    <string name="languageSpanish">Espagnol</string>
-    <string name="languageItalian">Italien</string>
-    <string name="languagePortuguese">Portugais</string>
-    <string name="languageDutch">Néerlandais</string>
-    <string name="languageLithuanian">Lituanien</string>
-    <string name="languageTurkish">Turc</string>
-    <string name="languageAzerbaijani">Azerbaïdjanais</string>
-    <string name="languagePolish">Polonais</string>
-    <string name="languageUkrainian">Ukrainien</string>
-    <string name="languageRussian">Russe</string>
-    <string name="languageGreek">Grec</string>
-    <string name="languageArabic">Arabe</string>
-    <string name="languageFarsi">Persan</string>
-    <string name="languageJapanese">Japonais</string>
-    <string name="languageChinese">Chinois</string>
-    <string name="languageKorean">Coréen</string>
     <string name="createWordScreenReadingLabel">Lecture</string>
     <string name="createWordScreenAspectLabel">Aspect</string>
     <string name="createWordScreenRootLabel">Racine</string>
@@ -152,11 +132,8 @@
     <string name="dictionaryDetailsScreenNoWordsToPractice">Ajoutez d\'abord un mot — il n\'y a rien à pratiquer</string>
     <string name="dictionaryDetailsScreenNotEnoughWordsForTest">Un test nécessite au moins 4 mots dans cette paire de langues</string>
     <string name="offlineBannerMessage">Vous êtes hors ligne — les modifications seront synchronisées à la reconnexion</string>
-    <string name="errorScreenMessage">Une erreur s’est produite</string>
-    <string name="errorRetry">Réessayer</string>
     <string name="errorSaveFailed">Échec de l’enregistrement — vérifiez votre connexion et réessayez</string>
     <string name="errorDeleteFailed">Échec de la suppression — veuillez réessayer</string>
-    <string name="errorScreenTitle">Erreur</string>
     <string name="testScreenTitle">Mode test</string>
     <string name="testQuestionProgress">Question %1$d sur %2$d</string>
     <string name="testCompleteTitle">Test terminé</string>
@@ -194,9 +171,5 @@
     <plurals name="dictionaryDetailsScreenWordListCount">
         <item quantity="one">%1$d mot dans le dictionnaire</item>
         <item quantity="other">%1$d mots dans le dictionnaire</item>
-    </plurals>
-    <plurals name="dictionaryListScreenWordCount">
-        <item quantity="one">%1$d mot</item>
-        <item quantity="other">%1$d mots</item>
     </plurals>
 </resources>

@@ -3,7 +3,6 @@
     <!--String-->
     <string name="dictionaryListScreenHeader">Bibliotheca</string>
     <string name="dictionaryListScreenSubtitle">Τα λεξικά σας</string>
-    <string name="dictionaryLanguagePair">%1$s → %2$s</string>
     <string name="dictionaryDetailsScreenTest">Τεστ</string>
     <string name="dictionaryDetailsScreenSelf">Αυτοεξάσκηση</string>
     <string name="dictionaryDetailsScreenWordListHeader">Λίστα λέξεων</string>
@@ -115,25 +114,6 @@
     <string name="welcomeScreenTitlePractice">Εξασκηθείτε με μια κίνηση</string>
     <string name="welcomeScreenDescriptionPractice">Στην αυτοεξάσκηση, πατήστε μια κάρτα για να αποκαλύψετε τη μετάφραση. Σύρετε δεξιά αν ξέρετε τη λέξη, αριστερά αν χρειάζεστε περισσότερη εξάσκηση.</string>
     <string name="welcomeScreenDone">Τέλος</string>
-    <string name="languageEnglish">Αγγλικά</string>
-    <string name="languageGerman">Γερμανικά</string>
-    <string name="languageFrench">Γαλλικά</string>
-    <string name="languageSpanish">Ισπανικά</string>
-    <string name="languageItalian">Ιταλικά</string>
-    <string name="languagePortuguese">Πορτογαλικά</string>
-    <string name="languageDutch">Ολλανδικά</string>
-    <string name="languageLithuanian">Λιθουανικά</string>
-    <string name="languageTurkish">Τουρκικά</string>
-    <string name="languageAzerbaijani">Αζερμπαϊτζανικά</string>
-    <string name="languagePolish">Πολωνικά</string>
-    <string name="languageUkrainian">Ουκρανικά</string>
-    <string name="languageRussian">Ρωσικά</string>
-    <string name="languageGreek">Ελληνικά</string>
-    <string name="languageArabic">Αραβικά</string>
-    <string name="languageFarsi">Περσικά</string>
-    <string name="languageJapanese">Ιαπωνικά</string>
-    <string name="languageChinese">Κινεζικά</string>
-    <string name="languageKorean">Κορεατικά</string>
     <string name="createWordScreenReadingLabel">Ανάγνωση</string>
     <string name="createWordScreenAspectLabel">Ρηματική όψη</string>
     <string name="createWordScreenRootLabel">Ρίζα</string>
@@ -152,11 +132,8 @@
     <string name="dictionaryDetailsScreenNoWordsToPractice">Προσθέστε πρώτα μια λέξη — δεν υπάρχει τίποτα για εξάσκηση</string>
     <string name="dictionaryDetailsScreenNotEnoughWordsForTest">Ένα τεστ χρειάζεται τουλάχιστον 4 λέξεις σε αυτό το ζεύγος γλωσσών</string>
     <string name="offlineBannerMessage">Είστε εκτός σύνδεσης — οι αλλαγές θα συγχρονιστούν μόλις επανασυνδεθείτε</string>
-    <string name="errorScreenMessage">Κάτι πήγε στραβά</string>
-    <string name="errorRetry">Επανάληψη</string>
     <string name="errorSaveFailed">Αποτυχία αποθήκευσης — ελέγξτε τη σύνδεσή σας και δοκιμάστε ξανά</string>
     <string name="errorDeleteFailed">Αποτυχία διαγραφής — δοκιμάστε ξανά</string>
-    <string name="errorScreenTitle">Σφάλμα</string>
     <string name="testScreenTitle">Λειτουργία τεστ</string>
     <string name="testQuestionProgress">Ερώτηση %1$d από %2$d</string>
     <string name="testCompleteTitle">Το τεστ ολοκληρώθηκε</string>
@@ -194,9 +171,5 @@
     <plurals name="dictionaryDetailsScreenWordListCount">
         <item quantity="one">%1$d λέξη στο λεξικό</item>
         <item quantity="other">%1$d λέξεις στο λεξικό</item>
-    </plurals>
-    <plurals name="dictionaryListScreenWordCount">
-        <item quantity="one">%1$d λέξη</item>
-        <item quantity="other">%1$d λέξεις</item>
     </plurals>
 </resources>

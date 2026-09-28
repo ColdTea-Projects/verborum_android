@@ -1,22 +1,32 @@
 package de.coldtea.verborum.app.navigation
 
-import androidx.compose.ui.res.stringResource
+import androidx.compose.runtime.LaunchedEffect
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
-import de.coldtea.verborum.core.R as CoreR
-import de.coldtea.verborum.core.ui.RegisterTopBar
-import de.coldtea.verborum.forum.marketplace.ui.ForumMainScreen
+import de.coldtea.verborum.forum.marketplace.ui.forumdictionarydetails.ForumDictionaryDetailsScreen
+import de.coldtea.verborum.forum.marketplace.ui.forumdictionarydetails.ForumDictionaryDetailsViewModel
+import de.coldtea.verborum.forum.marketplace.ui.forumdictionarylist.ForumDictionaryListScreen
 
+// Forum is a tab root; the screen registers its own title/subtitle (no back button).
 fun NavGraphBuilder.insertForumMain(navController: NavHostController) = composable(
-    de.coldtea.verborum.app.navigation.SCREEN_FORUM_MAIN_SCREEN
+    SCREEN_FORUM_MAIN_SCREEN
 ) {
-    // Forum is a tab root — title/subtitle only, no back button. The title is the product name and
-    // stays literal; the subtitle is prose and is translated.
-    RegisterTopBar(
-        title = "Forum",
-        subtitle = stringResource(CoreR.string.forumComingSoon),
-        showBackButton = false,
+    ForumDictionaryListScreen(
+        onDictionaryClick = { dictionaryId ->
+            navController.navigate("$SCREEN_FORUM_DICTIONARY_DETAILS/$dictionaryId")
+        },
     )
-    ForumMainScreen()
+}
+
+fun NavGraphBuilder.insertForumDictionaryDetails() = composable(
+    "$SCREEN_FORUM_DICTIONARY_DETAILS/{dictionaryId}"
+) { navBackStackEntry ->
+    val viewModel = hiltViewModel<ForumDictionaryDetailsViewModel>()
+    val dictionaryId: String = navBackStackEntry.arguments?.getString("dictionaryId").orEmpty()
+
+    LaunchedEffect(dictionaryId) { viewModel.init(dictionaryId) }
+
+    ForumDictionaryDetailsScreen(viewModel = viewModel)
 }

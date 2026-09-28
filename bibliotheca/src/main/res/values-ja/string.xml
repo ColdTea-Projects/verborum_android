@@ -3,7 +3,6 @@
     <!--String-->
     <string name="dictionaryListScreenHeader">Bibliotheca</string>
     <string name="dictionaryListScreenSubtitle">あなたの辞書</string>
-    <string name="dictionaryLanguagePair">%1$sから%2$sへ</string>
     <string name="dictionaryDetailsScreenTest">テスト</string>
     <string name="dictionaryDetailsScreenSelf">セルフ練習</string>
     <string name="dictionaryDetailsScreenWordListHeader">単語リスト</string>
@@ -115,25 +114,6 @@
     <string name="welcomeScreenTitlePractice">スワイプで練習</string>
     <string name="welcomeScreenDescriptionPractice">セルフ練習では、カードをタップすると訳が表示されます。単語を知っていれば右に、もっと練習が必要なら左にスワイプします。</string>
     <string name="welcomeScreenDone">完了</string>
-    <string name="languageEnglish">英語</string>
-    <string name="languageGerman">ドイツ語</string>
-    <string name="languageFrench">フランス語</string>
-    <string name="languageSpanish">スペイン語</string>
-    <string name="languageItalian">イタリア語</string>
-    <string name="languagePortuguese">ポルトガル語</string>
-    <string name="languageDutch">オランダ語</string>
-    <string name="languageLithuanian">リトアニア語</string>
-    <string name="languageTurkish">トルコ語</string>
-    <string name="languageAzerbaijani">アゼルバイジャン語</string>
-    <string name="languagePolish">ポーランド語</string>
-    <string name="languageUkrainian">ウクライナ語</string>
-    <string name="languageRussian">ロシア語</string>
-    <string name="languageGreek">ギリシャ語</string>
-    <string name="languageArabic">アラビア語</string>
-    <string name="languageFarsi">ペルシア語</string>
-    <string name="languageJapanese">日本語</string>
-    <string name="languageChinese">中国語</string>
-    <string name="languageKorean">韓国語</string>
     <string name="createWordScreenReadingLabel">読み</string>
     <string name="createWordScreenAspectLabel">相（アスペクト）</string>
     <string name="createWordScreenRootLabel">語根</string>
@@ -152,11 +132,8 @@
     <string name="dictionaryDetailsScreenNoWordsToPractice">まず単語を追加してください — 練習できるものがありません</string>
     <string name="dictionaryDetailsScreenNotEnoughWordsForTest">テストにはこの言語ペアで少なくとも4語が必要です</string>
     <string name="offlineBannerMessage">オフラインです — 変更は再接続時に同期されます</string>
-    <string name="errorScreenMessage">問題が発生しました</string>
-    <string name="errorRetry">再試行</string>
     <string name="errorSaveFailed">保存できませんでした — 接続を確認してもう一度お試しください</string>
     <string name="errorDeleteFailed">削除できませんでした — もう一度お試しください</string>
-    <string name="errorScreenTitle">エラー</string>
     <string name="testScreenTitle">テストモード</string>
     <string name="testQuestionProgress">問題 %1$d / %2$d</string>
     <string name="testCompleteTitle">テスト完了</string>
@@ -193,8 +170,5 @@
     <!--Plurals-->
     <plurals name="dictionaryDetailsScreenWordListCount">
         <item quantity="other">辞書に%1$d語</item>
-    </plurals>
-    <plurals name="dictionaryListScreenWordCount">
-        <item quantity="other">%1$d語</item>
     </plurals>
 </resources>

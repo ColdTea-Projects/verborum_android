@@ -3,7 +3,6 @@
     <!--String-->
     <string name="dictionaryListScreenHeader">Bibliotheca</string>
     <string name="dictionaryListScreenSubtitle">واژه‌نامه‌های شما</string>
-    <string name="dictionaryLanguagePair">از %1$s به %2$s</string>
     <string name="dictionaryDetailsScreenTest">آزمون</string>
     <string name="dictionaryDetailsScreenSelf">تمرین شخصی</string>
     <string name="dictionaryDetailsScreenWordListHeader">فهرست واژه‌ها</string>
@@ -115,25 +114,6 @@
     <string name="welcomeScreenTitlePractice">با یک کشیدن تمرین کنید</string>
     <string name="welcomeScreenDescriptionPractice">در تمرین شخصی، روی کارت ضربه بزنید تا ترجمه نمایان شود. اگر واژه را می‌دانید به راست بکشید، اگر به تمرین بیشتری نیاز دارید به چپ.</string>
     <string name="welcomeScreenDone">تمام</string>
-    <string name="languageEnglish">انگلیسی</string>
-    <string name="languageGerman">آلمانی</string>
-    <string name="languageFrench">فرانسوی</string>
-    <string name="languageSpanish">اسپانیایی</string>
-    <string name="languageItalian">ایتالیایی</string>
-    <string name="languagePortuguese">پرتغالی</string>
-    <string name="languageDutch">هلندی</string>
-    <string name="languageLithuanian">لیتوانیایی</string>
-    <string name="languageTurkish">ترکی</string>
-    <string name="languageAzerbaijani">آذربایجانی</string>
-    <string name="languagePolish">لهستانی</string>
-    <string name="languageUkrainian">اوکراینی</string>
-    <string name="languageRussian">روسی</string>
-    <string name="languageGreek">یونانی</string>
-    <string name="languageArabic">عربی</string>
-    <string name="languageFarsi">فارسی</string>
-    <string name="languageJapanese">ژاپنی</string>
-    <string name="languageChinese">چینی</string>
-    <string name="languageKorean">کره‌ای</string>
     <string name="createWordScreenReadingLabel">خوانش</string>
     <string name="createWordScreenAspectLabel">نمود</string>
     <string name="createWordScreenRootLabel">ریشه</string>
@@ -152,11 +132,8 @@
     <string name="dictionaryDetailsScreenNoWordsToPractice">ابتدا واژه‌ای بیفزایید — هنوز چیزی برای تمرین نیست</string>
     <string name="dictionaryDetailsScreenNotEnoughWordsForTest">آزمون به دست‌کم ۴ واژه در این جفت زبان نیاز دارد</string>
     <string name="offlineBannerMessage">آفلاین هستید — تغییرات پس از اتصال دوباره همگام‌سازی می‌شوند</string>
-    <string name="errorScreenMessage">مشکلی پیش آمد</string>
-    <string name="errorRetry">تلاش دوباره</string>
     <string name="errorSaveFailed">ذخیره نشد — اتصال خود را بررسی کنید و دوباره تلاش کنید</string>
     <string name="errorDeleteFailed">حذف نشد — لطفاً دوباره تلاش کنید</string>
-    <string name="errorScreenTitle">خطا</string>
     <string name="testScreenTitle">حالت آزمون</string>
     <string name="testQuestionProgress">پرسش %1$d از %2$d</string>
     <string name="testCompleteTitle">آزمون کامل شد</string>
@@ -194,9 +171,5 @@
     <plurals name="dictionaryDetailsScreenWordListCount">
         <item quantity="one">%1$d واژه در واژه‌نامه</item>
         <item quantity="other">%1$d واژه در واژه‌نامه</item>
-    </plurals>
-    <plurals name="dictionaryListScreenWordCount">
-        <item quantity="one">%1$d واژه</item>
-        <item quantity="other">%1$d واژه</item>
     </plurals>
 </resources>

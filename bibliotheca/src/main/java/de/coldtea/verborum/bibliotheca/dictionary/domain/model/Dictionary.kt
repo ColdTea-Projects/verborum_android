@@ -1,6 +1,6 @@
 package de.coldtea.verborum.bibliotheca.dictionary.domain.model
 
-import de.coldtea.verborum.bibliotheca.common.data.api.ApiTimestamp
+import de.coldtea.verborum.core.utils.ApiTimestamp
 import de.coldtea.verborum.bibliotheca.dictionary.data.api.model.DictionaryRequest
 import de.coldtea.verborum.bibliotheca.dictionary.data.db.entity.DictionaryEntity
 import de.coldtea.verborum.bibliotheca.dictionary.ui.dictionarylist.model.DictionaryUi

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="forumListScreenTitle">Forum</string>
+    <string name="forumListScreenSubtitle">Von der Community geteilte Wörterbücher</string>
+    <string name="forumListEmpty">Noch keine geteilten Wörterbücher</string>
+    <string name="forumListLoadError">Die geteilten Wörterbücher konnten nicht geladen werden</string>
+    <string name="forumDownload">Herunterladen</string>
+    <string name="forumPublishedBy">von %1$s</string>
+    <string name="forumUnknownPublisher">Unbekannter Herausgeber</string>
+    <string name="forumDetailsCreator">Ersteller</string>
+    <string name="forumDetailsRating">Bewertung</string>
+    <string name="forumDetailsDownloads">Downloads</string>
+    <string name="forumDetailsNoRating">Noch keine Bewertungen</string>
+    <string name="forumRatingContentDescription">Bewertet mit %1$s von 5</string>
+    <string name="forumMoreOptions">Weitere Optionen</string>
+    <string name="forumDetailsWordListHeader">Wortliste</string>
+</resources>

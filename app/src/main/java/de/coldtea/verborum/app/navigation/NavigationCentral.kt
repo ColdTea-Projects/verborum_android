@@ -117,6 +117,7 @@ fun NavigationCentral(showWelcome: Boolean = false) {
                     }
                     navigation(startDestination = SCREEN_FORUM_MAIN_SCREEN, route = GROUP_FORUM) {
                         insertForumMain(navController)
+                        insertForumDictionaryDetails()
                     }
                     navigation(startDestination = SCREEN_OPTIONS, route = GROUP_OPTIONS) {
                         insertOptions(navController)

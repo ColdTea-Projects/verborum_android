@@ -3,7 +3,6 @@
     <!--String-->
     <string name="dictionaryListScreenHeader">Bibliotheca</string>
     <string name="dictionaryListScreenSubtitle">Deine Wörterbücher</string>
-    <string name="dictionaryLanguagePair">%1$s zu %2$s</string>
     <string name="dictionaryDetailsScreenTest">Test</string>
     <string name="dictionaryDetailsScreenSelf">Selbstübung</string>
     <string name="dictionaryDetailsScreenWordListHeader">Wortliste</string>
@@ -115,25 +114,6 @@
     <string name="welcomeScreenTitlePractice">Übe mit einer Wischbewegung</string>
     <string name="welcomeScreenDescriptionPractice">Tippe beim Selbststudium auf eine Karte, um die Übersetzung aufzudecken. Wische nach rechts, wenn du das Wort kennst, nach links, wenn du mehr Übung brauchst.</string>
     <string name="welcomeScreenDone">Fertig</string>
-    <string name="languageEnglish">Englisch</string>
-    <string name="languageGerman">Deutsch</string>
-    <string name="languageFrench">Französisch</string>
-    <string name="languageSpanish">Spanisch</string>
-    <string name="languageItalian">Italienisch</string>
-    <string name="languagePortuguese">Portugiesisch</string>
-    <string name="languageDutch">Niederländisch</string>
-    <string name="languageLithuanian">Litauisch</string>
-    <string name="languageTurkish">Türkisch</string>
-    <string name="languageAzerbaijani">Aserbaidschanisch</string>
-    <string name="languagePolish">Polnisch</string>
-    <string name="languageUkrainian">Ukrainisch</string>
-    <string name="languageRussian">Russisch</string>
-    <string name="languageGreek">Griechisch</string>
-    <string name="languageArabic">Arabisch</string>
-    <string name="languageFarsi">Persisch</string>
-    <string name="languageJapanese">Japanisch</string>
-    <string name="languageChinese">Chinesisch</string>
-    <string name="languageKorean">Koreanisch</string>
     <string name="createWordScreenReadingLabel">Lesung</string>
     <string name="createWordScreenAspectLabel">Aspekt</string>
     <string name="createWordScreenRootLabel">Wurzel</string>
@@ -152,11 +132,8 @@
     <string name="dictionaryDetailsScreenNoWordsToPractice">Füge zuerst ein Wort hinzu — es gibt noch nichts zu üben</string>
     <string name="dictionaryDetailsScreenNotEnoughWordsForTest">Ein Test braucht mindestens 4 Wörter in diesem Sprachpaar</string>
     <string name="offlineBannerMessage">Du bist offline — Änderungen werden synchronisiert, sobald du wieder verbunden bist</string>
-    <string name="errorScreenMessage">Etwas ist schiefgelaufen</string>
-    <string name="errorRetry">Wiederholen</string>
     <string name="errorSaveFailed">Speichern fehlgeschlagen — prüfe deine Verbindung und versuche es erneut</string>
     <string name="errorDeleteFailed">Löschen fehlgeschlagen — bitte versuche es erneut</string>
-    <string name="errorScreenTitle">Fehler</string>
     <string name="testScreenTitle">Testmodus</string>
     <string name="testQuestionProgress">Frage %1$d von %2$d</string>
     <string name="testCompleteTitle">Test abgeschlossen</string>
@@ -194,9 +171,5 @@
     <plurals name="dictionaryDetailsScreenWordListCount">
         <item quantity="one">%1$d Wort im Wörterbuch</item>
         <item quantity="other">%1$d Wörter im Wörterbuch</item>
-    </plurals>
-    <plurals name="dictionaryListScreenWordCount">
-        <item quantity="one">%1$d Wort</item>
-        <item quantity="other">%1$d Wörter</item>
     </plurals>
 </resources>

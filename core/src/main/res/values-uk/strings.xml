@@ -11,5 +11,33 @@
     <string name="optionsLanguageSystemDefault">Системна за замовчуванням</string>
     <string name="optionsLogout">Вийти</string>
     <string name="topBarBack">Назад</string>
-    <string name="forumComingSoon">Незабаром</string>
+    <string name="dictionaryLanguagePair">%1$s → %2$s</string>
+    <string name="errorScreenMessage">Щось пішло не так</string>
+    <string name="errorRetry">Повторити спробу</string>
+    <string name="errorScreenTitle">Помилка</string>
+    <string name="languageEnglish">Англійська</string>
+    <string name="languageGerman">Німецька</string>
+    <string name="languageFrench">Французька</string>
+    <string name="languageSpanish">Іспанська</string>
+    <string name="languageItalian">Італійська</string>
+    <string name="languagePortuguese">Португальська</string>
+    <string name="languageDutch">Нідерландська</string>
+    <string name="languageLithuanian">Литовська</string>
+    <string name="languageTurkish">Турецька</string>
+    <string name="languageAzerbaijani">Азербайджанська</string>
+    <string name="languagePolish">Польська</string>
+    <string name="languageUkrainian">Українська</string>
+    <string name="languageRussian">Російська</string>
+    <string name="languageGreek">Грецька</string>
+    <string name="languageArabic">Арабська</string>
+    <string name="languageFarsi">Перська</string>
+    <string name="languageJapanese">Японська</string>
+    <string name="languageChinese">Китайська</string>
+    <string name="languageKorean">Корейська</string>
+    <plurals name="dictionaryListScreenWordCount">
+        <item quantity="one">%1$d слово</item>
+        <item quantity="few">%1$d слова</item>
+        <item quantity="many">%1$d слів</item>
+        <item quantity="other">%1$d слова</item>
+    </plurals>
 </resources>

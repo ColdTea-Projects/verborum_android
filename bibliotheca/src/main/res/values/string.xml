@@ -3,7 +3,6 @@
     <!--String-->
     <string name="dictionaryListScreenHeader">Bibliotheca</string>
     <string name="dictionaryListScreenSubtitle">Your dictionaries</string>
-    <string name="dictionaryLanguagePair">%1$s to %2$s</string>
     <string name="dictionaryDetailsScreenTest">Test</string>
     <string name="dictionaryDetailsScreenSelf">Self Practice</string>
     <string name="dictionaryDetailsScreenWordListHeader">Word List</string>
@@ -115,25 +114,6 @@
     <string name="welcomeScreenTitlePractice">Practice with a swipe</string>
     <string name="welcomeScreenDescriptionPractice">In self practice, tap a card to reveal the translation. Swipe right when you know the word, swipe left when you need more practice.</string>
     <string name="welcomeScreenDone">I am done</string>
-    <string name="languageEnglish">English</string>
-    <string name="languageGerman">German</string>
-    <string name="languageFrench">French</string>
-    <string name="languageSpanish">Spanish</string>
-    <string name="languageItalian">Italian</string>
-    <string name="languagePortuguese">Portuguese</string>
-    <string name="languageDutch">Dutch</string>
-    <string name="languageLithuanian">Lithuanian</string>
-    <string name="languageTurkish">Turkish</string>
-    <string name="languageAzerbaijani">Azerbaijani</string>
-    <string name="languagePolish">Polish</string>
-    <string name="languageUkrainian">Ukrainian</string>
-    <string name="languageRussian">Russian</string>
-    <string name="languageGreek">Greek</string>
-    <string name="languageArabic">Arabic</string>
-    <string name="languageFarsi">Farsi</string>
-    <string name="languageJapanese">Japanese</string>
-    <string name="languageChinese">Chinese</string>
-    <string name="languageKorean">Korean</string>
     <string name="createWordScreenReadingLabel">Reading</string>
     <string name="createWordScreenAspectLabel">Aspect</string>
     <string name="createWordScreenRootLabel">Root</string>
@@ -152,11 +132,8 @@
     <string name="dictionaryDetailsScreenNoWordsToPractice">Add a word first — there is nothing to practice yet</string>
     <string name="dictionaryDetailsScreenNotEnoughWordsForTest">A test needs at least 4 words in this language pair</string>
     <string name="offlineBannerMessage">You\'re offline — changes will sync when you reconnect</string>
-    <string name="errorScreenMessage">Something went wrong</string>
-    <string name="errorRetry">Retry</string>
     <string name="errorSaveFailed">Couldn’t save — check your connection and try again</string>
     <string name="errorDeleteFailed">Couldn’t delete — please try again</string>
-    <string name="errorScreenTitle">Error</string>
     <string name="testScreenTitle">Test Mode</string>
     <string name="testQuestionProgress">Question %1$d of %2$d</string>
     <string name="testCompleteTitle">Test Complete</string>
@@ -194,9 +171,5 @@
     <plurals name="dictionaryDetailsScreenWordListCount">
         <item quantity="one">%1$d word in the dictionary</item>
         <item quantity="other">%1$d words in the dictionary</item>
-    </plurals>
-    <plurals name="dictionaryListScreenWordCount">
-        <item quantity="one">%1$d word</item>
-        <item quantity="other">%1$d words</item>
     </plurals>
 </resources>

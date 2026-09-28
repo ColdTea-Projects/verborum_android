@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="forumListScreenTitle">Forum</string>
+    <string name="forumListScreenSubtitle">İcma tərəfindən paylaşılan lüğətlər</string>
+    <string name="forumListEmpty">Hələ paylaşılan lüğət yoxdur</string>
+    <string name="forumListLoadError">Paylaşılan lüğətləri yükləmək mümkün olmadı</string>
+    <string name="forumDownload">Yüklə</string>
+    <string name="forumPublishedBy">%1$s tərəfindən</string>
+    <string name="forumUnknownPublisher">Naməlum naşir</string>
+    <string name="forumDetailsCreator">Müəllif</string>
+    <string name="forumDetailsRating">Reytinq</string>
+    <string name="forumDetailsDownloads">Yükləmələr</string>
+    <string name="forumDetailsNoRating">Hələ qiymətləndirmə yoxdur</string>
+    <string name="forumRatingContentDescription">5 üzərindən %1$s qiymət</string>
+    <string name="forumMoreOptions">Digər seçimlər</string>
+    <string name="forumDetailsWordListHeader">Söz siyahısı</string>
+</resources>

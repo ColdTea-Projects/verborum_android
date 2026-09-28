@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="forumListScreenTitle">Forum</string>
+    <string name="forumListScreenSubtitle">社区分享的词典</string>
+    <string name="forumListEmpty">暂无共享词典</string>
+    <string name="forumListLoadError">无法加载共享词典</string>
+    <string name="forumDownload">下载</string>
+    <string name="forumPublishedBy">作者：%1$s</string>
+    <string name="forumUnknownPublisher">未知发布者</string>
+    <string name="forumDetailsCreator">创建者</string>
+    <string name="forumDetailsRating">评分</string>
+    <string name="forumDetailsDownloads">下载量</string>
+    <string name="forumDetailsNoRating">暂无评分</string>
+    <string name="forumRatingContentDescription">评分 %1$s（满分 5）</string>
+    <string name="forumMoreOptions">更多选项</string>
+    <string name="forumDetailsWordListHeader">单词列表</string>
+</resources>

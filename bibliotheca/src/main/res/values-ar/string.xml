@@ -3,7 +3,6 @@
     <!--String-->
     <string name="dictionaryListScreenHeader">Bibliotheca</string>
     <string name="dictionaryListScreenSubtitle">قواميسك</string>
-    <string name="dictionaryLanguagePair">من %1$s إلى %2$s</string>
     <string name="dictionaryDetailsScreenTest">اختبار</string>
     <string name="dictionaryDetailsScreenSelf">تدريب ذاتي</string>
     <string name="dictionaryDetailsScreenWordListHeader">قائمة الكلمات</string>
@@ -115,25 +114,6 @@
     <string name="welcomeScreenTitlePractice">تدرّب بحركة سحب واحدة</string>
     <string name="welcomeScreenDescriptionPractice">في التدريب الذاتي، انقر على البطاقة لإظهار الترجمة. اسحب لليمين إذا كنت تعرف الكلمة، ولليسار إذا كنت بحاجة إلى مزيد من التدريب.</string>
     <string name="welcomeScreenDone">تم</string>
-    <string name="languageEnglish">الإنجليزية</string>
-    <string name="languageGerman">الألمانية</string>
-    <string name="languageFrench">الفرنسية</string>
-    <string name="languageSpanish">الإسبانية</string>
-    <string name="languageItalian">الإيطالية</string>
-    <string name="languagePortuguese">البرتغالية</string>
-    <string name="languageDutch">الهولندية</string>
-    <string name="languageLithuanian">الليتوانية</string>
-    <string name="languageTurkish">التركية</string>
-    <string name="languageAzerbaijani">الأذربيجانية</string>
-    <string name="languagePolish">البولندية</string>
-    <string name="languageUkrainian">الأوكرانية</string>
-    <string name="languageRussian">الروسية</string>
-    <string name="languageGreek">اليونانية</string>
-    <string name="languageArabic">العربية</string>
-    <string name="languageFarsi">الفارسية</string>
-    <string name="languageJapanese">اليابانية</string>
-    <string name="languageChinese">الصينية</string>
-    <string name="languageKorean">الكورية</string>
     <string name="createWordScreenReadingLabel">القراءة</string>
     <string name="createWordScreenAspectLabel">الجهة (الأسبكت)</string>
     <string name="createWordScreenRootLabel">الجذر</string>
@@ -152,11 +132,8 @@
     <string name="dictionaryDetailsScreenNoWordsToPractice">أضف كلمة أولاً — لا يوجد شيء للتدرب عليه بعد</string>
     <string name="dictionaryDetailsScreenNotEnoughWordsForTest">يحتاج الاختبار إلى 4 كلمات على الأقل في زوج اللغات هذا</string>
     <string name="offlineBannerMessage">أنت غير متصل — ستتم مزامنة التغييرات عند إعادة الاتصال</string>
-    <string name="errorScreenMessage">حدث خطأ ما</string>
-    <string name="errorRetry">إعادة المحاولة</string>
     <string name="errorSaveFailed">تعذّر الحفظ — تحقق من اتصالك وحاول مرة أخرى</string>
     <string name="errorDeleteFailed">تعذّر الحذف — يرجى المحاولة مرة أخرى</string>
-    <string name="errorScreenTitle">خطأ</string>
     <string name="testScreenTitle">وضع الاختبار</string>
     <string name="testQuestionProgress">السؤال %1$d من %2$d</string>
     <string name="testCompleteTitle">اكتمل الاختبار</string>
@@ -198,13 +175,5 @@
         <item quantity="few">%1$d كلمات في القاموس</item>
         <item quantity="many">%1$d كلمة في القاموس</item>
         <item quantity="other">%1$d كلمة في القاموس</item>
-    </plurals>
-    <plurals name="dictionaryListScreenWordCount">
-        <item quantity="zero">%1$d كلمة</item>
-        <item quantity="one">كلمة واحدة</item>
-        <item quantity="two">كلمتان</item>
-        <item quantity="few">%1$d كلمات</item>
-        <item quantity="many">%1$d كلمة</item>
-        <item quantity="other">%1$d كلمة</item>
     </plurals>
 </resources>

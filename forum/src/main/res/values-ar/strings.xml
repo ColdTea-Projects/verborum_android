@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="forumListScreenTitle">Forum</string>
+    <string name="forumListScreenSubtitle">قواميس يشاركها المجتمع</string>
+    <string name="forumListEmpty">لا توجد قواميس مشتركة بعد</string>
+    <string name="forumListLoadError">تعذّر تحميل القواميس المشتركة</string>
+    <string name="forumDownload">تنزيل</string>
+    <string name="forumPublishedBy">بواسطة %1$s</string>
+    <string name="forumUnknownPublisher">ناشر غير معروف</string>
+    <string name="forumDetailsCreator">المنشئ</string>
+    <string name="forumDetailsRating">التقييم</string>
+    <string name="forumDetailsDownloads">التنزيلات</string>
+    <string name="forumDetailsNoRating">لا توجد تقييمات بعد</string>
+    <string name="forumRatingContentDescription">التقييم %1$s من 5</string>
+    <string name="forumMoreOptions">خيارات أخرى</string>
+    <string name="forumDetailsWordListHeader">قائمة الكلمات</string>
+</resources>

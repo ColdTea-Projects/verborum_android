@@ -30,7 +30,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import de.coldtea.verborum.bibliotheca.common.ui.model.SupportedLanguage
+import de.coldtea.verborum.core.ui.model.SupportedLanguage
 import de.coldtea.verborum.bibliotheca.common.utils.ResStrings
 import de.coldtea.verborum.bibliotheca.dictionary.ui.createdictionary.composables.LanguageDropdown
 import de.coldtea.verborum.bibliotheca.dictionary.ui.createdictionary.composables.TagSelector

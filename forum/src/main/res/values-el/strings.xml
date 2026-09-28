@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="forumListScreenTitle">Forum</string>
+    <string name="forumListScreenSubtitle">Λεξικά που μοιράζεται η κοινότητα</string>
+    <string name="forumListEmpty">Δεν υπάρχουν ακόμη κοινόχρηστα λεξικά</string>
+    <string name="forumListLoadError">Δεν ήταν δυνατή η φόρτωση των κοινόχρηστων λεξικών</string>
+    <string name="forumDownload">Λήψη</string>
+    <string name="forumPublishedBy">από %1$s</string>
+    <string name="forumUnknownPublisher">Άγνωστος εκδότης</string>
+    <string name="forumDetailsCreator">Δημιουργός</string>
+    <string name="forumDetailsRating">Βαθμολογία</string>
+    <string name="forumDetailsDownloads">Λήψεις</string>
+    <string name="forumDetailsNoRating">Δεν υπάρχουν ακόμη βαθμολογίες</string>
+    <string name="forumRatingContentDescription">Βαθμολογία %1$s στα 5</string>
+    <string name="forumMoreOptions">Περισσότερες επιλογές</string>
+    <string name="forumDetailsWordListHeader">Λίστα λέξεων</string>
+</resources>

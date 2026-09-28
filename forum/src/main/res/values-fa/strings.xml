@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="forumListScreenTitle">Forum</string>
+    <string name="forumListScreenSubtitle">واژه‌نامه‌هایی که جامعه به اشتراک گذاشته است</string>
+    <string name="forumListEmpty">هنوز واژه‌نامهٔ اشتراکی‌ای وجود ندارد</string>
+    <string name="forumListLoadError">بارگیری واژه‌نامه‌های اشتراکی ممکن نشد</string>
+    <string name="forumDownload">دانلود</string>
+    <string name="forumPublishedBy">از %1$s</string>
+    <string name="forumUnknownPublisher">ناشر ناشناس</string>
+    <string name="forumDetailsCreator">سازنده</string>
+    <string name="forumDetailsRating">امتیاز</string>
+    <string name="forumDetailsDownloads">دانلودها</string>
+    <string name="forumDetailsNoRating">هنوز امتیازی ثبت نشده</string>
+    <string name="forumRatingContentDescription">امتیاز %1$s از 5</string>
+    <string name="forumMoreOptions">گزینه‌های بیشتر</string>
+    <string name="forumDetailsWordListHeader">فهرست واژه‌ها</string>
+</resources>

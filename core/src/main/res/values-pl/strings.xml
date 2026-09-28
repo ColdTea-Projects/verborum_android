@@ -11,5 +11,33 @@
     <string name="optionsLanguageSystemDefault">Domyślny systemowy</string>
     <string name="optionsLogout">Wyloguj się</string>
     <string name="topBarBack">Wstecz</string>
-    <string name="forumComingSoon">Wkrótce</string>
+    <string name="dictionaryLanguagePair">%1$s → %2$s</string>
+    <string name="errorScreenMessage">Coś poszło nie tak</string>
+    <string name="errorRetry">Spróbuj ponownie</string>
+    <string name="errorScreenTitle">Błąd</string>
+    <string name="languageEnglish">Angielski</string>
+    <string name="languageGerman">Niemiecki</string>
+    <string name="languageFrench">Francuski</string>
+    <string name="languageSpanish">Hiszpański</string>
+    <string name="languageItalian">Włoski</string>
+    <string name="languagePortuguese">Portugalski</string>
+    <string name="languageDutch">Niderlandzki</string>
+    <string name="languageLithuanian">Litewski</string>
+    <string name="languageTurkish">Turecki</string>
+    <string name="languageAzerbaijani">Azerski</string>
+    <string name="languagePolish">Polski</string>
+    <string name="languageUkrainian">Ukraiński</string>
+    <string name="languageRussian">Rosyjski</string>
+    <string name="languageGreek">Grecki</string>
+    <string name="languageArabic">Arabski</string>
+    <string name="languageFarsi">Perski</string>
+    <string name="languageJapanese">Japoński</string>
+    <string name="languageChinese">Chiński</string>
+    <string name="languageKorean">Koreański</string>
+    <plurals name="dictionaryListScreenWordCount">
+        <item quantity="one">%1$d słowo</item>
+        <item quantity="few">%1$d słowa</item>
+        <item quantity="many">%1$d słów</item>
+        <item quantity="other">%1$d słowa</item>
+    </plurals>
 </resources>

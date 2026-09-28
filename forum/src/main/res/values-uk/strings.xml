@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="forumListScreenTitle">Forum</string>
+    <string name="forumListScreenSubtitle">Словники, якими поділилася спільнота</string>
+    <string name="forumListEmpty">Спільних словників ще немає</string>
+    <string name="forumListLoadError">Не вдалося завантажити спільні словники</string>
+    <string name="forumDownload">Завантажити</string>
+    <string name="forumPublishedBy">автор: %1$s</string>
+    <string name="forumUnknownPublisher">Невідомий автор</string>
+    <string name="forumDetailsCreator">Автор</string>
+    <string name="forumDetailsRating">Рейтинг</string>
+    <string name="forumDetailsDownloads">Завантаження</string>
+    <string name="forumDetailsNoRating">Ще немає оцінок</string>
+    <string name="forumRatingContentDescription">Оцінка %1$s з 5</string>
+    <string name="forumMoreOptions">Більше параметрів</string>
+    <string name="forumDetailsWordListHeader">Список слів</string>
+</resources>

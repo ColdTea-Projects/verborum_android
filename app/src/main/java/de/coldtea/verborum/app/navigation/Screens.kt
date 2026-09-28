@@ -31,6 +31,7 @@ const val SCREEN_MULTIPLE_CHOCIE = "multipleChoiceScreen"
 
 const val GROUP_FORUM = "groupForum"
 const val SCREEN_FORUM_MAIN_SCREEN = "forumMainScreen"
+const val SCREEN_FORUM_DICTIONARY_DETAILS = "forumDictionaryDetailsScreen"
 
 const val GROUP_OPTIONS = "groupOptions"
 const val SCREEN_OPTIONS = "optionsScreen"

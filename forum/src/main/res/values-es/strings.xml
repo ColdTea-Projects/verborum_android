@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="forumListScreenTitle">Forum</string>
+    <string name="forumListScreenSubtitle">Diccionarios compartidos por la comunidad</string>
+    <string name="forumListEmpty">Aún no hay diccionarios compartidos</string>
+    <string name="forumListLoadError">No se pudieron cargar los diccionarios compartidos</string>
+    <string name="forumDownload">Descargar</string>
+    <string name="forumPublishedBy">por %1$s</string>
+    <string name="forumUnknownPublisher">Editor desconocido</string>
+    <string name="forumDetailsCreator">Creador</string>
+    <string name="forumDetailsRating">Valoración</string>
+    <string name="forumDetailsDownloads">Descargas</string>
+    <string name="forumDetailsNoRating">Aún sin valoraciones</string>
+    <string name="forumRatingContentDescription">Valorado con %1$s de 5</string>
+    <string name="forumMoreOptions">Más opciones</string>
+    <string name="forumDetailsWordListHeader">Lista de palabras</string>
+</resources>

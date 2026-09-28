@@ -30,9 +30,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import de.coldtea.verborum.bibliotheca.common.ui.components.ScreenError
-import de.coldtea.verborum.bibliotheca.common.ui.model.SupportedLanguage
+import de.coldtea.verborum.core.ui.components.ScreenError
+import de.coldtea.verborum.core.ui.model.SupportedLanguage
+import de.coldtea.verborum.bibliotheca.common.utils.CoreResPlurals
 import de.coldtea.verborum.bibliotheca.common.utils.ResPlurals
+import de.coldtea.verborum.bibliotheca.common.utils.CoreResStrings
 import de.coldtea.verborum.bibliotheca.common.utils.ResStrings
 import de.coldtea.verborum.bibliotheca.word.ui.createword.composables.LanguageInputCard
 import de.coldtea.verborum.bibliotheca.word.ui.createword.composables.OtherTypeDropdown
@@ -81,7 +83,7 @@ fun CreateWordScreen(
     when (createWordState) {
         is CreateWordState.Loading -> Unit
         is CreateWordState.Failed -> {
-            RegisterTopBar(title = stringResource(ResStrings.errorScreenTitle), showBackButton = true)
+            RegisterTopBar(title = stringResource(CoreResStrings.errorScreenTitle), showBackButton = true)
             ScreenError(onRetry = viewModel::retry)
         }
         is CreateWordState.Success -> {
@@ -125,7 +127,7 @@ fun CreateWordScreen(
             // Flashes the accent colour and fades back whenever the count moves, so a save
             // registers even though the form itself just quietly clears.
             subtitleHighlight = pluralStringResource(
-                ResPlurals.dictionaryListScreenWordCount,
+                CoreResPlurals.dictionaryListScreenWordCount,
                 dictionary.wordCount,
                 dictionary.wordCount,
             ),

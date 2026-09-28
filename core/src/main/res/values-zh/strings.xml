@@ -11,5 +11,30 @@
     <string name="optionsLanguageSystemDefault">系统默认</string>
     <string name="optionsLogout">退出登录</string>
     <string name="topBarBack">返回</string>
-    <string name="forumComingSoon">敬请期待</string>
+    <string name="dictionaryLanguagePair">%1$s到%2$s</string>
+    <string name="errorScreenMessage">出了点问题</string>
+    <string name="errorRetry">重试</string>
+    <string name="errorScreenTitle">错误</string>
+    <string name="languageEnglish">英语</string>
+    <string name="languageGerman">德语</string>
+    <string name="languageFrench">法语</string>
+    <string name="languageSpanish">西班牙语</string>
+    <string name="languageItalian">意大利语</string>
+    <string name="languagePortuguese">葡萄牙语</string>
+    <string name="languageDutch">荷兰语</string>
+    <string name="languageLithuanian">立陶宛语</string>
+    <string name="languageTurkish">土耳其语</string>
+    <string name="languageAzerbaijani">阿塞拜疆语</string>
+    <string name="languagePolish">波兰语</string>
+    <string name="languageUkrainian">乌克兰语</string>
+    <string name="languageRussian">俄语</string>
+    <string name="languageGreek">希腊语</string>
+    <string name="languageArabic">阿拉伯语</string>
+    <string name="languageFarsi">波斯语</string>
+    <string name="languageJapanese">日语</string>
+    <string name="languageChinese">中文</string>
+    <string name="languageKorean">韩语</string>
+    <plurals name="dictionaryListScreenWordCount">
+        <item quantity="other">%1$d个单词</item>
+    </plurals>
 </resources>

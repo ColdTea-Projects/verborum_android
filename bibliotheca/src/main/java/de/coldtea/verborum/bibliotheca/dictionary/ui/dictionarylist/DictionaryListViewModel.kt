@@ -3,7 +3,7 @@ package de.coldtea.verborum.bibliotheca.dictionary.ui.dictionarylist
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import de.coldtea.verborum.bibliotheca.common.domain.SyncService
-import de.coldtea.verborum.bibliotheca.common.ui.model.SupportedLanguage
+import de.coldtea.verborum.core.ui.model.SupportedLanguage
 import de.coldtea.verborum.bibliotheca.dictionary.domain.DictionaryService
 import de.coldtea.verborum.bibliotheca.common.utils.ResStrings
 import de.coldtea.verborum.bibliotheca.dictionary.ui.dictionarylist.model.DictionaryListState

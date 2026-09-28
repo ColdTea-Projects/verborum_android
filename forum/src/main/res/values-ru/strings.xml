@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="forumListScreenTitle">Forum</string>
+    <string name="forumListScreenSubtitle">Словари, которыми поделилось сообщество</string>
+    <string name="forumListEmpty">Пока нет общих словарей</string>
+    <string name="forumListLoadError">Не удалось загрузить общие словари</string>
+    <string name="forumDownload">Скачать</string>
+    <string name="forumPublishedBy">автор: %1$s</string>
+    <string name="forumUnknownPublisher">Неизвестный автор</string>
+    <string name="forumDetailsCreator">Автор</string>
+    <string name="forumDetailsRating">Рейтинг</string>
+    <string name="forumDetailsDownloads">Загрузки</string>
+    <string name="forumDetailsNoRating">Пока нет оценок</string>
+    <string name="forumRatingContentDescription">Оценка %1$s из 5</string>
+    <string name="forumMoreOptions">Ещё</string>
+    <string name="forumDetailsWordListHeader">Список слов</string>
+</resources>

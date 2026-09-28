@@ -11,5 +11,31 @@
     <string name="optionsLanguageSystemDefault">پیش‌فرض سیستم</string>
     <string name="optionsLogout">خروج</string>
     <string name="topBarBack">بازگشت</string>
-    <string name="forumComingSoon">به‌زودی</string>
+    <string name="dictionaryLanguagePair">از %1$s به %2$s</string>
+    <string name="errorScreenMessage">مشکلی پیش آمد</string>
+    <string name="errorRetry">تلاش دوباره</string>
+    <string name="errorScreenTitle">خطا</string>
+    <string name="languageEnglish">انگلیسی</string>
+    <string name="languageGerman">آلمانی</string>
+    <string name="languageFrench">فرانسوی</string>
+    <string name="languageSpanish">اسپانیایی</string>
+    <string name="languageItalian">ایتالیایی</string>
+    <string name="languagePortuguese">پرتغالی</string>
+    <string name="languageDutch">هلندی</string>
+    <string name="languageLithuanian">لیتوانیایی</string>
+    <string name="languageTurkish">ترکی</string>
+    <string name="languageAzerbaijani">آذربایجانی</string>
+    <string name="languagePolish">لهستانی</string>
+    <string name="languageUkrainian">اوکراینی</string>
+    <string name="languageRussian">روسی</string>
+    <string name="languageGreek">یونانی</string>
+    <string name="languageArabic">عربی</string>
+    <string name="languageFarsi">فارسی</string>
+    <string name="languageJapanese">ژاپنی</string>
+    <string name="languageChinese">چینی</string>
+    <string name="languageKorean">کره‌ای</string>
+    <plurals name="dictionaryListScreenWordCount">
+        <item quantity="one">%1$d واژه</item>
+        <item quantity="other">%1$d واژه</item>
+    </plurals>
 </resources>

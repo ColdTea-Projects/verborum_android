@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="forumListScreenTitle">Forum</string>
+    <string name="forumListScreenSubtitle">Woordenboeken gedeeld door de community</string>
+    <string name="forumListEmpty">Nog geen gedeelde woordenboeken</string>
+    <string name="forumListLoadError">De gedeelde woordenboeken konden niet worden geladen</string>
+    <string name="forumDownload">Downloaden</string>
+    <string name="forumPublishedBy">door %1$s</string>
+    <string name="forumUnknownPublisher">Onbekende uitgever</string>
+    <string name="forumDetailsCreator">Maker</string>
+    <string name="forumDetailsRating">Beoordeling</string>
+    <string name="forumDetailsDownloads">Downloads</string>
+    <string name="forumDetailsNoRating">Nog geen beoordelingen</string>
+    <string name="forumRatingContentDescription">Beoordeeld met %1$s van de 5</string>
+    <string name="forumMoreOptions">Meer opties</string>
+    <string name="forumDetailsWordListHeader">Woordenlijst</string>
+</resources>

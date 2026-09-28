@@ -3,7 +3,6 @@
     <!--String-->
     <string name="dictionaryListScreenHeader">Bibliotheca</string>
     <string name="dictionaryListScreenSubtitle">Lüğətləriniz</string>
-    <string name="dictionaryLanguagePair">%1$s - %2$s</string>
     <string name="dictionaryDetailsScreenTest">Test</string>
     <string name="dictionaryDetailsScreenSelf">Sərbəst məşq</string>
     <string name="dictionaryDetailsScreenWordListHeader">Söz siyahısı</string>
@@ -115,25 +114,6 @@
     <string name="welcomeScreenTitlePractice">Sürüşdürərək məşq edin</string>
     <string name="welcomeScreenDescriptionPractice">Sərbəst məşqdə tərcüməni görmək üçün karta toxunun. Sözü bilirsinizsə sağa, daha çox məşq lazımdırsa sola sürüşdürün.</string>
     <string name="welcomeScreenDone">Bitirdim</string>
-    <string name="languageEnglish">İngiliscə</string>
-    <string name="languageGerman">Almanca</string>
-    <string name="languageFrench">Fransızca</string>
-    <string name="languageSpanish">İspanca</string>
-    <string name="languageItalian">İtalyanca</string>
-    <string name="languagePortuguese">Portuqalca</string>
-    <string name="languageDutch">Hollandca</string>
-    <string name="languageLithuanian">Litva dili</string>
-    <string name="languageTurkish">Türkcə</string>
-    <string name="languageAzerbaijani">Azərbaycanca</string>
-    <string name="languagePolish">Polyak dili</string>
-    <string name="languageUkrainian">Ukrayna dili</string>
-    <string name="languageRussian">Rusca</string>
-    <string name="languageGreek">Yunanca</string>
-    <string name="languageArabic">Ərəbcə</string>
-    <string name="languageFarsi">Farsca</string>
-    <string name="languageJapanese">Yaponca</string>
-    <string name="languageChinese">Çincə</string>
-    <string name="languageKorean">Koreyaca</string>
     <string name="createWordScreenReadingLabel">Oxunuş</string>
     <string name="createWordScreenAspectLabel">Görünüş</string>
     <string name="createWordScreenRootLabel">Kök</string>
@@ -152,11 +132,8 @@
     <string name="dictionaryDetailsScreenNoWordsToPractice">Əvvəlcə söz əlavə edin — hələ məşq ediləcək bir şey yoxdur</string>
     <string name="dictionaryDetailsScreenNotEnoughWordsForTest">Test üçün bu dil cütündə ən azı 4 söz lazımdır</string>
     <string name="offlineBannerMessage">Oflaynsınız — dəyişikliklər yenidən qoşulduqda sinxronlaşdırılacaq</string>
-    <string name="errorScreenMessage">Nə isə səhv oldu</string>
-    <string name="errorRetry">Yenidən cəhd et</string>
     <string name="errorSaveFailed">Yadda saxlanılmadı — bağlantını yoxlayıb yenidən cəhd et</string>
     <string name="errorDeleteFailed">Silinmədi — zəhmət olmasa yenidən cəhd et</string>
-    <string name="errorScreenTitle">Xəta</string>
     <string name="testScreenTitle">Test rejimi</string>
     <string name="testQuestionProgress">Sual %1$d / %2$d</string>
     <string name="testCompleteTitle">Test tamamlandı</string>
@@ -194,9 +171,5 @@
     <plurals name="dictionaryDetailsScreenWordListCount">
         <item quantity="one">lüğətdə %1$d söz</item>
         <item quantity="other">lüğətdə %1$d söz</item>
-    </plurals>
-    <plurals name="dictionaryListScreenWordCount">
-        <item quantity="one">%1$d söz</item>
-        <item quantity="other">%1$d söz</item>
     </plurals>
 </resources>

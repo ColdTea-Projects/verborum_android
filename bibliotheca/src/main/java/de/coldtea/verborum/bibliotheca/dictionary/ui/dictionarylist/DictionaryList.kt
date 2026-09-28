@@ -44,13 +44,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import de.coldtea.verborum.bibliotheca.common.ui.model.SupportedLanguage
+import de.coldtea.verborum.core.ui.model.SupportedLanguage
 import de.coldtea.verborum.bibliotheca.common.utils.ResDrawables
 import de.coldtea.verborum.bibliotheca.common.utils.ResStrings
 import de.coldtea.verborum.bibliotheca.dictionary.ui.dictionarylist.composables.DeleteDictionaryDialog
 import de.coldtea.verborum.bibliotheca.dictionary.ui.dictionarylist.composables.DictionaryCard
-import de.coldtea.verborum.bibliotheca.common.ui.components.ScreenError
-import de.coldtea.verborum.bibliotheca.dictionary.ui.dictionarylist.composables.DictionaryCardSkeleton
+import de.coldtea.verborum.core.ui.components.ScreenError
+import de.coldtea.verborum.core.ui.components.DictionaryCardSkeleton
 import de.coldtea.verborum.bibliotheca.dictionary.ui.dictionarylist.composables.DictionaryFilterBar
 import de.coldtea.verborum.bibliotheca.dictionary.ui.dictionarylist.composables.DictionarySearchField
 import de.coldtea.verborum.bibliotheca.dictionary.ui.dictionarylist.composables.SelectionBottomSheet

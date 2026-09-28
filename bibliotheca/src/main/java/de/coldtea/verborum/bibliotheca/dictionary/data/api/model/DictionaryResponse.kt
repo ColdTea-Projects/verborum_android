@@ -2,7 +2,7 @@ package de.coldtea.verborum.bibliotheca.dictionary.data.api.model
 
 import android.annotation.SuppressLint
 import androidx.annotation.Keep
-import de.coldtea.verborum.bibliotheca.common.data.api.ApiTimestamp
+import de.coldtea.verborum.core.utils.ApiTimestamp
 import de.coldtea.verborum.bibliotheca.dictionary.domain.model.Dictionary
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

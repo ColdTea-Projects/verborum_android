@@ -11,5 +11,33 @@
     <string name="optionsLanguageSystemDefault">Sistemos numatytoji</string>
     <string name="optionsLogout">Atsijungti</string>
     <string name="topBarBack">Atgal</string>
-    <string name="forumComingSoon">Netrukus</string>
+    <string name="dictionaryLanguagePair">%1$s į %2$s</string>
+    <string name="errorScreenMessage">Kažkas nepavyko</string>
+    <string name="errorRetry">Bandyti dar kartą</string>
+    <string name="errorScreenTitle">Klaida</string>
+    <string name="languageEnglish">Anglų</string>
+    <string name="languageGerman">Vokiečių</string>
+    <string name="languageFrench">Prancūzų</string>
+    <string name="languageSpanish">Ispanų</string>
+    <string name="languageItalian">Italų</string>
+    <string name="languagePortuguese">Portugalų</string>
+    <string name="languageDutch">Olandų</string>
+    <string name="languageLithuanian">Lietuvių</string>
+    <string name="languageTurkish">Turkų</string>
+    <string name="languageAzerbaijani">Azerbaidžaniečių</string>
+    <string name="languagePolish">Lenkų</string>
+    <string name="languageUkrainian">Ukrainiečių</string>
+    <string name="languageRussian">Rusų</string>
+    <string name="languageGreek">Graikų</string>
+    <string name="languageArabic">Arabų</string>
+    <string name="languageFarsi">Persų</string>
+    <string name="languageJapanese">Japonų</string>
+    <string name="languageChinese">Kinų</string>
+    <string name="languageKorean">Korėjiečių</string>
+    <plurals name="dictionaryListScreenWordCount">
+        <item quantity="one">%1$d žodis</item>
+        <item quantity="few">%1$d žodžiai</item>
+        <item quantity="many">%1$d žodžio</item>
+        <item quantity="other">%1$d žodžių</item>
+    </plurals>
 </resources>

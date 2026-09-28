@@ -41,11 +41,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import de.coldtea.verborum.bibliotheca.common.utils.ResDrawables
+import de.coldtea.verborum.bibliotheca.common.utils.CoreResPlurals
 import de.coldtea.verborum.bibliotheca.common.utils.ResPlurals
+import de.coldtea.verborum.bibliotheca.common.utils.CoreResStrings
 import de.coldtea.verborum.bibliotheca.common.utils.ResStrings
-import de.coldtea.verborum.bibliotheca.common.ui.components.ScreenError
+import de.coldtea.verborum.core.ui.components.ScreenError
 import de.coldtea.verborum.bibliotheca.dictionary.ui.dictionarylist.composables.DeleteDictionaryDialog
-import de.coldtea.verborum.bibliotheca.dictionary.ui.dictionarylist.composables.languagePairLabel
+import de.coldtea.verborum.core.ui.components.languagePairLabel
 import de.coldtea.verborum.bibliotheca.word.ui.dictionarydetails.composables.DictionaryTagsText
 import de.coldtea.verborum.bibliotheca.word.ui.dictionarydetails.composables.PracticeModeButton
 import de.coldtea.verborum.bibliotheca.word.ui.dictionarydetails.composables.WordListItem
@@ -95,7 +97,7 @@ fun DictionaryDetailsScreen(
 
             val languagePair = languagePairLabel(dictionary.fromLang, dictionary.toLang)
             val wordCount = pluralStringResource(
-                ResPlurals.dictionaryListScreenWordCount,
+                CoreResPlurals.dictionaryListScreenWordCount,
                 words.size,
                 words.size,
             )
@@ -269,7 +271,7 @@ fun DictionaryDetailsScreen(
 
     // Rendered after (over) the empty column so its opaque background covers it on load failure.
     if (dictionaryDetailState is DictionaryDetailState.Failed) {
-        RegisterTopBar(title = stringResource(ResStrings.errorScreenTitle), showBackButton = true)
+        RegisterTopBar(title = stringResource(CoreResStrings.errorScreenTitle), showBackButton = true)
         ScreenError(onRetry = viewModel::retry)
     }
 }

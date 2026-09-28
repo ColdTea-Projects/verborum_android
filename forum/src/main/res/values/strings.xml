@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="forumListScreenTitle">Forum</string>
+    <string name="forumListScreenSubtitle">Dictionaries shared by the community</string>
+    <string name="forumListEmpty">No shared dictionaries yet</string>
+    <string name="forumListLoadError">Couldn’t load the shared dictionaries</string>
+    <string name="forumDownload">Download</string>
+    <string name="forumPublishedBy">by %1$s</string>
+    <string name="forumUnknownPublisher">Unknown publisher</string>
+    <string name="forumDetailsCreator">Creator</string>
+    <string name="forumDetailsRating">Rating</string>
+    <string name="forumDetailsDownloads">Downloads</string>
+    <string name="forumDetailsNoRating">No ratings yet</string>
+    <string name="forumRatingContentDescription">Rated %1$s out of 5</string>
+    <string name="forumMoreOptions">More options</string>
+    <string name="forumDetailsWordListHeader">Word List</string>
+</resources>

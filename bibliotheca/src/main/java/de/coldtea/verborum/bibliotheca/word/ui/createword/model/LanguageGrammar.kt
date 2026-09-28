@@ -8,7 +8,7 @@ import de.coldtea.verborum.bibliotheca.common.utils.ResStrings
  * into a surface form (handling article elision such as French *l'eau* and Italian *lo studente*).
  *
  * Everything is keyed by the two-letter language code from
- * [de.coldtea.verborum.bibliotheca.common.ui.model.SupportedLanguage].
+ * [de.coldtea.verborum.core.ui.model.SupportedLanguage].
  */
 object LanguageGrammar {
 

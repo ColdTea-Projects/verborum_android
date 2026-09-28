@@ -3,6 +3,7 @@ package de.coldtea.verborum.bibliotheca.common.data.api
 import de.coldtea.verborum.bibliotheca.dictionary.data.api.model.DictionaryResponse
 import de.coldtea.verborum.bibliotheca.word.data.api.model.WordResponse
 import de.coldtea.verborum.core.extensions.json
+import de.coldtea.verborum.core.utils.ApiTimestamp
 import kotlinx.serialization.ExperimentalSerializationApi
 import org.junit.After
 import org.junit.Assert.assertEquals

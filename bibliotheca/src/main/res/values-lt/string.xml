@@ -3,7 +3,6 @@
     <!--String-->
     <string name="dictionaryListScreenHeader">Bibliotheca</string>
     <string name="dictionaryListScreenSubtitle">Jūsų žodynai</string>
-    <string name="dictionaryLanguagePair">%1$s į %2$s</string>
     <string name="dictionaryDetailsScreenTest">Testas</string>
     <string name="dictionaryDetailsScreenSelf">Savarankiškas mokymasis</string>
     <string name="dictionaryDetailsScreenWordListHeader">Žodžių sąrašas</string>
@@ -115,25 +114,6 @@
     <string name="welcomeScreenTitlePractice">Treniruokitės braukdami</string>
     <string name="welcomeScreenDescriptionPractice">Savarankiškai mokydamiesi, bakstelėkite kortelę, kad pamatytumėte vertimą. Braukite dešinėn, jei žodį žinote, kairėn — jei reikia daugiau praktikos.</string>
     <string name="welcomeScreenDone">Baigta</string>
-    <string name="languageEnglish">Anglų</string>
-    <string name="languageGerman">Vokiečių</string>
-    <string name="languageFrench">Prancūzų</string>
-    <string name="languageSpanish">Ispanų</string>
-    <string name="languageItalian">Italų</string>
-    <string name="languagePortuguese">Portugalų</string>
-    <string name="languageDutch">Olandų</string>
-    <string name="languageLithuanian">Lietuvių</string>
-    <string name="languageTurkish">Turkų</string>
-    <string name="languageAzerbaijani">Azerbaidžaniečių</string>
-    <string name="languagePolish">Lenkų</string>
-    <string name="languageUkrainian">Ukrainiečių</string>
-    <string name="languageRussian">Rusų</string>
-    <string name="languageGreek">Graikų</string>
-    <string name="languageArabic">Arabų</string>
-    <string name="languageFarsi">Persų</string>
-    <string name="languageJapanese">Japonų</string>
-    <string name="languageChinese">Kinų</string>
-    <string name="languageKorean">Korėjiečių</string>
     <string name="createWordScreenReadingLabel">Skaitymas</string>
     <string name="createWordScreenAspectLabel">Veikslas</string>
     <string name="createWordScreenRootLabel">Šaknis</string>
@@ -152,11 +132,8 @@
     <string name="dictionaryDetailsScreenNoWordsToPractice">Pirmiausia pridėkite žodį – dar nėra ko mokytis</string>
     <string name="dictionaryDetailsScreenNotEnoughWordsForTest">Testui reikia bent 4 žodžių šioje kalbų poroje</string>
     <string name="offlineBannerMessage">Esate neprisijungę – pakeitimai bus sinchronizuoti prisijungus</string>
-    <string name="errorScreenMessage">Kažkas nepavyko</string>
-    <string name="errorRetry">Bandyti dar kartą</string>
     <string name="errorSaveFailed">Nepavyko išsaugoti — patikrinkite ryšį ir bandykite dar kartą</string>
     <string name="errorDeleteFailed">Nepavyko ištrinti — bandykite dar kartą</string>
-    <string name="errorScreenTitle">Klaida</string>
     <string name="testScreenTitle">Testo režimas</string>
     <string name="testQuestionProgress">%1$d klausimas iš %2$d</string>
     <string name="testCompleteTitle">Testas baigtas</string>
@@ -196,11 +173,5 @@
         <item quantity="few">%1$d žodžiai žodyne</item>
         <item quantity="many">%1$d žodžio žodyne</item>
         <item quantity="other">%1$d žodžių žodyne</item>
-    </plurals>
-    <plurals name="dictionaryListScreenWordCount">
-        <item quantity="one">%1$d žodis</item>
-        <item quantity="few">%1$d žodžiai</item>
-        <item quantity="many">%1$d žodžio</item>
-        <item quantity="other">%1$d žodžių</item>
     </plurals>
 </resources>

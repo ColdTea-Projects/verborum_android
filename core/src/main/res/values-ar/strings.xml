@@ -11,5 +11,35 @@
     <string name="optionsLanguageSystemDefault">الإعداد الافتراضي للنظام</string>
     <string name="optionsLogout">تسجيل الخروج</string>
     <string name="topBarBack">رجوع</string>
-    <string name="forumComingSoon">قريباً</string>
+    <string name="dictionaryLanguagePair">من %1$s إلى %2$s</string>
+    <string name="errorScreenMessage">حدث خطأ ما</string>
+    <string name="errorRetry">إعادة المحاولة</string>
+    <string name="errorScreenTitle">خطأ</string>
+    <string name="languageEnglish">الإنجليزية</string>
+    <string name="languageGerman">الألمانية</string>
+    <string name="languageFrench">الفرنسية</string>
+    <string name="languageSpanish">الإسبانية</string>
+    <string name="languageItalian">الإيطالية</string>
+    <string name="languagePortuguese">البرتغالية</string>
+    <string name="languageDutch">الهولندية</string>
+    <string name="languageLithuanian">الليتوانية</string>
+    <string name="languageTurkish">التركية</string>
+    <string name="languageAzerbaijani">الأذربيجانية</string>
+    <string name="languagePolish">البولندية</string>
+    <string name="languageUkrainian">الأوكرانية</string>
+    <string name="languageRussian">الروسية</string>
+    <string name="languageGreek">اليونانية</string>
+    <string name="languageArabic">العربية</string>
+    <string name="languageFarsi">الفارسية</string>
+    <string name="languageJapanese">اليابانية</string>
+    <string name="languageChinese">الصينية</string>
+    <string name="languageKorean">الكورية</string>
+    <plurals name="dictionaryListScreenWordCount">
+        <item quantity="zero">%1$d كلمة</item>
+        <item quantity="one">كلمة واحدة</item>
+        <item quantity="two">كلمتان</item>
+        <item quantity="few">%1$d كلمات</item>
+        <item quantity="many">%1$d كلمة</item>
+        <item quantity="other">%1$d كلمة</item>
+    </plurals>
 </resources>

@@ -42,10 +42,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import de.coldtea.verborum.bibliotheca.common.utils.CoreResDrawables
 import de.coldtea.verborum.bibliotheca.common.utils.ResDrawables
+import de.coldtea.verborum.bibliotheca.common.utils.CoreResPlurals
 import de.coldtea.verborum.bibliotheca.common.utils.ResPlurals
 import de.coldtea.verborum.bibliotheca.common.utils.ResStrings
 import de.coldtea.verborum.bibliotheca.dictionary.ui.dictionarylist.model.DictionaryUi
 import de.coldtea.verborum.core.theme.VerborumTheme
+import de.coldtea.verborum.core.ui.components.languagePairLabel
+import de.coldtea.verborum.core.ui.components.relativeTimeAgo
 
 @Composable
 fun DictionaryCard(
@@ -144,7 +147,7 @@ fun DictionaryCard(
                     ) {
                         Text(
                             text = pluralStringResource(
-                                ResPlurals.dictionaryListScreenWordCount,
+                                CoreResPlurals.dictionaryListScreenWordCount,
                                 dictionary.wordCount,
                                 dictionary.wordCount,
                             ),
@@ -177,17 +180,6 @@ fun DictionaryCard(
         }
     }
 }
-
-// "3 days ago", "5 minutes ago", … localized by the platform; recomputed only when createdAt changes.
-@Composable
-private fun relativeTimeAgo(createdAt: Long): String =
-    remember(createdAt) {
-        DateUtils.getRelativeTimeSpanString(
-            createdAt,
-            System.currentTimeMillis(),
-            DateUtils.MINUTE_IN_MILLIS,
-        ).toString()
-    }
 
 @PreviewLightDark
 @Composable

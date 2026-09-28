@@ -11,5 +11,31 @@
     <string name="optionsLanguageSystemDefault">Sistem defoltu</string>
     <string name="optionsLogout">Çıxış</string>
     <string name="topBarBack">Geri</string>
-    <string name="forumComingSoon">Tezliklə</string>
+    <string name="dictionaryLanguagePair">%1$s - %2$s</string>
+    <string name="errorScreenMessage">Nə isə səhv oldu</string>
+    <string name="errorRetry">Yenidən cəhd et</string>
+    <string name="errorScreenTitle">Xəta</string>
+    <string name="languageEnglish">İngiliscə</string>
+    <string name="languageGerman">Almanca</string>
+    <string name="languageFrench">Fransızca</string>
+    <string name="languageSpanish">İspanca</string>
+    <string name="languageItalian">İtalyanca</string>
+    <string name="languagePortuguese">Portuqalca</string>
+    <string name="languageDutch">Hollandca</string>
+    <string name="languageLithuanian">Litva dili</string>
+    <string name="languageTurkish">Türkcə</string>
+    <string name="languageAzerbaijani">Azərbaycanca</string>
+    <string name="languagePolish">Polyak dili</string>
+    <string name="languageUkrainian">Ukrayna dili</string>
+    <string name="languageRussian">Rusca</string>
+    <string name="languageGreek">Yunanca</string>
+    <string name="languageArabic">Ərəbcə</string>
+    <string name="languageFarsi">Farsca</string>
+    <string name="languageJapanese">Yaponca</string>
+    <string name="languageChinese">Çincə</string>
+    <string name="languageKorean">Koreyaca</string>
+    <plurals name="dictionaryListScreenWordCount">
+        <item quantity="one">%1$d söz</item>
+        <item quantity="other">%1$d söz</item>
+    </plurals>
 </resources>

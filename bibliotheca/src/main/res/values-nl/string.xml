@@ -3,7 +3,6 @@
     <!--String-->
     <string name="dictionaryListScreenHeader">Bibliotheca</string>
     <string name="dictionaryListScreenSubtitle">Jouw woordenboeken</string>
-    <string name="dictionaryLanguagePair">%1$s naar %2$s</string>
     <string name="dictionaryDetailsScreenTest">Test</string>
     <string name="dictionaryDetailsScreenSelf">Zelfstudie</string>
     <string name="dictionaryDetailsScreenWordListHeader">Woordenlijst</string>
@@ -115,25 +114,6 @@
     <string name="welcomeScreenTitlePractice">Oefen met een veeg</string>
     <string name="welcomeScreenDescriptionPractice">Tik bij zelfstudie op een kaart om de vertaling te tonen. Veeg naar rechts als je het woord kent, naar links als je meer oefening nodig hebt.</string>
     <string name="welcomeScreenDone">Klaar</string>
-    <string name="languageEnglish">Engels</string>
-    <string name="languageGerman">Duits</string>
-    <string name="languageFrench">Frans</string>
-    <string name="languageSpanish">Spaans</string>
-    <string name="languageItalian">Italiaans</string>
-    <string name="languagePortuguese">Portugees</string>
-    <string name="languageDutch">Nederlands</string>
-    <string name="languageLithuanian">Litouws</string>
-    <string name="languageTurkish">Turks</string>
-    <string name="languageAzerbaijani">Azerbeidzjaans</string>
-    <string name="languagePolish">Pools</string>
-    <string name="languageUkrainian">Oekraïens</string>
-    <string name="languageRussian">Russisch</string>
-    <string name="languageGreek">Grieks</string>
-    <string name="languageArabic">Arabisch</string>
-    <string name="languageFarsi">Perzisch</string>
-    <string name="languageJapanese">Japans</string>
-    <string name="languageChinese">Chinees</string>
-    <string name="languageKorean">Koreaans</string>
     <string name="createWordScreenReadingLabel">Lezing</string>
     <string name="createWordScreenAspectLabel">Aspect</string>
     <string name="createWordScreenRootLabel">Wortel</string>
@@ -152,11 +132,8 @@
     <string name="dictionaryDetailsScreenNoWordsToPractice">Voeg eerst een woord toe — er is nog niets om te oefenen</string>
     <string name="dictionaryDetailsScreenNotEnoughWordsForTest">Een test heeft minstens 4 woorden in dit taalpaar nodig</string>
     <string name="offlineBannerMessage">Je bent offline — wijzigingen worden gesynchroniseerd zodra je weer verbinding hebt</string>
-    <string name="errorScreenMessage">Er is iets misgegaan</string>
-    <string name="errorRetry">Opnieuw proberen</string>
     <string name="errorSaveFailed">Opslaan mislukt — controleer je verbinding en probeer het opnieuw</string>
     <string name="errorDeleteFailed">Verwijderen mislukt — probeer het opnieuw</string>
-    <string name="errorScreenTitle">Fout</string>
     <string name="testScreenTitle">Testmodus</string>
     <string name="testQuestionProgress">Vraag %1$d van %2$d</string>
     <string name="testCompleteTitle">Test voltooid</string>
@@ -194,9 +171,5 @@
     <plurals name="dictionaryDetailsScreenWordListCount">
         <item quantity="one">%1$d woord in het woordenboek</item>
         <item quantity="other">%1$d woorden in het woordenboek</item>
-    </plurals>
-    <plurals name="dictionaryListScreenWordCount">
-        <item quantity="one">%1$d woord</item>
-        <item quantity="other">%1$d woorden</item>
     </plurals>
 </resources>

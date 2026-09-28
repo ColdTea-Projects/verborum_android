@@ -15,7 +15,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import de.coldtea.verborum.bibliotheca.common.ui.components.ScreenError
+import de.coldtea.verborum.core.ui.components.ScreenError
 import de.coldtea.verborum.bibliotheca.common.utils.ResStrings
 import de.coldtea.verborum.bibliotheca.word.ui.multiplechoice.composables.MultipleChoiceContent
 import de.coldtea.verborum.bibliotheca.word.ui.multiplechoice.composables.ResultScreen

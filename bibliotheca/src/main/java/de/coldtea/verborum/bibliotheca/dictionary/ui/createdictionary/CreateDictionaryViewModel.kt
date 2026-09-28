@@ -2,7 +2,8 @@ package de.coldtea.verborum.bibliotheca.dictionary.ui.createdictionary
 
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import de.coldtea.verborum.bibliotheca.common.ui.model.SupportedLanguage
+import de.coldtea.verborum.core.ui.model.SupportedLanguage
+import de.coldtea.verborum.bibliotheca.common.utils.CoreResStrings
 import de.coldtea.verborum.bibliotheca.common.utils.ResStrings
 import de.coldtea.verborum.bibliotheca.dictionary.domain.DictionaryService
 import de.coldtea.verborum.bibliotheca.dictionary.ui.createdictionary.model.CreateDictionaryState
@@ -36,7 +37,7 @@ class CreateDictionaryViewModel @Inject constructor(
                 _editingDictionary.emit(dictionaryService.getDictionary(dictionaryId))
             } catch (e: Exception) {
                 // Prefill failed — tell the user; the form stays usable as a blank create form.
-                _snackbarMessages.emit(UiText.Resource(ResStrings.errorScreenMessage))
+                _snackbarMessages.emit(UiText.Resource(CoreResStrings.errorScreenMessage))
             }
         }
     }

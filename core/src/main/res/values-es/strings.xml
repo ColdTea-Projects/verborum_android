@@ -11,5 +11,31 @@
     <string name="optionsLanguageSystemDefault">Predeterminado del sistema</string>
     <string name="optionsLogout">Cerrar sesión</string>
     <string name="topBarBack">Atrás</string>
-    <string name="forumComingSoon">Próximamente</string>
+    <string name="dictionaryLanguagePair">%1$s a %2$s</string>
+    <string name="errorScreenMessage">Algo salió mal</string>
+    <string name="errorRetry">Reintentar</string>
+    <string name="errorScreenTitle">Error</string>
+    <string name="languageEnglish">Inglés</string>
+    <string name="languageGerman">Alemán</string>
+    <string name="languageFrench">Francés</string>
+    <string name="languageSpanish">Español</string>
+    <string name="languageItalian">Italiano</string>
+    <string name="languagePortuguese">Portugués</string>
+    <string name="languageDutch">Neerlandés</string>
+    <string name="languageLithuanian">Lituano</string>
+    <string name="languageTurkish">Turco</string>
+    <string name="languageAzerbaijani">Azerbaiyano</string>
+    <string name="languagePolish">Polaco</string>
+    <string name="languageUkrainian">Ucraniano</string>
+    <string name="languageRussian">Ruso</string>
+    <string name="languageGreek">Griego</string>
+    <string name="languageArabic">Árabe</string>
+    <string name="languageFarsi">Persa</string>
+    <string name="languageJapanese">Japonés</string>
+    <string name="languageChinese">Chino</string>
+    <string name="languageKorean">Coreano</string>
+    <plurals name="dictionaryListScreenWordCount">
+        <item quantity="one">%1$d palabra</item>
+        <item quantity="other">%1$d palabras</item>
+    </plurals>
 </resources>

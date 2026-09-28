@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="forumListScreenTitle">Forum</string>
+    <string name="forumListScreenSubtitle">Bendruomenės bendrinami žodynai</string>
+    <string name="forumListEmpty">Bendrinamų žodynų dar nėra</string>
+    <string name="forumListLoadError">Nepavyko įkelti bendrinamų žodynų</string>
+    <string name="forumDownload">Atsisiųsti</string>
+    <string name="forumPublishedBy">autorius: %1$s</string>
+    <string name="forumUnknownPublisher">Nežinomas leidėjas</string>
+    <string name="forumDetailsCreator">Kūrėjas</string>
+    <string name="forumDetailsRating">Įvertinimas</string>
+    <string name="forumDetailsDownloads">Atsisiuntimai</string>
+    <string name="forumDetailsNoRating">Įvertinimų dar nėra</string>
+    <string name="forumRatingContentDescription">Įvertinta %1$s iš 5</string>
+    <string name="forumMoreOptions">Daugiau parinkčių</string>
+    <string name="forumDetailsWordListHeader">Žodžių sąrašas</string>
+</resources>

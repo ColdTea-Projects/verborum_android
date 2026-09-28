@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="forumListScreenTitle">Forum</string>
+    <string name="forumListScreenSubtitle">コミュニティが共有した辞書</string>
+    <string name="forumListEmpty">共有された辞書はまだありません</string>
+    <string name="forumListLoadError">共有辞書を読み込めませんでした</string>
+    <string name="forumDownload">ダウンロード</string>
+    <string name="forumPublishedBy">作成者: %1$s</string>
+    <string name="forumUnknownPublisher">不明な公開者</string>
+    <string name="forumDetailsCreator">作成者</string>
+    <string name="forumDetailsRating">評価</string>
+    <string name="forumDetailsDownloads">ダウンロード数</string>
+    <string name="forumDetailsNoRating">まだ評価がありません</string>
+    <string name="forumRatingContentDescription">5段階中%1$sの評価</string>
+    <string name="forumMoreOptions">その他のオプション</string>
+    <string name="forumDetailsWordListHeader">単語リスト</string>
+</resources>

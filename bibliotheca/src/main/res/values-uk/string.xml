@@ -3,7 +3,6 @@
     <!--String-->
     <string name="dictionaryListScreenHeader">Bibliotheca</string>
     <string name="dictionaryListScreenSubtitle">Ваші словники</string>
-    <string name="dictionaryLanguagePair">%1$s → %2$s</string>
     <string name="dictionaryDetailsScreenTest">Тест</string>
     <string name="dictionaryDetailsScreenSelf">Самостійна практика</string>
     <string name="dictionaryDetailsScreenWordListHeader">Список слів</string>
@@ -115,25 +114,6 @@
     <string name="welcomeScreenTitlePractice">Практикуйтеся одним рухом</string>
     <string name="welcomeScreenDescriptionPractice">У самостійній практиці торкніться картки, щоб показати переклад. Проведіть праворуч, якщо знаєте слово, ліворуч — якщо потрібно більше практики.</string>
     <string name="welcomeScreenDone">Готово</string>
-    <string name="languageEnglish">Англійська</string>
-    <string name="languageGerman">Німецька</string>
-    <string name="languageFrench">Французька</string>
-    <string name="languageSpanish">Іспанська</string>
-    <string name="languageItalian">Італійська</string>
-    <string name="languagePortuguese">Португальська</string>
-    <string name="languageDutch">Нідерландська</string>
-    <string name="languageLithuanian">Литовська</string>
-    <string name="languageTurkish">Турецька</string>
-    <string name="languageAzerbaijani">Азербайджанська</string>
-    <string name="languagePolish">Польська</string>
-    <string name="languageUkrainian">Українська</string>
-    <string name="languageRussian">Російська</string>
-    <string name="languageGreek">Грецька</string>
-    <string name="languageArabic">Арабська</string>
-    <string name="languageFarsi">Перська</string>
-    <string name="languageJapanese">Японська</string>
-    <string name="languageChinese">Китайська</string>
-    <string name="languageKorean">Корейська</string>
     <string name="createWordScreenReadingLabel">Читання</string>
     <string name="createWordScreenAspectLabel">Вид</string>
     <string name="createWordScreenRootLabel">Корінь</string>
@@ -152,11 +132,8 @@
     <string name="dictionaryDetailsScreenNoWordsToPractice">Спершу додайте слово — поки немає що практикувати</string>
     <string name="dictionaryDetailsScreenNotEnoughWordsForTest">Для тесту потрібно щонайменше 4 слова в цій мовній парі</string>
     <string name="offlineBannerMessage">Ви офлайн — зміни синхронізуються після відновлення зʼєднання</string>
-    <string name="errorScreenMessage">Щось пішло не так</string>
-    <string name="errorRetry">Повторити спробу</string>
     <string name="errorSaveFailed">Не вдалося зберегти — перевірте з’єднання та повторіть</string>
     <string name="errorDeleteFailed">Не вдалося видалити — повторіть спробу</string>
-    <string name="errorScreenTitle">Помилка</string>
     <string name="testScreenTitle">Режим тесту</string>
     <string name="testQuestionProgress">Питання %1$d з %2$d</string>
     <string name="testCompleteTitle">Тест завершено</string>
@@ -196,11 +173,5 @@
         <item quantity="few">%1$d слова в словнику</item>
         <item quantity="many">%1$d слів у словнику</item>
         <item quantity="other">%1$d слова в словнику</item>
-    </plurals>
-    <plurals name="dictionaryListScreenWordCount">
-        <item quantity="one">%1$d слово</item>
-        <item quantity="few">%1$d слова</item>
-        <item quantity="many">%1$d слів</item>
-        <item quantity="other">%1$d слова</item>
     </plurals>
 </resources>

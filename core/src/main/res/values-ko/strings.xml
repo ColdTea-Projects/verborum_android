@@ -11,5 +11,30 @@
     <string name="optionsLanguageSystemDefault">시스템 기본값</string>
     <string name="optionsLogout">로그아웃</string>
     <string name="topBarBack">뒤로</string>
-    <string name="forumComingSoon">곧 출시</string>
+    <string name="dictionaryLanguagePair">%1$s → %2$s</string>
+    <string name="errorScreenMessage">문제가 발생했습니다</string>
+    <string name="errorRetry">다시 시도</string>
+    <string name="errorScreenTitle">오류</string>
+    <string name="languageEnglish">영어</string>
+    <string name="languageGerman">독일어</string>
+    <string name="languageFrench">프랑스어</string>
+    <string name="languageSpanish">스페인어</string>
+    <string name="languageItalian">이탈리아어</string>
+    <string name="languagePortuguese">포르투갈어</string>
+    <string name="languageDutch">네덜란드어</string>
+    <string name="languageLithuanian">리투아니아어</string>
+    <string name="languageTurkish">튀르키예어</string>
+    <string name="languageAzerbaijani">아제르바이잔어</string>
+    <string name="languagePolish">폴란드어</string>
+    <string name="languageUkrainian">우크라이나어</string>
+    <string name="languageRussian">러시아어</string>
+    <string name="languageGreek">그리스어</string>
+    <string name="languageArabic">아랍어</string>
+    <string name="languageFarsi">페르시아어</string>
+    <string name="languageJapanese">일본어</string>
+    <string name="languageChinese">중국어</string>
+    <string name="languageKorean">한국어</string>
+    <plurals name="dictionaryListScreenWordCount">
+        <item quantity="other">%1$d개 단어</item>
+    </plurals>
 </resources>

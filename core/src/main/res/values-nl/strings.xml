@@ -11,5 +11,31 @@
     <string name="optionsLanguageSystemDefault">Systeemstandaard</string>
     <string name="optionsLogout">Uitloggen</string>
     <string name="topBarBack">Terug</string>
-    <string name="forumComingSoon">Binnenkort</string>
+    <string name="dictionaryLanguagePair">%1$s naar %2$s</string>
+    <string name="errorScreenMessage">Er is iets misgegaan</string>
+    <string name="errorRetry">Opnieuw proberen</string>
+    <string name="errorScreenTitle">Fout</string>
+    <string name="languageEnglish">Engels</string>
+    <string name="languageGerman">Duits</string>
+    <string name="languageFrench">Frans</string>
+    <string name="languageSpanish">Spaans</string>
+    <string name="languageItalian">Italiaans</string>
+    <string name="languagePortuguese">Portugees</string>
+    <string name="languageDutch">Nederlands</string>
+    <string name="languageLithuanian">Litouws</string>
+    <string name="languageTurkish">Turks</string>
+    <string name="languageAzerbaijani">Azerbeidzjaans</string>
+    <string name="languagePolish">Pools</string>
+    <string name="languageUkrainian">Oekraïens</string>
+    <string name="languageRussian">Russisch</string>
+    <string name="languageGreek">Grieks</string>
+    <string name="languageArabic">Arabisch</string>
+    <string name="languageFarsi">Perzisch</string>
+    <string name="languageJapanese">Japans</string>
+    <string name="languageChinese">Chinees</string>
+    <string name="languageKorean">Koreaans</string>
+    <plurals name="dictionaryListScreenWordCount">
+        <item quantity="one">%1$d woord</item>
+        <item quantity="other">%1$d woorden</item>
+    </plurals>
 </resources>
