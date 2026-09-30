@@ -48,6 +48,10 @@ when {
 }
 ```
 
+Pull-to-refresh: wrap the column in `PullToRefreshBox(isRefreshing, onRefresh = items::refresh)`
+with `isRefreshing = loadState.refresh is Loading && itemCount > 0` (the first load has its
+skeleton). A failed refresh keeps the old items, so report it on `LocalSnackbarHostState`.
+
 Previews: `flowOf(PagingData.from(list)).collectAsLazyPagingItems()`.
 
 ## Tests (`paging-testing`)

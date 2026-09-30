@@ -15,10 +15,13 @@ import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -38,6 +41,7 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemContentType
 import androidx.paging.compose.itemKey
 import de.coldtea.verborum.core.theme.VerborumTheme
+import de.coldtea.verborum.core.ui.LocalSnackbarHostState
 import de.coldtea.verborum.core.ui.RegisterTopBar
 import de.coldtea.verborum.core.ui.components.DictionaryCardSkeleton
 import de.coldtea.verborum.core.ui.components.ScreenError
@@ -68,6 +72,7 @@ fun ForumDictionaryListScreen(
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ForumDictionaryListContent(
     dictionaries: LazyPagingItems<ForumDictionaryUi>,
@@ -85,75 +90,95 @@ private fun ForumDictionaryListContent(
         )
     }
 
-    Column(
+    val refresh = dictionaries.loadState.refresh
+    // Only a refresh over a shown list spins the pull indicator; the first load has its skeleton.
+    val isRefreshing = refresh is LoadState.Loading && dictionaries.itemCount > 0
+
+    // A failed pull keeps the old list on screen, so the failure is reported on the snackbar.
+    val snackbarHostState = LocalSnackbarHostState.current
+    val refreshErrorMessage = stringResource(ResStrings.forumListLoadError)
+    LaunchedEffect(refresh) {
+        if (refresh is LoadState.Error && dictionaries.itemCount > 0) {
+            snackbarHostState.showSnackbar(refreshErrorMessage)
+        }
+    }
+
+    PullToRefreshBox(
+        isRefreshing = isRefreshing,
+        // A new PagingSource from page 0, so newly published dictionaries appear at the top.
+        onRefresh = dictionaries::refresh,
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
-            .padding(horizontal = 24.dp)
+            .background(MaterialTheme.colorScheme.background),
     ) {
-        Spacer(modifier = Modifier.height(16.dp))
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 24.dp)
+        ) {
+            Spacer(modifier = Modifier.height(16.dp))
 
-        val refresh = dictionaries.loadState.refresh
-        when {
-            // Once items exist, a later refresh keeps them on screen instead of blanking the list.
-            dictionaries.itemCount > 0 -> {
-                LazyColumn(
-                    state = listState,
-                    modifier = Modifier.weight(1f),
-                    // Un-clipped room for the first/last cards' shadow and press-lift.
-                    contentPadding = PaddingValues(vertical = 8.dp),
-                    verticalArrangement = Arrangement.spacedBy(16.dp)
-                ) {
-                    items(
-                        count = dictionaries.itemCount,
-                        key = dictionaries.itemKey { it.dictionaryId },
-                        contentType = dictionaries.itemContentType { DICTIONARY_CONTENT_TYPE },
-                    ) { index ->
-                        // Placeholders are disabled, so a loaded index is never null.
-                        dictionaries[index]?.let { dictionary ->
-                            ForumDictionaryCard(
-                                dictionary = dictionary,
-                                onClick = onDictionaryClick,
-                                onMenuClick = { optionsFor = it },
-                            )
+            when {
+                // Once items exist, a later refresh keeps them on screen instead of blanking the list.
+                dictionaries.itemCount > 0 -> {
+                    LazyColumn(
+                        state = listState,
+                        modifier = Modifier.weight(1f),
+                        // Un-clipped room for the first/last cards' shadow and press-lift.
+                        contentPadding = PaddingValues(vertical = 8.dp),
+                        verticalArrangement = Arrangement.spacedBy(16.dp)
+                    ) {
+                        items(
+                            count = dictionaries.itemCount,
+                            key = dictionaries.itemKey { it.dictionaryId },
+                            contentType = dictionaries.itemContentType { DICTIONARY_CONTENT_TYPE },
+                        ) { index ->
+                            // Placeholders are disabled, so a loaded index is never null.
+                            dictionaries[index]?.let { dictionary ->
+                                ForumDictionaryCard(
+                                    dictionary = dictionary,
+                                    onClick = onDictionaryClick,
+                                    onMenuClick = { optionsFor = it },
+                                )
+                            }
                         }
+
+                        appendFooter(
+                            append = dictionaries.loadState.append,
+                            onRetry = dictionaries::retry,
+                        )
                     }
+                }
 
-                    appendFooter(
-                        append = dictionaries.loadState.append,
+                refresh is LoadState.Loading -> {
+                    LazyColumn(
+                        modifier = Modifier.weight(1f),
+                        contentPadding = PaddingValues(vertical = 8.dp),
+                        verticalArrangement = Arrangement.spacedBy(16.dp)
+                    ) {
+                        items(count = 4) { DictionaryCardSkeleton() }
+                    }
+                }
+
+                refresh is LoadState.Error -> {
+                    ScreenError(
                         onRetry = dictionaries::retry,
+                        modifier = Modifier.weight(1f),
+                        message = stringResource(ResStrings.forumListLoadError),
                     )
                 }
-            }
 
-            refresh is LoadState.Loading -> {
-                LazyColumn(
-                    modifier = Modifier.weight(1f),
-                    contentPadding = PaddingValues(vertical = 8.dp),
-                    verticalArrangement = Arrangement.spacedBy(16.dp)
-                ) {
-                    items(count = 4) { DictionaryCardSkeleton() }
-                }
-            }
-
-            refresh is LoadState.Error -> {
-                ScreenError(
-                    onRetry = dictionaries::retry,
-                    modifier = Modifier.weight(1f),
-                    message = stringResource(ResStrings.forumListLoadError),
-                )
-            }
-
-            else -> {
-                Box(
-                    modifier = Modifier.weight(1f),
-                    contentAlignment = Alignment.Center,
-                ) {
-                    Text(
-                        text = stringResource(ResStrings.forumListEmpty),
-                        fontSize = 15.sp,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    )
+                else -> {
+                    Box(
+                        modifier = Modifier.weight(1f),
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        Text(
+                            text = stringResource(ResStrings.forumListEmpty),
+                            fontSize = 15.sp,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
+                    }
                 }
             }
         }
