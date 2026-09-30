@@ -128,6 +128,14 @@ class MarketplaceRepositoryTest {
     }
 
     @Test
+    fun `dummy words cover long phrases on the word and translation sides`() = runTest {
+        val words = subject.getListings().items.flatMap { subject.getWords(it.dictionaryId) }
+
+        assertTrue(words.any { it.word.orEmpty().length > LONG_ENTRY_LENGTH })
+        assertTrue(words.any { it.translation.orEmpty().length > LONG_ENTRY_LENGTH })
+    }
+
+    @Test
     fun `getListing finds a known id and returns null for an unknown one`() = runTest {
         val known = subject.getListings(page = 2, size = 15).items.first()
 
@@ -138,5 +146,10 @@ class MarketplaceRepositoryTest {
     @Test
     fun `getWords of an unknown dictionary is empty`() = runTest {
         assertEquals(emptyList<Any>(), subject.getWords("unknown"))
+    }
+
+    private companion object {
+        // Comfortably more than one line of the details screen's entry on a phone.
+        const val LONG_ENTRY_LENGTH = 60
     }
 }

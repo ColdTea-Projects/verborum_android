@@ -33,9 +33,12 @@ internal object MarketplaceDummyData {
     // Declared before [templates]: object properties initialise in order, and each template reads
     // its word count from here. Keyed by the template ids above.
     private val wordsByDictionary: Map<String, List<Pair<String, String>>> = mapOf(
-        // Two long lists (this and ITALIAN_CAFE, 50 words each) to exercise scrolling.
+        // Two long lists (this and ITALIAN_CAFE, 50+ words each) to exercise scrolling. Most lists
+        // also carry a long phrase or two, to exercise wrapping in the details screen's entries.
         EVERYDAY_GERMAN to listOf(
             "house" to "das Haus", "to buy" to "kaufen/erwerben", "bread" to "das Brot",
+            "to look forward to something you have been waiting for a very long time" to
+                "sich auf etwas freuen, auf das man schon sehr lange gewartet hat",
             "train station" to "der Bahnhof", "tomorrow" to "morgen", "friend" to "der Freund",
             "water" to "das Wasser", "apple" to "der Apfel", "car" to "das Auto",
             "street" to "die Straße", "city" to "die Stadt", "school" to "die Schule",
@@ -52,18 +55,30 @@ internal object MarketplaceDummyData {
             "sun" to "die Sonne", "big" to "groß", "small" to "klein",
             "good" to "gut", "beautiful" to "schön", "expensive" to "teuer",
             "cheap" to "billig/günstig", "thank you" to "danke",
+            // Long on both sides and with alternatives, so wrapping meets the "/" display join.
+            "I would like to make an appointment for next week, if possible in the morning/" +
+                "could I book an appointment for some morning next week?" to
+                "Ich hätte gern einen Termin für nächste Woche, wenn möglich vormittags/" +
+                "Könnte ich einen Termin an einem Vormittag nächste Woche vereinbaren?",
         ),
         JAPANESE_TRAVEL to listOf(
             "hello" to "こんにちは", "thank you" to "ありがとう", "station" to "駅",
             "ticket" to "切符", "hotel" to "ホテル", "excuse me" to "すみません",
+            "Could you please tell me which platform the express train to Kyoto leaves from?" to
+                "京都行きの特急列車は何番線から出発するか教えていただけますか？",
         ),
         TURKISH_KITCHEN to listOf(
             "ekmek" to "bread", "peynir" to "cheese", "çay" to "tea",
             "domates" to "tomato", "kaşık" to "spoon", "tencere" to "pot",
+            // Long on the word side only.
+            "soğanları kısık ateşte, sürekli karıştırarak altın rengini alana kadar kavurmak" to
+                "to sauté",
         ),
         FRENCH_VERBS to listOf(
             "to be" to "être", "to have" to "avoir", "to go" to "aller",
             "to do/to make" to "faire", "to say" to "dire", "to see" to "voir",
+            // Long on the translation side only.
+            "to get by" to "se débrouiller tant bien que mal avec les moyens dont on dispose",
         ),
         ITALIAN_CAFE to listOf(
             "coffee" to "il caffè", "milk" to "il latte", "sugar" to "lo zucchero",
@@ -83,10 +98,14 @@ internal object MarketplaceDummyData {
             "small" to "piccolo", "large" to "grande", "hot" to "caldo",
             "cold" to "freddo", "sweet" to "dolce", "bitter" to "amaro",
             "delicious" to "buonissimo/delizioso", "excuse me" to "scusi", "how much" to "quanto costa",
+            "a large cappuccino with oat milk, no sugar, and a little cocoa powder on top, to take away" to
+                "un cappuccino grande con latte d'avena, senza zucchero e con un po' di cacao sopra, da portare via",
         ),
         SPANISH_BUSINESS to listOf(
             "meeting" to "la reunión", "invoice" to "la factura", "contract" to "el contrato",
             "deadline" to "la fecha límite", "customer" to "el cliente",
+            "please find attached the signed contract together with the invoice for the first quarter" to
+                "adjunto le envío el contrato firmado junto con la factura del primer trimestre",
         ),
         POLISH_UKRAINIAN to listOf(
             "dom" to "дім", "woda" to "вода", "chleb" to "хліб",
