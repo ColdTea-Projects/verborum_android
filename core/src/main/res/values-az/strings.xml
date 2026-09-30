@@ -71,4 +71,17 @@
     <string name="tagTopicCultureHolidays">Mədəniyyət və bayramlar</string>
     <string name="tagTopicNewsPolitics">Xəbərlər və siyasət</string>
     <string name="tagTopicFoodService">İaşə xidməti</string>
+
+    <!-- Search/filter controls shared by the bibliotheca and forum lists -->
+    <string name="dictionaryListSearch">Axtar</string>
+    <string name="dictionaryListFromChip">Mənbə: %1$s</string>
+    <string name="dictionaryListToChip">Hədəf: %1$s</string>
+    <string name="dictionaryListFilterAny">İstənilən</string>
+    <string name="dictionaryListClear">Təmizlə</string>
+    <string name="dictionaryListAnyLanguage">İstənilən dil</string>
+    <string name="createDictionaryScreenFromLanguage">Mənbə dil</string>
+    <string name="createDictionaryScreenToLanguage">Hədəf dil</string>
+    <string name="createDictionaryTagsLevel">Səviyyə</string>
+    <string name="createDictionaryTagsTopic">Mövzu</string>
+    <string name="createDictionaryTagsExams">İmtahanlar</string>
 </resources>

@@ -70,4 +70,17 @@
     <string name="tagTopicCultureHolidays">文化与节日</string>
     <string name="tagTopicNewsPolitics">新闻与政治</string>
     <string name="tagTopicFoodService">餐饮服务</string>
+
+    <!-- Search/filter controls shared by the bibliotheca and forum lists -->
+    <string name="dictionaryListSearch">搜索</string>
+    <string name="dictionaryListFromChip">从: %1$s</string>
+    <string name="dictionaryListToChip">到: %1$s</string>
+    <string name="dictionaryListFilterAny">任意</string>
+    <string name="dictionaryListClear">清除</string>
+    <string name="dictionaryListAnyLanguage">任意语言</string>
+    <string name="createDictionaryScreenFromLanguage">源语言</string>
+    <string name="createDictionaryScreenToLanguage">目标语言</string>
+    <string name="createDictionaryTagsLevel">级别</string>
+    <string name="createDictionaryTagsTopic">主题</string>
+    <string name="createDictionaryTagsExams">考试</string>
 </resources>

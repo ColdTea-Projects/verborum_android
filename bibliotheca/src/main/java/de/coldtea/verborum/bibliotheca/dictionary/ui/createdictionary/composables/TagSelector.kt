@@ -37,6 +37,8 @@ import de.coldtea.verborum.core.ui.model.DictionaryTag
 import de.coldtea.verborum.core.ui.model.EXAM_TAGS
 import de.coldtea.verborum.core.ui.model.LEVEL_TAGS
 import de.coldtea.verborum.core.ui.model.TOPIC_TAGS
+import de.coldtea.verborum.bibliotheca.common.utils.CoreResStrings
+import de.coldtea.verborum.bibliotheca.common.utils.CoreResDrawables
 
 /**
  * Collapsible tag picker for the create/edit dictionary form: a header the user taps to reveal
@@ -88,7 +90,7 @@ fun TagSelector(
                 )
             }
             Icon(
-                painter = painterResource(ResDrawables.ic_chevron_right_24),
+                painter = painterResource(CoreResDrawables.ic_chevron_right_24),
                 contentDescription = null,
                 tint = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier
@@ -100,19 +102,19 @@ fun TagSelector(
         AnimatedVisibility(visible = expanded) {
             Column {
                 TagGroup(
-                    title = stringResource(ResStrings.createDictionaryTagsLevel),
+                    title = stringResource(CoreResStrings.createDictionaryTagsLevel),
                     tags = LEVEL_TAGS,
                     selectedTags = selectedTags,
                     onToggleTag = onToggleTag,
                 )
                 TagGroup(
-                    title = stringResource(ResStrings.createDictionaryTagsTopic),
+                    title = stringResource(CoreResStrings.createDictionaryTagsTopic),
                     tags = TOPIC_TAGS,
                     selectedTags = selectedTags,
                     onToggleTag = onToggleTag,
                 )
                 TagGroup(
-                    title = stringResource(ResStrings.createDictionaryTagsExams),
+                    title = stringResource(CoreResStrings.createDictionaryTagsExams),
                     tags = EXAM_TAGS,
                     selectedTags = selectedTags,
                     onToggleTag = onToggleTag,

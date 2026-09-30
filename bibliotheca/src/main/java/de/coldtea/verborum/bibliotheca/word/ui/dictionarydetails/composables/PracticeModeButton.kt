@@ -34,6 +34,7 @@ import de.coldtea.verborum.bibliotheca.common.ui.components.IconOnTopButton
 import de.coldtea.verborum.bibliotheca.common.utils.ResDrawables
 import de.coldtea.verborum.core.theme.VerborumColors
 import de.coldtea.verborum.core.theme.VerborumTheme
+import de.coldtea.verborum.bibliotheca.common.utils.CoreResDrawables
 
 /**
  * A disabled button is dimmed but deliberately stays tappable: tapping it routes to
@@ -68,7 +69,7 @@ fun PreviewPracticeModeButton() {
     VerborumTheme {
         PracticeModeButton(
             text = "Self Practice",
-            iconRes = ResDrawables.ic_chevron_right_24,
+            iconRes = CoreResDrawables.ic_chevron_right_24,
             backgroundColor = VerborumColors.LightAccent
         ) { }
     }

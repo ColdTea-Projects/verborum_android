@@ -70,4 +70,17 @@
     <string name="tagTopicCultureHolidays">文化と祝日</string>
     <string name="tagTopicNewsPolitics">ニュースと政治</string>
     <string name="tagTopicFoodService">飲食サービス</string>
+
+    <!-- Search/filter controls shared by the bibliotheca and forum lists -->
+    <string name="dictionaryListSearch">検索</string>
+    <string name="dictionaryListFromChip">元: %1$s</string>
+    <string name="dictionaryListToChip">先: %1$s</string>
+    <string name="dictionaryListFilterAny">すべて</string>
+    <string name="dictionaryListClear">クリア</string>
+    <string name="dictionaryListAnyLanguage">すべての言語</string>
+    <string name="createDictionaryScreenFromLanguage">元の言語</string>
+    <string name="createDictionaryScreenToLanguage">訳語の言語</string>
+    <string name="createDictionaryTagsLevel">レベル</string>
+    <string name="createDictionaryTagsTopic">トピック</string>
+    <string name="createDictionaryTagsExams">試験</string>
 </resources>

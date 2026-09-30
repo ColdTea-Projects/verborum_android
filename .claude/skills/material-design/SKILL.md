@@ -47,6 +47,7 @@ private fun WordListPreview() = VerborumTheme {
 - **Buttons**: `Button` (filled `primary`) for the primary action, `OutlinedButton` for secondary; destructive actions use `error` coloring.
 - **Chips**: `FilterChip` for multi-select (tags), colored via `FilterChipDefaults.filterChipColors(selectedContainerColor = …, selectedLabelColor = …)`.
 - **Bottom sheets**: `ModalBottomSheet` for contextual choices (options, language/sort pickers) — see `SelectionBottomSheet`.
+- **List filter rows** reuse `core/ui/components`: `FilterBarChip` pills, `LanguageFilterSheet`, `SelectionBottomSheet` (single choice) and `MultiSelectionBottomSheet` (grouped multi-choice, e.g. tags) — shared by the bibliotheca and forum lists.
 - **Feedback**: transient messages via the shared snackbar (`LocalSnackbarHostState` + `ShowSnackbarMessages`), standing conditions (offline) via a pinned banner. Load failures use `ScreenError`.
 - **State-driven UI**: render per sealed state; give lists a stable `key` and a skeleton/loading state so a background sync doesn't visibly reshuffle them.
 

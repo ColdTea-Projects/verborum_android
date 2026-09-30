@@ -71,4 +71,17 @@
     <string name="tagTopicCultureHolidays">Kültür ve bayramlar</string>
     <string name="tagTopicNewsPolitics">Haber ve siyaset</string>
     <string name="tagTopicFoodService">Yeme-içme hizmeti</string>
+
+    <!-- Search/filter controls shared by the bibliotheca and forum lists -->
+    <string name="dictionaryListSearch">Ara</string>
+    <string name="dictionaryListFromChip">Kaynak: %1$s</string>
+    <string name="dictionaryListToChip">Hedef: %1$s</string>
+    <string name="dictionaryListFilterAny">Herhangi</string>
+    <string name="dictionaryListClear">Temizle</string>
+    <string name="dictionaryListAnyLanguage">Herhangi bir dil</string>
+    <string name="createDictionaryScreenFromLanguage">Kaynak dil</string>
+    <string name="createDictionaryScreenToLanguage">Hedef dil</string>
+    <string name="createDictionaryTagsLevel">Seviye</string>
+    <string name="createDictionaryTagsTopic">Konu</string>
+    <string name="createDictionaryTagsExams">Sınavlar</string>
 </resources>

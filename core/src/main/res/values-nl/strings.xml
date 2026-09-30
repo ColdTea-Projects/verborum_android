@@ -71,4 +71,17 @@
     <string name="tagTopicCultureHolidays">Cultuur &amp; feestdagen</string>
     <string name="tagTopicNewsPolitics">Nieuws &amp; politiek</string>
     <string name="tagTopicFoodService">Horeca</string>
+
+    <!-- Search/filter controls shared by the bibliotheca and forum lists -->
+    <string name="dictionaryListSearch">Zoeken</string>
+    <string name="dictionaryListFromChip">Van: %1$s</string>
+    <string name="dictionaryListToChip">Naar: %1$s</string>
+    <string name="dictionaryListFilterAny">Alle</string>
+    <string name="dictionaryListClear">Wissen</string>
+    <string name="dictionaryListAnyLanguage">Elke taal</string>
+    <string name="createDictionaryScreenFromLanguage">Brontaal</string>
+    <string name="createDictionaryScreenToLanguage">Doeltaal</string>
+    <string name="createDictionaryTagsLevel">Niveau</string>
+    <string name="createDictionaryTagsTopic">Onderwerp</string>
+    <string name="createDictionaryTagsExams">Examens</string>
 </resources>

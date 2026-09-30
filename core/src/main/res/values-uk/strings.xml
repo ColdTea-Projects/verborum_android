@@ -73,4 +73,17 @@
     <string name="tagTopicCultureHolidays">Культура та свята</string>
     <string name="tagTopicNewsPolitics">Новини та політика</string>
     <string name="tagTopicFoodService">Громадське харчування</string>
+
+    <!-- Search/filter controls shared by the bibliotheca and forum lists -->
+    <string name="dictionaryListSearch">Пошук</string>
+    <string name="dictionaryListFromChip">З: %1$s</string>
+    <string name="dictionaryListToChip">На: %1$s</string>
+    <string name="dictionaryListFilterAny">Будь-яка</string>
+    <string name="dictionaryListClear">Очистити</string>
+    <string name="dictionaryListAnyLanguage">Будь-яка мова</string>
+    <string name="createDictionaryScreenFromLanguage">Мова оригіналу</string>
+    <string name="createDictionaryScreenToLanguage">Мова перекладу</string>
+    <string name="createDictionaryTagsLevel">Рівень</string>
+    <string name="createDictionaryTagsTopic">Тема</string>
+    <string name="createDictionaryTagsExams">Іспити</string>
 </resources>

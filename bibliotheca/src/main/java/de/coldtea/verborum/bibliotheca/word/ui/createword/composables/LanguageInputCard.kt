@@ -61,6 +61,7 @@ import de.coldtea.verborum.bibliotheca.word.ui.createword.model.WordInputFilter
 import de.coldtea.verborum.bibliotheca.word.ui.createword.model.WordType
 import de.coldtea.verborum.bibliotheca.word.ui.model.displayLine
 import de.coldtea.verborum.core.theme.VerborumTheme
+import de.coldtea.verborum.bibliotheca.common.utils.CoreResDrawables
 
 /** The number of keyboard text fields one meaning of [spec] renders: the base word plus its text forms. */
 internal fun textFieldsPerMeaning(spec: LanguageFormSpec): Int =
@@ -264,7 +265,7 @@ private fun AlternativeHeader(onRemove: () -> Unit) {
             modifier = Modifier.size(28.dp),
         ) {
             Icon(
-                painter = painterResource(ResDrawables.ic_close_24),
+                painter = painterResource(CoreResDrawables.ic_close_24),
                 contentDescription = stringResource(ResStrings.createWordScreenRemoveAlternative),
                 tint = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.size(18.dp)

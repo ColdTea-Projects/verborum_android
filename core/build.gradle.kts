@@ -94,6 +94,10 @@ dependencies {
     implementation(libs.androidx.compose.ui.graphics)
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.material3)
+    // Pins material3 to the version the feature modules ship (the BOM alone resolves an older one).
+    // Compiling core against the BOM's version while the app runs this one breaks core's
+    // bottom sheets at runtime (NoSuchMethodError: rememberModalBottomSheetState).
+    implementation(libs.material3)
     implementation(libs.navigation.compose)
     androidTestImplementation(platform(libs.androidx.activity.compose.bom))
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)

@@ -1,6 +1,5 @@
 package de.coldtea.verborum.bibliotheca.dictionary.ui.dictionarylist.composables
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
@@ -20,18 +19,19 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import de.coldtea.verborum.core.ui.components.FilterBarChip
 import de.coldtea.verborum.core.ui.model.SupportedLanguage
 import de.coldtea.verborum.bibliotheca.common.utils.ResDrawables
 import de.coldtea.verborum.bibliotheca.common.utils.ResStrings
 import de.coldtea.verborum.bibliotheca.dictionary.ui.dictionarylist.model.DictionarySort
+import de.coldtea.verborum.bibliotheca.common.utils.CoreResStrings
+import de.coldtea.verborum.bibliotheca.common.utils.CoreResDrawables
 
 /** The expandable "Search dictionaries" field shown above the filter chips. */
 @Composable
@@ -50,7 +50,7 @@ fun DictionarySearchField(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Icon(
-                painter = painterResource(ResDrawables.ic_search_24),
+                painter = painterResource(CoreResDrawables.ic_search_24),
                 contentDescription = null,
                 tint = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.size(20.dp),
@@ -81,7 +81,7 @@ fun DictionarySearchField(
             )
             if (query.isNotEmpty()) {
                 Icon(
-                    painter = painterResource(ResDrawables.ic_close_24),
+                    painter = painterResource(CoreResDrawables.ic_close_24),
                     contentDescription = null,
                     tint = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier
@@ -108,7 +108,7 @@ fun DictionaryFilterBar(
     onClearClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val anyLabel = stringResource(ResStrings.dictionaryListFilterAny)
+    val anyLabel = stringResource(CoreResStrings.dictionaryListFilterAny)
     val fromValue = fromFilter?.let { stringResource(it.displayNameRes) } ?: anyLabel
     val toValue = toFilter?.let { stringResource(it.displayNameRes) } ?: anyLabel
 
@@ -119,81 +119,28 @@ fun DictionaryFilterBar(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        FilterChip(
-            text = stringResource(ResStrings.dictionaryListFromChip, fromValue),
+        FilterBarChip(
+            text = stringResource(CoreResStrings.dictionaryListFromChip, fromValue),
             onClick = onFromClick,
             trailingCaret = true,
             highlighted = fromFilter != null,
         )
-        FilterChip(
-            text = stringResource(ResStrings.dictionaryListToChip, toValue),
+        FilterBarChip(
+            text = stringResource(CoreResStrings.dictionaryListToChip, toValue),
             onClick = onToClick,
             trailingCaret = true,
             highlighted = toFilter != null,
         )
-        FilterChip(
+        FilterBarChip(
             text = stringResource(sortOrder.labelRes),
             onClick = onSortClick,
             leadingIconRes = ResDrawables.ic_sort_24,
             trailingCaret = true,
         )
-        FilterChip(
-            text = stringResource(ResStrings.dictionaryListClear),
+        FilterBarChip(
+            text = stringResource(CoreResStrings.dictionaryListClear),
             onClick = onClearClick,
-            leadingIconRes = ResDrawables.ic_close_24,
+            leadingIconRes = CoreResDrawables.ic_close_24,
         )
-    }
-}
-
-@Composable
-private fun FilterChip(
-    text: String,
-    onClick: () -> Unit,
-    leadingIconRes: Int? = null,
-    trailingCaret: Boolean = false,
-    highlighted: Boolean = false,
-) {
-    val accent = MaterialTheme.colorScheme.primary
-    val contentColor = if (highlighted) accent else MaterialTheme.colorScheme.onSurface
-    Surface(
-        onClick = onClick,
-        shape = RoundedCornerShape(percent = 50),
-        color = if (highlighted) accent.copy(alpha = 0.10f) else MaterialTheme.colorScheme.surface,
-        border = BorderStroke(
-            1.dp,
-            if (highlighted) accent else MaterialTheme.colorScheme.outline,
-        ),
-    ) {
-        Row(
-            modifier = Modifier.padding(horizontal = 14.dp, vertical = 8.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(6.dp),
-        ) {
-            leadingIconRes?.let { iconRes ->
-                Icon(
-                    painter = painterResource(iconRes),
-                    contentDescription = null,
-                    tint = contentColor,
-                    modifier = Modifier.size(16.dp),
-                )
-            }
-            Text(
-                text = text,
-                fontSize = 14.sp,
-                fontWeight = FontWeight.Medium,
-                color = contentColor,
-            )
-            if (trailingCaret) {
-                // chevron-right rotated a quarter-turn = a downward caret.
-                Icon(
-                    painter = painterResource(ResDrawables.ic_chevron_right_24),
-                    contentDescription = null,
-                    tint = contentColor,
-                    modifier = Modifier
-                        .size(16.dp)
-                        .rotate(90f),
-                )
-            }
-        }
     }
 }

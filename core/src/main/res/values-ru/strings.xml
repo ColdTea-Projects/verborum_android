@@ -73,4 +73,17 @@
     <string name="tagTopicCultureHolidays">Культура и праздники</string>
     <string name="tagTopicNewsPolitics">Новости и политика</string>
     <string name="tagTopicFoodService">Общепит</string>
+
+    <!-- Search/filter controls shared by the bibliotheca and forum lists -->
+    <string name="dictionaryListSearch">Поиск</string>
+    <string name="dictionaryListFromChip">Из: %1$s</string>
+    <string name="dictionaryListToChip">На: %1$s</string>
+    <string name="dictionaryListFilterAny">Любой</string>
+    <string name="dictionaryListClear">Очистить</string>
+    <string name="dictionaryListAnyLanguage">Любой язык</string>
+    <string name="createDictionaryScreenFromLanguage">Исходный язык</string>
+    <string name="createDictionaryScreenToLanguage">Целевой язык</string>
+    <string name="createDictionaryTagsLevel">Уровень</string>
+    <string name="createDictionaryTagsTopic">Тема</string>
+    <string name="createDictionaryTagsExams">Экзамены</string>
 </resources>

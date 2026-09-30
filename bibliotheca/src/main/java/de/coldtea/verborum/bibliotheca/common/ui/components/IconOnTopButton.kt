@@ -33,6 +33,7 @@ import androidx.compose.ui.unit.sp
 import de.coldtea.verborum.bibliotheca.common.utils.ResDrawables
 import de.coldtea.verborum.core.theme.VerborumColors
 import de.coldtea.verborum.core.theme.VerborumTheme
+import de.coldtea.verborum.bibliotheca.common.utils.CoreResDrawables
 
 @Composable
 fun IconOnTopButton(
@@ -101,7 +102,7 @@ fun PreviewPracticeModeButton() {
     VerborumTheme {
         IconOnTopButton(
             text = "Self Practice",
-            iconRes = ResDrawables.ic_chevron_right_24,
+            iconRes = CoreResDrawables.ic_chevron_right_24,
             backgroundColor = VerborumColors.LightAccent
         ) { }
     }

@@ -70,4 +70,17 @@
     <string name="tagTopicCultureHolidays">문화와 명절</string>
     <string name="tagTopicNewsPolitics">뉴스와 정치</string>
     <string name="tagTopicFoodService">요식업</string>
+
+    <!-- Search/filter controls shared by the bibliotheca and forum lists -->
+    <string name="dictionaryListSearch">검색</string>
+    <string name="dictionaryListFromChip">출발: %1$s</string>
+    <string name="dictionaryListToChip">도착: %1$s</string>
+    <string name="dictionaryListFilterAny">모두</string>
+    <string name="dictionaryListClear">지우기</string>
+    <string name="dictionaryListAnyLanguage">모든 언어</string>
+    <string name="createDictionaryScreenFromLanguage">출발 언어</string>
+    <string name="createDictionaryScreenToLanguage">도착 언어</string>
+    <string name="createDictionaryTagsLevel">레벨</string>
+    <string name="createDictionaryTagsTopic">주제</string>
+    <string name="createDictionaryTagsExams">시험</string>
 </resources>

@@ -53,8 +53,9 @@ import de.coldtea.verborum.core.ui.components.ScreenError
 import de.coldtea.verborum.core.ui.components.DictionaryCardSkeleton
 import de.coldtea.verborum.bibliotheca.dictionary.ui.dictionarylist.composables.DictionaryFilterBar
 import de.coldtea.verborum.bibliotheca.dictionary.ui.dictionarylist.composables.DictionarySearchField
-import de.coldtea.verborum.bibliotheca.dictionary.ui.dictionarylist.composables.SelectionBottomSheet
-import de.coldtea.verborum.bibliotheca.dictionary.ui.dictionarylist.composables.SelectionOption
+import de.coldtea.verborum.core.ui.components.LanguageFilterSheet
+import de.coldtea.verborum.core.ui.components.SelectionBottomSheet
+import de.coldtea.verborum.core.ui.components.SelectionOption
 import de.coldtea.verborum.bibliotheca.dictionary.ui.dictionarylist.model.DictionaryListState
 import de.coldtea.verborum.bibliotheca.dictionary.ui.dictionarylist.model.DictionarySort
 import de.coldtea.verborum.bibliotheca.dictionary.ui.dictionarylist.model.DictionaryUi
@@ -62,6 +63,8 @@ import de.coldtea.verborum.core.theme.VerborumTheme
 import de.coldtea.verborum.core.ui.RegisterTopBar
 import de.coldtea.verborum.core.ui.ShowSnackbarMessages
 import de.coldtea.verborum.core.ui.VerborumTopBarAction
+import de.coldtea.verborum.bibliotheca.common.utils.CoreResStrings
+import de.coldtea.verborum.bibliotheca.common.utils.CoreResDrawables
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -124,7 +127,7 @@ fun DictionaryListScreen(
 
     if (showFromSheet) {
         LanguageFilterSheet(
-            title = stringResource(ResStrings.createDictionaryScreenFromLanguage),
+            title = stringResource(CoreResStrings.createDictionaryScreenFromLanguage),
             selected = fromFilter,
             onSelect = viewModel::onFromFilterChange,
             onDismiss = { showFromSheet = false },
@@ -133,7 +136,7 @@ fun DictionaryListScreen(
 
     if (showToSheet) {
         LanguageFilterSheet(
-            title = stringResource(ResStrings.createDictionaryScreenToLanguage),
+            title = stringResource(CoreResStrings.createDictionaryScreenToLanguage),
             selected = toFilter,
             onSelect = viewModel::onToFilterChange,
             onDismiss = { showToSheet = false },
@@ -154,8 +157,8 @@ fun DictionaryListScreen(
         showBackButton = false,
         // Magnifier on the right toggles the search field below.
         action = VerborumTopBarAction(
-            iconRes = ResDrawables.ic_search_24,
-            contentDescription = stringResource(ResStrings.dictionaryListSearch),
+            iconRes = CoreResDrawables.ic_search_24,
+            contentDescription = stringResource(CoreResStrings.dictionaryListSearch),
             onClick = viewModel::toggleSearch,
         ),
     )
@@ -288,36 +291,6 @@ fun DictionaryListScreen(
             }
         }
     }
-}
-
-/** Bottom sheet listing "Any language" plus every supported language, filtering by [selected]. */
-@Composable
-private fun LanguageFilterSheet(
-    title: String,
-    selected: SupportedLanguage?,
-    onSelect: (SupportedLanguage?) -> Unit,
-    onDismiss: () -> Unit,
-) {
-    // buildList/forEach are inline, so stringResource is valid inside them.
-    val options = buildList {
-        add(
-            SelectionOption(
-                label = stringResource(ResStrings.dictionaryListAnyLanguage),
-                isSelected = selected == null,
-                onSelect = { onSelect(null) },
-            )
-        )
-        SupportedLanguage.entries.forEach { language ->
-            add(
-                SelectionOption(
-                    label = stringResource(language.displayNameRes),
-                    isSelected = selected == language,
-                    onSelect = { onSelect(language) },
-                )
-            )
-        }
-    }
-    SelectionBottomSheet(title = title, options = options, onDismiss = onDismiss)
 }
 
 /** Bottom sheet listing the [DictionarySort] options, marking [selected]. */

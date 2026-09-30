@@ -71,4 +71,17 @@
     <string name="tagTopicCultureHolidays">Πολιτισμός και γιορτές</string>
     <string name="tagTopicNewsPolitics">Ειδήσεις και πολιτική</string>
     <string name="tagTopicFoodService">Εστίαση</string>
+
+    <!-- Search/filter controls shared by the bibliotheca and forum lists -->
+    <string name="dictionaryListSearch">Αναζήτηση</string>
+    <string name="dictionaryListFromChip">Από: %1$s</string>
+    <string name="dictionaryListToChip">Προς: %1$s</string>
+    <string name="dictionaryListFilterAny">Οποιαδήποτε</string>
+    <string name="dictionaryListClear">Καθαρισμός</string>
+    <string name="dictionaryListAnyLanguage">Οποιαδήποτε γλώσσα</string>
+    <string name="createDictionaryScreenFromLanguage">Γλώσσα προέλευσης</string>
+    <string name="createDictionaryScreenToLanguage">Γλώσσα προορισμού</string>
+    <string name="createDictionaryTagsLevel">Επίπεδο</string>
+    <string name="createDictionaryTagsTopic">Θέμα</string>
+    <string name="createDictionaryTagsExams">Εξετάσεις</string>
 </resources>

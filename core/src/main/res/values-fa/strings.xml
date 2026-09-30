@@ -71,4 +71,17 @@
     <string name="tagTopicCultureHolidays">فرهنگ و اعیاد</string>
     <string name="tagTopicNewsPolitics">اخبار و سیاست</string>
     <string name="tagTopicFoodService">خدمات غذایی</string>
+
+    <!-- Search/filter controls shared by the bibliotheca and forum lists -->
+    <string name="dictionaryListSearch">جستجو</string>
+    <string name="dictionaryListFromChip">از: %1$s</string>
+    <string name="dictionaryListToChip">به: %1$s</string>
+    <string name="dictionaryListFilterAny">هر</string>
+    <string name="dictionaryListClear">پاک کردن</string>
+    <string name="dictionaryListAnyLanguage">هر زبان</string>
+    <string name="createDictionaryScreenFromLanguage">زبان مبدأ</string>
+    <string name="createDictionaryScreenToLanguage">زبان مقصد</string>
+    <string name="createDictionaryTagsLevel">سطح</string>
+    <string name="createDictionaryTagsTopic">موضوع</string>
+    <string name="createDictionaryTagsExams">آزمون‌ها</string>
 </resources>

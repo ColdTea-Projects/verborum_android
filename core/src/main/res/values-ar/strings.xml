@@ -75,4 +75,17 @@
     <string name="tagTopicCultureHolidays">الثقافة والأعياد</string>
     <string name="tagTopicNewsPolitics">الأخبار والسياسة</string>
     <string name="tagTopicFoodService">خدمات الطعام</string>
+
+    <!-- Search/filter controls shared by the bibliotheca and forum lists -->
+    <string name="dictionaryListSearch">بحث</string>
+    <string name="dictionaryListFromChip">من: %1$s</string>
+    <string name="dictionaryListToChip">إلى: %1$s</string>
+    <string name="dictionaryListFilterAny">أي</string>
+    <string name="dictionaryListClear">مسح</string>
+    <string name="dictionaryListAnyLanguage">أي لغة</string>
+    <string name="createDictionaryScreenFromLanguage">اللغة المصدر</string>
+    <string name="createDictionaryScreenToLanguage">اللغة الهدف</string>
+    <string name="createDictionaryTagsLevel">المستوى</string>
+    <string name="createDictionaryTagsTopic">الموضوع</string>
+    <string name="createDictionaryTagsExams">الامتحانات</string>
 </resources>

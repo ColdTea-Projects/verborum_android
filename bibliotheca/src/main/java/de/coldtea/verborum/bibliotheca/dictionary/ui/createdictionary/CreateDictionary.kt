@@ -38,6 +38,7 @@ import de.coldtea.verborum.bibliotheca.dictionary.ui.createdictionary.model.Crea
 import de.coldtea.verborum.core.theme.VerborumTheme
 import de.coldtea.verborum.core.ui.RegisterTopBar
 import de.coldtea.verborum.core.ui.ShowSnackbarMessages
+import de.coldtea.verborum.bibliotheca.common.utils.CoreResStrings
 
 @Composable
 fun CreateDictionaryScreen(
@@ -118,7 +119,7 @@ fun CreateDictionaryScreen(
             Spacer(modifier = Modifier.height(16.dp))
 
             LanguageDropdown(
-                label = stringResource(ResStrings.createDictionaryScreenFromLanguage),
+                label = stringResource(CoreResStrings.createDictionaryScreenFromLanguage),
                 selectedLanguage = fromLanguage,
                 onLanguageSelected = { fromLanguage = it },
                 // A dictionary's language pair is fixed once its words exist — locked in edit mode.
@@ -129,7 +130,7 @@ fun CreateDictionaryScreen(
             Spacer(modifier = Modifier.height(16.dp))
 
             LanguageDropdown(
-                label = stringResource(ResStrings.createDictionaryScreenToLanguage),
+                label = stringResource(CoreResStrings.createDictionaryScreenToLanguage),
                 selectedLanguage = toLanguage,
                 onLanguageSelected = { toLanguage = it },
                 enabled = !isEditing,

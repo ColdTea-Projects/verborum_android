@@ -71,4 +71,17 @@
     <string name="tagTopicCultureHolidays">Kultur &amp; Feste</string>
     <string name="tagTopicNewsPolitics">Nachrichten &amp; Politik</string>
     <string name="tagTopicFoodService">Gastronomie</string>
+
+    <!-- Search/filter controls shared by the bibliotheca and forum lists -->
+    <string name="dictionaryListSearch">Suchen</string>
+    <string name="dictionaryListFromChip">Von: %1$s</string>
+    <string name="dictionaryListToChip">Nach: %1$s</string>
+    <string name="dictionaryListFilterAny">Beliebig</string>
+    <string name="dictionaryListClear">Zurücksetzen</string>
+    <string name="dictionaryListAnyLanguage">Beliebige Sprache</string>
+    <string name="createDictionaryScreenFromLanguage">Ausgangssprache</string>
+    <string name="createDictionaryScreenToLanguage">Zielsprache</string>
+    <string name="createDictionaryTagsLevel">Niveau</string>
+    <string name="createDictionaryTagsTopic">Thema</string>
+    <string name="createDictionaryTagsExams">Prüfungen</string>
 </resources>

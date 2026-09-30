@@ -73,4 +73,17 @@
     <string name="tagTopicCultureHolidays">Kultūra ir šventės</string>
     <string name="tagTopicNewsPolitics">Naujienos ir politika</string>
     <string name="tagTopicFoodService">Maitinimo paslaugos</string>
+
+    <!-- Search/filter controls shared by the bibliotheca and forum lists -->
+    <string name="dictionaryListSearch">Ieškoti</string>
+    <string name="dictionaryListFromChip">Iš: %1$s</string>
+    <string name="dictionaryListToChip">Į: %1$s</string>
+    <string name="dictionaryListFilterAny">Bet kokia</string>
+    <string name="dictionaryListClear">Išvalyti</string>
+    <string name="dictionaryListAnyLanguage">Bet kokia kalba</string>
+    <string name="createDictionaryScreenFromLanguage">Iš kalbos</string>
+    <string name="createDictionaryScreenToLanguage">Į kalbą</string>
+    <string name="createDictionaryTagsLevel">Lygis</string>
+    <string name="createDictionaryTagsTopic">Tema</string>
+    <string name="createDictionaryTagsExams">Egzaminai</string>
 </resources>

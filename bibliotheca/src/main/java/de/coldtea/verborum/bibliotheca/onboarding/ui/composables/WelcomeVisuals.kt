@@ -100,7 +100,7 @@ fun LibraryVisual(modifier: Modifier = Modifier) {
                 }
 
                 Icon(
-                    painter = painterResource(ResDrawables.ic_chevron_right_24),
+                    painter = painterResource(CoreResDrawables.ic_chevron_right_24),
                     contentDescription = null,
                     tint = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.size(18.dp)
@@ -174,7 +174,7 @@ fun PracticeVisual(modifier: Modifier = Modifier) {
         modifier = modifier.fillMaxWidth()
     ) {
         Icon(
-            painter = painterResource(ResDrawables.ic_chevron_right_24),
+            painter = painterResource(CoreResDrawables.ic_chevron_right_24),
             contentDescription = null,
             tint = MaterialTheme.colorScheme.error,
             // Mirrored chevron: swiping left lowers the progress.
@@ -218,7 +218,7 @@ fun PracticeVisual(modifier: Modifier = Modifier) {
         }
 
         Icon(
-            painter = painterResource(ResDrawables.ic_chevron_right_24),
+            painter = painterResource(CoreResDrawables.ic_chevron_right_24),
             contentDescription = null,
             tint = MaterialTheme.colorScheme.primary,
             modifier = Modifier.size(28.dp)
