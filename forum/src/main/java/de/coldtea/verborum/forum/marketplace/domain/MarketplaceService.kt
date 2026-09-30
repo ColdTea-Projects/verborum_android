@@ -11,6 +11,7 @@ import de.coldtea.verborum.forum.marketplace.domain.usecase.api.GetMarketplaceLi
 import de.coldtea.verborum.forum.marketplace.domain.usecase.api.GetMarketplaceListingsApiUseCase
 import de.coldtea.verborum.forum.marketplace.domain.usecase.api.GetMarketplaceWordsApiUseCase
 import de.coldtea.verborum.forum.marketplace.ui.forumdictionarydetails.model.ForumWordUi
+import de.coldtea.verborum.forum.marketplace.ui.forumdictionarylist.model.ForumDictionaryFilter
 import de.coldtea.verborum.forum.marketplace.ui.forumdictionarylist.model.ForumDictionaryUi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -26,8 +27,8 @@ class MarketplaceService @Inject constructor(
     private val getMarketplaceListingApiUseCase: GetMarketplaceListingApiUseCase,
     private val getMarketplaceWordsApiUseCase: GetMarketplaceWordsApiUseCase,
 ) {
-    /** The browse list, newest first, loaded [LISTING_PAGE_SIZE] listings at a time. */
-    fun getDictionaries(): Flow<PagingData<ForumDictionaryUi>> =
+    /** The browse list narrowed by [filter], newest first, loaded [LISTING_PAGE_SIZE] at a time. */
+    fun getDictionaries(filter: ForumDictionaryFilter): Flow<PagingData<ForumDictionaryUi>> =
         Pager(
             config = PagingConfig(
                 pageSize = LISTING_PAGE_SIZE,
@@ -37,7 +38,11 @@ class MarketplaceService @Inject constructor(
                 enablePlaceholders = false,
             ),
             pagingSourceFactory = {
-                MarketplaceListingPagingSource(getMarketplaceListingsApiUseCase, LISTING_PAGE_SIZE)
+                MarketplaceListingPagingSource(
+                    getMarketplaceListingsApiUseCase = getMarketplaceListingsApiUseCase,
+                    pageSize = LISTING_PAGE_SIZE,
+                    filter = filter.convertToListingFilter(),
+                )
             },
         ).flow.map { pagingData -> pagingData.map(MarketplaceListing::convertToUi) }
 

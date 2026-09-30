@@ -71,6 +71,57 @@ class MarketplaceRepositoryTest {
     }
     // endregion
 
+    // region filters
+    @Test
+    fun `getListings filters by either language on its own`() = runTest {
+        val fromEnglish = subject.getListings(size = 100, fromLang = "en").items
+        val toGerman = subject.getListings(size = 100, toLang = "DE").items
+
+        assertTrue(fromEnglish.isNotEmpty())
+        assertTrue(fromEnglish.all { it.fromLang == "EN" })
+        assertTrue(toGerman.isNotEmpty())
+        assertTrue(toGerman.all { it.toLang == "DE" })
+    }
+
+    @Test
+    fun `getListings keeps listings carrying any of the selected tags`() = runTest {
+        val tags = setOf("n5", "business")
+
+        val items = subject.getListings(size = 100, tags = tags).items
+
+        // Japanese Travel (n5) and Spanish Business (business) — neither carries both.
+        assertEquals(setOf("Japanese Travel Phrases", "Spanish Business Basics"), items.map { it.name }.toSet())
+        assertTrue(items.all { listing -> listing.tags.orEmpty().any { it in tags } })
+    }
+
+    @Test
+    fun `getListings matches part of the publisher name, ignoring case`() = runTest {
+        val items = subject.getListings(size = 100, publisherName = " SCHMI ").items
+
+        assertTrue(items.isNotEmpty())
+        assertTrue(items.all { it.publisherName == "Anna Schmidt" })
+    }
+
+    @Test
+    fun `a filtered page envelope counts only the matches`() = runTest {
+        val all = allListings().count { it.fromLang == "EN" && it.toLang == "DE" }
+
+        val page = subject.getListings(page = 0, size = 15, fromLang = "EN", toLang = "DE")
+
+        assertEquals(all.toLong(), page.totalElements)
+        assertEquals((all + 14) / 15, page.totalPages)
+    }
+
+    @Test
+    fun `getListings returns an empty last page when nothing matches`() = runTest {
+        val page = subject.getListings(publisherName = "nobody by this name")
+
+        assertTrue(page.items.isEmpty())
+        assertEquals(0L, page.totalElements)
+        assertFalse(page.hasMore)
+    }
+    // endregion
+
     @Test
     fun `listings repeat the templates with unique canonical ids and uppercase supported codes`() = runTest {
         val items = allListings()

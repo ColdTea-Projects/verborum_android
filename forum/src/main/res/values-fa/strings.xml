@@ -5,6 +5,11 @@
     <string name="forumListEmpty">هنوز واژه‌نامهٔ اشتراکی‌ای وجود ندارد</string>
     <string name="forumListLoadError">بارگیری واژه‌نامه‌های اشتراکی ممکن نشد</string>
     <string name="forumListLoadMoreError">بارگیری واژه‌نامه‌های بیشتر ممکن نشد</string>
+    <string name="forumFilterTagsChip">برچسب‌ها: %1$s</string>
+    <string name="forumFilterTagsTitle">برچسب‌ها</string>
+    <string name="forumFilterUserChip">کاربر: %1$s</string>
+    <string name="forumFilterUserHint">نام کاربری</string>
+    <string name="forumListNoMatches">هیچ واژه‌نامهٔ اشتراکی با این فیلترها مطابقت ندارد</string>
     <string name="forumDownload">دانلود</string>
     <string name="forumPublishedBy">از %1$s</string>
     <string name="forumUnknownPublisher">ناشر ناشناس</string>

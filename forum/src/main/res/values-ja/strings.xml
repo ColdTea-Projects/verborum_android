@@ -5,6 +5,11 @@
     <string name="forumListEmpty">共有された辞書はまだありません</string>
     <string name="forumListLoadError">共有辞書を読み込めませんでした</string>
     <string name="forumListLoadMoreError">これ以上の辞書を読み込めませんでした</string>
+    <string name="forumFilterTagsChip">タグ: %1$s</string>
+    <string name="forumFilterTagsTitle">タグ</string>
+    <string name="forumFilterUserChip">ユーザー: %1$s</string>
+    <string name="forumFilterUserHint">ユーザー名</string>
+    <string name="forumListNoMatches">条件に一致する共有辞書はありません</string>
     <string name="forumDownload">ダウンロード</string>
     <string name="forumPublishedBy">作成者: %1$s</string>
     <string name="forumUnknownPublisher">不明な公開者</string>

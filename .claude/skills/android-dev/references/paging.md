@@ -31,6 +31,10 @@ No `paging-runtime` — that is the RecyclerView adapter, unused in a Compose-on
 - `enablePlaceholders = false` for backend pages whose total can shift mid-scroll.
 - Rethrow `CancellationException` in `load`; every other exception becomes `LoadResult.Error`.
 - `cachedIn(viewModelScope)` exactly once, in the ViewModel, so pages survive back-navigation.
+- Filters/queries: hold them in a `MutableStateFlow` and build
+  `filter.flatMapLatest { service.getX(it) }.cachedIn(viewModelScope)` — each change starts a new
+  pager from page 0. Key the screen's list state by the filter
+  (`rememberSaveable(filter, saver = LazyListState.Saver)`) so new results start at the top.
 
 ## Screen
 

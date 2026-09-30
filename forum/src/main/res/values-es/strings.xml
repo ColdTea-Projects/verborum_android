@@ -5,6 +5,11 @@
     <string name="forumListEmpty">Aún no hay diccionarios compartidos</string>
     <string name="forumListLoadError">No se pudieron cargar los diccionarios compartidos</string>
     <string name="forumListLoadMoreError">No se pudieron cargar más diccionarios</string>
+    <string name="forumFilterTagsChip">Etiquetas: %1$s</string>
+    <string name="forumFilterTagsTitle">Etiquetas</string>
+    <string name="forumFilterUserChip">Usuario: %1$s</string>
+    <string name="forumFilterUserHint">Nombre de usuario</string>
+    <string name="forumListNoMatches">Ningún diccionario compartido coincide con estos filtros</string>
     <string name="forumDownload">Descargar</string>
     <string name="forumPublishedBy">por %1$s</string>
     <string name="forumUnknownPublisher">Editor desconocido</string>

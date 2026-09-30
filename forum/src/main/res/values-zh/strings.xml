@@ -5,6 +5,11 @@
     <string name="forumListEmpty">暂无共享词典</string>
     <string name="forumListLoadError">无法加载共享词典</string>
     <string name="forumListLoadMoreError">无法加载更多词典</string>
+    <string name="forumFilterTagsChip">标签：%1$s</string>
+    <string name="forumFilterTagsTitle">标签</string>
+    <string name="forumFilterUserChip">用户：%1$s</string>
+    <string name="forumFilterUserHint">用户名</string>
+    <string name="forumListNoMatches">没有符合这些筛选条件的共享词典</string>
     <string name="forumDownload">下载</string>
     <string name="forumPublishedBy">作者：%1$s</string>
     <string name="forumUnknownPublisher">未知发布者</string>

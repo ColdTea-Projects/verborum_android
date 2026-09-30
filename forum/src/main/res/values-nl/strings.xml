@@ -5,6 +5,11 @@
     <string name="forumListEmpty">Nog geen gedeelde woordenboeken</string>
     <string name="forumListLoadError">De gedeelde woordenboeken konden niet worden geladen</string>
     <string name="forumListLoadMoreError">Er konden geen extra woordenboeken worden geladen</string>
+    <string name="forumFilterTagsChip">Tags: %1$s</string>
+    <string name="forumFilterTagsTitle">Tags</string>
+    <string name="forumFilterUserChip">Gebruiker: %1$s</string>
+    <string name="forumFilterUserHint">Gebruikersnaam</string>
+    <string name="forumListNoMatches">Geen gedeelde woordenboeken komen overeen met deze filters</string>
     <string name="forumDownload">Downloaden</string>
     <string name="forumPublishedBy">door %1$s</string>
     <string name="forumUnknownPublisher">Onbekende uitgever</string>

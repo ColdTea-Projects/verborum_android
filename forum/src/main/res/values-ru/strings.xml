@@ -5,6 +5,11 @@
     <string name="forumListEmpty">Пока нет общих словарей</string>
     <string name="forumListLoadError">Не удалось загрузить общие словари</string>
     <string name="forumListLoadMoreError">Не удалось загрузить больше словарей</string>
+    <string name="forumFilterTagsChip">Теги: %1$s</string>
+    <string name="forumFilterTagsTitle">Теги</string>
+    <string name="forumFilterUserChip">Пользователь: %1$s</string>
+    <string name="forumFilterUserHint">Имя пользователя</string>
+    <string name="forumListNoMatches">Нет общих словарей, соответствующих этим фильтрам</string>
     <string name="forumDownload">Скачать</string>
     <string name="forumPublishedBy">автор: %1$s</string>
     <string name="forumUnknownPublisher">Неизвестный автор</string>

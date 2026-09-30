@@ -5,6 +5,11 @@
     <string name="forumListEmpty">Δεν υπάρχουν ακόμη κοινόχρηστα λεξικά</string>
     <string name="forumListLoadError">Δεν ήταν δυνατή η φόρτωση των κοινόχρηστων λεξικών</string>
     <string name="forumListLoadMoreError">Δεν ήταν δυνατή η φόρτωση περισσότερων λεξικών</string>
+    <string name="forumFilterTagsChip">Ετικέτες: %1$s</string>
+    <string name="forumFilterTagsTitle">Ετικέτες</string>
+    <string name="forumFilterUserChip">Χρήστης: %1$s</string>
+    <string name="forumFilterUserHint">Όνομα χρήστη</string>
+    <string name="forumListNoMatches">Κανένα κοινόχρηστο λεξικό δεν ταιριάζει με αυτά τα φίλτρα</string>
     <string name="forumDownload">Λήψη</string>
     <string name="forumPublishedBy">από %1$s</string>
     <string name="forumUnknownPublisher">Άγνωστος εκδότης</string>

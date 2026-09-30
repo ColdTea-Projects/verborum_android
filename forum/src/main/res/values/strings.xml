@@ -5,6 +5,11 @@
     <string name="forumListEmpty">No shared dictionaries yet</string>
     <string name="forumListLoadError">Couldn’t load the shared dictionaries</string>
     <string name="forumListLoadMoreError">Couldn’t load more dictionaries</string>
+    <string name="forumFilterTagsChip">Tags: %1$s</string>
+    <string name="forumFilterTagsTitle">Tags</string>
+    <string name="forumFilterUserChip">User: %1$s</string>
+    <string name="forumFilterUserHint">User name</string>
+    <string name="forumListNoMatches">No shared dictionaries match these filters</string>
     <string name="forumDownload">Download</string>
     <string name="forumPublishedBy">by %1$s</string>
     <string name="forumUnknownPublisher">Unknown publisher</string>

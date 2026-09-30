@@ -5,6 +5,11 @@
     <string name="forumListEmpty">Henüz paylaşılan sözlük yok</string>
     <string name="forumListLoadError">Paylaşılan sözlükler yüklenemedi</string>
     <string name="forumListLoadMoreError">Daha fazla sözlük yüklenemedi</string>
+    <string name="forumFilterTagsChip">Etiketler: %1$s</string>
+    <string name="forumFilterTagsTitle">Etiketler</string>
+    <string name="forumFilterUserChip">Kullanıcı: %1$s</string>
+    <string name="forumFilterUserHint">Kullanıcı adı</string>
+    <string name="forumListNoMatches">Bu filtrelere uyan paylaşılan sözlük yok</string>
     <string name="forumDownload">İndir</string>
     <string name="forumPublishedBy">%1$s tarafından</string>
     <string name="forumUnknownPublisher">Bilinmeyen yayıncı</string>

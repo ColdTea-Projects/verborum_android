@@ -5,6 +5,11 @@
     <string name="forumListEmpty">Спільних словників ще немає</string>
     <string name="forumListLoadError">Не вдалося завантажити спільні словники</string>
     <string name="forumListLoadMoreError">Не вдалося завантажити більше словників</string>
+    <string name="forumFilterTagsChip">Теги: %1$s</string>
+    <string name="forumFilterTagsTitle">Теги</string>
+    <string name="forumFilterUserChip">Користувач: %1$s</string>
+    <string name="forumFilterUserHint">Ім’я користувача</string>
+    <string name="forumListNoMatches">Немає спільних словників, що відповідають цим фільтрам</string>
     <string name="forumDownload">Завантажити</string>
     <string name="forumPublishedBy">автор: %1$s</string>
     <string name="forumUnknownPublisher">Невідомий автор</string>

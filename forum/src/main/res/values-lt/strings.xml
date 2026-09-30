@@ -5,6 +5,11 @@
     <string name="forumListEmpty">Bendrinamų žodynų dar nėra</string>
     <string name="forumListLoadError">Nepavyko įkelti bendrinamų žodynų</string>
     <string name="forumListLoadMoreError">Nepavyko įkelti daugiau žodynų</string>
+    <string name="forumFilterTagsChip">Žymės: %1$s</string>
+    <string name="forumFilterTagsTitle">Žymės</string>
+    <string name="forumFilterUserChip">Naudotojas: %1$s</string>
+    <string name="forumFilterUserHint">Naudotojo vardas</string>
+    <string name="forumListNoMatches">Nėra bendrinamų žodynų, atitinkančių šiuos filtrus</string>
     <string name="forumDownload">Atsisiųsti</string>
     <string name="forumPublishedBy">autorius: %1$s</string>
     <string name="forumUnknownPublisher">Nežinomas leidėjas</string>

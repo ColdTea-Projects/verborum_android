@@ -5,6 +5,11 @@
     <string name="forumListEmpty">لا توجد قواميس مشتركة بعد</string>
     <string name="forumListLoadError">تعذّر تحميل القواميس المشتركة</string>
     <string name="forumListLoadMoreError">تعذّر تحميل المزيد من القواميس</string>
+    <string name="forumFilterTagsChip">الوسوم: %1$s</string>
+    <string name="forumFilterTagsTitle">الوسوم</string>
+    <string name="forumFilterUserChip">المستخدم: %1$s</string>
+    <string name="forumFilterUserHint">اسم المستخدم</string>
+    <string name="forumListNoMatches">لا توجد قواميس مشتركة تطابق عوامل التصفية هذه</string>
     <string name="forumDownload">تنزيل</string>
     <string name="forumPublishedBy">بواسطة %1$s</string>
     <string name="forumUnknownPublisher">ناشر غير معروف</string>

@@ -5,6 +5,11 @@
     <string name="forumListEmpty">Brak udostępnionych słowników</string>
     <string name="forumListLoadError">Nie udało się wczytać udostępnionych słowników</string>
     <string name="forumListLoadMoreError">Nie udało się wczytać kolejnych słowników</string>
+    <string name="forumFilterTagsChip">Tagi: %1$s</string>
+    <string name="forumFilterTagsTitle">Tagi</string>
+    <string name="forumFilterUserChip">Użytkownik: %1$s</string>
+    <string name="forumFilterUserHint">Nazwa użytkownika</string>
+    <string name="forumListNoMatches">Żaden udostępniony słownik nie pasuje do tych filtrów</string>
     <string name="forumDownload">Pobierz</string>
     <string name="forumPublishedBy">autor: %1$s</string>
     <string name="forumUnknownPublisher">Nieznany wydawca</string>

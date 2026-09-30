@@ -5,6 +5,11 @@
     <string name="forumListEmpty">Hələ paylaşılan lüğət yoxdur</string>
     <string name="forumListLoadError">Paylaşılan lüğətləri yükləmək mümkün olmadı</string>
     <string name="forumListLoadMoreError">Daha çox lüğət yükləmək mümkün olmadı</string>
+    <string name="forumFilterTagsChip">Teqlər: %1$s</string>
+    <string name="forumFilterTagsTitle">Teqlər</string>
+    <string name="forumFilterUserChip">İstifadəçi: %1$s</string>
+    <string name="forumFilterUserHint">İstifadəçi adı</string>
+    <string name="forumListNoMatches">Bu filtrlərə uyğun paylaşılan lüğət yoxdur</string>
     <string name="forumDownload">Yüklə</string>
     <string name="forumPublishedBy">%1$s tərəfindən</string>
     <string name="forumUnknownPublisher">Naməlum naşir</string>
