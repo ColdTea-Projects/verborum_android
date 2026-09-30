@@ -53,7 +53,7 @@ import de.coldtea.verborum.forum.marketplace.ui.forumdictionarylist.model.ForumD
 
 /**
  * The marketplace counterpart of bibliotheca's `DictionaryCard` — same look, plus the publisher
- * next to the publish date.
+ * next to the publish date and the dictionary's tags as chips along the bottom.
  */
 @Composable
 fun ForumDictionaryCard(
@@ -144,6 +144,11 @@ fun ForumDictionaryCard(
                         dictionary = dictionary,
                         modifier = Modifier.padding(top = 8.dp),
                     )
+
+                    ForumTagChips(
+                        tagCodes = dictionary.tags,
+                        modifier = Modifier.padding(top = 10.dp),
+                    )
                 }
 
                 // Overflow menu — opens the Download options sheet.
@@ -220,6 +225,7 @@ private fun ForumDictionaryCardPreview() {
                 publishedAt = System.currentTimeMillis() - 3 * DateUtils.DAY_IN_MILLIS,
                 rating = 4.7f,
                 wordCount = 12,
+                tags = listOf("a1", "daily_routine", "shopping", "family", "travel"),
             ),
             onClick = {},
         )

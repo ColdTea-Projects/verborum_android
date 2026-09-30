@@ -14,6 +14,7 @@ data class MarketplaceListing(
     val publishedAt: Long,
     val rating: Float?,
     val wordCount: Int?,
+    val tags: List<String>,
 ) {
     fun convertToUi() = ForumDictionaryUi(
         dictionaryId = dictionaryId,
@@ -26,5 +27,6 @@ data class MarketplaceListing(
         publishedAt = publishedAt,
         rating = rating,
         wordCount = wordCount,
+        tags = tags,
     )
 }

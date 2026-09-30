@@ -16,6 +16,7 @@ fun testMarketplaceListing(
     publishedAt: Long = 1_000L,
     rating: Float? = 4.5f,
     wordCount: Int? = 6,
+    tags: List<String> = listOf("a1", "food_drink"),
 ) = MarketplaceListing(
     dictionaryId = dictionaryId,
     publisherId = publisherId,
@@ -27,6 +28,7 @@ fun testMarketplaceListing(
     publishedAt = publishedAt,
     rating = rating,
     wordCount = wordCount,
+    tags = tags,
 )
 
 fun testForumDictionaryUi(
@@ -40,6 +42,7 @@ fun testForumDictionaryUi(
     publishedAt: Long = 1_000L,
     rating: Float? = 4.5f,
     wordCount: Int? = 6,
+    tags: List<String> = listOf("a1", "food_drink"),
 ) = ForumDictionaryUi(
     dictionaryId = dictionaryId,
     publisherId = publisherId,
@@ -51,6 +54,7 @@ fun testForumDictionaryUi(
     publishedAt = publishedAt,
     rating = rating,
     wordCount = wordCount,
+    tags = tags,
 )
 
 fun testMarketplaceWord(

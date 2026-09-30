@@ -36,6 +36,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import de.coldtea.verborum.core.theme.VerborumTheme
 import de.coldtea.verborum.core.ui.RegisterTopBar
+import de.coldtea.verborum.core.ui.components.DictionaryTagsText
 import de.coldtea.verborum.core.ui.components.ScreenError
 import de.coldtea.verborum.core.ui.components.languagePairLabel
 import de.coldtea.verborum.forum.common.utils.CoreResPlurals
@@ -119,6 +120,14 @@ private fun ForumDictionaryDetailsContent(
                     rating = dictionary.rating,
                     downloadCount = dictionary.downloadCount,
                 )
+
+                // The same translated tag line bibliotheca shows under its practice buttons;
+                // hidden when there are none.
+                if (dictionary.tags.isNotEmpty()) {
+                    Spacer(modifier = Modifier.height(12.dp))
+                    DictionaryTagsText(tagCodes = dictionary.tags)
+                }
+
                 Spacer(modifier = Modifier.height(32.dp))
             }
 
@@ -195,6 +204,7 @@ private fun ForumDictionaryDetailsContentPreview() {
                 publishedAt = System.currentTimeMillis(),
                 rating = 4.7f,
                 wordCount = 2,
+                tags = listOf("a1", "daily_routine", "shopping"),
             ),
             words = listOf(
                 ForumWordUi(wordId = "w1", word = "house", translation = "das Haus"),

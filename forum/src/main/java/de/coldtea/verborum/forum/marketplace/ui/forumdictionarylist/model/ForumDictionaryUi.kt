@@ -16,4 +16,6 @@ data class ForumDictionaryUi(
     val publishedAt: Long,
     val rating: Float?,
     val wordCount: Int?,
+    // Tag codes (resolved to translated labels at render time); empty when there are none.
+    val tags: List<String> = emptyList(),
 )

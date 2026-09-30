@@ -13,6 +13,7 @@ class MarketplaceResponseConversionTest {
         rating: Float? = null,
         publisherName: String? = null,
         wordCount: Int? = null,
+        tags: List<String>? = null,
     ) = MarketplaceListingResponse(
         dictionaryId = "00000006-0000-4000-8000-000000000000",
         publisherId = "765a81ed-2612-4dcc-bf7a-3d5fecf3d0d6",
@@ -24,6 +25,7 @@ class MarketplaceResponseConversionTest {
         publisherName = publisherName,
         rating = rating,
         wordCount = wordCount,
+        tags = tags,
     )
 
     // region listing
@@ -46,6 +48,14 @@ class MarketplaceResponseConversionTest {
         assertNull(result.publisherName)
         assertNull(result.rating)
         assertNull(result.wordCount)
+        assertEquals(emptyList<String>(), result.tags)
+    }
+
+    @Test
+    fun `listing normalises tag codes to trimmed, lowercase and distinct`() {
+        val result = listing(tags = listOf(" A1 ", "food_drink", "a1", "", "FOOD_DRINK")).convertToListing()
+
+        assertEquals(listOf("a1", "food_drink"), result.tags)
     }
 
     @Test

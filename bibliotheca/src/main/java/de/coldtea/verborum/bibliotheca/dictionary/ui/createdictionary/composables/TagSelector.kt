@@ -33,10 +33,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import de.coldtea.verborum.bibliotheca.common.utils.ResDrawables
 import de.coldtea.verborum.bibliotheca.common.utils.ResStrings
-import de.coldtea.verborum.bibliotheca.dictionary.ui.createdictionary.model.DictionaryTag
-import de.coldtea.verborum.bibliotheca.dictionary.ui.createdictionary.model.EXAM_TAGS
-import de.coldtea.verborum.bibliotheca.dictionary.ui.createdictionary.model.LEVEL_TAGS
-import de.coldtea.verborum.bibliotheca.dictionary.ui.createdictionary.model.TOPIC_TAGS
+import de.coldtea.verborum.core.ui.model.DictionaryTag
+import de.coldtea.verborum.core.ui.model.EXAM_TAGS
+import de.coldtea.verborum.core.ui.model.LEVEL_TAGS
+import de.coldtea.verborum.core.ui.model.TOPIC_TAGS
 
 /**
  * Collapsible tag picker for the create/edit dictionary form: a header the user taps to reveal

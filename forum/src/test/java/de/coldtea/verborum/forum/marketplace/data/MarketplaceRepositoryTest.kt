@@ -1,6 +1,8 @@
 package de.coldtea.verborum.forum.marketplace.data
 
 import de.coldtea.verborum.core.ui.model.SupportedLanguage
+import de.coldtea.verborum.core.ui.model.dictionaryTagByCode
+import de.coldtea.verborum.forum.marketplace.ui.forumdictionarylist.composables.MAX_VISIBLE_TAG_CHIPS
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
@@ -63,6 +65,21 @@ class MarketplaceRepositoryTest {
                 assertTrue(word.word.orEmpty().startsWith("["))
             }
         }
+    }
+
+    @Test
+    fun `every dummy tag is a known taxonomy code`() = runTest {
+        subject.getListings().items.flatMap { it.tags.orEmpty() }.forEach { code ->
+            assertNotNull(code, dictionaryTagByCode(code))
+        }
+    }
+
+    @Test
+    fun `dummy data covers a card over the chip limit and one without tags`() = runTest {
+        val tagCounts = subject.getListings().items.map { it.tags.orEmpty().size }
+
+        assertTrue(tagCounts.any { it > MAX_VISIBLE_TAG_CHIPS })
+        assertTrue(tagCounts.any { it == 0 })
     }
 
     @Test

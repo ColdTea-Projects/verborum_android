@@ -6,6 +6,7 @@ import de.coldtea.verborum.core.utils.ApiTimestamp
 import de.coldtea.verborum.forum.marketplace.domain.model.MarketplaceListing
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import java.util.Locale
 
 /**
  * One marketplace listing, shaped like ms_marketplace's listing
@@ -42,6 +43,10 @@ data class MarketplaceListingResponse(
     val rating: Float? = null,
     @SerialName("wordCount")
     val wordCount: Int? = null,
+    // Tag codes. Not on the listing in the contract either: the real source is ms_dictionary's
+    // GET /dictionaries/{id}/tags (guide §4.5), one call per dictionary.
+    @SerialName("tags")
+    val tags: List<String>? = null,
 ) {
     fun convertToListing() = MarketplaceListing(
         dictionaryId = dictionaryId,
@@ -54,6 +59,11 @@ data class MarketplaceListingResponse(
         publishedAt = ApiTimestamp.parse(publishedAt) ?: 0L,
         rating = rating?.coerceIn(0f, MAX_RATING),
         wordCount = wordCount,
+        // Codes are lowercase on the backend (it normalises on write); normalise defensively.
+        tags = tags.orEmpty()
+            .map { it.trim().lowercase(Locale.ROOT) }
+            .filter(String::isNotEmpty)
+            .distinct(),
     )
 
     companion object {

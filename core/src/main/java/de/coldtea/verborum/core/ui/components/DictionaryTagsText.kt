@@ -1,4 +1,4 @@
-package de.coldtea.verborum.bibliotheca.word.ui.dictionarydetails.composables
+package de.coldtea.verborum.core.ui.components
 
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -6,7 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.sp
-import de.coldtea.verborum.bibliotheca.dictionary.ui.createdictionary.model.dictionaryTagByCode
+import de.coldtea.verborum.core.ui.model.dictionaryTagByCode
 
 /**
  * Renders a dictionary's tags as a single small line of translated labels separated by middle dots,
@@ -19,13 +19,7 @@ fun DictionaryTagsText(
     tagCodes: List<String>,
     modifier: Modifier = Modifier,
 ) {
-    // Resolve in a plain loop: stringResource can't be called from the lambda of a map/forEach.
-    val labels = mutableListOf<String>()
-    for (code in tagCodes) {
-        val tag = dictionaryTagByCode(code) ?: continue
-        val label = tag.labelRes?.let { stringResource(it) } ?: tag.name ?: continue
-        labels.add(label)
-    }
+    val labels = dictionaryTagLabels(tagCodes)
     if (labels.isEmpty()) return
 
     Text(
@@ -34,4 +28,21 @@ fun DictionaryTagsText(
         color = MaterialTheme.colorScheme.onSurfaceVariant,
         modifier = modifier,
     )
+}
+
+/**
+ * The display labels of [tagCodes], in order: translatable tags follow the device language, fixed
+ * names (framework/exam codes) show as-is, unknown codes are skipped. Shared by [DictionaryTagsText]
+ * and the forum's tag chips so both resolve tags identically.
+ */
+@Composable
+fun dictionaryTagLabels(tagCodes: List<String>): List<String> {
+    // Resolve in a plain loop: stringResource can't be called from the lambda of a map/forEach.
+    val labels = mutableListOf<String>()
+    for (code in tagCodes) {
+        val tag = dictionaryTagByCode(code) ?: continue
+        val label = tag.labelRes?.let { stringResource(it) } ?: tag.name ?: continue
+        labels.add(label)
+    }
+    return labels
 }

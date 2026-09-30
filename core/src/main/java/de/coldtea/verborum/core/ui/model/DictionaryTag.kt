@@ -1,7 +1,7 @@
-package de.coldtea.verborum.bibliotheca.dictionary.ui.createdictionary.model
+package de.coldtea.verborum.core.ui.model
 
 import androidx.annotation.StringRes
-import de.coldtea.verborum.bibliotheca.common.utils.ResStrings
+import de.coldtea.verborum.core.utils.ResStrings
 
 /**
  * A selectable dictionary tag.

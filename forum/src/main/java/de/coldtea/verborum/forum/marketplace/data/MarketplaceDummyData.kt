@@ -86,19 +86,28 @@ internal object MarketplaceDummyData {
     /** Newest first, as `GET /marketplace/dictionaries` orders them. */
     val listings: List<MarketplaceListingResponse> = listOf(
         listing(ITALIAN_CAFE, "b1d2e3f4-0000-4000-8000-000000000005", "Sofia Rossi",
-            "Italian Café Talk", "EN", "IT", 2051, "2026-09-26T08:12:40.118204Z", 4.8f),
+            "Italian Café Talk", "EN", "IT", 2051, "2026-09-26T08:12:40.118204Z", 4.8f,
+            // More than four tags, to exercise the list card's chip limit.
+            listOf("basic", "a1", "food_drink", "food_service", "travel", "culture_holidays", "cils")),
         listing(EVERYDAY_GERMAN, "b1d2e3f4-0000-4000-8000-000000000001", "Anna Schmidt",
-            "Everyday German", "EN", "DE", 1284, "2026-09-24T17:01:21.303971Z", 4.7f),
+            "Everyday German", "EN", "DE", 1284, "2026-09-24T17:01:21.303971Z", 4.7f,
+            listOf("a1", "daily_routine", "shopping", "family")),
         listing(JAPANESE_TRAVEL, "b1d2e3f4-0000-4000-8000-000000000002", "Kenji Watanabe",
-            "Japanese Travel Phrases", "EN", "JA", 842, "2026-09-20T11:45:03.552100Z", 4.5f),
+            "Japanese Travel Phrases", "EN", "JA", 842, "2026-09-20T11:45:03.552100Z", 4.5f,
+            listOf("n5", "travel", "transport")),
         listing(TURKISH_KITCHEN, "b1d2e3f4-0000-4000-8000-000000000003", "Elif Yılmaz",
-            "Turkish Kitchen", "TR", "EN", 317, "2026-09-12T19:30:00.000000Z", 4.2f),
+            "Turkish Kitchen", "TR", "EN", 317, "2026-09-12T19:30:00.000000Z", 4.2f,
+            listOf("food_drink", "home_appliances")),
         listing(POLISH_UKRAINIAN, "b1d2e3f4-0000-4000-8000-000000000007", "Marta Kowalska",
-            "Polish → Ukrainian", "PL", "UK", 7, "2026-09-01T09:00:12.000000Z", 4.1f),
+            "Polish → Ukrainian", "PL", "UK", 7, "2026-09-01T09:00:12.000000Z", 4.1f,
+            // No tags: the card shows no chip row.
+            emptyList()),
         listing(FRENCH_VERBS, "b1d2e3f4-0000-4000-8000-000000000004", "Lucas Martin",
-            "French Verbs A1", "EN", "FR", 96, "2026-08-18T14:22:51.020000Z", 3.9f),
+            "French Verbs A1", "EN", "FR", 96, "2026-08-18T14:22:51.020000Z", 3.9f,
+            listOf("a1", "education", "delf_dalf")),
         listing(SPANISH_BUSINESS, "b1d2e3f4-0000-4000-8000-000000000006", "Daniel Kim",
-            "Spanish Business Basics", "EN", "ES", 58, "2026-07-30T07:05:44.700000Z", 3.6f),
+            "Spanish Business Basics", "EN", "ES", 58, "2026-07-30T07:05:44.700000Z", 3.6f,
+            listOf("intermediate", "business", "work_office")),
     )
 
     fun wordsFor(dictionaryId: String): List<MarketplaceWordResponse> =
@@ -122,6 +131,7 @@ internal object MarketplaceDummyData {
         importCount: Int,
         publishedAt: String,
         rating: Float,
+        tags: List<String>,
     ) = MarketplaceListingResponse(
         dictionaryId = dictionaryId,
         publisherId = publisherId,
@@ -133,6 +143,7 @@ internal object MarketplaceDummyData {
         publisherName = publisherName,
         rating = rating,
         wordCount = wordsByDictionary[dictionaryId]?.size,
+        tags = tags,
     )
 
     private fun String.toSurfacesJson(): String =

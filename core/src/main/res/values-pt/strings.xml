@@ -38,4 +38,37 @@
         <item quantity="one">%1$d palavra</item>
         <item quantity="other">%1$d palavras</item>
     </plurals>
+    <string name="tagLevelBasic">Básico</string>
+    <string name="tagLevelIntermediate">Intermédio</string>
+    <string name="tagLevelAdvanced">Avançado</string>
+    <string name="tagTopicFoodDrink">Comida e bebida</string>
+    <string name="tagTopicHomeAppliances">Casa e eletrodomésticos</string>
+    <string name="tagTopicClothing">Roupa</string>
+    <string name="tagTopicFamily">Família</string>
+    <string name="tagTopicDailyRoutine">Rotina diária</string>
+    <string name="tagTopicShopping">Compras</string>
+    <string name="tagTopicMoney">Dinheiro</string>
+    <string name="tagTopicTravel">Viagens</string>
+    <string name="tagTopicTransport">Transporte</string>
+    <string name="tagTopicCarsParts">Carros e peças</string>
+    <string name="tagTopicDirections">Direções</string>
+    <string name="tagTopicCity">Cidade</string>
+    <string name="tagTopicNatureWeather">Natureza e clima</string>
+    <string name="tagTopicAnimals">Animais</string>
+    <string name="tagTopicPlants">Plantas</string>
+    <string name="tagTopicBodyHealth">Corpo e saúde</string>
+    <string name="tagTopicMedicine">Medicina</string>
+    <string name="tagTopicEmotions">Emoções</string>
+    <string name="tagTopicWorkOffice">Trabalho e escritório</string>
+    <string name="tagTopicBusiness">Negócios</string>
+    <string name="tagTopicEducation">Educação</string>
+    <string name="tagTopicItTechnology">Informática e tecnologia</string>
+    <string name="tagTopicLaw">Direito</string>
+    <string name="tagTopicScience">Ciência</string>
+    <string name="tagTopicSports">Desportos</string>
+    <string name="tagTopicMusic">Música</string>
+    <string name="tagTopicArtFilm">Arte e cinema</string>
+    <string name="tagTopicCultureHolidays">Cultura e feriados</string>
+    <string name="tagTopicNewsPolitics">Notícias e política</string>
+    <string name="tagTopicFoodService">Restauração</string>
 </resources>
