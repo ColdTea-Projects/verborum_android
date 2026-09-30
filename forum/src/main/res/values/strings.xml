@@ -4,6 +4,7 @@
     <string name="forumListScreenSubtitle">Dictionaries shared by the community</string>
     <string name="forumListEmpty">No shared dictionaries yet</string>
     <string name="forumListLoadError">Couldn’t load the shared dictionaries</string>
+    <string name="forumListLoadMoreError">Couldn’t load more dictionaries</string>
     <string name="forumDownload">Download</string>
     <string name="forumPublishedBy">by %1$s</string>
     <string name="forumUnknownPublisher">Unknown publisher</string>

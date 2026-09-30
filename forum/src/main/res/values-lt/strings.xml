@@ -4,6 +4,7 @@
     <string name="forumListScreenSubtitle">Bendruomenės bendrinami žodynai</string>
     <string name="forumListEmpty">Bendrinamų žodynų dar nėra</string>
     <string name="forumListLoadError">Nepavyko įkelti bendrinamų žodynų</string>
+    <string name="forumListLoadMoreError">Nepavyko įkelti daugiau žodynų</string>
     <string name="forumDownload">Atsisiųsti</string>
     <string name="forumPublishedBy">autorius: %1$s</string>
     <string name="forumUnknownPublisher">Nežinomas leidėjas</string>

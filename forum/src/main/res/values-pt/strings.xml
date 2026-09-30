@@ -4,6 +4,7 @@
     <string name="forumListScreenSubtitle">Dicionários partilhados pela comunidade</string>
     <string name="forumListEmpty">Ainda não há dicionários partilhados</string>
     <string name="forumListLoadError">Não foi possível carregar os dicionários partilhados</string>
+    <string name="forumListLoadMoreError">Não foi possível carregar mais dicionários</string>
     <string name="forumDownload">Transferir</string>
     <string name="forumPublishedBy">por %1$s</string>
     <string name="forumUnknownPublisher">Editor desconhecido</string>

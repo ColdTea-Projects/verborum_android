@@ -7,15 +7,18 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -23,19 +26,27 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.paging.LoadState
+import androidx.paging.PagingData
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.itemContentType
+import androidx.paging.compose.itemKey
 import de.coldtea.verborum.core.theme.VerborumTheme
 import de.coldtea.verborum.core.ui.RegisterTopBar
 import de.coldtea.verborum.core.ui.components.DictionaryCardSkeleton
 import de.coldtea.verborum.core.ui.components.ScreenError
+import de.coldtea.verborum.forum.common.utils.CoreResStrings
 import de.coldtea.verborum.forum.common.utils.ResStrings
 import de.coldtea.verborum.forum.marketplace.ui.forumdictionarylist.composables.ForumDictionaryCard
 import de.coldtea.verborum.forum.marketplace.ui.forumdictionarylist.composables.ForumDictionaryOptionsSheet
-import de.coldtea.verborum.forum.marketplace.ui.forumdictionarylist.model.ForumDictionaryListState
 import de.coldtea.verborum.forum.marketplace.ui.forumdictionarylist.model.ForumDictionaryUi
+import kotlinx.coroutines.flow.flowOf
 
 /** The Forum tab root: the marketplace's shared dictionaries, laid out like bibliotheca's list. */
 @Composable
@@ -43,7 +54,7 @@ fun ForumDictionaryListScreen(
     viewModel: ForumDictionaryListViewModel = hiltViewModel(),
     onDictionaryClick: (String) -> Unit,
 ) {
-    val state by viewModel.dictionariesState.collectAsState()
+    val dictionaries = viewModel.dictionaries.collectAsLazyPagingItems()
 
     RegisterTopBar(
         title = stringResource(ResStrings.forumListScreenTitle),
@@ -52,19 +63,17 @@ fun ForumDictionaryListScreen(
     )
 
     ForumDictionaryListContent(
-        state = state,
+        dictionaries = dictionaries,
         onDictionaryClick = onDictionaryClick,
-        onRetry = viewModel::retry,
     )
 }
 
 @Composable
 private fun ForumDictionaryListContent(
-    state: ForumDictionaryListState,
+    dictionaries: LazyPagingItems<ForumDictionaryUi>,
     onDictionaryClick: (String) -> Unit,
-    onRetry: () -> Unit,
 ) {
-    // Hoisted so the scroll position survives the Loading -> Success switch.
+    // Hoisted so the scroll position survives the skeleton -> list switch and back-navigation.
     val listState = rememberLazyListState()
     var optionsFor by remember { mutableStateOf<ForumDictionaryUi?>(null) }
 
@@ -84,8 +93,40 @@ private fun ForumDictionaryListContent(
     ) {
         Spacer(modifier = Modifier.height(16.dp))
 
-        when (state) {
-            is ForumDictionaryListState.Loading -> {
+        val refresh = dictionaries.loadState.refresh
+        when {
+            // Once items exist, a later refresh keeps them on screen instead of blanking the list.
+            dictionaries.itemCount > 0 -> {
+                LazyColumn(
+                    state = listState,
+                    modifier = Modifier.weight(1f),
+                    // Un-clipped room for the first/last cards' shadow and press-lift.
+                    contentPadding = PaddingValues(vertical = 8.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    items(
+                        count = dictionaries.itemCount,
+                        key = dictionaries.itemKey { it.dictionaryId },
+                        contentType = dictionaries.itemContentType { DICTIONARY_CONTENT_TYPE },
+                    ) { index ->
+                        // Placeholders are disabled, so a loaded index is never null.
+                        dictionaries[index]?.let { dictionary ->
+                            ForumDictionaryCard(
+                                dictionary = dictionary,
+                                onClick = onDictionaryClick,
+                                onMenuClick = { optionsFor = it },
+                            )
+                        }
+                    }
+
+                    appendFooter(
+                        append = dictionaries.loadState.append,
+                        onRetry = dictionaries::retry,
+                    )
+                }
+            }
+
+            refresh is LoadState.Loading -> {
                 LazyColumn(
                     modifier = Modifier.weight(1f),
                     contentPadding = PaddingValues(vertical = 8.dp),
@@ -95,74 +136,100 @@ private fun ForumDictionaryListContent(
                 }
             }
 
-            is ForumDictionaryListState.Failed -> {
+            refresh is LoadState.Error -> {
                 ScreenError(
-                    onRetry = onRetry,
+                    onRetry = dictionaries::retry,
                     modifier = Modifier.weight(1f),
                     message = stringResource(ResStrings.forumListLoadError),
                 )
             }
 
-            is ForumDictionaryListState.Success -> {
-                if (state.dictionaries.isEmpty()) {
-                    Box(
-                        modifier = Modifier.weight(1f),
-                        contentAlignment = Alignment.Center,
-                    ) {
-                        Text(
-                            text = stringResource(ResStrings.forumListEmpty),
-                            fontSize = 15.sp,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        )
-                    }
-                } else {
-                    LazyColumn(
-                        state = listState,
-                        modifier = Modifier.weight(1f),
-                        // Un-clipped room for the first/last cards' shadow and press-lift.
-                        contentPadding = PaddingValues(vertical = 8.dp),
-                        verticalArrangement = Arrangement.spacedBy(16.dp)
-                    ) {
-                        items(
-                            items = state.dictionaries,
-                            key = { it.dictionaryId },
-                        ) { dictionary ->
-                            ForumDictionaryCard(
-                                dictionary = dictionary,
-                                onClick = onDictionaryClick,
-                                onMenuClick = { optionsFor = it },
-                            )
-                        }
-                    }
+            else -> {
+                Box(
+                    modifier = Modifier.weight(1f),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Text(
+                        text = stringResource(ResStrings.forumListEmpty),
+                        fontSize = 15.sp,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
                 }
             }
         }
     }
 }
 
+/** The list's last row while the next page loads, or failed to (with an inline retry). */
+private fun LazyListScope.appendFooter(
+    append: LoadState,
+    onRetry: () -> Unit,
+) {
+    when (append) {
+        is LoadState.Loading -> item(key = FOOTER_KEY, contentType = FOOTER_KEY) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp),
+                contentAlignment = Alignment.Center,
+            ) {
+                CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
+            }
+        }
+
+        is LoadState.Error -> item(key = FOOTER_KEY, contentType = FOOTER_KEY) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                Text(
+                    text = stringResource(ResStrings.forumListLoadMoreError),
+                    fontSize = 14.sp,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    textAlign = TextAlign.Center,
+                )
+                OutlinedButton(
+                    onClick = onRetry,
+                    modifier = Modifier.padding(top = 8.dp),
+                ) {
+                    Text(text = stringResource(CoreResStrings.errorRetry))
+                }
+            }
+        }
+
+        is LoadState.NotLoading -> Unit
+    }
+}
+
+private const val DICTIONARY_CONTENT_TYPE = "dictionary"
+private const val FOOTER_KEY = "appendFooter"
+
 @PreviewLightDark
 @Composable
 private fun ForumDictionaryListContentPreview() {
     VerborumTheme {
         ForumDictionaryListContent(
-            state = ForumDictionaryListState.Success(
-                listOf(
-                    ForumDictionaryUi(
-                        dictionaryId = "1",
-                        publisherId = "p1",
-                        publisherName = "Anna Schmidt",
-                        name = "Everyday German",
-                        fromLang = "EN",
-                        toLang = "DE",
-                        downloadCount = 1284,
-                        publishedAt = System.currentTimeMillis(),
-                        rating = 4.7f,
-                        wordCount = 6,
-                    ),
+            dictionaries = flowOf(
+                PagingData.from(
+                    listOf(
+                        ForumDictionaryUi(
+                            dictionaryId = "1",
+                            publisherId = "p1",
+                            publisherName = "Anna Schmidt",
+                            name = "Everyday German",
+                            fromLang = "EN",
+                            toLang = "DE",
+                            downloadCount = 1284,
+                            publishedAt = System.currentTimeMillis(),
+                            rating = 4.7f,
+                            wordCount = 6,
+                        ),
+                    )
                 )
-            ),
+            ).collectAsLazyPagingItems(),
             onDictionaryClick = {},
-            onRetry = {},
         )
     }
 }

@@ -37,6 +37,7 @@ appauth = "0.11.1"
 security-crypto = "1.0.0"
 robolectric = "4.14.1"
 androidx-test-core = "1.6.1"
+paging = "3.3.6"
 
 [libraries]
 androidx_core_ktx = { module = "androidx.core:core-ktx", version.ref = "androidx_core_ktx" }
@@ -83,6 +84,9 @@ androidx_security_crypto = { module = "androidx.security:security-crypto", versi
 robolectric = { module = "org.robolectric:robolectric", version.ref = "robolectric" }
 androidx_test_core = { module = "androidx.test:core", version.ref = "androidx-test-core" }
 okhttp3_mockwebserver = { module = "com.squareup.okhttp3:mockwebserver", version.ref = "okhttp" }
+androidx_paging_common = { module = "androidx.paging:paging-common", version.ref = "paging" }
+androidx_paging_compose = { module = "androidx.paging:paging-compose", version.ref = "paging" }
+androidx_paging_testing = { module = "androidx.paging:paging-testing", version.ref = "paging" }
 
 
 [plugins]

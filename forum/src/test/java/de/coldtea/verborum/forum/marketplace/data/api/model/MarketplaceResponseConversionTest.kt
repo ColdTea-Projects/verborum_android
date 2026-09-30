@@ -108,4 +108,29 @@ class MarketplaceResponseConversionTest {
         assertEquals(emptyList<String>(), result.translations)
     }
     // endregion
+
+    // region page
+    @Test
+    fun `page converts its listings, de-duplicated by id, and keeps hasMore`() {
+        val result = MarketplacePageResponse(
+            items = listOf(listing(), listing(), listing().copy(dictionaryId = "other")),
+            page = 1,
+            size = 3,
+            totalElements = 9,
+            totalPages = 3,
+        ).convertToListingPage()
+
+        assertEquals(listOf("00000006-0000-4000-8000-000000000000", "other"), result.listings.map { it.dictionaryId })
+        assertEquals(1, result.page)
+        assertTrue(result.hasMore)
+    }
+
+    @Test
+    fun `the last page has no more`() {
+        val result = MarketplacePageResponse(page = 2, size = 3, totalElements = 9, totalPages = 3)
+            .convertToListingPage()
+
+        assertFalse(result.hasMore)
+    }
+    // endregion
 }

@@ -1,11 +1,15 @@
 package de.coldtea.verborum.forum.marketplace.ui.forumdictionarylist
 
+import androidx.paging.PagingData
+import androidx.paging.testing.asSnapshot
 import de.coldtea.verborum.core.BaseTest
 import de.coldtea.verborum.forum.marketplace.domain.MarketplaceService
-import de.coldtea.verborum.forum.marketplace.ui.forumdictionarylist.model.ForumDictionaryListState
 import de.coldtea.verborum.forum.testForumDictionaryUi
-import io.mockk.coEvery
+import io.mockk.every
 import io.mockk.impl.annotations.MockK
+import io.mockk.verify
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Test
@@ -16,32 +20,24 @@ class ForumDictionaryListViewModelTest : BaseTest() {
     private lateinit var marketplaceService: MarketplaceService
 
     @Test
-    fun `init emits Success with the marketplace dictionaries`() = runTest {
+    fun `dictionaries exposes the service's paged marketplace dictionaries`() = runTest {
         val dictionaries = listOf(testForumDictionaryUi(dictionaryId = "a"), testForumDictionaryUi(dictionaryId = "b"))
-        coEvery { marketplaceService.getDictionaries() } returns dictionaries
+        every { marketplaceService.getDictionaries() } returns flowOf(PagingData.from(dictionaries))
 
         val viewModel = ForumDictionaryListViewModel(marketplaceService)
 
-        assertEquals(ForumDictionaryListState.Success(dictionaries), viewModel.dictionariesState.value)
+        // The cached stream never completes, so snapshot its first PagingData rather than the stream.
+        assertEquals(dictionaries, flowOf(viewModel.dictionaries.first()).asSnapshot())
     }
 
     @Test
-    fun `init emits Failed when loading throws`() = runTest {
-        coEvery { marketplaceService.getDictionaries() } throws RuntimeException("offline")
-
+    fun `the pager is created once, however often the list is collected`() = runTest {
+        every { marketplaceService.getDictionaries() } returns flowOf(PagingData.from(listOf(testForumDictionaryUi())))
         val viewModel = ForumDictionaryListViewModel(marketplaceService)
 
-        assertEquals(ForumDictionaryListState.Failed, viewModel.dictionariesState.value)
-    }
+        viewModel.dictionaries.first()
+        viewModel.dictionaries.first()
 
-    @Test
-    fun `retry after a failure loads again`() = runTest {
-        val dictionaries = listOf(testForumDictionaryUi())
-        coEvery { marketplaceService.getDictionaries() } throws RuntimeException("offline") andThen dictionaries
-        val viewModel = ForumDictionaryListViewModel(marketplaceService)
-
-        viewModel.retry()
-
-        assertEquals(ForumDictionaryListState.Success(dictionaries), viewModel.dictionariesState.value)
+        verify(exactly = 1) { marketplaceService.getDictionaries() }
     }
 }

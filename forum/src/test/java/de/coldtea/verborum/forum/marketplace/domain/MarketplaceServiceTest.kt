@@ -1,6 +1,8 @@
 package de.coldtea.verborum.forum.marketplace.domain
 
+import androidx.paging.testing.asSnapshot
 import de.coldtea.verborum.core.BaseTest
+import de.coldtea.verborum.forum.marketplace.domain.model.MarketplaceListingPage
 import de.coldtea.verborum.forum.marketplace.domain.usecase.api.GetMarketplaceListingApiUseCase
 import de.coldtea.verborum.forum.marketplace.domain.usecase.api.GetMarketplaceListingsApiUseCase
 import de.coldtea.verborum.forum.marketplace.domain.usecase.api.GetMarketplaceWordsApiUseCase
@@ -38,10 +40,16 @@ class MarketplaceServiceTest : BaseTest() {
     }
 
     @Test
-    fun `getDictionaries maps listings to UI models, import count as downloads`() = runTest {
-        coEvery { getMarketplaceListingsApiUseCase() } returns listOf(
-            testMarketplaceListing(dictionaryId = "a", importCount = 42),
-            testMarketplaceListing(dictionaryId = "b", publisherName = null, rating = null),
+    fun `getDictionaries pages listings as UI models, import count as downloads`() = runTest {
+        coEvery {
+            getMarketplaceListingsApiUseCase(0, MarketplaceService.LISTING_PAGE_SIZE)
+        } returns MarketplaceListingPage(
+            listings = listOf(
+                testMarketplaceListing(dictionaryId = "a", importCount = 42),
+                testMarketplaceListing(dictionaryId = "b", publisherName = null, rating = null),
+            ),
+            page = 0,
+            hasMore = false,
         )
 
         assertEquals(
@@ -49,7 +57,7 @@ class MarketplaceServiceTest : BaseTest() {
                 testForumDictionaryUi(dictionaryId = "a", downloadCount = 42),
                 testForumDictionaryUi(dictionaryId = "b", publisherName = null, rating = null),
             ),
-            subject.getDictionaries(),
+            subject.getDictionaries().asSnapshot(),
         )
     }
 

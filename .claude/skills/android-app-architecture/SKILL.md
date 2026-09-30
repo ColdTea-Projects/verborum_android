@@ -34,6 +34,7 @@ Each domain concept (`word`, `dictionary`, `auth`, `options`) is a self-containe
     model/          domain model (X) with convertToEntity()/convertToUi()/convertToRequest()
     usecase/local/  one-verb use cases hitting the repository (SaveXUseCase, ObserveXByYUseCase…)
     usecase/api/    one-verb use cases hitting the API (SaveXApiUseCase…)
+    paging/         Paging 3 PagingSource over a paged API use case (see android-dev references/paging.md)
     XService.kt     orchestrates use cases; the only thing ViewModels talk to
   ui/
     <screen>/       ONE DIRECTORY PER SCREEN (dictionarylist/, createdictionary/, dictionarydetails/…)

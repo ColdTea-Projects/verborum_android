@@ -20,6 +20,7 @@ The practical companion for building features. It routes to the specialist skill
 | build.gradle.kts, libs.versions.toml, build failures | **gradle-toolchain** |
 | Creating/staging/committing files | **git-workflow** |
 | Writing, expanding, or auditing a skill in `.claude/skills/` | **write-a-skill** |
+| A paged (endless-scroll) list backed by a paginated API | [references/paging.md](references/paging.md) — Paging 3 layering, rules, tests |
 | Forum tab (`forum` module), publishing a dictionary, imported/vault dictionaries | read `docs/marketplace-client-guide.md` first — the ms_marketplace contract |
 
 Load `android-app-architecture` before touching structure; the layering, model tiers, DI, and navigation rules live there and are not repeated here.

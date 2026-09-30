@@ -4,6 +4,7 @@
     <string name="forumListScreenSubtitle">İcma tərəfindən paylaşılan lüğətlər</string>
     <string name="forumListEmpty">Hələ paylaşılan lüğət yoxdur</string>
     <string name="forumListLoadError">Paylaşılan lüğətləri yükləmək mümkün olmadı</string>
+    <string name="forumListLoadMoreError">Daha çox lüğət yükləmək mümkün olmadı</string>
     <string name="forumDownload">Yüklə</string>
     <string name="forumPublishedBy">%1$s tərəfindən</string>
     <string name="forumUnknownPublisher">Naməlum naşir</string>

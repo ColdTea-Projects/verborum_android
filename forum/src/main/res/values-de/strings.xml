@@ -4,6 +4,7 @@
     <string name="forumListScreenSubtitle">Von der Community geteilte Wörterbücher</string>
     <string name="forumListEmpty">Noch keine geteilten Wörterbücher</string>
     <string name="forumListLoadError">Die geteilten Wörterbücher konnten nicht geladen werden</string>
+    <string name="forumListLoadMoreError">Weitere Wörterbücher konnten nicht geladen werden</string>
     <string name="forumDownload">Herunterladen</string>
     <string name="forumPublishedBy">von %1$s</string>
     <string name="forumUnknownPublisher">Unbekannter Herausgeber</string>

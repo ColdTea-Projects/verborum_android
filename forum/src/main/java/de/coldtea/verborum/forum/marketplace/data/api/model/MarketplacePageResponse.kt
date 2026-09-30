@@ -2,6 +2,7 @@ package de.coldtea.verborum.forum.marketplace.data.api.model
 
 import android.annotation.SuppressLint
 import androidx.annotation.Keep
+import de.coldtea.verborum.forum.marketplace.domain.model.MarketplaceListingPage
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -25,4 +26,13 @@ data class MarketplacePageResponse(
     val totalPages: Int = 0,
 ) {
     val hasMore: Boolean get() = page + 1 < totalPages
+
+    fun convertToListingPage() = MarketplaceListingPage(
+        // The order is stable, but a listing published mid-scroll can still repeat one (§4.1).
+        listings = items
+            .distinctBy { it.dictionaryId }
+            .map(MarketplaceListingResponse::convertToListing),
+        page = page,
+        hasMore = hasMore,
+    )
 }

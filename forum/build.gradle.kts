@@ -64,6 +64,11 @@ dependencies {
     implementation(libs.hilt.navigation.compose)
     ksp(libs.hilt.compiler)
 
+    //Paging 3 — the marketplace browse list (paging-common for the domain's PagingSource)
+    implementation(libs.androidx.paging.common)
+    implementation(libs.androidx.paging.compose)
+    testImplementation(libs.androidx.paging.testing)
+
     //KotlinX Serialization — the marketplace DTOs already follow the backend contract
     implementation(libs.kotlinx.serialization.json)
 }

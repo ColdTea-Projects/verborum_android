@@ -33,7 +33,7 @@ The Android app is the **first and reference client**. Its goals:
 | Practice — Self practice | ✅ | Flip-style self-check |
 | Practice — Multiple choice | ✅ | Generated distractors |
 | Sync engine | ✅ | Offline-first, upload-then-download (see §5) |
-| Marketplace ("Forum" tab) | 🔲 stub | "Coming soon" screen; waits for backend ms_marketplace |
+| Marketplace ("Forum" tab) | 🟡 dummy data | Browse list (Paging 3, 15 per page) + details screen on canned data; ms_marketplace not wired yet |
 | Authentication | 🔲 none | Runs entirely as guest user (see §7, §8.2) |
 | Word suggestions (Autofil) | 🔲 | Backend V2 feature |
 
@@ -47,7 +47,7 @@ The Android app is the **first and reference client**. Its goals:
 verborum_android/
 ├── app/            # Navigation shell only (NavigationCentral, bottom bar, Screens)
 ├── bibliotheca/    # The dictionary feature: everything vocabulary-related
-├── forum/          # Marketplace feature (stub)
+├── forum/          # Marketplace feature (browse + details on dummy data)
 ├── core/           # Shared: theme, BaseViewModel, network plumbing, base URL
 └── buildSrc/       # Version/config management (Configuration.kt, version.properties)
 ```
@@ -55,7 +55,7 @@ verborum_android/
 ### 3.2 Stack
 
 Kotlin 2.1 · Jetpack Compose + Material 3 · Hilt · Room · Retrofit + kotlinx.serialization ·
-MockK/JUnit for tests · minSdk 23, compileSdk 35, Java 17.
+Paging 3 (marketplace browse list) · MockK/JUnit for tests · minSdk 23, compileSdk 35, Java 17.
 
 ### 3.3 Layering (per feature slice)
 

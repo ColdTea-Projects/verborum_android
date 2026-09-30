@@ -4,6 +4,7 @@
     <string name="forumListScreenSubtitle">Słowniki udostępnione przez społeczność</string>
     <string name="forumListEmpty">Brak udostępnionych słowników</string>
     <string name="forumListLoadError">Nie udało się wczytać udostępnionych słowników</string>
+    <string name="forumListLoadMoreError">Nie udało się wczytać kolejnych słowników</string>
     <string name="forumDownload">Pobierz</string>
     <string name="forumPublishedBy">autor: %1$s</string>
     <string name="forumUnknownPublisher">Nieznany wydawca</string>

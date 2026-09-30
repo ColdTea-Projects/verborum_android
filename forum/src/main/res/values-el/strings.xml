@@ -4,6 +4,7 @@
     <string name="forumListScreenSubtitle">Λεξικά που μοιράζεται η κοινότητα</string>
     <string name="forumListEmpty">Δεν υπάρχουν ακόμη κοινόχρηστα λεξικά</string>
     <string name="forumListLoadError">Δεν ήταν δυνατή η φόρτωση των κοινόχρηστων λεξικών</string>
+    <string name="forumListLoadMoreError">Δεν ήταν δυνατή η φόρτωση περισσότερων λεξικών</string>
     <string name="forumDownload">Λήψη</string>
     <string name="forumPublishedBy">από %1$s</string>
     <string name="forumUnknownPublisher">Άγνωστος εκδότης</string>

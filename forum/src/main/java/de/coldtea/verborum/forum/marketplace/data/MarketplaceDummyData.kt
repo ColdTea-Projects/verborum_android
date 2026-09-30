@@ -1,7 +1,9 @@
 package de.coldtea.verborum.forum.marketplace.data
 
+import de.coldtea.verborum.core.utils.ApiTimestamp
 import de.coldtea.verborum.forum.marketplace.data.api.model.MarketplaceListingResponse
 import de.coldtea.verborum.forum.marketplace.data.api.model.MarketplaceWordResponse
+import java.util.Locale
 
 /**
  * Canned marketplace content served by [MarketplaceRepository] until ms_marketplace is wired in.
@@ -19,8 +21,17 @@ internal object MarketplaceDummyData {
     private const val SPANISH_BUSINESS = "0e7c1a52-3f1b-4c2a-9d4e-1a2b3c4d5e06"
     private const val POLISH_UKRAINIAN = "0e7c1a52-3f1b-4c2a-9d4e-1a2b3c4d5e07"
 
-    // Declared before [listings]: object properties initialise in order, and each listing reads
-    // its word count from here.
+    /** Enough for ~20 pages of 15 — effectively endless while scrolling, yet still finite. */
+    const val TOTAL_LISTINGS = 300
+
+    private const val DICTIONARY_ID_PREFIX = "0e7c1a52-3f1b-4c2a-9d4e-"
+    private const val WORD_ID_PREFIX = "5a7d2c10-8b3e-4f61-"
+
+    // Longer than the templates' own publish-date spread (~2 months), so cycles never interleave.
+    private const val CYCLE_SPAN_MILLIS = 90L * 24 * 60 * 60 * 1000
+
+    // Declared before [templates]: object properties initialise in order, and each template reads
+    // its word count from here. Keyed by the template ids above.
     private val wordsByDictionary: Map<String, List<Pair<String, String>>> = mapOf(
         // Two long lists (this and ITALIAN_CAFE, 50 words each) to exercise scrolling.
         EVERYDAY_GERMAN to listOf(
@@ -83,8 +94,8 @@ internal object MarketplaceDummyData {
         ),
     )
 
-    /** Newest first, as `GET /marketplace/dictionaries` orders them. */
-    val listings: List<MarketplaceListingResponse> = listOf(
+    /** The seven hand-written listings, newest first — the cycle every page is cut from. */
+    private val templates: List<MarketplaceListingResponse> = listOf(
         listing(ITALIAN_CAFE, "b1d2e3f4-0000-4000-8000-000000000005", "Sofia Rossi",
             "Italian Café Talk", "EN", "IT", 2051, "2026-09-26T08:12:40.118204Z", 4.8f,
             // More than four tags, to exercise the list card's chip limit.
@@ -110,16 +121,44 @@ internal object MarketplaceDummyData {
             listOf("intermediate", "business", "work_office")),
     )
 
-    fun wordsFor(dictionaryId: String): List<MarketplaceWordResponse> =
-        wordsByDictionary[dictionaryId].orEmpty().mapIndexed { index, (word, translation) ->
+    /**
+     * Newest first, as `GET /marketplace/dictionaries` orders them: [TOTAL_LISTINGS] listings
+     * produced by repeating [templates]. Each repetition gets its own dictionary id (so paging
+     * keys stay unique) and is published [CYCLE_SPAN_MILLIS] earlier (so the order stays newest
+     * first); everything else, words included, is the template's.
+     */
+    val listings: List<MarketplaceListingResponse> = List(TOTAL_LISTINGS) { index ->
+        val template = templates[index % templates.size]
+        val cycle = index / templates.size
+        template.copy(
+            dictionaryId = dictionaryIdAt(index),
+            publishedAt = ApiTimestamp.parse(template.publishedAt)
+                ?.let { ApiTimestamp.format(it - cycle * CYCLE_SPAN_MILLIS) },
+        )
+    }
+
+    fun wordsFor(dictionaryId: String): List<MarketplaceWordResponse> {
+        val index = indexOf(dictionaryId) ?: return emptyList()
+        val templateId = templates[index % templates.size].dictionaryId
+        return wordsByDictionary[templateId].orEmpty().mapIndexed { wordIndex, (word, translation) ->
             MarketplaceWordResponse(
-                wordId = "%s%02d".format(dictionaryId.dropLast(2), index),
+                wordId = "%s%04x-%012x".format(Locale.ROOT, WORD_ID_PREFIX, wordIndex, index),
                 dictionaryId = dictionaryId,
                 // Canonical surfaces column: a JSON array, "/" separating alternatives here.
                 word = word.toSurfacesJson(),
                 translation = translation.toSurfacesJson(),
             )
         }
+    }
+
+    private fun dictionaryIdAt(index: Int): String = "%s%012x".format(Locale.ROOT, DICTIONARY_ID_PREFIX, index)
+
+    /** The listing position encoded in a [dictionaryIdAt] id, or null when it is not one. */
+    private fun indexOf(dictionaryId: String): Int? =
+        dictionaryId.takeIf { it.startsWith(DICTIONARY_ID_PREFIX) }
+            ?.removePrefix(DICTIONARY_ID_PREFIX)
+            ?.toIntOrNull(radix = 16)
+            ?.takeIf { it in 0 until TOTAL_LISTINGS }
 
     private fun listing(
         dictionaryId: String,

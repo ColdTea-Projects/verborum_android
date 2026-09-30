@@ -4,6 +4,7 @@
     <string name="forumListScreenSubtitle">Словари, которыми поделилось сообщество</string>
     <string name="forumListEmpty">Пока нет общих словарей</string>
     <string name="forumListLoadError">Не удалось загрузить общие словари</string>
+    <string name="forumListLoadMoreError">Не удалось загрузить больше словарей</string>
     <string name="forumDownload">Скачать</string>
     <string name="forumPublishedBy">автор: %1$s</string>
     <string name="forumUnknownPublisher">Неизвестный автор</string>

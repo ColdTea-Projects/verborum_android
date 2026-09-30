@@ -4,6 +4,7 @@
     <string name="forumListScreenSubtitle">Woordenboeken gedeeld door de community</string>
     <string name="forumListEmpty">Nog geen gedeelde woordenboeken</string>
     <string name="forumListLoadError">De gedeelde woordenboeken konden niet worden geladen</string>
+    <string name="forumListLoadMoreError">Er konden geen extra woordenboeken worden geladen</string>
     <string name="forumDownload">Downloaden</string>
     <string name="forumPublishedBy">door %1$s</string>
     <string name="forumUnknownPublisher">Onbekende uitgever</string>
