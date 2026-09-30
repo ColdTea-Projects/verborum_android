@@ -24,6 +24,8 @@ import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import de.coldtea.verborum.core.theme.VerborumTheme
+import de.coldtea.verborum.forum.common.ui.components.RatingStars
+import de.coldtea.verborum.forum.common.ui.components.formatRating
 import de.coldtea.verborum.forum.common.utils.ResStrings
 import java.text.NumberFormat
 

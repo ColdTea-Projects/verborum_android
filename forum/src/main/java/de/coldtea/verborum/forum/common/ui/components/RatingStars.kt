@@ -1,4 +1,4 @@
-package de.coldtea.verborum.forum.marketplace.ui.forumdictionarydetails.composables
+package de.coldtea.verborum.forum.common.ui.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -21,7 +21,8 @@ import kotlin.math.roundToInt
 
 /**
  * [rating] (0–5) as five stars in the gold accent, rounded to the nearest half. Read out as one
- * phrase ("Rated 4.5 out of 5") instead of five separate icons.
+ * phrase ("Rated 4.5 out of 5") instead of five separate icons. Shared by the Forum list cards and
+ * the details screen's info panel.
  */
 @Composable
 fun RatingStars(

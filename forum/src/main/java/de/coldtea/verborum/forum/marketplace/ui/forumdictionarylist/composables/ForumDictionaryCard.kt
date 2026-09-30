@@ -38,6 +38,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
@@ -45,6 +46,8 @@ import androidx.compose.ui.unit.sp
 import de.coldtea.verborum.core.theme.VerborumTheme
 import de.coldtea.verborum.core.ui.components.languagePairLabel
 import de.coldtea.verborum.core.ui.components.relativeTimeAgo
+import de.coldtea.verborum.forum.common.ui.components.RatingStars
+import de.coldtea.verborum.forum.common.ui.components.formatRating
 import de.coldtea.verborum.forum.common.utils.CoreResDrawables
 import de.coldtea.verborum.forum.common.utils.CoreResPlurals
 import de.coldtea.verborum.forum.common.utils.ResDrawables
@@ -106,11 +109,13 @@ fun ForumDictionaryCard(
                 horizontalArrangement = Arrangement.spacedBy(16.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                // Book Icon
+                // Book Icon — pinned to the top, level with the name, however tall the card grows.
                 Surface(
                     shape = RoundedCornerShape(12.dp),
                     color = MaterialTheme.colorScheme.secondary,
-                    modifier = Modifier.size(48.dp)
+                    modifier = Modifier
+                        .size(48.dp)
+                        .align(Alignment.Top)
                 ) {
                     Box(
                         contentAlignment = Alignment.Center,
@@ -140,6 +145,11 @@ fun ForumDictionaryCard(
                         modifier = Modifier.padding(top = 2.dp)
                     )
 
+                    // Left out when the backend has no rating (not in the contract yet, guide §9).
+                    dictionary.rating?.let { rating ->
+                        CardRating(rating = rating, modifier = Modifier.padding(top = 6.dp))
+                    }
+
                     ForumDictionaryMetaLine(
                         dictionary = dictionary,
                         modifier = Modifier.padding(top = 8.dp),
@@ -162,6 +172,28 @@ fun ForumDictionaryCard(
                 }
             }
         }
+    }
+}
+
+/** The details panel's rating, inline: five stars and the value ("★★★★½ 4.7"). */
+@Composable
+private fun CardRating(
+    rating: Float,
+    modifier: Modifier = Modifier,
+) {
+    Row(
+        modifier = modifier,
+        horizontalArrangement = Arrangement.spacedBy(6.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        RatingStars(rating = rating, starSize = 14.dp)
+        Text(
+            text = formatRating(rating),
+            fontSize = 13.sp,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            // The stars already announce "Rated 4.7 out of 5"; don't read the number twice.
+            modifier = Modifier.clearAndSetSemantics {},
+        )
     }
 }
 
