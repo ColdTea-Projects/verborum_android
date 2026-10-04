@@ -31,4 +31,7 @@
     <string name="forumRatingContentDescription">امتیاز %1$s از 5</string>
     <string name="forumMoreOptions">گزینه‌های بیشتر</string>
     <string name="forumDetailsWordListHeader">فهرست واژه‌ها</string>
+
+    <string name="forumMembershipTitle">به Forum بپیوندید</string>
+    <string name="forumMembershipMessage">برای مرور و وارد کردن واژه‌نامه‌های اشتراکی، به تنظیمات ← نمایه بروید، یک نام نمایشی اضافه کنید و شرایط Forum را بپذیرید.</string>
 </resources>

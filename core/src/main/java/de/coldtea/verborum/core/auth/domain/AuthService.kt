@@ -1,7 +1,7 @@
 package de.coldtea.verborum.core.auth.domain
 
 import android.content.Intent
-import de.coldtea.verborum.core.auth.domain.usecase.EnsureUserProfileUseCase
+import de.coldtea.verborum.core.profile.domain.usecase.api.EnsureUserProfileUseCase
 import de.coldtea.verborum.core.auth.AuthTokenStore
 import de.coldtea.verborum.core.auth.JwtDecoder
 import de.coldtea.verborum.core.auth.domain.model.LoginOutcome

@@ -31,4 +31,7 @@
     <string name="forumRatingContentDescription">评分 %1$s（满分 5）</string>
     <string name="forumMoreOptions">更多选项</string>
     <string name="forumDetailsWordListHeader">单词列表</string>
+
+    <string name="forumMembershipTitle">加入 Forum</string>
+    <string name="forumMembershipMessage">要浏览和导入共享词典，请前往 选项 → 个人资料，填写显示名称并接受 Forum 条款。</string>
 </resources>

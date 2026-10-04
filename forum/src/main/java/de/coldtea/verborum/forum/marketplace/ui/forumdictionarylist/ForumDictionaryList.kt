@@ -54,31 +54,74 @@ import de.coldtea.verborum.forum.common.utils.ResStrings
 import de.coldtea.verborum.forum.marketplace.ui.forumdictionarylist.composables.ForumDictionaryCard
 import de.coldtea.verborum.forum.marketplace.ui.forumdictionarylist.composables.ForumDictionaryOptionsSheet
 import de.coldtea.verborum.forum.marketplace.ui.forumdictionarylist.composables.ForumActiveFilters
+import de.coldtea.verborum.forum.marketplace.ui.forumdictionarylist.composables.ForumMembershipRequired
+import de.coldtea.verborum.forum.marketplace.ui.forumdictionarylist.model.ForumAccessState
 import de.coldtea.verborum.forum.marketplace.ui.forumdictionarylist.model.ForumDictionaryFilter
 import de.coldtea.verborum.forum.marketplace.ui.forumdictionarylist.model.ForumDictionaryUi
 import kotlinx.coroutines.flow.flowOf
 
-/** The Forum tab root: the marketplace's shared dictionaries, laid out like bibliotheca's list. */
+/**
+ * The Forum tab root: the marketplace's shared dictionaries, laid out like bibliotheca's list.
+ * Members only (guide §6.3) — anyone else sees how to join instead, and the list is not loaded.
+ */
 @Composable
 fun ForumDictionaryListScreen(
     viewModel: ForumDictionaryListViewModel = hiltViewModel(),
     onDictionaryClick: (String) -> Unit,
     onSearchClick: () -> Unit,
 ) {
-    val dictionaries = viewModel.dictionaries.collectAsLazyPagingItems()
-    val filter by viewModel.filter.collectAsState()
+    val access by viewModel.accessState.collectAsState()
+
+    // Every visit re-checks membership: the user may have joined or left since the last one.
+    LaunchedEffect(Unit) { viewModel.refreshAccess() }
 
     RegisterTopBar(
         title = stringResource(ResStrings.forumListScreenTitle),
         subtitle = stringResource(ResStrings.forumListScreenSubtitle),
         showBackButton = false,
         // Magnifier on the right opens the search screen, which applies its criteria here.
-        action = VerborumTopBarAction(
-            iconRes = CoreResDrawables.ic_search_24,
-            contentDescription = stringResource(CoreResStrings.dictionaryListSearch),
-            onClick = onSearchClick,
-        ),
+        action = if (access == ForumAccessState.Member) {
+            VerborumTopBarAction(
+                iconRes = CoreResDrawables.ic_search_24,
+                contentDescription = stringResource(CoreResStrings.dictionaryListSearch),
+                onClick = onSearchClick,
+            )
+        } else {
+            null
+        },
     )
+
+    when (access) {
+        ForumAccessState.Loading -> Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.background),
+            contentAlignment = Alignment.Center,
+        ) {
+            CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
+        }
+
+        ForumAccessState.NotMember -> ForumMembershipRequired()
+
+        ForumAccessState.Failed -> ScreenError(onRetry = viewModel::refreshAccess)
+
+        ForumAccessState.Member -> ForumDictionaryListMember(
+            viewModel = viewModel,
+            onDictionaryClick = onDictionaryClick,
+            onSearchClick = onSearchClick,
+        )
+    }
+}
+
+/** The list itself — only composed for members, so the pager never runs for anyone else. */
+@Composable
+private fun ForumDictionaryListMember(
+    viewModel: ForumDictionaryListViewModel,
+    onDictionaryClick: (String) -> Unit,
+    onSearchClick: () -> Unit,
+) {
+    val dictionaries = viewModel.dictionaries.collectAsLazyPagingItems()
+    val filter by viewModel.filter.collectAsState()
 
     ForumDictionaryListContent(
         dictionaries = dictionaries,

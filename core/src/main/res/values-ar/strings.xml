@@ -88,4 +88,17 @@
     <string name="createDictionaryTagsLevel">المستوى</string>
     <string name="createDictionaryTagsTopic">الموضوع</string>
     <string name="createDictionaryTagsExams">الامتحانات</string>
+
+    <string name="optionsProfile">الملف الشخصي</string>
+    <string name="profileEmailLabel">البريد الإلكتروني</string>
+    <string name="profileDisplayNameLabel">الاسم المعروض</string>
+    <string name="profileDisplayNameSupporting">يظهر للآخرين على القواميس التي تشاركها في Forum</string>
+    <string name="profileDisplayNameRequired">يلزم وجود اسم معروض لقبول شروط Forum</string>
+    <string name="profileTermsTitle">شروط Forum</string>
+    <string name="profileTermsShow">إظهار الشروط</string>
+    <string name="profileTermsHide">إخفاء الشروط</string>
+    <string name="profileTermsAgree">أوافق على شروط Forum</string>
+    <string name="profileUpdate">تحديث</string>
+    <string name="profileUpdated">تم تحديث الملف الشخصي</string>
+    <string name="profileUpdateError">تعذّر تحديث ملفك الشخصي. يُرجى المحاولة مرة أخرى.</string>
 </resources>

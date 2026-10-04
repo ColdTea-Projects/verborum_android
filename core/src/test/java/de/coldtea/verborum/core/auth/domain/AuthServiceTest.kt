@@ -6,7 +6,8 @@ import de.coldtea.verborum.core.auth.AuthTokenStore
 import de.coldtea.verborum.core.auth.JwtDecoder
 import de.coldtea.verborum.core.auth.domain.model.LoginOutcome
 import de.coldtea.verborum.core.auth.domain.model.TokenBundle
-import de.coldtea.verborum.core.auth.domain.usecase.EnsureUserProfileUseCase
+import de.coldtea.verborum.core.profile.domain.model.UserProfile
+import de.coldtea.verborum.core.profile.domain.usecase.api.EnsureUserProfileUseCase
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.coVerifyOrder
@@ -55,6 +56,13 @@ class AuthServiceTest : BaseTest() {
         every { JwtDecoder.displayName(ID_TOKEN) } returns DISPLAY_NAME
         every { JwtDecoder.emailVerified(ID_TOKEN) } returns true
         coEvery { authManager.exchangeCode(redirectData) } returns tokenBundle
+        coEvery { ensureUserProfileUseCase.invoke(any(), any(), any()) } returns UserProfile(
+            userId = "user-id",
+            email = EMAIL,
+            displayName = DISPLAY_NAME,
+            isMarketplaceMember = false,
+            marketplaceAgreementVersion = null,
+        )
 
         // LinkedHashSet so hook order is deterministic — the production set is Dagger-built.
         authService = AuthService(

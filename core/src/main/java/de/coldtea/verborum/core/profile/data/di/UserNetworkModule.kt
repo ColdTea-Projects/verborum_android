@@ -1,11 +1,11 @@
-package de.coldtea.verborum.core.auth.data.di
+package de.coldtea.verborum.core.profile.data.di
 
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import de.coldtea.verborum.core.auth.data.api.UserApi
+import de.coldtea.verborum.core.profile.data.api.UserApi
 import de.coldtea.verborum.core.BuildConfig
 import de.coldtea.verborum.core.extensions.json
 import kotlinx.serialization.ExperimentalSerializationApi

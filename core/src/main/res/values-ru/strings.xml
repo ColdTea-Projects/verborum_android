@@ -86,4 +86,17 @@
     <string name="createDictionaryTagsLevel">Уровень</string>
     <string name="createDictionaryTagsTopic">Тема</string>
     <string name="createDictionaryTagsExams">Экзамены</string>
+
+    <string name="optionsProfile">Профиль</string>
+    <string name="profileEmailLabel">Эл. почта</string>
+    <string name="profileDisplayNameLabel">Отображаемое имя</string>
+    <string name="profileDisplayNameSupporting">Показывается другим в словарях, которыми вы делитесь в Forum</string>
+    <string name="profileDisplayNameRequired">Чтобы принять условия Forum, нужно отображаемое имя</string>
+    <string name="profileTermsTitle">Условия Forum</string>
+    <string name="profileTermsShow">Показать условия</string>
+    <string name="profileTermsHide">Скрыть условия</string>
+    <string name="profileTermsAgree">Я принимаю условия Forum</string>
+    <string name="profileUpdate">Обновить</string>
+    <string name="profileUpdated">Профиль обновлён</string>
+    <string name="profileUpdateError">Не удалось обновить профиль. Попробуйте ещё раз.</string>
 </resources>

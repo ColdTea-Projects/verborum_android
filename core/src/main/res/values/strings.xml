@@ -84,4 +84,19 @@
     <string name="createDictionaryTagsLevel">Level</string>
     <string name="createDictionaryTagsTopic">Topic</string>
     <string name="createDictionaryTagsExams">Exams</string>
+
+    <string name="optionsProfile">Profile</string>
+    <string name="profileEmailLabel">Email</string>
+    <string name="profileDisplayNameLabel">Display name</string>
+    <string name="profileDisplayNameSupporting">Shown to others on the dictionaries you share in the Forum</string>
+    <string name="profileDisplayNameRequired">A display name is required to accept the Forum terms</string>
+    <string name="profileTermsTitle">Forum terms</string>
+    <string name="profileTermsShow">Show the terms</string>
+    <string name="profileTermsHide">Hide the terms</string>
+    <string name="profileTermsAgree">I agree to the Forum terms</string>
+    <string name="profileUpdate">Update</string>
+    <string name="profileUpdated">Profile updated</string>
+    <string name="profileUpdateError">Couldn’t update your profile. Please try again.</string>
+    <!-- Placeholder until the legal text exists; English-only on purpose. -->
+    <string name="profileTermsText" translatable="false">To use the Forum you agree that the dictionaries you choose to share are visible to other Verborum users, together with your display name, and that they can import them. You can withdraw at any time from your profile: your shared dictionaries then stop appearing in the Forum. This is placeholder text; the full terms will follow.</string>
 </resources>

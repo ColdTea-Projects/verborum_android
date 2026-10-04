@@ -31,4 +31,7 @@
     <string name="forumRatingContentDescription">5 üzerinden %1$s puan</string>
     <string name="forumMoreOptions">Diğer seçenekler</string>
     <string name="forumDetailsWordListHeader">Kelime listesi</string>
+
+    <string name="forumMembershipTitle">Forum’a katıl</string>
+    <string name="forumMembershipMessage">Paylaşılan sözlüklere göz atmak ve içe aktarmak için Seçenekler → Profil’e git, bir görünen ad ekle ve Forum koşullarını kabul et.</string>
 </resources>

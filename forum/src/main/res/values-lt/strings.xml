@@ -31,4 +31,7 @@
     <string name="forumRatingContentDescription">Įvertinta %1$s iš 5</string>
     <string name="forumMoreOptions">Daugiau parinkčių</string>
     <string name="forumDetailsWordListHeader">Žodžių sąrašas</string>
+
+    <string name="forumMembershipTitle">Prisijunkite prie Forum</string>
+    <string name="forumMembershipMessage">Norėdami naršyti ir importuoti bendrinamus žodynus, eikite į Parinktys → Profilis, pridėkite rodomą vardą ir sutikite su Forum sąlygomis.</string>
 </resources>

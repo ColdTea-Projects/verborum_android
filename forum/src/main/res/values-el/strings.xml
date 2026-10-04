@@ -31,4 +31,7 @@
     <string name="forumRatingContentDescription">Βαθμολογία %1$s στα 5</string>
     <string name="forumMoreOptions">Περισσότερες επιλογές</string>
     <string name="forumDetailsWordListHeader">Λίστα λέξεων</string>
+
+    <string name="forumMembershipTitle">Γίνετε μέλος του Forum</string>
+    <string name="forumMembershipMessage">Για να περιηγηθείτε και να εισαγάγετε κοινόχρηστα λεξικά, μεταβείτε στις Επιλογές → Προφίλ, προσθέστε ένα εμφανιζόμενο όνομα και αποδεχτείτε τους όρους του Forum.</string>
 </resources>

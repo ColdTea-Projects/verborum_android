@@ -31,4 +31,7 @@
     <string name="forumRatingContentDescription">Оцінка %1$s з 5</string>
     <string name="forumMoreOptions">Більше параметрів</string>
     <string name="forumDetailsWordListHeader">Список слів</string>
+
+    <string name="forumMembershipTitle">Приєднайтеся до Forum</string>
+    <string name="forumMembershipMessage">Щоб переглядати й імпортувати спільні словники, відкрийте Параметри → Профіль, додайте відображуване ім’я та прийміть умови Forum.</string>
 </resources>

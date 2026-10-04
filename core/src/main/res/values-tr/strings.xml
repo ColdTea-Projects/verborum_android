@@ -84,4 +84,17 @@
     <string name="createDictionaryTagsLevel">Seviye</string>
     <string name="createDictionaryTagsTopic">Konu</string>
     <string name="createDictionaryTagsExams">Sınavlar</string>
+
+    <string name="optionsProfile">Profil</string>
+    <string name="profileEmailLabel">E-posta</string>
+    <string name="profileDisplayNameLabel">Görünen ad</string>
+    <string name="profileDisplayNameSupporting">Forum’da paylaştığın sözlüklerde diğer kullanıcılara gösterilir</string>
+    <string name="profileDisplayNameRequired">Forum koşullarını kabul etmek için bir görünen ad gerekli</string>
+    <string name="profileTermsTitle">Forum koşulları</string>
+    <string name="profileTermsShow">Koşulları göster</string>
+    <string name="profileTermsHide">Koşulları gizle</string>
+    <string name="profileTermsAgree">Forum koşullarını kabul ediyorum</string>
+    <string name="profileUpdate">Güncelle</string>
+    <string name="profileUpdated">Profil güncellendi</string>
+    <string name="profileUpdateError">Profilin güncellenemedi. Lütfen tekrar dene.</string>
 </resources>

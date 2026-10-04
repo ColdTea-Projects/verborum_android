@@ -86,4 +86,17 @@
     <string name="createDictionaryTagsLevel">Lygis</string>
     <string name="createDictionaryTagsTopic">Tema</string>
     <string name="createDictionaryTagsExams">Egzaminai</string>
+
+    <string name="optionsProfile">Profilis</string>
+    <string name="profileEmailLabel">El. paštas</string>
+    <string name="profileDisplayNameLabel">Rodomas vardas</string>
+    <string name="profileDisplayNameSupporting">Rodomas kitiems prie žodynų, kuriais dalijatės Forum</string>
+    <string name="profileDisplayNameRequired">Norint sutikti su Forum sąlygomis, reikia rodomo vardo</string>
+    <string name="profileTermsTitle">Forum sąlygos</string>
+    <string name="profileTermsShow">Rodyti sąlygas</string>
+    <string name="profileTermsHide">Slėpti sąlygas</string>
+    <string name="profileTermsAgree">Sutinku su Forum sąlygomis</string>
+    <string name="profileUpdate">Atnaujinti</string>
+    <string name="profileUpdated">Profilis atnaujintas</string>
+    <string name="profileUpdateError">Nepavyko atnaujinti profilio. Bandykite dar kartą.</string>
 </resources>

@@ -31,4 +31,7 @@
     <string name="forumRatingContentDescription">5 üzərindən %1$s qiymət</string>
     <string name="forumMoreOptions">Digər seçimlər</string>
     <string name="forumDetailsWordListHeader">Söz siyahısı</string>
+
+    <string name="forumMembershipTitle">Forum-a qoşulun</string>
+    <string name="forumMembershipMessage">Paylaşılan lüğətlərə baxmaq və idxal etmək üçün Seçimlər → Profil bölməsinə keçin, görünən ad əlavə edin və Forum şərtlərini qəbul edin.</string>
 </resources>

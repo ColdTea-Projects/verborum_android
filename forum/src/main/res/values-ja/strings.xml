@@ -31,4 +31,7 @@
     <string name="forumRatingContentDescription">5段階中%1$sの評価</string>
     <string name="forumMoreOptions">その他のオプション</string>
     <string name="forumDetailsWordListHeader">単語リスト</string>
+
+    <string name="forumMembershipTitle">Forumに参加する</string>
+    <string name="forumMembershipMessage">共有辞書を閲覧・インポートするには、オプション → プロフィールで表示名を入力し、Forumの規約に同意してください。</string>
 </resources>

@@ -86,4 +86,17 @@
     <string name="createDictionaryTagsLevel">Poziom</string>
     <string name="createDictionaryTagsTopic">Temat</string>
     <string name="createDictionaryTagsExams">Egzaminy</string>
+
+    <string name="optionsProfile">Profil</string>
+    <string name="profileEmailLabel">E-mail</string>
+    <string name="profileDisplayNameLabel">Nazwa wyświetlana</string>
+    <string name="profileDisplayNameSupporting">Widoczna dla innych przy słownikach udostępnianych na Forum</string>
+    <string name="profileDisplayNameRequired">Aby zaakceptować warunki Forum, wymagana jest nazwa wyświetlana</string>
+    <string name="profileTermsTitle">Warunki Forum</string>
+    <string name="profileTermsShow">Pokaż warunki</string>
+    <string name="profileTermsHide">Ukryj warunki</string>
+    <string name="profileTermsAgree">Akceptuję warunki Forum</string>
+    <string name="profileUpdate">Aktualizuj</string>
+    <string name="profileUpdated">Profil zaktualizowany</string>
+    <string name="profileUpdateError">Nie udało się zaktualizować profilu. Spróbuj ponownie.</string>
 </resources>

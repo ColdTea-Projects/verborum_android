@@ -33,11 +33,12 @@ import de.coldtea.verborum.core.theme.VerborumTheme
 import de.coldtea.verborum.core.ui.RegisterTopBar
 
 /**
- * The Options tab: a vertical list of tappable rows. Today it holds only "Log out", but it is built
- * as a list of [OptionRow]s so future entries (profile, preferences, about…) are a one-line add.
+ * The Options tab: a vertical list of tappable rows (profile, language, log out), built from
+ * [OptionRow]s so future entries (preferences, about…) are a one-line add.
  */
 @Composable
 fun OptionsScreen(
+    onProfileClick: () -> Unit,
     onLanguageClick: () -> Unit,
     viewModel: OptionsViewModel = hiltViewModel(),
 ) {
@@ -50,6 +51,7 @@ fun OptionsScreen(
 
     OptionsContent(
         isLoggingOut = isLoggingOut,
+        onProfileClick = onProfileClick,
         onLanguageClick = onLanguageClick,
         onLogout = viewModel::logout,
     )
@@ -58,6 +60,7 @@ fun OptionsScreen(
 @Composable
 private fun OptionsContent(
     isLoggingOut: Boolean,
+    onProfileClick: () -> Unit,
     onLanguageClick: () -> Unit,
     onLogout: () -> Unit,
 ) {
@@ -67,6 +70,12 @@ private fun OptionsContent(
             .padding(horizontal = 16.dp, vertical = 8.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
+        OptionRow(
+            iconRes = ResDrawables.ic_person_24,
+            label = stringResource(ResStrings.optionsProfile),
+            onClick = onProfileClick,
+        )
+
         OptionRow(
             iconRes = ResDrawables.ic_language_24,
             label = stringResource(ResStrings.optionsLanguage),
@@ -133,6 +142,6 @@ private fun OptionRow(
 @Composable
 private fun PreviewOptionsScreen() {
     VerborumTheme {
-        OptionsContent(isLoggingOut = false, onLanguageClick = {}, onLogout = {})
+        OptionsContent(isLoggingOut = false, onProfileClick = {}, onLanguageClick = {}, onLogout = {})
     }
 }

@@ -37,4 +37,5 @@ const val SCREEN_FORUM_SEARCH = "forumSearchScreen"
 const val GROUP_OPTIONS = "groupOptions"
 const val SCREEN_OPTIONS = "optionsScreen"
 const val SCREEN_LANGUAGE = "languageScreen"
+const val SCREEN_PROFILE = "profileScreen"
 

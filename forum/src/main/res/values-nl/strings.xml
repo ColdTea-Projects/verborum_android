@@ -31,4 +31,7 @@
     <string name="forumRatingContentDescription">Beoordeeld met %1$s van de 5</string>
     <string name="forumMoreOptions">Meer opties</string>
     <string name="forumDetailsWordListHeader">Woordenlijst</string>
+
+    <string name="forumMembershipTitle">Word lid van het Forum</string>
+    <string name="forumMembershipMessage">Ga naar Opties → Profiel, voeg een weergavenaam toe en accepteer de Forum-voorwaarden om gedeelde woordenboeken te bekijken en te importeren.</string>
 </resources>

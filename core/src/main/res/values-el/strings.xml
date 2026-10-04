@@ -84,4 +84,17 @@
     <string name="createDictionaryTagsLevel">Επίπεδο</string>
     <string name="createDictionaryTagsTopic">Θέμα</string>
     <string name="createDictionaryTagsExams">Εξετάσεις</string>
+
+    <string name="optionsProfile">Προφίλ</string>
+    <string name="profileEmailLabel">Email</string>
+    <string name="profileDisplayNameLabel">Εμφανιζόμενο όνομα</string>
+    <string name="profileDisplayNameSupporting">Εμφανίζεται σε άλλους στα λεξικά που μοιράζεστε στο Forum</string>
+    <string name="profileDisplayNameRequired">Απαιτείται εμφανιζόμενο όνομα για την αποδοχή των όρων του Forum</string>
+    <string name="profileTermsTitle">Όροι του Forum</string>
+    <string name="profileTermsShow">Εμφάνιση των όρων</string>
+    <string name="profileTermsHide">Απόκρυψη των όρων</string>
+    <string name="profileTermsAgree">Αποδέχομαι τους όρους του Forum</string>
+    <string name="profileUpdate">Ενημέρωση</string>
+    <string name="profileUpdated">Το προφίλ ενημερώθηκε</string>
+    <string name="profileUpdateError">Δεν ήταν δυνατή η ενημέρωση του προφίλ. Δοκιμάστε ξανά.</string>
 </resources>

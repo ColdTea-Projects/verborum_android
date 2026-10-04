@@ -31,4 +31,7 @@
     <string name="forumRatingContentDescription">التقييم %1$s من 5</string>
     <string name="forumMoreOptions">خيارات أخرى</string>
     <string name="forumDetailsWordListHeader">قائمة الكلمات</string>
+
+    <string name="forumMembershipTitle">انضم إلى Forum</string>
+    <string name="forumMembershipMessage">لتصفح القواميس المشتركة واستيرادها، انتقل إلى الخيارات ← الملف الشخصي، وأضف اسمًا معروضًا واقبل شروط Forum.</string>
 </resources>

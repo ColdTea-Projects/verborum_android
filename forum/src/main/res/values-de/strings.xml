@@ -31,4 +31,7 @@
     <string name="forumRatingContentDescription">Bewertet mit %1$s von 5</string>
     <string name="forumMoreOptions">Weitere Optionen</string>
     <string name="forumDetailsWordListHeader">Wortliste</string>
+
+    <string name="forumMembershipTitle">Dem Forum beitreten</string>
+    <string name="forumMembershipMessage">Um geteilte Wörterbücher zu durchsuchen und zu importieren, öffne Optionen → Profil, gib einen Anzeigenamen ein und akzeptiere die Forum-Bedingungen.</string>
 </resources>

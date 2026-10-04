@@ -84,4 +84,17 @@
     <string name="createDictionaryTagsLevel">Nivel</string>
     <string name="createDictionaryTagsTopic">Tema</string>
     <string name="createDictionaryTagsExams">Exámenes</string>
+
+    <string name="optionsProfile">Perfil</string>
+    <string name="profileEmailLabel">Correo electrónico</string>
+    <string name="profileDisplayNameLabel">Nombre visible</string>
+    <string name="profileDisplayNameSupporting">Se muestra a otros en los diccionarios que compartes en el Forum</string>
+    <string name="profileDisplayNameRequired">Se necesita un nombre visible para aceptar las condiciones del Forum</string>
+    <string name="profileTermsTitle">Condiciones del Forum</string>
+    <string name="profileTermsShow">Mostrar las condiciones</string>
+    <string name="profileTermsHide">Ocultar las condiciones</string>
+    <string name="profileTermsAgree">Acepto las condiciones del Forum</string>
+    <string name="profileUpdate">Actualizar</string>
+    <string name="profileUpdated">Perfil actualizado</string>
+    <string name="profileUpdateError">No se pudo actualizar tu perfil. Inténtalo de nuevo.</string>
 </resources>

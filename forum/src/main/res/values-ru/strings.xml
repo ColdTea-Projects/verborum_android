@@ -31,4 +31,7 @@
     <string name="forumRatingContentDescription">Оценка %1$s из 5</string>
     <string name="forumMoreOptions">Ещё</string>
     <string name="forumDetailsWordListHeader">Список слов</string>
+
+    <string name="forumMembershipTitle">Присоединяйтесь к Forum</string>
+    <string name="forumMembershipMessage">Чтобы просматривать и импортировать общие словари, откройте Настройки → Профиль, укажите отображаемое имя и примите условия Forum.</string>
 </resources>

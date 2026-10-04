@@ -31,4 +31,7 @@
     <string name="forumRatingContentDescription">Ocena %1$s na 5</string>
     <string name="forumMoreOptions">Więcej opcji</string>
     <string name="forumDetailsWordListHeader">Lista słów</string>
+
+    <string name="forumMembershipTitle">Dołącz do Forum</string>
+    <string name="forumMembershipMessage">Aby przeglądać i importować udostępnione słowniki, przejdź do Opcje → Profil, dodaj nazwę wyświetlaną i zaakceptuj warunki Forum.</string>
 </resources>

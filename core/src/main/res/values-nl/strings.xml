@@ -84,4 +84,17 @@
     <string name="createDictionaryTagsLevel">Niveau</string>
     <string name="createDictionaryTagsTopic">Onderwerp</string>
     <string name="createDictionaryTagsExams">Examens</string>
+
+    <string name="optionsProfile">Profiel</string>
+    <string name="profileEmailLabel">E-mail</string>
+    <string name="profileDisplayNameLabel">Weergavenaam</string>
+    <string name="profileDisplayNameSupporting">Wordt aan anderen getoond bij de woordenboeken die je in het Forum deelt</string>
+    <string name="profileDisplayNameRequired">Een weergavenaam is vereist om de Forum-voorwaarden te accepteren</string>
+    <string name="profileTermsTitle">Forum-voorwaarden</string>
+    <string name="profileTermsShow">Voorwaarden tonen</string>
+    <string name="profileTermsHide">Voorwaarden verbergen</string>
+    <string name="profileTermsAgree">Ik ga akkoord met de Forum-voorwaarden</string>
+    <string name="profileUpdate">Bijwerken</string>
+    <string name="profileUpdated">Profiel bijgewerkt</string>
+    <string name="profileUpdateError">Je profiel kon niet worden bijgewerkt. Probeer het opnieuw.</string>
 </resources>

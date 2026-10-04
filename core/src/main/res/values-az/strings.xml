@@ -84,4 +84,17 @@
     <string name="createDictionaryTagsLevel">Səviyyə</string>
     <string name="createDictionaryTagsTopic">Mövzu</string>
     <string name="createDictionaryTagsExams">İmtahanlar</string>
+
+    <string name="optionsProfile">Profil</string>
+    <string name="profileEmailLabel">E-poçt</string>
+    <string name="profileDisplayNameLabel">Görünən ad</string>
+    <string name="profileDisplayNameSupporting">Forum-da paylaşdığınız lüğətlərdə başqalarına göstərilir</string>
+    <string name="profileDisplayNameRequired">Forum şərtlərini qəbul etmək üçün görünən ad tələb olunur</string>
+    <string name="profileTermsTitle">Forum şərtləri</string>
+    <string name="profileTermsShow">Şərtləri göstər</string>
+    <string name="profileTermsHide">Şərtləri gizlət</string>
+    <string name="profileTermsAgree">Forum şərtlərini qəbul edirəm</string>
+    <string name="profileUpdate">Yenilə</string>
+    <string name="profileUpdated">Profil yeniləndi</string>
+    <string name="profileUpdateError">Profilinizi yeniləmək mümkün olmadı. Yenidən cəhd edin.</string>
 </resources>

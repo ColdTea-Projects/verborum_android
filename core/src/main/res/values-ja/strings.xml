@@ -83,4 +83,17 @@
     <string name="createDictionaryTagsLevel">レベル</string>
     <string name="createDictionaryTagsTopic">トピック</string>
     <string name="createDictionaryTagsExams">試験</string>
+
+    <string name="optionsProfile">プロフィール</string>
+    <string name="profileEmailLabel">メールアドレス</string>
+    <string name="profileDisplayNameLabel">表示名</string>
+    <string name="profileDisplayNameSupporting">Forumで共有した辞書で他のユーザーに表示されます</string>
+    <string name="profileDisplayNameRequired">Forumの規約に同意するには表示名が必要です</string>
+    <string name="profileTermsTitle">Forumの規約</string>
+    <string name="profileTermsShow">規約を表示</string>
+    <string name="profileTermsHide">規約を隠す</string>
+    <string name="profileTermsAgree">Forumの規約に同意します</string>
+    <string name="profileUpdate">更新</string>
+    <string name="profileUpdated">プロフィールを更新しました</string>
+    <string name="profileUpdateError">プロフィールを更新できませんでした。もう一度お試しください。</string>
 </resources>

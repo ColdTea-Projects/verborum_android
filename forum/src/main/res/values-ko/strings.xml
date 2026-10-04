@@ -31,4 +31,7 @@
     <string name="forumRatingContentDescription">5점 만점에 %1$s점</string>
     <string name="forumMoreOptions">옵션 더보기</string>
     <string name="forumDetailsWordListHeader">단어 목록</string>
+
+    <string name="forumMembershipTitle">Forum 가입하기</string>
+    <string name="forumMembershipMessage">공유 사전을 둘러보고 가져오려면 옵션 → 프로필로 이동해 표시 이름을 추가하고 Forum 약관에 동의하세요.</string>
 </resources>

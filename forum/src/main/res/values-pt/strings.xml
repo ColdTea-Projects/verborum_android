@@ -31,4 +31,7 @@
     <string name="forumRatingContentDescription">Avaliado com %1$s em 5</string>
     <string name="forumMoreOptions">Mais opções</string>
     <string name="forumDetailsWordListHeader">Lista de palavras</string>
+
+    <string name="forumMembershipTitle">Participe do Forum</string>
+    <string name="forumMembershipMessage">Para explorar e importar dicionários compartilhados, vá em Opções → Perfil, adicione um nome de exibição e aceite os termos do Forum.</string>
 </resources>

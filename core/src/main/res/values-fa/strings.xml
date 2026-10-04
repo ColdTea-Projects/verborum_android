@@ -84,4 +84,17 @@
     <string name="createDictionaryTagsLevel">سطح</string>
     <string name="createDictionaryTagsTopic">موضوع</string>
     <string name="createDictionaryTagsExams">آزمون‌ها</string>
+
+    <string name="optionsProfile">نمایه</string>
+    <string name="profileEmailLabel">ایمیل</string>
+    <string name="profileDisplayNameLabel">نام نمایشی</string>
+    <string name="profileDisplayNameSupporting">در واژه‌نامه‌هایی که در Forum به اشتراک می‌گذارید به دیگران نشان داده می‌شود</string>
+    <string name="profileDisplayNameRequired">برای پذیرفتن شرایط Forum به نام نمایشی نیاز است</string>
+    <string name="profileTermsTitle">شرایط Forum</string>
+    <string name="profileTermsShow">نمایش شرایط</string>
+    <string name="profileTermsHide">پنهان کردن شرایط</string>
+    <string name="profileTermsAgree">شرایط Forum را می‌پذیرم</string>
+    <string name="profileUpdate">به‌روزرسانی</string>
+    <string name="profileUpdated">نمایه به‌روز شد</string>
+    <string name="profileUpdateError">به‌روزرسانی نمایه ممکن نشد. لطفاً دوباره تلاش کنید.</string>
 </resources>

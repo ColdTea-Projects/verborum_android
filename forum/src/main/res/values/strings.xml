@@ -31,4 +31,7 @@
     <string name="forumRatingContentDescription">Rated %1$s out of 5</string>
     <string name="forumMoreOptions">More options</string>
     <string name="forumDetailsWordListHeader">Word List</string>
+
+    <string name="forumMembershipTitle">Join the Forum</string>
+    <string name="forumMembershipMessage">To browse and import shared dictionaries, go to Options → Profile, add a display name and accept the Forum terms.</string>
 </resources>
