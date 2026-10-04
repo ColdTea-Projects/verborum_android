@@ -2,6 +2,8 @@
 <resources>
     <string name="forumListScreenTitle">Forum</string>
     <string name="forumListScreenSubtitle">Словники, якими поділилася спільнота</string>
+    <string name="forumTabPopular">Популярні</string>
+    <string name="forumTabFresh">Нові</string>
     <string name="forumListEmpty">Спільних словників ще немає</string>
     <string name="forumListLoadError">Не вдалося завантажити спільні словники</string>
     <string name="forumListLoadMoreError">Не вдалося завантажити більше словників</string>
@@ -21,6 +23,7 @@
     <string name="forumLanguagePairPickFirst">Виберіть першу мову</string>
     <string name="forumLanguagePairPickSecond">Виберіть мову в пару до мови %1$s</string>
     <string name="forumSearchUser">Користувач</string>
+    <string name="forumSearchUserTooShort">Введіть щонайменше %1$d символи</string>
     <string name="forumDownload">Завантажити</string>
     <string name="forumPublishedBy">автор: %1$s</string>
     <string name="forumUnknownPublisher">Невідомий автор</string>

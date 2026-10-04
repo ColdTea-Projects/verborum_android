@@ -9,8 +9,8 @@ import kotlinx.serialization.Serializable
 import java.util.Locale
 
 /**
- * One marketplace listing, shaped like ms_marketplace's listing
- * (`docs/marketplace-client-guide.md` §4.2).
+ * One marketplace listing (`docs/marketplace-client-guide.md` §5.2). Every text field is written by
+ * another user — untrusted, rendered as plain text only.
  */
 @SuppressLint("UnsafeOptInUsageError")
 @Keep
@@ -21,52 +21,42 @@ data class MarketplaceListingResponse(
     // The owner's JWT `sub` — an id, never shown to the user.
     @SerialName("publisherId")
     val publisherId: String,
+    // The publisher's display name; not unique.
+    @SerialName("publisherName")
+    val publisherName: String? = null,
     @SerialName("name")
     val name: String,
-    // Always uppercase on the wire (guide §4.1).
+    // Uppercase, real direction.
     @SerialName("fromLang")
     val fromLang: String,
     @SerialName("toLang")
     val toLang: String,
+    // Lowercase and sorted; [] when untagged.
+    @SerialName("tags")
+    val tags: List<String> = emptyList(),
     // Distinct users who imported it.
     @SerialName("importCount")
     val importCount: Int = 0,
     // ISO-8601 UTC ("2026-07-19T17:01:21.303971Z"); when it (most recently) became public.
     @SerialName("publishedAt")
     val publishedAt: String? = null,
-    // Not in the backend contract yet (guide §9: publisher names are BL-04, ratings are not
-    // designed, and listings carry no word count). Only the dummy source fills them; a real
-    // response leaves them null and the UI hides what is missing.
-    @SerialName("publisherName")
-    val publisherName: String? = null,
-    @SerialName("rating")
-    val rating: Float? = null,
-    @SerialName("wordCount")
-    val wordCount: Int? = null,
-    // Tag codes. Not on the listing in the contract either: the real source is ms_dictionary's
-    // GET /dictionaries/{id}/tags (guide §4.5), one call per dictionary.
-    @SerialName("tags")
-    val tags: List<String>? = null,
 ) {
     fun convertToListing() = MarketplaceListing(
         dictionaryId = dictionaryId,
         publisherId = publisherId,
-        publisherName = publisherName,
+        publisherName = publisherName?.takeIf(String::isNotBlank),
         name = name,
         fromLang = fromLang,
         toLang = toLang,
         importCount = importCount,
         publishedAt = ApiTimestamp.parse(publishedAt) ?: 0L,
-        rating = rating?.coerceIn(0f, MAX_RATING),
-        wordCount = wordCount,
         // Codes are lowercase on the backend (it normalises on write); normalise defensively.
-        tags = tags.orEmpty()
-            .map { it.trim().lowercase(Locale.ROOT) }
-            .filter(String::isNotEmpty)
-            .distinct(),
+        tags = tags.normaliseTags(),
     )
-
-    companion object {
-        const val MAX_RATING = 5f
-    }
 }
+
+/** Trimmed, lowercase, non-empty and distinct — the shape the taxonomy lookup expects. */
+internal fun List<String>.normaliseTags(): List<String> =
+    map { it.trim().lowercase(Locale.ROOT) }
+        .filter(String::isNotEmpty)
+        .distinct()

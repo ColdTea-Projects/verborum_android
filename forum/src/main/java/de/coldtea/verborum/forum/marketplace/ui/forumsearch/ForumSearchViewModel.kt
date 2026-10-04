@@ -3,6 +3,7 @@ package de.coldtea.verborum.forum.marketplace.ui.forumsearch
 import dagger.hilt.android.lifecycle.HiltViewModel
 import de.coldtea.verborum.core.ui.BaseViewModel
 import de.coldtea.verborum.core.ui.model.SupportedLanguage
+import de.coldtea.verborum.forum.marketplace.domain.model.MarketplaceListingFilter
 import de.coldtea.verborum.forum.marketplace.ui.forumdictionarylist.model.ForumDictionaryFilter
 import de.coldtea.verborum.forum.marketplace.ui.forumdictionarylist.model.ForumLanguagePair
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -29,10 +30,14 @@ class ForumSearchViewModel @Inject constructor() : BaseViewModel() {
         _draft.value = current
     }
 
-    /** Adds the pair at the end, unless the same two languages are already there in either order. */
+    /**
+     * Adds the pair at the end, unless the same two languages are already there in either order,
+     * or the backend's limit of pairs is reached.
+     */
     fun onAddLanguagePair(first: SupportedLanguage, second: SupportedLanguage) = _draft.update { draft ->
         val pair = ForumLanguagePair(first = first, second = second)
-        if (first == second || draft.languagePairs.any { it.isSamePairAs(pair) }) draft
+        val isFull = draft.languagePairs.size >= MarketplaceListingFilter.MAX_VALUES_PER_FILTER
+        if (first == second || isFull || draft.languagePairs.any { it.isSamePairAs(pair) }) draft
         else draft.copy(languagePairs = draft.languagePairs + pair)
     }
 
@@ -40,12 +45,19 @@ class ForumSearchViewModel @Inject constructor() : BaseViewModel() {
         draft.copy(languagePairs = draft.languagePairs - pair)
     }
 
+    /** Toggles the tag; a new one is not added once the backend's limit of tags is reached. */
     fun onToggleTag(code: String) = _draft.update { draft ->
-        draft.copy(tags = if (code in draft.tags) draft.tags - code else draft.tags + code)
+        when {
+            code in draft.tags -> draft.copy(tags = draft.tags - code)
+            draft.tags.size >= MarketplaceListingFilter.MAX_VALUES_PER_FILTER -> draft
+            else -> draft.copy(tags = draft.tags + code)
+        }
     }
 
-    /** Keeps the text as typed; it is trimmed when the search is applied. */
-    fun onUserNameChange(userName: String) = _draft.update { it.copy(userName = userName) }
+    /** Keeps the text as typed (capped at the backend's limit); it is trimmed when the search is applied. */
+    fun onUserNameChange(userName: String) = _draft.update {
+        it.copy(userName = userName.take(MarketplaceListingFilter.MAX_PUBLISHER_NAME_LENGTH))
+    }
 
     fun clear() {
         _draft.value = ForumDictionaryFilter()

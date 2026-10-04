@@ -2,6 +2,8 @@
 <resources>
     <string name="forumListScreenTitle">Forum</string>
     <string name="forumListScreenSubtitle">Słowniki udostępnione przez społeczność</string>
+    <string name="forumTabPopular">Popularne</string>
+    <string name="forumTabFresh">Nowe</string>
     <string name="forumListEmpty">Brak udostępnionych słowników</string>
     <string name="forumListLoadError">Nie udało się wczytać udostępnionych słowników</string>
     <string name="forumListLoadMoreError">Nie udało się wczytać kolejnych słowników</string>
@@ -21,6 +23,7 @@
     <string name="forumLanguagePairPickFirst">Wybierz pierwszy język</string>
     <string name="forumLanguagePairPickSecond">Wybierz język do pary z %1$s</string>
     <string name="forumSearchUser">Użytkownik</string>
+    <string name="forumSearchUserTooShort">Wpisz co najmniej %1$d znaki</string>
     <string name="forumDownload">Pobierz</string>
     <string name="forumPublishedBy">autor: %1$s</string>
     <string name="forumUnknownPublisher">Nieznany wydawca</string>

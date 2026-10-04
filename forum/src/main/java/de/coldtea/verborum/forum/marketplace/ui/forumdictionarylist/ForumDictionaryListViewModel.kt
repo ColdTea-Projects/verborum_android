@@ -9,6 +9,7 @@ import de.coldtea.verborum.core.ui.BaseViewModel
 import de.coldtea.verborum.forum.marketplace.domain.MarketplaceService
 import de.coldtea.verborum.forum.marketplace.ui.forumdictionarylist.model.ForumAccessState
 import de.coldtea.verborum.forum.marketplace.ui.forumdictionarylist.model.ForumDictionaryFilter
+import de.coldtea.verborum.forum.marketplace.ui.forumdictionarylist.model.ForumDictionaryTab
 import de.coldtea.verborum.forum.marketplace.ui.forumdictionarylist.model.ForumDictionaryUi
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -18,14 +19,16 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class ForumDictionaryListViewModel @Inject constructor(
-    marketplaceService: MarketplaceService,
+    private val marketplaceService: MarketplaceService,
     private val profileService: ProfileService,
 ) : BaseViewModel() {
 
@@ -46,20 +49,57 @@ class ForumDictionaryListViewModel @Inject constructor(
             }
         }.stateIn(viewModelScope, SharingStarted.Eagerly, ForumAccessState.Loading)
 
-    // Set by the search screen (see [applyFilter]); held here so it survives navigating away.
-    private val _filter = MutableStateFlow(ForumDictionaryFilter())
-    val filter = _filter.asStateFlow()
+    // Null until the default filter (the user's own language pairs) is known, so the lists do not
+    // load unfiltered first. Then set by the search screen (see [applyFilter]); held here so it
+    // survives navigating away. Both tabs share it.
+    private val selectedFilter = MutableStateFlow<ForumDictionaryFilter?>(null)
+    val filter: StateFlow<ForumDictionaryFilter> =
+        selectedFilter
+            .map { it ?: ForumDictionaryFilter() }
+            .stateIn(viewModelScope, SharingStarted.Eagerly, ForumDictionaryFilter())
+
+    private val _selectedTab = MutableStateFlow(ForumDictionaryTab.POPULAR)
+    val selectedTab: StateFlow<ForumDictionaryTab> = _selectedTab.asStateFlow()
+
+    private val popularDictionaries = pagedList(ForumDictionaryTab.POPULAR)
+    private val freshDictionaries = pagedList(ForumDictionaryTab.FRESH)
+
+    init {
+        viewModelScope.launch(exceptionHandler) {
+            val default = try {
+                marketplaceService.getDefaultFilter()
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                ForumDictionaryFilter()
+            }
+            // A filter the user already applied wins over the late default.
+            selectedFilter.compareAndSet(null, default)
+        }
+    }
+
+    /** The paged list of [tab] for the current [filter]. */
+    fun dictionaries(tab: ForumDictionaryTab): Flow<PagingData<ForumDictionaryUi>> = when (tab) {
+        ForumDictionaryTab.POPULAR -> popularDictionaries
+        ForumDictionaryTab.FRESH -> freshDictionaries
+    }
+
+    fun selectTab(tab: ForumDictionaryTab) {
+        _selectedTab.value = tab
+    }
 
     /**
-     * The paged browse list for the current [filter]. Every filter change starts a new pager from
-     * page 0 (flatMapLatest drops the previous one); loading/error/end state travels inside the
-     * paging stream, so the screen reads it from `LazyPagingItems.loadState`. Cached in
-     * [viewModelScope] so loaded pages survive configuration changes and back-navigation.
+     * One tab's paged list. Every filter change starts a new pager from page 0 (flatMapLatest drops
+     * the previous one); loading/error/end state travels inside the paging stream, so the screen
+     * reads it from `LazyPagingItems.loadState`. Cached in [viewModelScope] so loaded pages
+     * survive tab switches, configuration changes and back-navigation. A pager only runs while
+     * its tab is on screen.
      */
     @OptIn(ExperimentalCoroutinesApi::class)
-    val dictionaries: Flow<PagingData<ForumDictionaryUi>> =
-        _filter
-            .flatMapLatest { filter -> marketplaceService.getDictionaries(filter) }
+    private fun pagedList(tab: ForumDictionaryTab): Flow<PagingData<ForumDictionaryUi>> =
+        selectedFilter
+            .filterNotNull()
+            .flatMapLatest { filter -> marketplaceService.getDictionaries(filter, tab.order) }
             .cachedIn(viewModelScope)
 
     /** Re-checks membership with `/users/me` — on every visit, since it can change on another device. */
@@ -78,10 +118,11 @@ class ForumDictionaryListViewModel @Inject constructor(
 
     /** The search screen's result; an unchanged filter does not reload. */
     fun applyFilter(filter: ForumDictionaryFilter) {
-        _filter.value = filter
+        selectedFilter.value = filter
     }
 
+    /** Clears every criterion, the default language pairs included. */
     fun clearFilters() {
-        _filter.value = ForumDictionaryFilter()
+        selectedFilter.value = ForumDictionaryFilter()
     }
 }

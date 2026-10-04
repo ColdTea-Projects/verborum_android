@@ -1,211 +1,97 @@
 package de.coldtea.verborum.forum.marketplace.data
 
-import de.coldtea.verborum.core.ui.model.SupportedLanguage
-import de.coldtea.verborum.core.ui.model.dictionaryTagByCode
-import de.coldtea.verborum.core.utils.ApiTimestamp
-import de.coldtea.verborum.forum.marketplace.ui.forumdictionarylist.composables.MAX_VISIBLE_TAG_CHIPS
+import de.coldtea.verborum.core.BaseTest
+import de.coldtea.verborum.forum.marketplace.data.api.MarketplaceApi
+import de.coldtea.verborum.forum.marketplace.data.api.SharedDictionaryApi
+import de.coldtea.verborum.forum.marketplace.data.api.SharedWordApi
+import de.coldtea.verborum.forum.marketplace.data.api.model.MarketplaceListingResponse
+import de.coldtea.verborum.forum.marketplace.data.api.model.MarketplacePageResponse
+import de.coldtea.verborum.forum.marketplace.domain.model.MarketplaceListingOrder
+import io.mockk.coEvery
+import io.mockk.coVerify
+import io.mockk.impl.annotations.MockK
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertFalse
-import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
-import org.junit.Assert.assertTrue
 import org.junit.Test
 
-/**
- * The dummy source must look like the real wire data, or the eventual API swap changes behaviour.
- */
-class MarketplaceRepositoryTest {
+class MarketplaceRepositoryTest : BaseTest() {
 
-    private val subject = MarketplaceRepository()
-    private val canonicalUuid =
-        Regex("^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$")
+    @MockK
+    private lateinit var marketplaceApi: MarketplaceApi
 
-    // Every listing, fetched page by page as the Forum list does.
-    private suspend fun allListings() =
-        (0 until MarketplaceDummyData.TOTAL_LISTINGS / MarketplaceRepository.MAX_PAGE_SIZE)
-            .flatMap { subject.getListings(page = it, size = MarketplaceRepository.MAX_PAGE_SIZE).items }
+    @MockK
+    private lateinit var sharedDictionaryApi: SharedDictionaryApi
 
-    // region getListings
-    @Test
-    fun `getListings returns a first page in the contract envelope`() = runTest {
-        val page = subject.getListings(page = 0, size = 15)
+    @MockK
+    private lateinit var sharedWordApi: SharedWordApi
 
-        assertEquals(0, page.page)
-        assertEquals(15, page.size)
-        assertEquals(15, page.items.size)
-        assertEquals(MarketplaceDummyData.TOTAL_LISTINGS.toLong(), page.totalElements)
-        assertEquals(MarketplaceDummyData.TOTAL_LISTINGS / 15, page.totalPages)
-        assertTrue(page.hasMore)
+    private lateinit var subject: MarketplaceRepository
+
+    override fun setUp() {
+        super.setUp()
+        subject = MarketplaceRepository(marketplaceApi, sharedDictionaryApi, sharedWordApi)
     }
 
-    @Test
-    fun `getListings pages with a stable order`() = runTest {
-        val first = subject.getListings(page = 0, size = 15)
-        val second = subject.getListings(page = 1, size = 15)
-
-        assertEquals(first, subject.getListings(page = 0, size = 15))
-        assertTrue(first.items.none { it in second.items })
-    }
+    private fun listing(dictionaryId: String) = MarketplaceListingResponse(
+        dictionaryId = dictionaryId,
+        publisherId = "765a81ed-2612-4dcc-bf7a-3d5fecf3d0d6",
+        publisherName = "Anna Bauer",
+        name = "Polish → Ukrainian",
+        fromLang = "PL",
+        toLang = "UK",
+    )
 
     @Test
-    fun `the last page is partial and has no more after it`() = runTest {
-        val size = 7 * 6 // TOTAL_LISTINGS is not a multiple of this
-        val lastPage = (MarketplaceDummyData.TOTAL_LISTINGS - 1) / size
+    fun `getListings passes every filter through to the marketplace`() = runTest {
+        coEvery { marketplaceApi.getListings(any(), any(), any(), any(), any()) } returns MarketplacePageResponse()
 
-        val page = subject.getListings(page = lastPage, size = size)
+        subject.getListings(order = MarketplaceListingOrder.NEWEST, page = 2, size = 15, pairs = listOf("EN-TR"), tags = listOf("food"), publisherName = "ann")
 
-        assertEquals(MarketplaceDummyData.TOTAL_LISTINGS % size, page.items.size)
-        assertFalse(page.hasMore)
-        assertTrue(subject.getListings(page = lastPage + 1, size = size).items.isEmpty())
+        coVerify { marketplaceApi.getListings(page = 2, size = 15, pairs = listOf("EN-TR"), tags = listOf("food"), publisher = "ann") }
     }
 
-    @Test(expected = IllegalArgumentException::class)
-    fun `getListings rejects a page size the backend would reject`() = runTest {
-        subject.getListings(page = 0, size = MarketplaceRepository.MAX_PAGE_SIZE + 1)
-    }
-
-    @Test(expected = IllegalArgumentException::class)
-    fun `getListings rejects a negative page`() = runTest {
-        subject.getListings(page = -1, size = 15)
-    }
-    // endregion
-
-    // region filters
     @Test
-    fun `getListings matches each language pair in both directions`() = runTest {
-        val items = subject.getListings(size = 100, languagePairs = listOf("DE" to "TR", "fr" to "en")).items
+    fun `a loaded listing can be looked up by id afterwards`() = runTest {
+        coEvery { marketplaceApi.getListings(any(), any(), any(), any(), any()) } returns
+            MarketplacePageResponse(items = listOf(listing("a"), listing("b")), hasNext = false)
 
-        assertEquals(
-            setOf("DE" to "TR", "TR" to "DE", "FR" to "EN", "EN" to "FR"),
-            items.map { it.fromLang to it.toLang }.toSet(),
+        subject.getListings(order = MarketplaceListingOrder.NEWEST, page = 0, size = 15, pairs = emptyList(), tags = emptyList(), publisherName = null)
+
+        assertEquals(listing("b"), subject.getLoadedListing("b"))
+        assertNull(subject.getLoadedListing("never-loaded"))
+    }
+
+    @Test
+    fun `a reload replaces the remembered listing with the fresh one`() = runTest {
+        val renamed = listing("a").copy(name = "Renamed")
+        coEvery { marketplaceApi.getListings(any(), any(), any(), any(), any()) } returnsMany listOf(
+            MarketplacePageResponse(items = listOf(listing("a"))),
+            MarketplacePageResponse(items = listOf(renamed)),
         )
+
+        repeat(2) { subject.getListings(order = MarketplaceListingOrder.NEWEST, page = 0, size = 15, pairs = emptyList(), tags = emptyList(), publisherName = null) }
+
+        assertEquals(renamed, subject.getLoadedListing("a"))
     }
 
     @Test
-    fun `getListings keeps listings carrying any of the selected tags`() = runTest {
-        val tags = setOf("n5", "business")
+    fun `the popular order reads the popular endpoint with the same filters`() = runTest {
+        coEvery { marketplaceApi.getPopularListings(any(), any(), any(), any(), any()) } returns
+            MarketplacePageResponse(items = listOf(listing("p")))
 
-        val items = subject.getListings(size = 100, tags = tags).items
-
-        // Japanese Travel (n5) and the two business lists — none carries both.
-        assertEquals(
-            setOf("Japanese Travel Phrases", "Spanish Business Basics", "Anglais des affaires"),
-            items.map { it.name }.toSet(),
+        subject.getListings(
+            order = MarketplaceListingOrder.POPULAR,
+            page = 0,
+            size = 15,
+            pairs = listOf("DE-EN"),
+            tags = emptyList(),
+            publisherName = null,
         )
-        assertTrue(items.all { listing -> listing.tags.orEmpty().any { it in tags } })
-    }
 
-    @Test
-    fun `getListings matches part of the publisher name, ignoring case`() = runTest {
-        val items = subject.getListings(size = 100, publisherName = " SCHMI ").items
-
-        assertTrue(items.isNotEmpty())
-        assertTrue(items.all { it.publisherName == "Anna Schmidt" })
-    }
-
-    @Test
-    fun `a filtered page envelope counts only the matches`() = runTest {
-        val all = allListings().count { it.fromLang == "EN" && it.toLang == "DE" }
-
-        val page = subject.getListings(page = 0, size = 15, languagePairs = listOf("DE" to "EN"))
-
-        assertEquals(all.toLong(), page.totalElements)
-        assertEquals((all + 14) / 15, page.totalPages)
-    }
-
-    @Test
-    fun `getListings returns an empty last page when nothing matches`() = runTest {
-        val page = subject.getListings(publisherName = "nobody by this name")
-
-        assertTrue(page.items.isEmpty())
-        assertEquals(0L, page.totalElements)
-        assertFalse(page.hasMore)
-    }
-    // endregion
-
-    @Test
-    fun `listings repeat the templates with unique canonical ids and uppercase supported codes`() = runTest {
-        val items = allListings()
-
-        assertEquals(MarketplaceDummyData.TOTAL_LISTINGS, items.size)
-        assertEquals(items.size, items.map { it.dictionaryId }.toSet().size)
-        assertEquals(TEMPLATE_COUNT, items.map { it.name }.toSet().size)
-        items.forEach { listing ->
-            assertTrue(listing.dictionaryId, canonicalUuid.matches(listing.dictionaryId))
-            assertTrue(listing.publisherId, canonicalUuid.matches(listing.publisherId))
-            listOf(listing.fromLang, listing.toLang).forEach { code ->
-                assertEquals(code.uppercase(), code)
-                assertNotNull(code, SupportedLanguage.fromCode(code))
-            }
-        }
-    }
-
-    @Test
-    fun `listings stay newest first across every repetition`() = runTest {
-        val publishedAt = allListings().map { ApiTimestamp.parse(it.publishedAt) }
-
-        assertTrue(publishedAt.none { it == null })
-        assertEquals(publishedAt.sortedByDescending { it }, publishedAt)
-        assertEquals(publishedAt.size, publishedAt.toSet().size)
-    }
-
-    @Test
-    fun `every listing's word count matches its words`() = runTest {
-        val wordIds = mutableSetOf<String>()
-        allListings().forEach { listing ->
-            val words = subject.getWords(listing.dictionaryId)
-            assertEquals(listing.name, listing.wordCount, words.size)
-            words.forEach { word ->
-                assertTrue(word.wordId, canonicalUuid.matches(word.wordId))
-                assertTrue(word.wordId, wordIds.add(word.wordId))
-                assertEquals(listing.dictionaryId, word.dictionaryId)
-                assertTrue(word.word.orEmpty().startsWith("["))
-            }
-        }
-    }
-
-    @Test
-    fun `every dummy tag is a known taxonomy code`() = runTest {
-        subject.getListings().items.flatMap { it.tags.orEmpty() }.forEach { code ->
-            assertNotNull(code, dictionaryTagByCode(code))
-        }
-    }
-
-    @Test
-    fun `dummy data covers a card over the chip limit and one without tags`() = runTest {
-        val tagCounts = subject.getListings().items.map { it.tags.orEmpty().size }
-
-        assertTrue(tagCounts.any { it > MAX_VISIBLE_TAG_CHIPS })
-        assertTrue(tagCounts.any { it == 0 })
-    }
-
-    @Test
-    fun `dummy words cover long phrases on the word and translation sides`() = runTest {
-        val words = subject.getListings().items.flatMap { subject.getWords(it.dictionaryId) }
-
-        assertTrue(words.any { it.word.orEmpty().length > LONG_ENTRY_LENGTH })
-        assertTrue(words.any { it.translation.orEmpty().length > LONG_ENTRY_LENGTH })
-    }
-
-    @Test
-    fun `getListing finds a known id and returns null for an unknown one`() = runTest {
-        val known = subject.getListings(page = 2, size = 15).items.first()
-
-        assertEquals(known, subject.getListing(known.dictionaryId))
-        assertNull(subject.getListing("00000000-0000-4000-8000-000000000000"))
-    }
-
-    @Test
-    fun `getWords of an unknown dictionary is empty`() = runTest {
-        assertEquals(emptyList<Any>(), subject.getWords("unknown"))
-    }
-
-    private companion object {
-        // Comfortably more than one line of the details screen's entry on a phone.
-        const val LONG_ENTRY_LENGTH = 60
-
-        // The hand-written listings MarketplaceDummyData repeats.
-        const val TEMPLATE_COUNT = 10
+        coVerify { marketplaceApi.getPopularListings(page = 0, size = 15, pairs = listOf("DE-EN"), tags = emptyList(), publisher = null) }
+        coVerify(exactly = 0) { marketplaceApi.getListings(any(), any(), any(), any(), any()) }
+        // Popular listings feed the details screen just like fresh ones.
+        assertEquals(listing("p"), subject.getLoadedListing("p"))
     }
 }

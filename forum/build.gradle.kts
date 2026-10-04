@@ -69,6 +69,11 @@ dependencies {
     implementation(libs.androidx.paging.compose)
     testImplementation(libs.androidx.paging.testing)
 
-    //KotlinX Serialization — the marketplace DTOs already follow the backend contract
+    //Retrofit — ms_marketplace, plus ms_dictionary reads of shared dictionaries
+    implementation(libs.retrofit2)
+    implementation(libs.okHttp3)
+    implementation(libs.retrofit2.kotlinx.serialization.converter)
+
+    //KotlinX Serialization
     implementation(libs.kotlinx.serialization.json)
 }

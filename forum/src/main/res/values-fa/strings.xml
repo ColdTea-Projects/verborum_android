@@ -2,6 +2,8 @@
 <resources>
     <string name="forumListScreenTitle">Forum</string>
     <string name="forumListScreenSubtitle">واژه‌نامه‌هایی که جامعه به اشتراک گذاشته است</string>
+    <string name="forumTabPopular">محبوب</string>
+    <string name="forumTabFresh">تازه</string>
     <string name="forumListEmpty">هنوز واژه‌نامهٔ اشتراکی‌ای وجود ندارد</string>
     <string name="forumListLoadError">بارگیری واژه‌نامه‌های اشتراکی ممکن نشد</string>
     <string name="forumListLoadMoreError">بارگیری واژه‌نامه‌های بیشتر ممکن نشد</string>
@@ -21,6 +23,7 @@
     <string name="forumLanguagePairPickFirst">زبان اول را انتخاب کنید</string>
     <string name="forumLanguagePairPickSecond">زبانی برای جفت شدن با %1$s انتخاب کنید</string>
     <string name="forumSearchUser">کاربر</string>
+    <string name="forumSearchUserTooShort">دست‌کم %1$d نویسه وارد کنید</string>
     <string name="forumDownload">دانلود</string>
     <string name="forumPublishedBy">از %1$s</string>
     <string name="forumUnknownPublisher">ناشر ناشناس</string>

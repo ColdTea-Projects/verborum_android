@@ -145,7 +145,7 @@ fun ForumDictionaryCard(
                         modifier = Modifier.padding(top = 2.dp)
                     )
 
-                    // Left out when the backend has no rating (not in the contract yet, guide §9).
+                    // Left out when the backend has no rating (ratings are not in the contract, guide §10).
                     dictionary.rating?.let { rating ->
                         CardRating(rating = rating, modifier = Modifier.padding(top = 6.dp))
                     }

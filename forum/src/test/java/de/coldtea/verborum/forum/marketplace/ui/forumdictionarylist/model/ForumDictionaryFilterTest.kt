@@ -55,4 +55,12 @@ class ForumDictionaryFilterTest {
             result,
         )
     }
+
+    @Test
+    fun `a one- or two-letter user name is too short, a blank one is no filter`() {
+        assertTrue(ForumDictionaryFilter(userName = " an ").isUserNameTooShort)
+        assertFalse(ForumDictionaryFilter(userName = "ann").isUserNameTooShort)
+        assertFalse(ForumDictionaryFilter(userName = "  ").isUserNameTooShort)
+        assertFalse(ForumDictionaryFilter().isUserNameTooShort)
+    }
 }

@@ -16,8 +16,17 @@ data class ForumLanguagePair(
     fun isSamePairAs(other: ForumLanguagePair): Boolean =
         setOf(first, second) == setOf(other.first, other.second)
 
+    companion object {
+        /** Null when either code is not a supported language. */
+        fun fromListingPair(pair: MarketplaceLanguagePair): ForumLanguagePair? {
+            val first = SupportedLanguage.fromCode(pair.first) ?: return null
+            val second = SupportedLanguage.fromCode(pair.second) ?: return null
+            return ForumLanguagePair(first = first, second = second)
+        }
+    }
+
     fun convertToListingPair() = MarketplaceLanguagePair(
-        // The wire's codes are uppercase (guide §4.1).
+        // The wire's codes are uppercase (guide §5.4).
         first = first.code.uppercase(Locale.ROOT),
         second = second.code.uppercase(Locale.ROOT),
     )

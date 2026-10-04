@@ -14,6 +14,10 @@ data class ForumDictionaryFilter(
     val isActive: Boolean
         get() = this != ForumDictionaryFilter()
 
+    /** A user name shorter than the backend accepts (it answers 400); blank means no filter. */
+    val isUserNameTooShort: Boolean
+        get() = userName?.trim()?.length in 1 until MarketplaceListingFilter.MIN_PUBLISHER_NAME_LENGTH
+
     fun convertToListingFilter() = MarketplaceListingFilter(
         languagePairs = languagePairs.map(ForumLanguagePair::convertToListingPair),
         tags = tags,

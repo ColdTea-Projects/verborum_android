@@ -1,6 +1,12 @@
 package de.coldtea.verborum.forum.marketplace.ui.forumdictionarylist
 
 import androidx.compose.foundation.background
+import de.coldtea.verborum.forum.marketplace.ui.forumdictionarylist.model.ForumDictionaryTab
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.runtime.saveable.rememberSaveableStateHolder
+import androidx.compose.runtime.key
+import androidx.compose.material3.Tab
+import androidx.compose.material3.PrimaryTabRow
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -53,6 +59,7 @@ import de.coldtea.verborum.forum.common.utils.CoreResStrings
 import de.coldtea.verborum.forum.common.utils.ResStrings
 import de.coldtea.verborum.forum.marketplace.ui.forumdictionarylist.composables.ForumDictionaryCard
 import de.coldtea.verborum.forum.marketplace.ui.forumdictionarylist.composables.ForumDictionaryOptionsSheet
+import de.coldtea.verborum.forum.marketplace.domain.model.MarketplaceAccessDeniedException
 import de.coldtea.verborum.forum.marketplace.ui.forumdictionarylist.composables.ForumActiveFilters
 import de.coldtea.verborum.forum.marketplace.ui.forumdictionarylist.composables.ForumMembershipRequired
 import de.coldtea.verborum.forum.marketplace.ui.forumdictionarylist.model.ForumAccessState
@@ -113,15 +120,72 @@ fun ForumDictionaryListScreen(
     }
 }
 
-/** The list itself — only composed for members, so the pager never runs for anyone else. */
+/**
+ * The member's Forum: the Popular and Fresh tabs over the same filter. Only the selected tab is
+ * composed — so only its pager runs — and each tab keeps its own scroll position.
+ */
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ForumDictionaryListMember(
     viewModel: ForumDictionaryListViewModel,
     onDictionaryClick: (String) -> Unit,
     onSearchClick: () -> Unit,
 ) {
-    val dictionaries = viewModel.dictionaries.collectAsLazyPagingItems()
+    val selectedTab by viewModel.selectedTab.collectAsState()
+    val tabStates = rememberSaveableStateHolder()
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background),
+    ) {
+        PrimaryTabRow(
+            selectedTabIndex = selectedTab.ordinal,
+            containerColor = MaterialTheme.colorScheme.background,
+            contentColor = MaterialTheme.colorScheme.primary,
+        ) {
+            ForumDictionaryTab.entries.forEach { tab ->
+                Tab(
+                    selected = tab == selectedTab,
+                    onClick = { viewModel.selectTab(tab) },
+                    text = { Text(text = stringResource(tab.labelRes), fontWeight = FontWeight.Medium) },
+                    selectedContentColor = MaterialTheme.colorScheme.primary,
+                    unselectedContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
+        }
+
+        key(selectedTab) {
+            tabStates.SaveableStateProvider(selectedTab.name) {
+                ForumDictionaryTabContent(
+                    viewModel = viewModel,
+                    tab = selectedTab,
+                    onDictionaryClick = onDictionaryClick,
+                    onSearchClick = onSearchClick,
+                )
+            }
+        }
+    }
+}
+
+/** One tab's paged list. */
+@Composable
+private fun ForumDictionaryTabContent(
+    viewModel: ForumDictionaryListViewModel,
+    tab: ForumDictionaryTab,
+    onDictionaryClick: (String) -> Unit,
+    onSearchClick: () -> Unit,
+) {
+    val dictionaries = viewModel.dictionaries(tab).collectAsLazyPagingItems()
     val filter by viewModel.filter.collectAsState()
+
+    // Refused as a non-member (left on another device): re-check, so the gate shows how to join.
+    val refresh = dictionaries.loadState.refresh
+    LaunchedEffect(refresh) {
+        if (refresh is LoadState.Error && refresh.error is MarketplaceAccessDeniedException) {
+            viewModel.refreshAccess()
+        }
+    }
 
     ForumDictionaryListContent(
         dictionaries = dictionaries,

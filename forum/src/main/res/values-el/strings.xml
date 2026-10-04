@@ -2,6 +2,8 @@
 <resources>
     <string name="forumListScreenTitle">Forum</string>
     <string name="forumListScreenSubtitle">Λεξικά που μοιράζεται η κοινότητα</string>
+    <string name="forumTabPopular">Δημοφιλή</string>
+    <string name="forumTabFresh">Νέα</string>
     <string name="forumListEmpty">Δεν υπάρχουν ακόμη κοινόχρηστα λεξικά</string>
     <string name="forumListLoadError">Δεν ήταν δυνατή η φόρτωση των κοινόχρηστων λεξικών</string>
     <string name="forumListLoadMoreError">Δεν ήταν δυνατή η φόρτωση περισσότερων λεξικών</string>
@@ -21,6 +23,7 @@
     <string name="forumLanguagePairPickFirst">Επιλέξτε την πρώτη γλώσσα</string>
     <string name="forumLanguagePairPickSecond">Επιλέξτε γλώσσα για ζεύγος με %1$s</string>
     <string name="forumSearchUser">Χρήστης</string>
+    <string name="forumSearchUserTooShort">Εισαγάγετε τουλάχιστον %1$d χαρακτήρες</string>
     <string name="forumDownload">Λήψη</string>
     <string name="forumPublishedBy">από %1$s</string>
     <string name="forumUnknownPublisher">Άγνωστος εκδότης</string>

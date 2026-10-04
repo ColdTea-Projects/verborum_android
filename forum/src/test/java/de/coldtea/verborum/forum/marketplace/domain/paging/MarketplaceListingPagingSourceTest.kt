@@ -6,6 +6,7 @@ import androidx.paging.testing.TestPager
 import de.coldtea.verborum.core.BaseTest
 import de.coldtea.verborum.forum.marketplace.domain.model.MarketplaceLanguagePair
 import de.coldtea.verborum.forum.marketplace.domain.model.MarketplaceListingFilter
+import de.coldtea.verborum.forum.marketplace.domain.model.MarketplaceListingOrder
 import de.coldtea.verborum.forum.marketplace.domain.model.MarketplaceListingPage
 import de.coldtea.verborum.forum.marketplace.domain.usecase.api.GetMarketplaceListingsApiUseCase
 import de.coldtea.verborum.forum.testMarketplaceListing
@@ -27,7 +28,7 @@ class MarketplaceListingPagingSourceTest : BaseTest() {
 
     private fun pager() = TestPager(
         config,
-        MarketplaceListingPagingSource(getMarketplaceListingsApiUseCase, PAGE_SIZE, FILTER),
+        MarketplaceListingPagingSource(getMarketplaceListingsApiUseCase, ORDER, PAGE_SIZE, FILTER),
     )
 
     private fun page(page: Int, vararg ids: String, hasMore: Boolean = true) = MarketplaceListingPage(
@@ -38,7 +39,7 @@ class MarketplaceListingPagingSourceTest : BaseTest() {
 
     @Test
     fun `refresh loads page zero with the configured size`() = runTest {
-        coEvery { getMarketplaceListingsApiUseCase(0, PAGE_SIZE, FILTER) } returns page(0, "a", "b")
+        coEvery { getMarketplaceListingsApiUseCase(ORDER, 0, PAGE_SIZE, FILTER) } returns page(0, "a", "b")
 
         val result = pager().refresh() as LoadResult.Page
 
@@ -49,21 +50,21 @@ class MarketplaceListingPagingSourceTest : BaseTest() {
 
     @Test
     fun `every page is requested with the source's filter`() = runTest {
-        coEvery { getMarketplaceListingsApiUseCase(0, PAGE_SIZE, any()) } returns page(0, "a")
-        coEvery { getMarketplaceListingsApiUseCase(1, PAGE_SIZE, any()) } returns page(1, "b")
+        coEvery { getMarketplaceListingsApiUseCase(ORDER, 0, PAGE_SIZE, any()) } returns page(0, "a")
+        coEvery { getMarketplaceListingsApiUseCase(ORDER, 1, PAGE_SIZE, any()) } returns page(1, "b")
         val pager = pager()
 
         pager.refresh()
         pager.append()
 
-        coVerify(exactly = 1) { getMarketplaceListingsApiUseCase(0, PAGE_SIZE, FILTER) }
-        coVerify(exactly = 1) { getMarketplaceListingsApiUseCase(1, PAGE_SIZE, FILTER) }
+        coVerify(exactly = 1) { getMarketplaceListingsApiUseCase(ORDER, 0, PAGE_SIZE, FILTER) }
+        coVerify(exactly = 1) { getMarketplaceListingsApiUseCase(ORDER, 1, PAGE_SIZE, FILTER) }
     }
 
     @Test
     fun `append requests the next page number, not a load-size offset`() = runTest {
-        coEvery { getMarketplaceListingsApiUseCase(0, PAGE_SIZE, FILTER) } returns page(0, "a")
-        coEvery { getMarketplaceListingsApiUseCase(1, PAGE_SIZE, FILTER) } returns page(1, "b")
+        coEvery { getMarketplaceListingsApiUseCase(ORDER, 0, PAGE_SIZE, FILTER) } returns page(0, "a")
+        coEvery { getMarketplaceListingsApiUseCase(ORDER, 1, PAGE_SIZE, FILTER) } returns page(1, "b")
         val pager = pager()
 
         pager.refresh()
@@ -71,12 +72,12 @@ class MarketplaceListingPagingSourceTest : BaseTest() {
 
         assertEquals(listOf("b"), result.data.map { it.dictionaryId })
         assertEquals(2, result.nextKey)
-        coVerify(exactly = 1) { getMarketplaceListingsApiUseCase(1, PAGE_SIZE, FILTER) }
+        coVerify(exactly = 1) { getMarketplaceListingsApiUseCase(ORDER, 1, PAGE_SIZE, FILTER) }
     }
 
     @Test
     fun `the last page ends pagination`() = runTest {
-        coEvery { getMarketplaceListingsApiUseCase(0, PAGE_SIZE, FILTER) } returns page(0, "a", hasMore = false)
+        coEvery { getMarketplaceListingsApiUseCase(ORDER, 0, PAGE_SIZE, FILTER) } returns page(0, "a", hasMore = false)
 
         val result = pager().refresh() as LoadResult.Page
 
@@ -85,8 +86,8 @@ class MarketplaceListingPagingSourceTest : BaseTest() {
 
     @Test
     fun `a listing repeated by a later page is dropped`() = runTest {
-        coEvery { getMarketplaceListingsApiUseCase(0, PAGE_SIZE, FILTER) } returns page(0, "a", "b")
-        coEvery { getMarketplaceListingsApiUseCase(1, PAGE_SIZE, FILTER) } returns page(1, "b", "c")
+        coEvery { getMarketplaceListingsApiUseCase(ORDER, 0, PAGE_SIZE, FILTER) } returns page(0, "a", "b")
+        coEvery { getMarketplaceListingsApiUseCase(ORDER, 1, PAGE_SIZE, FILTER) } returns page(1, "b", "c")
         val pager = pager()
 
         pager.refresh()
@@ -98,7 +99,7 @@ class MarketplaceListingPagingSourceTest : BaseTest() {
     @Test
     fun `a failing load becomes an error result`() = runTest {
         val failure = RuntimeException("offline")
-        coEvery { getMarketplaceListingsApiUseCase(0, PAGE_SIZE, FILTER) } throws failure
+        coEvery { getMarketplaceListingsApiUseCase(ORDER, 0, PAGE_SIZE, FILTER) } throws failure
 
         val result = pager().refresh()
 
@@ -107,6 +108,7 @@ class MarketplaceListingPagingSourceTest : BaseTest() {
     }
 
     private companion object {
+        val ORDER = MarketplaceListingOrder.POPULAR
         const val PAGE_SIZE = 15
         val FILTER = MarketplaceListingFilter(
             languagePairs = listOf(MarketplaceLanguagePair("DE", "TR")),

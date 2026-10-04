@@ -103,6 +103,21 @@ class ProfileServiceTest : BaseTest() {
     }
     // endregion
 
+    // region userId
+    @Test
+    fun `getUserId uses the loaded profile without another call`() = runTest {
+        service.refreshProfile()
+
+        assertEquals("4140c0de-0000-4000-8000-0000000000bb", service.getUserId())
+        coVerify(exactly = 1) { ensureUserProfileUseCase.invoke(any(), any(), any()) }
+    }
+
+    @Test
+    fun `getUserId loads the profile first when none is known`() = runTest {
+        assertEquals("4140c0de-0000-4000-8000-0000000000bb", service.getUserId())
+    }
+    // endregion
+
     private companion object {
         const val SUBJECT = "765a81ed-2612-4dcc-bf7a-3d5fecf3d0d6"
         const val EMAIL = "anna@example.com"

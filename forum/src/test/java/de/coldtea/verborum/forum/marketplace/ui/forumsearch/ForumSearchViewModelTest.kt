@@ -106,4 +106,36 @@ class ForumSearchViewModelTest : BaseTest() {
         viewModel.onUserNameChange("   ")
         assertNull(viewModel.searchFilter().userName)
     }
+
+    // region backend limits
+    @Test
+    fun `no more than ten language pairs are added`() {
+        val viewModel = ForumSearchViewModel().apply { init(ForumDictionaryFilter()) }
+        val languages = SupportedLanguage.entries
+
+        languages.drop(1).take(11).forEach { viewModel.onAddLanguagePair(languages.first(), it) }
+
+        assertEquals(10, viewModel.draft.value.languagePairs.size)
+    }
+
+    @Test
+    fun `no more than ten tags are selected, but a selected one can still be removed`() {
+        val viewModel = ForumSearchViewModel().apply { init(ForumDictionaryFilter()) }
+
+        (1..11).forEach { viewModel.onToggleTag("tag$it") }
+        assertEquals(10, viewModel.draft.value.tags.size)
+
+        viewModel.onToggleTag("tag1")
+        assertEquals(9, viewModel.draft.value.tags.size)
+    }
+
+    @Test
+    fun `the user name is capped at the backend limit`() {
+        val viewModel = viewModel()
+
+        viewModel.onUserNameChange("a".repeat(300))
+
+        assertEquals(255, viewModel.draft.value.userName?.length)
+    }
+    // endregion
 }

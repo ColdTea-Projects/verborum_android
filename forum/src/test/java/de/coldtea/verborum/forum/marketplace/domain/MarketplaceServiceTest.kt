@@ -2,19 +2,24 @@ package de.coldtea.verborum.forum.marketplace.domain
 
 import androidx.paging.testing.asSnapshot
 import de.coldtea.verborum.core.BaseTest
+import de.coldtea.verborum.core.library.domain.model.DictionaryLanguages
+import de.coldtea.verborum.core.profile.domain.ProfileService
 import de.coldtea.verborum.core.ui.model.SupportedLanguage
 import de.coldtea.verborum.forum.marketplace.domain.model.MarketplaceLanguagePair
 import de.coldtea.verborum.forum.marketplace.domain.model.MarketplaceListingFilter
-import de.coldtea.verborum.forum.marketplace.ui.forumdictionarylist.model.ForumLanguagePair
-import de.coldtea.verborum.forum.marketplace.ui.forumdictionarylist.model.ForumDictionaryFilter
+import de.coldtea.verborum.forum.marketplace.domain.model.MarketplaceListingOrder
 import de.coldtea.verborum.forum.marketplace.domain.model.MarketplaceListingPage
 import de.coldtea.verborum.forum.marketplace.domain.usecase.api.GetMarketplaceListingApiUseCase
 import de.coldtea.verborum.forum.marketplace.domain.usecase.api.GetMarketplaceListingsApiUseCase
 import de.coldtea.verborum.forum.marketplace.domain.usecase.api.GetMarketplaceWordsApiUseCase
+import de.coldtea.verborum.forum.marketplace.domain.usecase.local.GetOwnedDictionaryLanguagesUseCase
+import de.coldtea.verborum.forum.marketplace.ui.forumdictionarylist.model.ForumDictionaryFilter
+import de.coldtea.verborum.forum.marketplace.ui.forumdictionarylist.model.ForumLanguagePair
 import de.coldtea.verborum.forum.testForumDictionaryUi
 import de.coldtea.verborum.forum.testForumWordUi
 import de.coldtea.verborum.forum.testMarketplaceListing
 import de.coldtea.verborum.forum.testMarketplaceWord
+import de.coldtea.verborum.forum.vault.domain.usecase.api.GetVaultDictionaryLanguagesApiUseCase
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.impl.annotations.MockK
@@ -34,6 +39,15 @@ class MarketplaceServiceTest : BaseTest() {
     @MockK
     private lateinit var getMarketplaceWordsApiUseCase: GetMarketplaceWordsApiUseCase
 
+    @MockK
+    private lateinit var getOwnedDictionaryLanguagesUseCase: GetOwnedDictionaryLanguagesUseCase
+
+    @MockK
+    private lateinit var getVaultDictionaryLanguagesApiUseCase: GetVaultDictionaryLanguagesApiUseCase
+
+    @MockK
+    private lateinit var profileService: ProfileService
+
     private lateinit var subject: MarketplaceService
 
     override fun setUp() {
@@ -42,17 +56,26 @@ class MarketplaceServiceTest : BaseTest() {
             getMarketplaceListingsApiUseCase,
             getMarketplaceListingApiUseCase,
             getMarketplaceWordsApiUseCase,
+            getOwnedDictionaryLanguagesUseCase,
+            getVaultDictionaryLanguagesApiUseCase,
+            profileService,
         )
     }
 
+    // region browse
     @Test
     fun `getDictionaries pages listings as UI models, import count as downloads`() = runTest {
         coEvery {
-            getMarketplaceListingsApiUseCase(0, MarketplaceService.LISTING_PAGE_SIZE, MarketplaceListingFilter())
+            getMarketplaceListingsApiUseCase(
+                MarketplaceListingOrder.NEWEST,
+                0,
+                MarketplaceService.LISTING_PAGE_SIZE,
+                MarketplaceListingFilter(),
+            )
         } returns MarketplaceListingPage(
             listings = listOf(
                 testMarketplaceListing(dictionaryId = "a", importCount = 42),
-                testMarketplaceListing(dictionaryId = "b", publisherName = null, rating = null),
+                testMarketplaceListing(dictionaryId = "b", publisherName = null),
             ),
             page = 0,
             hasMore = false,
@@ -61,16 +84,16 @@ class MarketplaceServiceTest : BaseTest() {
         assertEquals(
             listOf(
                 testForumDictionaryUi(dictionaryId = "a", downloadCount = 42),
-                testForumDictionaryUi(dictionaryId = "b", publisherName = null, rating = null),
+                testForumDictionaryUi(dictionaryId = "b", publisherName = null),
             ),
-            subject.getDictionaries(ForumDictionaryFilter()).asSnapshot(),
+            subject.getDictionaries(ForumDictionaryFilter(), MarketplaceListingOrder.NEWEST).asSnapshot(),
         )
     }
 
     @Test
-    fun `getDictionaries sends the filter with uppercase wire language codes`() = runTest {
+    fun `getDictionaries sends the order and the filter with uppercase wire language codes`() = runTest {
         coEvery {
-            getMarketplaceListingsApiUseCase(any(), any(), any())
+            getMarketplaceListingsApiUseCase(any(), any(), any(), any())
         } returns MarketplaceListingPage(listings = emptyList(), page = 0, hasMore = false)
 
         subject.getDictionaries(
@@ -78,11 +101,13 @@ class MarketplaceServiceTest : BaseTest() {
                 languagePairs = listOf(ForumLanguagePair(SupportedLanguage.ENGLISH, SupportedLanguage.GERMAN)),
                 tags = setOf("a1", "travel"),
                 userName = "anna",
-            )
+            ),
+            MarketplaceListingOrder.POPULAR,
         ).asSnapshot()
 
         coVerify {
             getMarketplaceListingsApiUseCase(
+                MarketplaceListingOrder.POPULAR,
                 0,
                 MarketplaceService.LISTING_PAGE_SIZE,
                 MarketplaceListingFilter(
@@ -112,4 +137,49 @@ class MarketplaceServiceTest : BaseTest() {
             subject.getWords("dictionaryId"),
         )
     }
+    // endregion
+
+    // region default filter
+    private fun languages(from: String, to: String, at: Long = 0L) = DictionaryLanguages(from, to, at)
+
+    @Test
+    fun `the default filter combines own and imported dictionaries`() = runTest {
+        coEvery { getOwnedDictionaryLanguagesUseCase() } returns listOf(languages("de", "en"), languages("tr", "en"))
+        coEvery { profileService.getUserId() } returns "user-id"
+        coEvery { getVaultDictionaryLanguagesApiUseCase("user-id") } returns
+            listOf(languages("EN", "TR"), languages("FR", "DE"))
+
+        assertEquals(
+            ForumDictionaryFilter(
+                languagePairs = listOf(
+                    // Two dictionaries (one own, one imported) beat one.
+                    ForumLanguagePair(SupportedLanguage.TURKISH, SupportedLanguage.ENGLISH),
+                    ForumLanguagePair(SupportedLanguage.GERMAN, SupportedLanguage.ENGLISH),
+                    ForumLanguagePair(SupportedLanguage.FRENCH, SupportedLanguage.GERMAN),
+                ),
+            ),
+            subject.getDefaultFilter(),
+        )
+    }
+
+    @Test
+    fun `an unreachable vault still leaves the own pairs`() = runTest {
+        coEvery { getOwnedDictionaryLanguagesUseCase() } returns listOf(languages("de", "en"))
+        coEvery { profileService.getUserId() } throws RuntimeException("offline")
+
+        assertEquals(
+            ForumDictionaryFilter(languagePairs = listOf(ForumLanguagePair(SupportedLanguage.GERMAN, SupportedLanguage.ENGLISH))),
+            subject.getDefaultFilter(),
+        )
+    }
+
+    @Test
+    fun `no dictionaries at all is an empty filter`() = runTest {
+        coEvery { getOwnedDictionaryLanguagesUseCase() } returns emptyList()
+        coEvery { profileService.getUserId() } returns "user-id"
+        coEvery { getVaultDictionaryLanguagesApiUseCase("user-id") } returns emptyList()
+
+        assertEquals(ForumDictionaryFilter(), subject.getDefaultFilter())
+    }
+    // endregion
 }

@@ -2,6 +2,8 @@
 <resources>
     <string name="forumListScreenTitle">Forum</string>
     <string name="forumListScreenSubtitle">قواميس يشاركها المجتمع</string>
+    <string name="forumTabPopular">الأكثر شيوعًا</string>
+    <string name="forumTabFresh">الأحدث</string>
     <string name="forumListEmpty">لا توجد قواميس مشتركة بعد</string>
     <string name="forumListLoadError">تعذّر تحميل القواميس المشتركة</string>
     <string name="forumListLoadMoreError">تعذّر تحميل المزيد من القواميس</string>
@@ -21,6 +23,7 @@
     <string name="forumLanguagePairPickFirst">اختر اللغة الأولى</string>
     <string name="forumLanguagePairPickSecond">اختر لغة لتقرنها بـ%1$s</string>
     <string name="forumSearchUser">المستخدم</string>
+    <string name="forumSearchUserTooShort">أدخل %1$d أحرف على الأقل</string>
     <string name="forumDownload">تنزيل</string>
     <string name="forumPublishedBy">بواسطة %1$s</string>
     <string name="forumUnknownPublisher">ناشر غير معروف</string>

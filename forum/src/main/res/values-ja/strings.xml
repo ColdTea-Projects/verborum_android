@@ -2,6 +2,8 @@
 <resources>
     <string name="forumListScreenTitle">Forum</string>
     <string name="forumListScreenSubtitle">コミュニティが共有した辞書</string>
+    <string name="forumTabPopular">人気</string>
+    <string name="forumTabFresh">新着</string>
     <string name="forumListEmpty">共有された辞書はまだありません</string>
     <string name="forumListLoadError">共有辞書を読み込めませんでした</string>
     <string name="forumListLoadMoreError">これ以上の辞書を読み込めませんでした</string>
@@ -21,6 +23,7 @@
     <string name="forumLanguagePairPickFirst">1つ目の言語を選択</string>
     <string name="forumLanguagePairPickSecond">%1$sと組み合わせる言語を選択</string>
     <string name="forumSearchUser">ユーザー</string>
+    <string name="forumSearchUserTooShort">%1$d文字以上入力してください</string>
     <string name="forumDownload">ダウンロード</string>
     <string name="forumPublishedBy">作成者: %1$s</string>
     <string name="forumUnknownPublisher">不明な公開者</string>

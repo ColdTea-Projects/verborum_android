@@ -39,6 +39,8 @@ android {
             buildConfigField("String", "ROOT_URL_VERBORUM_API", "\"http://10.0.2.2:8085/\"")
             // ms_user
             buildConfigField("String", "ROOT_URL_VERBORUM_USER_API", "\"http://10.0.2.2:8086/\"")
+            // ms_marketplace — the Forum
+            buildConfigField("String", "ROOT_URL_VERBORUM_MARKETPLACE_API", "\"http://10.0.2.2:8087/\"")
             // Keycloak is pinned to localhost:8180 on the backend (KC_HOSTNAME_URL default), so it
             // renders/redirects the browser to localhost — 10.0.2.2 would break the browser flow.
             // Reach it via `adb reverse tcp:8180 tcp:8180` so the emulator's localhost hits the host.
@@ -61,6 +63,7 @@ android {
         release {
             buildConfigField("String", "ROOT_URL_VERBORUM_API", "\"http://192.168.0.241:8085/\"")
             buildConfigField("String", "ROOT_URL_VERBORUM_USER_API", "\"http://192.168.0.241:8086/\"")
+            buildConfigField("String", "ROOT_URL_VERBORUM_MARKETPLACE_API", "\"http://192.168.0.241:8087/\"")
             buildConfigField(
                 "String",
                 "KEYCLOAK_ISSUER",

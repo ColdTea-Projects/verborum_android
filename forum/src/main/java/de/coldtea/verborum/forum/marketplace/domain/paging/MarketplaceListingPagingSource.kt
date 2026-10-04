@@ -4,21 +4,23 @@ import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import de.coldtea.verborum.forum.marketplace.domain.model.MarketplaceListing
 import de.coldtea.verborum.forum.marketplace.domain.model.MarketplaceListingFilter
+import de.coldtea.verborum.forum.marketplace.domain.model.MarketplaceListingOrder
 import de.coldtea.verborum.forum.marketplace.domain.usecase.api.GetMarketplaceListingsApiUseCase
 import kotlinx.coroutines.CancellationException
 import java.util.concurrent.ConcurrentHashMap
 
 /**
  * Pages the marketplace browse list, keyed by the backend's zero-based page number
- * (`docs/marketplace-client-guide.md` §7.1: `nextKey = page + 1` while more pages exist).
+ * (`docs/marketplace-client-guide.md` §8.1: `nextKey = page + 1` while more pages exist).
  *
  * Append-only: every generation starts at page 0 and never prepends, which is what lets
  * [seenIds] drop a listing a previous page already delivered — the backend can repeat one when a
- * listing is published mid-scroll (§4.1), and a repeated key would crash the lazy list.
+ * listing is published mid-scroll (§5.1), and a repeated key would crash the lazy list.
  * A refresh — or a new [filter] — builds a new source, so the set never outlives its generation.
  */
 class MarketplaceListingPagingSource(
     private val getMarketplaceListingsApiUseCase: GetMarketplaceListingsApiUseCase,
+    private val order: MarketplaceListingOrder,
     private val pageSize: Int,
     private val filter: MarketplaceListingFilter,
 ) : PagingSource<Int, MarketplaceListing>() {
@@ -29,7 +31,7 @@ class MarketplaceListingPagingSource(
         val page = params.key ?: FIRST_PAGE
         return try {
             // Always [pageSize], never params.loadSize: page numbers only line up with a fixed size.
-            val result = getMarketplaceListingsApiUseCase(page = page, size = pageSize, filter = filter)
+            val result = getMarketplaceListingsApiUseCase(order = order, page = page, size = pageSize, filter = filter)
             LoadResult.Page(
                 data = result.listings.filter { seenIds.add(it.dictionaryId) },
                 prevKey = null,

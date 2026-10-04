@@ -2,6 +2,8 @@
 <resources>
     <string name="forumListScreenTitle">Forum</string>
     <string name="forumListScreenSubtitle">Dictionnaires partagés par la communauté</string>
+    <string name="forumTabPopular">Populaires</string>
+    <string name="forumTabFresh">Récents</string>
     <string name="forumListEmpty">Aucun dictionnaire partagé pour l’instant</string>
     <string name="forumListLoadError">Impossible de charger les dictionnaires partagés</string>
     <string name="forumListLoadMoreError">Impossible de charger plus de dictionnaires</string>
@@ -21,6 +23,7 @@
     <string name="forumLanguagePairPickFirst">Choisissez la première langue</string>
     <string name="forumLanguagePairPickSecond">Choisissez une langue à associer au %1$s</string>
     <string name="forumSearchUser">Utilisateur</string>
+    <string name="forumSearchUserTooShort">Saisissez au moins %1$d caractères</string>
     <string name="forumDownload">Télécharger</string>
     <string name="forumPublishedBy">par %1$s</string>
     <string name="forumUnknownPublisher">Éditeur inconnu</string>

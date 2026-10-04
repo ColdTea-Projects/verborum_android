@@ -37,6 +37,7 @@ import de.coldtea.verborum.core.ui.model.SupportedLanguage
 import de.coldtea.verborum.forum.common.utils.CoreResStrings
 import de.coldtea.verborum.forum.common.utils.ResStrings
 import de.coldtea.verborum.forum.marketplace.ui.forumdictionarylist.model.ForumDictionaryFilter
+import de.coldtea.verborum.forum.marketplace.domain.model.MarketplaceListingFilter
 import de.coldtea.verborum.forum.marketplace.ui.forumdictionarylist.model.ForumLanguagePair
 import de.coldtea.verborum.forum.marketplace.ui.forumsearch.composables.LanguagePairField
 import de.coldtea.verborum.forum.marketplace.ui.forumsearch.composables.TagFilterGroups
@@ -116,9 +117,22 @@ private fun ForumSearchContent(
                 onValueChange = onUserNameChange,
                 label = { Text(text = stringResource(ResStrings.forumFilterUserHint)) },
                 singleLine = true,
+                isError = draft.isUserNameTooShort,
+                supportingText = if (draft.isUserNameTooShort) {
+                    {
+                        Text(
+                            text = stringResource(
+                                ResStrings.forumSearchUserTooShort,
+                                MarketplaceListingFilter.MIN_PUBLISHER_NAME_LENGTH,
+                            ),
+                        )
+                    }
+                } else {
+                    null
+                },
                 // The keyboard's search key runs the search, like the sticky button.
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
-                keyboardActions = KeyboardActions(onSearch = { onSearch() }),
+                keyboardActions = KeyboardActions(onSearch = { if (!draft.isUserNameTooShort) onSearch() }),
                 modifier = Modifier.fillMaxWidth(),
             )
 
@@ -152,6 +166,8 @@ private fun ForumSearchContent(
             }
             Button(
                 onClick = onSearch,
+                // The backend rejects a one- or two-letter name search (400).
+                enabled = !draft.isUserNameTooShort,
                 shape = RoundedCornerShape(16.dp),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = MaterialTheme.colorScheme.primary,

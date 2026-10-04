@@ -41,8 +41,8 @@ class ForumDictionaryDetailsViewModel @Inject constructor(
                 coroutineScope {
                     val dictionary = async { marketplaceService.getDictionary(dictionaryId) }
                     val words = async { marketplaceService.getWords(dictionaryId) }
-                    // An unknown id (once real: unpublished or deleted since the list loaded,
-                    // guide §4.3) has nothing to show, so it reads as a failed load.
+                    // A dictionary made private or deleted since the list loaded (404,
+                    // guide §6.7) has nothing to show, so it reads as a failed load.
                     dictionary.await()
                         ?.let { ForumDictionaryDetailState.Success(it, words.await()) }
                         ?: ForumDictionaryDetailState.Failed

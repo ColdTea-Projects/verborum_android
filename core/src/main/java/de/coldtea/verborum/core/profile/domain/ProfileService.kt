@@ -46,6 +46,13 @@ class ProfileService @Inject constructor(
         return loaded.convertToUi()
     }
 
+    /** ms_user's `userId` for `/users/{userId}/…` paths — loaded first if no profile is known yet. */
+    suspend fun getUserId(): String =
+        profile.value?.userId ?: run {
+            refreshProfile()
+            profile.value?.userId ?: throw IllegalStateException("No profile")
+        }
+
     /**
      * Sends only what changed — a null argument is left unchanged on the server. Accepting the
      * terms always carries the current [MarketplaceTerms.VERSION]; `displayName = ""` removes the

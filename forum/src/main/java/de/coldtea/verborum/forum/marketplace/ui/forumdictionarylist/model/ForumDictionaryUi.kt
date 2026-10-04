@@ -3,7 +3,8 @@ package de.coldtea.verborum.forum.marketplace.ui.forumdictionarylist.model
 /**
  * A marketplace dictionary as the Forum screens render it (the details screen imports it from
  * here). Every text field is written by another user — render it as plain text only.
- * [publisherName], [rating] and [wordCount] are null when the backend does not provide them.
+ * [rating] and [wordCount] are not in the marketplace contract (guide §10) and stay null until they are;
+ * [publisherName] is null only when the publisher is unknown.
  */
 data class ForumDictionaryUi(
     val dictionaryId: String,

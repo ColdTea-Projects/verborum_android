@@ -2,6 +2,8 @@
 <resources>
     <string name="forumListScreenTitle">Forum</string>
     <string name="forumListScreenSubtitle">Dictionaries shared by the community</string>
+    <string name="forumTabPopular">Popular</string>
+    <string name="forumTabFresh">Fresh</string>
     <string name="forumListEmpty">No shared dictionaries yet</string>
     <string name="forumListLoadError">Couldn’t load the shared dictionaries</string>
     <string name="forumListLoadMoreError">Couldn’t load more dictionaries</string>
@@ -21,6 +23,7 @@
     <string name="forumLanguagePairPickFirst">Pick the first language</string>
     <string name="forumLanguagePairPickSecond">Pick a language to pair with %1$s</string>
     <string name="forumSearchUser">User</string>
+    <string name="forumSearchUserTooShort">Enter at least %1$d characters</string>
     <string name="forumDownload">Download</string>
     <string name="forumPublishedBy">by %1$s</string>
     <string name="forumUnknownPublisher">Unknown publisher</string>
