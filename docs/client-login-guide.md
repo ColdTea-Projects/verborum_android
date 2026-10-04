@@ -4,9 +4,9 @@ Practical companion to `frontend-backend-integration.md` §6, which stays normat
 the contract is; this file says *how to build against it* and records the answers to questions the
 client teams actually asked. If the two ever disagree, §6 wins and this file is the bug.
 
-Last verified against a running stack: **2026-07-23** (backend roadmap P3-01/P3-02/P3-07 done).
-Amended **2026-08-28** with the backend login update (`docs/verborum_instructions28_08_26.md`):
-mandatory email verification, Mailpit, and Google/Facebook on the hosted page.
+Last verified against a running stack: **2026-08-06** (Phase 3 done; P3B-01…P3B-07 done and
+browser-verified). Reconciled on the same date against the Android client's own copy of this file,
+which had been amended ahead of it — where the two differed, the Android copy was right.
 
 ---
 
@@ -16,14 +16,18 @@ mandatory email verification, Mailpit, and Google/Facebook on the hosted page.
 |---|---|
 | Keycloak | Running at `http://localhost:8180`, realm `verborum` |
 | Realm config | Code, not console clicks — `keycloak/import/verborum-realm.json` |
-| `verborum-app` (mobile) | Public client, Authorization Code + **PKCE S256 enforced** |
-| `verborum-web` | Public client, PKCE S256, redirect `http://localhost:3000/*` |
-| Hosted sign-up | **Enabled** — clients build no registration form. **Email verification required (2026-08-28)** before the account can get tokens |
-| Password reset | Enabled (hosted "Forgot Password"); mail is captured by Mailpit at `http://localhost:8025` (2026-08-28) |
-| Email-code sign-in | Passwordless "email me a sign-in code" on the hosted page — read the code in Mailpit |
+| `verborum-app` | Public client, Authorization Code + **PKCE S256 enforced**. **Every** platform uses it — Android, iOS *and* web. The separate `verborum-web` client was removed 2026-08-06; it was locked to `localhost:3000` and nothing used it |
+| Hosted sign-up | **Enabled** — clients build no registration form |
+| Email verification | **Required** (`verifyEmail: true`) — a new account must confirm its address before it can obtain tokens |
+| Password reset | Enabled (hosted "Forgot Password") |
+| SMTP (local) | **Configured via Mailpit** — verification/reset mail is captured, readable at http://localhost:8025 (never actually sent) |
+| Google sign-in | **Live** (P3B-04, browser-verified 2026-07-28) — federated behind Keycloak, button on the hosted page. Needs that environment's `.env` credentials, and a tester's Google account must be allow-listed |
+| Facebook sign-in | **Live** (P3B-05, browser-verified 2026-07-28) — same shape as Google. Public access still gated on Meta App Review; testers must be added as Testers on the Meta app |
+| Passwordless email-code login | **Live** (P3B-06, browser-verified 2026-07-28) — "Try another way" → "Email me a sign-in code", hand-written Keycloak SPI baked into the custom image. No client code |
+| Login page branding | **Themed** — hosted login/registration/verify-email carry the Verborum design (crimson/gold, light + dark). Nothing to build client-side; the page AppAuth opens is simply branded |
 | ms_user (`:8086`) | Secured. All endpoints require a valid JWT |
-| ms_dictionary (`:8085`) | **Secured as of 2026-07-23 (P3-03)** — every call needs a bearer token. Still trusts a client-supplied `userId` (P3-05) |
-| Google / Facebook sign-in | **Configured (2026-08-28)** as Keycloak identity providers — buttons render on the hosted login page, no client code. Local dev needs backend `.env` credentials and an allow-listed account |
+| ms_dictionary (`:8085`) | **Secured (P3-03)**, and since **P3-05/P3-08 the owner comes from the token** — a client-supplied `userId` is no longer trusted. See §9 item 2 for the exact status codes |
+| Field limits | Enforced server-side as of 2026-08-06: `level` must be 0..7, and `word`/`translation`/`*Meta` are length-bounded. A violation is a 400 naming the field, not a silent accept |
 | API gateway | Not built (backend Phase 5). Talk to services directly for now |
 
 ---
@@ -33,17 +37,21 @@ mandatory email verification, Mailpit, and Google/Facebook on the hosted page.
 ```
 issuer          http://localhost:8180/realms/verborum
 discovery       {issuer}/.well-known/openid-configuration
-client_id       verborum-app          (Android + iOS)
-redirect_uri    de.coldtea.verborum://oauth2redirect/<path>
-                http://localhost:*    (emulator/loopback only)
+client_id       verborum-app          (Android, iOS AND web — there is no separate web client)
+redirect_uri    de.coldtea.verborum://oauth2redirect/<path>   (Android, iOS)
+                http://localhost:*    (emulator/loopback, and the local web dev server)
 scopes          openid profile email offline_access
 ```
 
 Android manifest placeholder: `manifestPlaceholders = [appAuthRedirectScheme: "de.coldtea.verborum"]`.
 iOS: register `de.coldtea.verborum` as a URL type.
+Web: the redirect target is the app's own page (`https://<origin>/`), consumed and stripped from the
+URL on the next start — no custom scheme involved.
 
-Adding a redirect URI means editing `keycloak/import/verborum-realm.json` in the backend repo — an
-unregistered URI is rejected before the login page renders.
+Adding a **local** redirect URI means editing `keycloak/import/verborum-realm.json` in the backend
+repo. A **deployed** web origin is not committed: tell the backend the origin and it is applied by
+`keycloak/bootstrap/configure.sh` from `APP_WEB_ORIGIN` (per-environment, like the social-login
+secrets). Either way an unregistered URI is rejected before the login page renders.
 
 **PKCE is enforced, not advisory.** An authorization request without `code_challenge` fails with
 `invalid_request: Missing parameter: code_challenge_method`. AppAuth and
@@ -73,18 +81,6 @@ It returns Keycloak's account-creation form and finishes with the same code exch
 auth flow in the client, not two. With AppAuth, reuse the `AuthorizationRequest` and swap the
 endpoint.
 
-**Email verification is required** (backend update 2026-08-28). A freshly registered account cannot
-get tokens until its address is confirmed, so the hosted flow ends on Keycloak's "verify your email"
-page and never redirects back — to the client that looks exactly like a cancel. The Android client
-therefore remembers that the *sign-up* endpoint was the one launched (`LoginViewModel`) and shows a
-"check your email" state instead of returning silently to the login wall; it also treats an
-`email_verified: false` id-token claim as `LoginOutcome.EmailNotVerified` and establishes no
-session. Locally the verification mail lands in Mailpit (http://localhost:8025), never a real inbox.
-
-**Google / Facebook sign-in needs no client code.** The social buttons render inside the same hosted
-login page the client already opens; they are enabled by backend `.env` credentials. See
-`docs/verborum_instructions28_08_26.md` for the local setup and per-account allow-listing.
-
 **Why not a native registration screen:** `POST /users/` does **not** create a Keycloak identity. It
 creates the *profile row* keyed on `keycloakId`. Creating the identity needs ms_user's Keycloak Admin
 API path (backend P3-04), which is not built. Hosted registration also keeps Keycloak the single
@@ -104,7 +100,16 @@ POST /users/            (ms_user, requires the bearer token)
 }
 ```
 
-Safe rule: call it whenever `GET /users/{userId}` returns 404. `email` must be unique — one profile
+**After every login, call `GET /users/me`** (since 2026-10-04): it returns
+`{id, email, displayName, marketplaceAgreementAccepted, marketplaceAgreementVersion}` for the token's
+own user — no stored id needed — and builds the profile page. **404 means there is no profile yet:**
+create it with the `POST /users/` above, then call `/me` again. Never `POST` when `/me` answered 200:
+a second profile for the same account is **409** `ProfileConflictException` (also for an email another
+profile uses). Change the name or the marketplace
+agreement with `PUT /users/me/profile-info` — the profile page is specified in
+`marketplace-client-guide.md` §4 and §6.1–§6.2.
+
+Safe rule: call it whenever `GET /users/me` (or `GET /users/{userId}`) returns 404. `email` must be unique — one profile
 per email is a product rule enforced in the database.
 
 `userId` is still client-supplied. Backend P3-05 will switch it to the JWT subject; that is a
@@ -224,21 +229,53 @@ clients are PKCE-only. Dev users: `testuser`/`testuser` (role `user`),
    Practical upshot for sync: keep uploading your own `sub` as `userId` and nothing changes. If you
    see 403s after this lands, you are sending the wrong owner id — most likely the guest UUID
    (`00000000-...`) that §6.4 says must be rewritten at first login.
-3. ~~**Google sign-in is not configured.**~~ **Resolved 2026-08-28** — Google *and* Facebook are
-   configured as Keycloak identity providers and render as buttons on the hosted login page.
-   Federated-behind-Keycloak remains the design (never integrate a Google/Facebook SDK directly),
-   so the client needs no code for them. Locally they need backend `.env` credentials, and each
-   tester's account must be allow-listed (Google) / added as a Tester (Facebook) — see
-   `docs/verborum_instructions28_08_26.md` §5–§6.
+3. ~~**Google & Facebook sign-in: credentials pending.**~~ **Resolved 2026-07-28** — both are live
+   and browser-verified. They remain federated behind Keycloak (never integrate a social SDK
+   directly) and render as buttons on the hosted login page the client already opens, so **no client
+   code exists for them**. What each environment still needs is its own `.env` credentials, plus
+   per-tester allow-listing while the Google app is in Testing and the Meta app in Development. The
+   step-by-step for that went to the client teams as `verborum_instructions28_08_26.md` §5–§6 (it
+   lives in the client repos, not this one). A social login
+   yields a normal `sub` and arrives pre-verified; the profile-creation dance (`POST /users/` on a
+   404) is unchanged. Apple was dropped.
 4. **No API gateway** until backend Phase 5. Clients address services directly and must carry per-
    service base URLs.
-5. ~~**No SMTP**~~ **Resolved 2026-08-28** — mail is captured by Mailpit (http://localhost:8025)
-   locally, so password reset, email verification, and the passwordless "email me a sign-in code"
-   flow all work; nothing is delivered to a real inbox. Email verification is now **mandatory**
-   before an account can obtain tokens (§3).
+5. **Email verification is required, and SMTP works locally via Mailpit.** After hosted sign-up the
+   account must confirm its address before it can obtain tokens. Locally the mail lands in the
+   Mailpit UI (http://localhost:8025), not a real inbox. Social logins (Google/Facebook) arrive
+   pre-verified and skip this step.
+
+   This is not just a UX note — **it changes what a cancelled login looks like.** Keycloak parks the
+   browser on its "verify your email" page and never redirects back, which to the client is
+   indistinguishable from the user dismissing the browser. Remember which endpoint you launched
+   (`/auth` vs `/registrations`) and, on a null result from a sign-up, show "check your inbox"
+   rather than silently returning to the login wall. Also treat an `email_verified: false` claim on
+   the id token as a failed login and store no tokens. The Android client does both
+   (`LoginViewModel`, `LoginOutcome.EmailNotVerified`) and is the reference for this.
+
+5a. **Passwordless email-code sign-in is live** (2026-07-28) and needs no client code: it is a step
+   inside the hosted page, reached via "Try another way" → "Email me a sign-in code". Locally the
+   code arrives in Mailpit. It yields the same tokens and the same `sub` as any other login.
 6. **Roles are not enforced on any endpoint yet.** Realm roles map correctly to
    `ROLE_user` / `ROLE_admin`, but no endpoint requires one, so do not build UI that depends on
    role-based 403s.
 7. **Guest-data migration is client-side** (§6.4): rewrite the local owner id from the guest UUID to
    the JWT `sub`, mark rows unsynced, run the normal upload. No backend endpoint exists or is
    needed. The guest UUID must never reach the server after login.
+8. **Field limits are enforced server-side as of 2026-08-06.** Previously the clients were the only
+   thing bounding these, which meant a bug or a third-party client could store a value the clients
+   then refuse to read — `level: 99` is the concrete case, and both clients already "heal" it by
+   resetting to 0 and re-uploading. The server now refuses it up front:
+
+   | Field | Limit | On violation |
+   |---|---|---|
+   | `level` | integer 0–7, or absent | 400 |
+   | `word`, `translation` | 2000 chars | 400 |
+   | `wordMeta`, `translationMeta` | 4000 chars | 400 |
+   | dictionary `name` | 255 chars | 400 (was a 500 from Postgres) |
+
+   The text limits bound the **serialised** value, not one typed surface: `word` is a JSON array of
+   per-meaning surfaces and the meta is the structure describing them, so 2000/4000 leaves room for
+   far more meanings than a person writes by hand. No client that respects its own 40/150-character
+   typing caps can hit them. If you do see a 400 here, it is a serialisation bug, not a user typing
+   too much — treat it as one and do not silently drop the row.
