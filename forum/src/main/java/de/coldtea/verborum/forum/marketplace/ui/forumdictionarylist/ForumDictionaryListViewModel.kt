@@ -5,7 +5,6 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import dagger.hilt.android.lifecycle.HiltViewModel
 import de.coldtea.verborum.core.ui.BaseViewModel
-import de.coldtea.verborum.core.ui.model.SupportedLanguage
 import de.coldtea.verborum.forum.marketplace.domain.MarketplaceService
 import de.coldtea.verborum.forum.marketplace.ui.forumdictionarylist.model.ForumDictionaryFilter
 import de.coldtea.verborum.forum.marketplace.ui.forumdictionarylist.model.ForumDictionaryUi
@@ -14,7 +13,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
 @HiltViewModel
@@ -22,14 +20,7 @@ class ForumDictionaryListViewModel @Inject constructor(
     marketplaceService: MarketplaceService,
 ) : BaseViewModel() {
 
-    // Search panel state. Held here (not in the composable) so it survives navigating to a
-    // dictionary and back.
-    private val _searchExpanded = MutableStateFlow(false)
-    val searchExpanded = _searchExpanded.asStateFlow()
-
-    private val _userNameInputVisible = MutableStateFlow(false)
-    val userNameInputVisible = _userNameInputVisible.asStateFlow()
-
+    // Set by the search screen (see [applyFilter]); held here so it survives navigating away.
     private val _filter = MutableStateFlow(ForumDictionaryFilter())
     val filter = _filter.asStateFlow()
 
@@ -45,29 +36,12 @@ class ForumDictionaryListViewModel @Inject constructor(
             .flatMapLatest { filter -> marketplaceService.getDictionaries(filter) }
             .cachedIn(viewModelScope)
 
-    fun toggleSearch() = _searchExpanded.update { !it }
-
-    fun onFromFilterChange(language: SupportedLanguage?) = _filter.update { it.copy(fromLanguage = language) }
-
-    fun onToFilterChange(language: SupportedLanguage?) = _filter.update { it.copy(toLanguage = language) }
-
-    fun onToggleTag(code: String) = _filter.update { filter ->
-        filter.copy(tags = if (code in filter.tags) filter.tags - code else filter.tags + code)
-    }
-
-    fun toggleUserNameInput() = _userNameInputVisible.update { !it }
-
-    /**
-     * Applies the typed user name — a blank one removes the user filter — and closes the input;
-     * the User chip then shows the applied name.
-     */
-    fun onUserNameSearch(userName: String) {
-        _filter.update { it.copy(userName = userName.trim().ifBlank { null }) }
-        _userNameInputVisible.value = false
+    /** The search screen's result; an unchanged filter does not reload. */
+    fun applyFilter(filter: ForumDictionaryFilter) {
+        _filter.value = filter
     }
 
     fun clearFilters() {
         _filter.value = ForumDictionaryFilter()
-        _userNameInputVisible.value = false
     }
 }

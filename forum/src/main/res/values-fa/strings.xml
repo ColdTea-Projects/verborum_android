@@ -10,6 +10,17 @@
     <string name="forumFilterUserChip">کاربر: %1$s</string>
     <string name="forumFilterUserHint">نام کاربری</string>
     <string name="forumListNoMatches">هیچ واژه‌نامهٔ اشتراکی با این فیلترها مطابقت ندارد</string>
+    <string name="forumSearchScreenTitle">جستجو</string>
+    <string name="forumSearchScreenSubtitle">واژه‌نامه‌های اشتراکی را پیدا کنید</string>
+    <string name="forumSearchLanguagePairs">جفت‌های زبانی</string>
+    <string name="forumSearchLanguagePairsHint">هر جفت با واژه‌نامه‌ها در هر دو جهت مطابقت دارد</string>
+    <string name="forumAddLanguagePair">افزودن جفت زبانی</string>
+    <string name="forumRemoveLanguagePair">حذف %1$s</string>
+    <string name="forumLanguagePairChip">%1$s ⇄ %2$s</string>
+    <string name="forumLanguagePairSheetTitle">افزودن جفت زبانی</string>
+    <string name="forumLanguagePairPickFirst">زبان اول را انتخاب کنید</string>
+    <string name="forumLanguagePairPickSecond">زبانی برای جفت شدن با %1$s انتخاب کنید</string>
+    <string name="forumSearchUser">کاربر</string>
     <string name="forumDownload">دانلود</string>
     <string name="forumPublishedBy">از %1$s</string>
     <string name="forumUnknownPublisher">ناشر ناشناس</string>

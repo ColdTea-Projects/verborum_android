@@ -10,6 +10,17 @@
     <string name="forumFilterUserChip">Пользователь: %1$s</string>
     <string name="forumFilterUserHint">Имя пользователя</string>
     <string name="forumListNoMatches">Нет общих словарей, соответствующих этим фильтрам</string>
+    <string name="forumSearchScreenTitle">Поиск</string>
+    <string name="forumSearchScreenSubtitle">Найдите общие словари</string>
+    <string name="forumSearchLanguagePairs">Языковые пары</string>
+    <string name="forumSearchLanguagePairsHint">Каждая пара находит словари в обоих направлениях</string>
+    <string name="forumAddLanguagePair">Добавить языковую пару</string>
+    <string name="forumRemoveLanguagePair">Удалить %1$s</string>
+    <string name="forumLanguagePairChip">%1$s ⇄ %2$s</string>
+    <string name="forumLanguagePairSheetTitle">Добавить языковую пару</string>
+    <string name="forumLanguagePairPickFirst">Выберите первый язык</string>
+    <string name="forumLanguagePairPickSecond">Выберите язык в пару к языку %1$s</string>
+    <string name="forumSearchUser">Пользователь</string>
     <string name="forumDownload">Скачать</string>
     <string name="forumPublishedBy">автор: %1$s</string>
     <string name="forumUnknownPublisher">Неизвестный автор</string>

@@ -12,9 +12,9 @@ import javax.inject.Inject
  * (`docs/marketplace-client-guide.md`), so only the bodies change when the Retrofit APIs arrive:
  *
  * - [getListings] → ms_marketplace `GET /marketplace/dictionaries?page=&size=` (§4.1). Its filters
- *   are **ahead of the contract**: the backend filters by language only as a pair
- *   (`/language?from=&to=`, both required), by publisher id rather than name, and not by tag at
- *   all (§9) — the dummy source filters freely so the Forum's search panel can be built first.
+ *   are **ahead of the contract**: the backend filters one directed language pair per call
+ *   (`/language?from=&to=`), by publisher id rather than name, and not by tag at all (§9) — the
+ *   dummy source filters freely so the Forum's search screen can be built first.
  * - [getListing] → no single-listing endpoint exists; resolve from the loaded page, with
  *   ms_dictionary `GET /dictionaries/dictionary/{id}` for the dictionary itself (§4.5)
  * - [getWords] → ms_dictionary `GET /words/dictionary/{id}` (§4.5)
@@ -25,8 +25,8 @@ class MarketplaceRepository @Inject constructor() {
     suspend fun getListings(
         page: Int = 0,
         size: Int = DEFAULT_PAGE_SIZE,
-        fromLang: String? = null,
-        toLang: String? = null,
+        // Each pair is (first, second) and matches either direction; empty matches every listing.
+        languagePairs: List<Pair<String, String>> = emptyList(),
         tags: Set<String> = emptySet(),
         publisherName: String? = null,
     ): MarketplacePageResponse {
@@ -36,8 +36,7 @@ class MarketplaceRepository @Inject constructor() {
         delay(SIMULATED_LATENCY_MILLIS)
 
         val all = MarketplaceDummyData.listings.filter { listing ->
-            (fromLang == null || listing.fromLang.equals(fromLang, ignoreCase = true)) &&
-                (toLang == null || listing.toLang.equals(toLang, ignoreCase = true)) &&
+            (languagePairs.isEmpty() || languagePairs.any { pair -> listing.isIn(pair) }) &&
                 (tags.isEmpty() || listing.tags.orEmpty().any { it in tags }) &&
                 (publisherName.isNullOrBlank() ||
                     listing.publisherName.orEmpty().contains(publisherName.trim(), ignoreCase = true))
@@ -52,6 +51,12 @@ class MarketplaceRepository @Inject constructor() {
     }
 
     /** Null when unknown — or, once real, made private/deleted since the list loaded (404). */
+    private fun MarketplaceListingResponse.isIn(pair: Pair<String, String>): Boolean {
+        val (first, second) = pair
+        return (fromLang.equals(first, ignoreCase = true) && toLang.equals(second, ignoreCase = true)) ||
+            (fromLang.equals(second, ignoreCase = true) && toLang.equals(first, ignoreCase = true))
+    }
+
     suspend fun getListing(dictionaryId: String): MarketplaceListingResponse? =
         MarketplaceDummyData.listings.firstOrNull { it.dictionaryId == dictionaryId }
 

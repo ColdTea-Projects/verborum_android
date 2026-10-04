@@ -21,6 +21,12 @@ internal object MarketplaceDummyData {
     private const val SPANISH_BUSINESS = "0e7c1a52-3f1b-4c2a-9d4e-1a2b3c4d5e06"
     private const val POLISH_UKRAINIAN = "0e7c1a52-3f1b-4c2a-9d4e-1a2b3c4d5e07"
 
+    // Both directions of one pair (DE→TR, TR→DE) and the reverse of FRENCH_VERBS (FR→EN), so the
+    // search's either-direction language pairs have something to match on both sides.
+    private const val GERMAN_TURKISH = "0e7c1a52-3f1b-4c2a-9d4e-1a2b3c4d5e08"
+    private const val TURKISH_GERMAN = "0e7c1a52-3f1b-4c2a-9d4e-1a2b3c4d5e09"
+    private const val FRENCH_ENGLISH = "0e7c1a52-3f1b-4c2a-9d4e-1a2b3c4d5e10"
+
     /** Enough for ~20 pages of 15 — effectively endless while scrolling, yet still finite. */
     const val TOTAL_LISTINGS = 300
 
@@ -111,9 +117,23 @@ internal object MarketplaceDummyData {
             "dom" to "дім", "woda" to "вода", "chleb" to "хліб",
             "dziękuję" to "дякую", "szkoła" to "школа",
         ),
+        GERMAN_TURKISH to listOf(
+            "der Freund" to "arkadaş", "das Haus" to "ev", "die Arbeit" to "iş",
+            "einkaufen" to "alışveriş yapmak", "Guten Morgen" to "günaydın", "teuer" to "pahalı",
+        ),
+        TURKISH_GERMAN to listOf(
+            "merhaba" to "hallo", "teşekkür ederim" to "danke", "su" to "das Wasser",
+            "okul" to "die Schule", "kitap" to "das Buch",
+            "Yarın sabah erkenden tren istasyonunda buluşalım mı?" to
+                "Sollen wir uns morgen früh am Bahnhof treffen?",
+        ),
+        FRENCH_ENGLISH to listOf(
+            "la réunion" to "the meeting", "le contrat" to "the contract", "la facture" to "the invoice",
+            "le délai" to "the deadline", "le client" to "the customer",
+        ),
     )
 
-    /** The seven hand-written listings, newest first — the cycle every page is cut from. */
+    /** The hand-written listings, newest first — the cycle every page is cut from. */
     private val templates: List<MarketplaceListingResponse> = listOf(
         listing(ITALIAN_CAFE, "b1d2e3f4-0000-4000-8000-000000000005", "Sofia Rossi",
             "Italian Café Talk", "EN", "IT", 2051, "2026-09-26T08:12:40.118204Z", 4.8f,
@@ -125,9 +145,15 @@ internal object MarketplaceDummyData {
         listing(JAPANESE_TRAVEL, "b1d2e3f4-0000-4000-8000-000000000002", "Kenji Watanabe",
             "Japanese Travel Phrases", "EN", "JA", 842, "2026-09-20T11:45:03.552100Z", 4.5f,
             listOf("n5", "travel", "transport")),
+        listing(GERMAN_TURKISH, "b1d2e3f4-0000-4000-8000-000000000008", "Jonas Becker",
+            "Türkisch für den Alltag", "DE", "TR", 433, "2026-09-16T10:10:10.000000Z", 4.4f,
+            listOf("a2", "daily_routine", "family")),
         listing(TURKISH_KITCHEN, "b1d2e3f4-0000-4000-8000-000000000003", "Elif Yılmaz",
             "Turkish Kitchen", "TR", "EN", 317, "2026-09-12T19:30:00.000000Z", 4.2f,
             listOf("food_drink", "home_appliances")),
+        listing(TURKISH_GERMAN, "b1d2e3f4-0000-4000-8000-000000000009", "Ayşe Demir",
+            "Almanca Temel Kelimeler", "TR", "DE", 268, "2026-09-05T15:45:30.000000Z", 4.3f,
+            listOf("basic", "a1", "goethe_testdaf")),
         listing(POLISH_UKRAINIAN, "b1d2e3f4-0000-4000-8000-000000000007", "Marta Kowalska",
             "Polish → Ukrainian", "PL", "UK", 7, "2026-09-01T09:00:12.000000Z", 4.1f,
             // No tags: the card shows no chip row.
@@ -135,6 +161,9 @@ internal object MarketplaceDummyData {
         listing(FRENCH_VERBS, "b1d2e3f4-0000-4000-8000-000000000004", "Lucas Martin",
             "French Verbs A1", "EN", "FR", 96, "2026-08-18T14:22:51.020000Z", 3.9f,
             listOf("a1", "education", "delf_dalf")),
+        listing(FRENCH_ENGLISH, "b1d2e3f4-0000-4000-8000-000000000010", "Camille Dubois",
+            "Anglais des affaires", "FR", "EN", 141, "2026-08-09T09:30:00.000000Z", 4.0f,
+            listOf("intermediate", "business", "ielts_cambridge")),
         listing(SPANISH_BUSINESS, "b1d2e3f4-0000-4000-8000-000000000006", "Daniel Kim",
             "Spanish Business Basics", "EN", "ES", 58, "2026-07-30T07:05:44.700000Z", 3.6f,
             listOf("intermediate", "business", "work_office")),

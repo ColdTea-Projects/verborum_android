@@ -10,6 +10,17 @@
     <string name="forumFilterUserChip">Gebruiker: %1$s</string>
     <string name="forumFilterUserHint">Gebruikersnaam</string>
     <string name="forumListNoMatches">Geen gedeelde woordenboeken komen overeen met deze filters</string>
+    <string name="forumSearchScreenTitle">Zoeken</string>
+    <string name="forumSearchScreenSubtitle">Vind gedeelde woordenboeken</string>
+    <string name="forumSearchLanguagePairs">Taalparen</string>
+    <string name="forumSearchLanguagePairsHint">Elk paar vindt woordenboeken in beide richtingen</string>
+    <string name="forumAddLanguagePair">Taalpaar toevoegen</string>
+    <string name="forumRemoveLanguagePair">%1$s verwijderen</string>
+    <string name="forumLanguagePairChip">%1$s ⇄ %2$s</string>
+    <string name="forumLanguagePairSheetTitle">Taalpaar toevoegen</string>
+    <string name="forumLanguagePairPickFirst">Kies de eerste taal</string>
+    <string name="forumLanguagePairPickSecond">Kies een taal om te koppelen aan %1$s</string>
+    <string name="forumSearchUser">Gebruiker</string>
     <string name="forumDownload">Downloaden</string>
     <string name="forumPublishedBy">door %1$s</string>
     <string name="forumUnknownPublisher">Onbekende uitgever</string>

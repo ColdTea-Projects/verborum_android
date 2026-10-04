@@ -10,6 +10,17 @@
     <string name="forumFilterUserChip">Користувач: %1$s</string>
     <string name="forumFilterUserHint">Ім’я користувача</string>
     <string name="forumListNoMatches">Немає спільних словників, що відповідають цим фільтрам</string>
+    <string name="forumSearchScreenTitle">Пошук</string>
+    <string name="forumSearchScreenSubtitle">Знайдіть спільні словники</string>
+    <string name="forumSearchLanguagePairs">Мовні пари</string>
+    <string name="forumSearchLanguagePairsHint">Кожна пара знаходить словники в обох напрямках</string>
+    <string name="forumAddLanguagePair">Додати мовну пару</string>
+    <string name="forumRemoveLanguagePair">Видалити %1$s</string>
+    <string name="forumLanguagePairChip">%1$s ⇄ %2$s</string>
+    <string name="forumLanguagePairSheetTitle">Додати мовну пару</string>
+    <string name="forumLanguagePairPickFirst">Виберіть першу мову</string>
+    <string name="forumLanguagePairPickSecond">Виберіть мову в пару до мови %1$s</string>
+    <string name="forumSearchUser">Користувач</string>
     <string name="forumDownload">Завантажити</string>
     <string name="forumPublishedBy">автор: %1$s</string>
     <string name="forumUnknownPublisher">Невідомий автор</string>

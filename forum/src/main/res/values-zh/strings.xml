@@ -10,6 +10,17 @@
     <string name="forumFilterUserChip">用户：%1$s</string>
     <string name="forumFilterUserHint">用户名</string>
     <string name="forumListNoMatches">没有符合这些筛选条件的共享词典</string>
+    <string name="forumSearchScreenTitle">搜索</string>
+    <string name="forumSearchScreenSubtitle">查找共享词典</string>
+    <string name="forumSearchLanguagePairs">语言对</string>
+    <string name="forumSearchLanguagePairsHint">每个语言对会匹配双向的词典</string>
+    <string name="forumAddLanguagePair">添加语言对</string>
+    <string name="forumRemoveLanguagePair">移除%1$s</string>
+    <string name="forumLanguagePairChip">%1$s ⇄ %2$s</string>
+    <string name="forumLanguagePairSheetTitle">添加语言对</string>
+    <string name="forumLanguagePairPickFirst">选择第一种语言</string>
+    <string name="forumLanguagePairPickSecond">选择与%1$s配对的语言</string>
+    <string name="forumSearchUser">用户</string>
     <string name="forumDownload">下载</string>
     <string name="forumPublishedBy">作者：%1$s</string>
     <string name="forumUnknownPublisher">未知发布者</string>

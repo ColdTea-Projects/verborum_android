@@ -1,10 +1,5 @@
 package de.coldtea.verborum.forum.marketplace.ui.forumdictionarylist
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.expandVertically
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -58,7 +53,7 @@ import de.coldtea.verborum.forum.common.utils.CoreResStrings
 import de.coldtea.verborum.forum.common.utils.ResStrings
 import de.coldtea.verborum.forum.marketplace.ui.forumdictionarylist.composables.ForumDictionaryCard
 import de.coldtea.verborum.forum.marketplace.ui.forumdictionarylist.composables.ForumDictionaryOptionsSheet
-import de.coldtea.verborum.forum.marketplace.ui.forumdictionarylist.composables.ForumSearchPanel
+import de.coldtea.verborum.forum.marketplace.ui.forumdictionarylist.composables.ForumActiveFilters
 import de.coldtea.verborum.forum.marketplace.ui.forumdictionarylist.model.ForumDictionaryFilter
 import de.coldtea.verborum.forum.marketplace.ui.forumdictionarylist.model.ForumDictionaryUi
 import kotlinx.coroutines.flow.flowOf
@@ -68,21 +63,20 @@ import kotlinx.coroutines.flow.flowOf
 fun ForumDictionaryListScreen(
     viewModel: ForumDictionaryListViewModel = hiltViewModel(),
     onDictionaryClick: (String) -> Unit,
+    onSearchClick: () -> Unit,
 ) {
     val dictionaries = viewModel.dictionaries.collectAsLazyPagingItems()
-    val searchExpanded by viewModel.searchExpanded.collectAsState()
-    val userNameInputVisible by viewModel.userNameInputVisible.collectAsState()
     val filter by viewModel.filter.collectAsState()
 
     RegisterTopBar(
         title = stringResource(ResStrings.forumListScreenTitle),
         subtitle = stringResource(ResStrings.forumListScreenSubtitle),
         showBackButton = false,
-        // Magnifier on the right toggles the search panel, as on the bibliotheca list.
+        // Magnifier on the right opens the search screen, which applies its criteria here.
         action = VerborumTopBarAction(
             iconRes = CoreResDrawables.ic_search_24,
             contentDescription = stringResource(CoreResStrings.dictionaryListSearch),
-            onClick = viewModel::toggleSearch,
+            onClick = onSearchClick,
         ),
     )
 
@@ -90,27 +84,13 @@ fun ForumDictionaryListScreen(
         dictionaries = dictionaries,
         filter = filter,
         onDictionaryClick = onDictionaryClick,
-        searchPanel = {
-            // The whole panel expands and collapses together, toggled by the top-bar magnifier.
-            // Explicitly vertical: outside a ColumnScope the default transition also grows the
-            // width, which slides the chips in from the start edge (bibliotheca's panel does not).
-            AnimatedVisibility(
-                visible = searchExpanded,
-                enter = fadeIn() + expandVertically(),
-                exit = fadeOut() + shrinkVertically(),
-            ) {
-                ForumSearchPanel(
-                    filter = filter,
-                    userNameInputVisible = userNameInputVisible,
-                    onFromFilterChange = viewModel::onFromFilterChange,
-                    onToFilterChange = viewModel::onToFilterChange,
-                    onToggleTag = viewModel::onToggleTag,
-                    onUserClick = viewModel::toggleUserNameInput,
-                    onUserNameSearch = viewModel::onUserNameSearch,
-                    onClearClick = viewModel::clearFilters,
-                    modifier = Modifier.padding(bottom = 16.dp),
-                )
-            }
+        activeFilters = {
+            ForumActiveFilters(
+                filter = filter,
+                onFilterClick = onSearchClick,
+                onClearClick = viewModel::clearFilters,
+                modifier = Modifier.padding(bottom = 16.dp),
+            )
         },
     )
 }
@@ -121,7 +101,7 @@ private fun ForumDictionaryListContent(
     dictionaries: LazyPagingItems<ForumDictionaryUi>,
     filter: ForumDictionaryFilter,
     onDictionaryClick: (String) -> Unit,
-    searchPanel: @Composable () -> Unit = {},
+    activeFilters: @Composable () -> Unit = {},
 ) {
     // Hoisted so the scroll position survives the skeleton -> list switch and back-navigation;
     // keyed by the filter so new search results start from the top.
@@ -164,7 +144,7 @@ private fun ForumDictionaryListContent(
         ) {
             Spacer(modifier = Modifier.height(16.dp))
 
-            searchPanel()
+            activeFilters()
 
             when {
                 // Once items exist, a later refresh keeps them on screen instead of blanking the list.

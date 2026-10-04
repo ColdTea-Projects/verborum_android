@@ -73,14 +73,13 @@ class MarketplaceRepositoryTest {
 
     // region filters
     @Test
-    fun `getListings filters by either language on its own`() = runTest {
-        val fromEnglish = subject.getListings(size = 100, fromLang = "en").items
-        val toGerman = subject.getListings(size = 100, toLang = "DE").items
+    fun `getListings matches each language pair in both directions`() = runTest {
+        val items = subject.getListings(size = 100, languagePairs = listOf("DE" to "TR", "fr" to "en")).items
 
-        assertTrue(fromEnglish.isNotEmpty())
-        assertTrue(fromEnglish.all { it.fromLang == "EN" })
-        assertTrue(toGerman.isNotEmpty())
-        assertTrue(toGerman.all { it.toLang == "DE" })
+        assertEquals(
+            setOf("DE" to "TR", "TR" to "DE", "FR" to "EN", "EN" to "FR"),
+            items.map { it.fromLang to it.toLang }.toSet(),
+        )
     }
 
     @Test
@@ -89,8 +88,11 @@ class MarketplaceRepositoryTest {
 
         val items = subject.getListings(size = 100, tags = tags).items
 
-        // Japanese Travel (n5) and Spanish Business (business) — neither carries both.
-        assertEquals(setOf("Japanese Travel Phrases", "Spanish Business Basics"), items.map { it.name }.toSet())
+        // Japanese Travel (n5) and the two business lists — none carries both.
+        assertEquals(
+            setOf("Japanese Travel Phrases", "Spanish Business Basics", "Anglais des affaires"),
+            items.map { it.name }.toSet(),
+        )
         assertTrue(items.all { listing -> listing.tags.orEmpty().any { it in tags } })
     }
 
@@ -106,7 +108,7 @@ class MarketplaceRepositoryTest {
     fun `a filtered page envelope counts only the matches`() = runTest {
         val all = allListings().count { it.fromLang == "EN" && it.toLang == "DE" }
 
-        val page = subject.getListings(page = 0, size = 15, fromLang = "EN", toLang = "DE")
+        val page = subject.getListings(page = 0, size = 15, languagePairs = listOf("DE" to "EN"))
 
         assertEquals(all.toLong(), page.totalElements)
         assertEquals((all + 14) / 15, page.totalPages)
@@ -128,7 +130,7 @@ class MarketplaceRepositoryTest {
 
         assertEquals(MarketplaceDummyData.TOTAL_LISTINGS, items.size)
         assertEquals(items.size, items.map { it.dictionaryId }.toSet().size)
-        assertEquals(7, items.map { it.name }.toSet().size)
+        assertEquals(TEMPLATE_COUNT, items.map { it.name }.toSet().size)
         items.forEach { listing ->
             assertTrue(listing.dictionaryId, canonicalUuid.matches(listing.dictionaryId))
             assertTrue(listing.publisherId, canonicalUuid.matches(listing.publisherId))
@@ -202,5 +204,8 @@ class MarketplaceRepositoryTest {
     private companion object {
         // Comfortably more than one line of the details screen's entry on a phone.
         const val LONG_ENTRY_LENGTH = 60
+
+        // The hand-written listings MarketplaceDummyData repeats.
+        const val TEMPLATE_COUNT = 10
     }
 }

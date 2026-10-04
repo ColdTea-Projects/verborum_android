@@ -3,7 +3,9 @@ package de.coldtea.verborum.forum.marketplace.domain
 import androidx.paging.testing.asSnapshot
 import de.coldtea.verborum.core.BaseTest
 import de.coldtea.verborum.core.ui.model.SupportedLanguage
+import de.coldtea.verborum.forum.marketplace.domain.model.MarketplaceLanguagePair
 import de.coldtea.verborum.forum.marketplace.domain.model.MarketplaceListingFilter
+import de.coldtea.verborum.forum.marketplace.ui.forumdictionarylist.model.ForumLanguagePair
 import de.coldtea.verborum.forum.marketplace.ui.forumdictionarylist.model.ForumDictionaryFilter
 import de.coldtea.verborum.forum.marketplace.domain.model.MarketplaceListingPage
 import de.coldtea.verborum.forum.marketplace.domain.usecase.api.GetMarketplaceListingApiUseCase
@@ -73,8 +75,7 @@ class MarketplaceServiceTest : BaseTest() {
 
         subject.getDictionaries(
             ForumDictionaryFilter(
-                fromLanguage = SupportedLanguage.ENGLISH,
-                toLanguage = SupportedLanguage.GERMAN,
+                languagePairs = listOf(ForumLanguagePair(SupportedLanguage.ENGLISH, SupportedLanguage.GERMAN)),
                 tags = setOf("a1", "travel"),
                 userName = "anna",
             )
@@ -84,7 +85,11 @@ class MarketplaceServiceTest : BaseTest() {
             getMarketplaceListingsApiUseCase(
                 0,
                 MarketplaceService.LISTING_PAGE_SIZE,
-                MarketplaceListingFilter(fromLang = "EN", toLang = "DE", tags = setOf("a1", "travel"), publisherName = "anna"),
+                MarketplaceListingFilter(
+                    languagePairs = listOf(MarketplaceLanguagePair("EN", "DE")),
+                    tags = setOf("a1", "travel"),
+                    publisherName = "anna",
+                ),
             )
         }
     }

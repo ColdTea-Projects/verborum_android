@@ -10,6 +10,17 @@
     <string name="forumFilterUserChip">Utilizador: %1$s</string>
     <string name="forumFilterUserHint">Nome de utilizador</string>
     <string name="forumListNoMatches">Nenhum dicionário partilhado corresponde a estes filtros</string>
+    <string name="forumSearchScreenTitle">Pesquisar</string>
+    <string name="forumSearchScreenSubtitle">Encontre dicionários partilhados</string>
+    <string name="forumSearchLanguagePairs">Pares de idiomas</string>
+    <string name="forumSearchLanguagePairsHint">Cada par corresponde a dicionários em ambas as direções</string>
+    <string name="forumAddLanguagePair">Adicionar par de idiomas</string>
+    <string name="forumRemoveLanguagePair">Remover %1$s</string>
+    <string name="forumLanguagePairChip">%1$s ⇄ %2$s</string>
+    <string name="forumLanguagePairSheetTitle">Adicionar um par de idiomas</string>
+    <string name="forumLanguagePairPickFirst">Escolha o primeiro idioma</string>
+    <string name="forumLanguagePairPickSecond">Escolha um idioma para emparelhar com %1$s</string>
+    <string name="forumSearchUser">Utilizador</string>
     <string name="forumDownload">Transferir</string>
     <string name="forumPublishedBy">por %1$s</string>
     <string name="forumUnknownPublisher">Editor desconhecido</string>

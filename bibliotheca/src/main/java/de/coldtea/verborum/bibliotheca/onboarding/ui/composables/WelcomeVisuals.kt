@@ -119,7 +119,7 @@ fun LibraryVisual(modifier: Modifier = Modifier) {
                     .padding(16.dp)
             ) {
                 Icon(
-                    painter = painterResource(ResDrawables.ic_plus_24),
+                    painter = painterResource(CoreResDrawables.ic_plus_24),
                     contentDescription = null,
                     tint = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.size(18.dp)

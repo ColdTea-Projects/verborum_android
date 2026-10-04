@@ -10,6 +10,17 @@
     <string name="forumFilterUserChip">Χρήστης: %1$s</string>
     <string name="forumFilterUserHint">Όνομα χρήστη</string>
     <string name="forumListNoMatches">Κανένα κοινόχρηστο λεξικό δεν ταιριάζει με αυτά τα φίλτρα</string>
+    <string name="forumSearchScreenTitle">Αναζήτηση</string>
+    <string name="forumSearchScreenSubtitle">Βρείτε κοινόχρηστα λεξικά</string>
+    <string name="forumSearchLanguagePairs">Ζεύγη γλωσσών</string>
+    <string name="forumSearchLanguagePairsHint">Κάθε ζεύγος ταιριάζει με λεξικά και προς τις δύο κατευθύνσεις</string>
+    <string name="forumAddLanguagePair">Προσθήκη ζεύγους γλωσσών</string>
+    <string name="forumRemoveLanguagePair">Αφαίρεση %1$s</string>
+    <string name="forumLanguagePairChip">%1$s ⇄ %2$s</string>
+    <string name="forumLanguagePairSheetTitle">Προσθήκη ζεύγους γλωσσών</string>
+    <string name="forumLanguagePairPickFirst">Επιλέξτε την πρώτη γλώσσα</string>
+    <string name="forumLanguagePairPickSecond">Επιλέξτε γλώσσα για ζεύγος με %1$s</string>
+    <string name="forumSearchUser">Χρήστης</string>
     <string name="forumDownload">Λήψη</string>
     <string name="forumPublishedBy">από %1$s</string>
     <string name="forumUnknownPublisher">Άγνωστος εκδότης</string>

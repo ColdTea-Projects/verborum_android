@@ -10,6 +10,17 @@
     <string name="forumFilterUserChip">Nutzer: %1$s</string>
     <string name="forumFilterUserHint">Benutzername</string>
     <string name="forumListNoMatches">Keine geteilten Wörterbücher passen zu diesen Filtern</string>
+    <string name="forumSearchScreenTitle">Suche</string>
+    <string name="forumSearchScreenSubtitle">Geteilte Wörterbücher finden</string>
+    <string name="forumSearchLanguagePairs">Sprachpaare</string>
+    <string name="forumSearchLanguagePairsHint">Jedes Paar findet Wörterbücher in beide Richtungen</string>
+    <string name="forumAddLanguagePair">Sprachpaar hinzufügen</string>
+    <string name="forumRemoveLanguagePair">%1$s entfernen</string>
+    <string name="forumLanguagePairChip">%1$s ⇄ %2$s</string>
+    <string name="forumLanguagePairSheetTitle">Sprachpaar hinzufügen</string>
+    <string name="forumLanguagePairPickFirst">Wähle die erste Sprache</string>
+    <string name="forumLanguagePairPickSecond">Wähle eine Sprache als Paar zu %1$s</string>
+    <string name="forumSearchUser">Nutzer</string>
     <string name="forumDownload">Herunterladen</string>
     <string name="forumPublishedBy">von %1$s</string>
     <string name="forumUnknownPublisher">Unbekannter Herausgeber</string>

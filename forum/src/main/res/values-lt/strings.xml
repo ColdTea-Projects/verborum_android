@@ -10,6 +10,17 @@
     <string name="forumFilterUserChip">Naudotojas: %1$s</string>
     <string name="forumFilterUserHint">Naudotojo vardas</string>
     <string name="forumListNoMatches">Nėra bendrinamų žodynų, atitinkančių šiuos filtrus</string>
+    <string name="forumSearchScreenTitle">Paieška</string>
+    <string name="forumSearchScreenSubtitle">Raskite bendrinamus žodynus</string>
+    <string name="forumSearchLanguagePairs">Kalbų poros</string>
+    <string name="forumSearchLanguagePairsHint">Kiekviena pora atitinka žodynus abiem kryptimis</string>
+    <string name="forumAddLanguagePair">Pridėti kalbų porą</string>
+    <string name="forumRemoveLanguagePair">Pašalinti %1$s</string>
+    <string name="forumLanguagePairChip">%1$s ⇄ %2$s</string>
+    <string name="forumLanguagePairSheetTitle">Pridėti kalbų porą</string>
+    <string name="forumLanguagePairPickFirst">Pasirinkite pirmąją kalbą</string>
+    <string name="forumLanguagePairPickSecond">Pasirinkite kalbą porai su %1$s</string>
+    <string name="forumSearchUser">Naudotojas</string>
     <string name="forumDownload">Atsisiųsti</string>
     <string name="forumPublishedBy">autorius: %1$s</string>
     <string name="forumUnknownPublisher">Nežinomas leidėjas</string>

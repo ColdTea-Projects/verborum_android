@@ -4,6 +4,7 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingSource.LoadResult
 import androidx.paging.testing.TestPager
 import de.coldtea.verborum.core.BaseTest
+import de.coldtea.verborum.forum.marketplace.domain.model.MarketplaceLanguagePair
 import de.coldtea.verborum.forum.marketplace.domain.model.MarketplaceListingFilter
 import de.coldtea.verborum.forum.marketplace.domain.model.MarketplaceListingPage
 import de.coldtea.verborum.forum.marketplace.domain.usecase.api.GetMarketplaceListingsApiUseCase
@@ -107,6 +108,9 @@ class MarketplaceListingPagingSourceTest : BaseTest() {
 
     private companion object {
         const val PAGE_SIZE = 15
-        val FILTER = MarketplaceListingFilter(fromLang = "EN", tags = setOf("a1"))
+        val FILTER = MarketplaceListingFilter(
+            languagePairs = listOf(MarketplaceLanguagePair("DE", "TR")),
+            tags = setOf("a1"),
+        )
     }
 }

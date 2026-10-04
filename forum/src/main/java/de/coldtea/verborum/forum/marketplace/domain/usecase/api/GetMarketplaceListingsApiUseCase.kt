@@ -13,8 +13,7 @@ class GetMarketplaceListingsApiUseCase @Inject constructor(
         repository.getListings(
             page = page,
             size = size,
-            fromLang = filter.fromLang,
-            toLang = filter.toLang,
+            languagePairs = filter.languagePairs.map { it.first to it.second },
             tags = filter.tags,
             publisherName = filter.publisherName,
         ).convertToListingPage()

@@ -55,6 +55,7 @@ import de.coldtea.verborum.bibliotheca.word.ui.dictionarydetails.model.Dictionar
 import de.coldtea.verborum.core.theme.VerborumTheme
 import de.coldtea.verborum.core.ui.RegisterTopBar
 import de.coldtea.verborum.core.ui.ShowSnackbarMessages
+import de.coldtea.verborum.bibliotheca.common.utils.CoreResDrawables
 
 @Composable
 fun DictionaryDetailsScreen(
@@ -215,7 +216,7 @@ fun DictionaryDetailsScreen(
                     .height(56.dp)
             ) {
                 Icon(
-                    painter = painterResource(ResDrawables.ic_plus_24),
+                    painter = painterResource(CoreResDrawables.ic_plus_24),
                     contentDescription = null,
                     modifier = Modifier.size(18.dp)
                 )

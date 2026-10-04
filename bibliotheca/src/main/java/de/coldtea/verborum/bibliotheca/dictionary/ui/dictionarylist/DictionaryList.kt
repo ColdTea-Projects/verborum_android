@@ -277,7 +277,7 @@ fun DictionaryListScreen(
                     .height(56.dp)
             ) {
                 Icon(
-                    painter = painterResource(ResDrawables.ic_plus_24),
+                    painter = painterResource(CoreResDrawables.ic_plus_24),
                     contentDescription = null,
                     modifier = Modifier.size(18.dp)
                 )

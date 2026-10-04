@@ -10,6 +10,17 @@
     <string name="forumFilterUserChip">Kullanıcı: %1$s</string>
     <string name="forumFilterUserHint">Kullanıcı adı</string>
     <string name="forumListNoMatches">Bu filtrelere uyan paylaşılan sözlük yok</string>
+    <string name="forumSearchScreenTitle">Ara</string>
+    <string name="forumSearchScreenSubtitle">Paylaşılan sözlükleri bulun</string>
+    <string name="forumSearchLanguagePairs">Dil çiftleri</string>
+    <string name="forumSearchLanguagePairsHint">Her çift, iki yöndeki sözlüklerle eşleşir</string>
+    <string name="forumAddLanguagePair">Dil çifti ekle</string>
+    <string name="forumRemoveLanguagePair">%1$s kaldır</string>
+    <string name="forumLanguagePairChip">%1$s ⇄ %2$s</string>
+    <string name="forumLanguagePairSheetTitle">Dil çifti ekle</string>
+    <string name="forumLanguagePairPickFirst">İlk dili seçin</string>
+    <string name="forumLanguagePairPickSecond">%1$s ile eşleştirilecek dili seçin</string>
+    <string name="forumSearchUser">Kullanıcı</string>
     <string name="forumDownload">İndir</string>
     <string name="forumPublishedBy">%1$s tarafından</string>
     <string name="forumUnknownPublisher">Bilinmeyen yayıncı</string>

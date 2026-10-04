@@ -10,6 +10,17 @@
     <string name="forumFilterUserChip">ユーザー: %1$s</string>
     <string name="forumFilterUserHint">ユーザー名</string>
     <string name="forumListNoMatches">条件に一致する共有辞書はありません</string>
+    <string name="forumSearchScreenTitle">検索</string>
+    <string name="forumSearchScreenSubtitle">共有辞書を探す</string>
+    <string name="forumSearchLanguagePairs">言語ペア</string>
+    <string name="forumSearchLanguagePairsHint">各ペアは双方向の辞書に一致します</string>
+    <string name="forumAddLanguagePair">言語ペアを追加</string>
+    <string name="forumRemoveLanguagePair">%1$sを削除</string>
+    <string name="forumLanguagePairChip">%1$s ⇄ %2$s</string>
+    <string name="forumLanguagePairSheetTitle">言語ペアを追加</string>
+    <string name="forumLanguagePairPickFirst">1つ目の言語を選択</string>
+    <string name="forumLanguagePairPickSecond">%1$sと組み合わせる言語を選択</string>
+    <string name="forumSearchUser">ユーザー</string>
     <string name="forumDownload">ダウンロード</string>
     <string name="forumPublishedBy">作成者: %1$s</string>
     <string name="forumUnknownPublisher">不明な公開者</string>

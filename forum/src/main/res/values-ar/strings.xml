@@ -10,6 +10,17 @@
     <string name="forumFilterUserChip">المستخدم: %1$s</string>
     <string name="forumFilterUserHint">اسم المستخدم</string>
     <string name="forumListNoMatches">لا توجد قواميس مشتركة تطابق عوامل التصفية هذه</string>
+    <string name="forumSearchScreenTitle">بحث</string>
+    <string name="forumSearchScreenSubtitle">ابحث عن القواميس المشتركة</string>
+    <string name="forumSearchLanguagePairs">أزواج اللغات</string>
+    <string name="forumSearchLanguagePairsHint">كل زوج يطابق القواميس في كلا الاتجاهين</string>
+    <string name="forumAddLanguagePair">إضافة زوج لغات</string>
+    <string name="forumRemoveLanguagePair">إزالة %1$s</string>
+    <string name="forumLanguagePairChip">%1$s ⇄ %2$s</string>
+    <string name="forumLanguagePairSheetTitle">إضافة زوج لغات</string>
+    <string name="forumLanguagePairPickFirst">اختر اللغة الأولى</string>
+    <string name="forumLanguagePairPickSecond">اختر لغة لتقرنها بـ%1$s</string>
+    <string name="forumSearchUser">المستخدم</string>
     <string name="forumDownload">تنزيل</string>
     <string name="forumPublishedBy">بواسطة %1$s</string>
     <string name="forumUnknownPublisher">ناشر غير معروف</string>
