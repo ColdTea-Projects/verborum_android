@@ -38,46 +38,46 @@ otherwise surface as unexplained 401 / 400 / 403 / 404 responses.
 > **Verborum backend — changes you must adapt to (as of 2026-10-04)**
 >
 > 1. **ms_dictionary (`:8085`) requires a token on every call — since 2026-07-23.** Send
-     >    `Authorization: Bearer <access token>` on dictionaries, words, tags and batch calls, or you get
-     >    **401** everywhere. Only `/actuator/health` and Swagger stay open. If sync suddenly fails across
-     >    the board, this is the first thing to check.
+>    `Authorization: Bearer <access token>` on dictionaries, words, tags and batch calls, or you get
+>    **401** everywhere. Only `/actuator/health` and Swagger stay open. If sync suddenly fails across
+>    the board, this is the first thing to check.
 > 2. **The owner comes from the token, not from your request.** On `POST`/`PUT /dictionaries/`, send
-     >    `userId` = your JWT `sub` (anything else → **403**). Writing to or deleting someone else's
-     >    dictionary → **403**. `GET /dictionaries/{userId}` and `GET /words/user/{userId}` must name
-     >    *you* → otherwise **403**.
+>    `userId` = your JWT `sub` (anything else → **403**). Writing to or deleting someone else's
+>    dictionary → **403**. `GET /dictionaries/{userId}` and `GET /words/user/{userId}` must name
+>    *you* → otherwise **403**.
 > 3. **Ids and language codes are validated — since 2026-09-27.** Every id you send (`dictionaryId`,
-     >    `wordId`, `userId`, `keycloakId`) must be a canonical UUID (`xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx`
-     >    hex). Every language code must be one of the 19 supported codes (any case). Violations are
-     >    **400** with the field named, e.g. `bundles.words[0].wordId: must be a valid UUID`. These were
-     >    silently accepted before — if you start seeing 400s, you have been sending bad data.
+>    `wordId`, `userId`, `keycloakId`) must be a canonical UUID (`xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx`
+>    hex). Every language code must be one of the 19 supported codes (any case). Violations are
+>    **400** with the field named, e.g. `bundles.words[0].wordId: must be a valid UUID`. These were
+>    silently accepted before — if you start seeing 400s, you have been sending bad data.
 > 4. **Public dictionaries are readable by everyone logged in — since 2026-09-27.** You can now read
-     >    another user's *public* dictionary, its words and its tags. A private one is still **404**, and
-     >    you can never write to someone else's dictionary (**403**). On words from someone else's
-     >    dictionary, `level` is always **`null`** — it is the owner's progress, not yours.
+>    another user's *public* dictionary, its words and its tags. A private one is still **404**, and
+>    you can never write to someone else's dictionary (**403**). On words from someone else's
+>    dictionary, `level` is always **`null`** — it is the owner's progress, not yours.
 > 5. **New profile endpoints — since 2026-10-04.** After every login call **`GET /users/me`**: it
-     >    returns `{id, email, displayName, marketplaceAgreementAccepted, marketplaceAgreementVersion}` for
-     >    the logged-in user, no stored id needed. **404 = no profile yet** → create it with `POST /users/`.
-     >    Edit the name and the marketplace agreement with **`PUT /users/me/profile-info`** (partial update).
-     >    `displayName` is now limited to 255 characters (400 otherwise). Creating a second profile for the
-     >    same account, or using an email another profile has, is now **409** (it was a 500).
+>    returns `{id, email, displayName, marketplaceAgreementAccepted, marketplaceAgreementVersion}` for
+>    the logged-in user, no stored id needed. **404 = no profile yet** → create it with `POST /users/`.
+>    Edit the name and the marketplace agreement with **`PUT /users/me/profile-info`** (partial update).
+>    `displayName` is now limited to 255 characters (400 otherwise). Creating a second profile for the
+>    same account, or using an email another profile has, is now **409** (it was a 500).
 > 6. **`PUT /users/` no longer clears `displayName` when you leave it out** — an omitted name is kept.
-     >    Send `""` to remove it. It never changes the marketplace agreement.
+>    Send `""` to remove it. It never changes the marketplace agreement.
 > 7. **The marketplace / Forum is live (`ms_marketplace`, `:8087`).** Browse public dictionaries,
-     >    filter by language pairs, tags or publisher name, and import them into your vault. Browse pages
-     >    are infinite scroll: they carry `hasNext`, not totals. **The Forum is for members only:** browsing
-     >    and importing need a display name and accepted marketplace terms, otherwise **403**; and a user's
-     >    public dictionaries appear only while that user is a member (§4).
+>    filter by language pairs, tags or publisher name, and import them into your vault. Browse pages
+>    are infinite scroll: they carry `hasNext`, not totals. **The Forum is for members only:** browsing
+>    and importing need a display name and accepted marketplace terms, otherwise **403**; and a user's
+>    public dictionaries appear only while that user is a member (§4).
 > 8. **Joining the Forum shares all of the user's dictionaries; leaving makes them all private** —
-     >    the server changes `isPublic` itself. **Re-fetch the user's dictionaries after a join or leave
-     >    before your next upload**, or your sync will push the old `isPublic` back. A member who has
-     >    dictionaries must keep at least one shared: making the last shared one private (or deleting it
-     >    while private ones remain) is **400** `SharingRequiredException`.
+>    the server changes `isPublic` itself. **Re-fetch the user's dictionaries after a join or leave
+>    before your next upload**, or your sync will push the old `isPublic` back. A member who has
+>    dictionaries must keep at least one shared: making the last shared one private (or deleting it
+>    while private ones remain) is **400** `SharingRequiredException`.
 > 9. **Word save/update messages changed.** `POST`/`PUT /words` now reply "Saved/Updated successfully
-     >    into dictionary `<dictionaryId>`" instead of listing the words. Do not parse `message` — it is for
-     >    humans and logs.
+>    into dictionary `<dictionaryId>`" instead of listing the words. Do not parse `message` — it is for
+>    humans and logs.
 > 10. **Web app only:** the backend sends **no CORS headers yet** (they arrive with the API gateway,
-      >    backend Phase 5). A browser app on its own origin cannot call the services directly — use a
-      >    same-origin dev proxy for now (§8.3 of the marketplace guide).
+>    backend Phase 5). A browser app on its own origin cannot call the services directly — use a
+>    same-origin dev proxy for now (§8.3 of the marketplace guide).
 >
 > Full details: `docs/integration/marketplace-client-guide.md` in the backend repo.
 
@@ -105,7 +105,8 @@ otherwise surface as unexplained 401 / 400 / 403 / 404 responses.
   **lose access**. Nothing is deleted; re-joining shares all of them again. Dictionaries are only
   deleted with the account.
 
-There is no rating, no view count, and no "make my own editable copy" (§10).
+Importers can **rate** a dictionary 1–5 stars (§5.6). There is no view count, no written review, and no "make
+my own editable copy" (§10).
 
 ---
 
@@ -225,6 +226,8 @@ POST /users/
   already has a profile; load it with GET /users/me…") — the usual cause is a reinstall that lost the
   `userId`; recover with `GET /users/me`. An email another profile already uses is also **409**
   ("This email is already used by another profile").
+- `email` must be the token's own `email` claim (any case), or **400** `email must be the signed-in account's own
+  verified email`. The token must carry a verified e-mail (`email_verified: true`), or **403** (since 2026-10-05, SEC-04).
 - `keycloakId` must equal your token's `sub` (**403** otherwise). `userId` and `keycloakId` must be
   canonical UUIDs, `email` a valid address (**400** otherwise).
 - A new profile is **not** a member: `marketplaceAgreementAccepted` starts `false`, whatever you send.
@@ -247,7 +250,7 @@ the name; `null`/absent leaves it alone. Read the result back with `GET /users/m
 
 | Field | Rules |
 |---|---|
-| `displayName` | ≤ 255 characters; leading/trailing spaces are trimmed; blank counts as no name. Need not be unique |
+| `displayName` | ≤ 255 characters; leading/trailing spaces are trimmed; blank counts as no name. Need not be unique, but must not contain a reserved word (see below) |
 | `marketplaceAgreementAccepted` | `true` = join (or confirm a new terms version); `false` = withdraw |
 | `marketplaceAgreementVersion` | the version of the terms text the user was shown, ≤ 50 chars (e.g. `"2026-10-01"`). **Required whenever you send `true`** for a user who is not a member yet |
 
@@ -263,6 +266,7 @@ the name; `null`/absent leaves it alone. Read the result back with `GET /users/m
 | `false` | **withdrawn.** **All of the user's dictionaries become private** within seconds — out of the Forum, and importers lose access; the last accepted version and time are kept as the record; nothing is deleted |
 | `true` + a **new** version while a member | the new version and a new acceptance time are recorded; stays a member |
 | a new `displayName` while a member | renamed; the Forum shows the new name within seconds |
+| a `displayName` containing a reserved word (`Verborum`, `admin`, `moderator`, `official`, `coldtea` anywhere; `support`, `staff`, `team`, `system`, `mod`, `root`, `security`, `help`, `helpdesk`, `bot` as a word; case, accents and look-alikes like `4dm1n` don't help) | 400 `displayName contains a reserved word …`. Show the message and keep the input; the same applies to `POST`/`PUT /users/` (since 2026-10-05) |
 | `{}` | nothing changes (201) |
 
 **404** = no profile (§4.3). **401** = token missing/expired.
@@ -308,7 +312,12 @@ member → 400). Prefer `profile-info` for anything on the profile page.
 |---|---|---|
 | `GET /marketplace/dictionaries?pair=EN-TR&tag=food&publisher=nna` | listings, optionally filtered | newest first |
 | `GET /marketplace/dictionaries/popular?…same filters…` | listings, same filters | most imported first; newest first among equals |
+| `GET /marketplace/dictionaries/top-rated?…same filters…` | **rated** listings only, same filters | best rated first by a weighted score (§5.6); newest first among equals |
 | `GET /marketplace/dictionaries/publisher/{publisherId}` | one publisher's listings | newest first |
+
+**Never your own.** `GET /marketplace/dictionaries`, `/popular` and `/top-rated` never return the caller's own
+listings (since 2026-10-04) — the Forum shows other people's dictionaries. Only
+`/publisher/{publisherId}` with your own `sub` returns yours.
 
 **Members only, both ways.** The caller must be a member (**403** otherwise, §4.6), and only members'
 listings are ever returned — on every endpoint, filtered or not, including `/publisher/{publisherId}`:
@@ -363,6 +372,8 @@ All three filters are optional and combine by **AND**; values of one filter comb
       "toLang":        "UK",
       "tags":          ["grammar", "travel"],
       "importCount":   7,
+      "ratingAverage": 4.3,
+      "ratingCount":   12,
       "publishedAt":   "2026-07-19T17:01:21.303971Z"
     }
   ],
@@ -383,6 +394,8 @@ All three filters are optional and combine by **AND**; values of one filter comb
 | `name`, `fromLang`, `toLang` | copies of the dictionary's fields, kept current within seconds; codes uppercase, real direction |
 | `tags` | the dictionary's tags, lowercase and sorted; `[]` when untagged. Kept current within seconds |
 | `importCount` | number of **distinct users** who imported it (a user importing twice counts once) |
+| `ratingAverage` | the plain average of its ratings, one decimal, 1.0–5.0; **`null` while nobody has rated it** (show "No ratings yet", not 0 stars) |
+| `ratingCount` | how many users rated it; `0` with `ratingAverage: null` |
 | `publishedAt` | when it (most recently) became public, ISO-8601 UTC. Private-then-public again resets it |
 
 This `SliceResponse` shape is Verborum's own contract, not Spring's `Slice` — map exactly these four
@@ -433,6 +446,36 @@ locale-independent conversion (`Locale.ROOT` / invariant culture) — Turkish lo
 | ms_dictionary | `GET /dictionaries/{id}/tags` | its tags (404 if not readable) |
 | ms_user | `GET /users/{userId}/vault` | the caller's vault: `[{vaultEntryId, userId, dictionaryId, importedAt}]` — `{userId}` is `id` from `/me`, **not** the `sub` |
 | ms_user | `DELETE /users/{userId}/vault/{dictionaryId}` | remove an imported dictionary from the vault (200, also when absent) |
+
+### 5.6 Ratings (since 2026-10-05)
+
+Users who **imported** a dictionary can rate it **1–5 whole stars**. There is no text, and one rating per
+user per dictionary, which they can change or remove. Listings carry `ratingAverage` and `ratingCount`
+(§5.2), and `/top-rated` (§5.1) lists rated dictionaries best first.
+
+| Request | Body | Result |
+|---|---|---|
+| `PUT /marketplace/dictionaries/{dictionaryId}/rating` | `{"stars": 4}` | **201**, creates or changes your rating. Idempotent: the same stars again changes nothing |
+| `GET /marketplace/dictionaries/{dictionaryId}/rating` | — | **200** `{"dictionaryId": "…", "stars": 4, "ratedAt": "…Z"}`, your own rating; **404** when you have not rated it |
+| `DELETE /marketplace/dictionaries/{dictionaryId}/rating` | — | **200**, removes your rating (also when you had none) |
+
+Rules for `PUT`, checked in this order:
+
+| Case | Status | `error` |
+|---|---|---|
+| caller is not a Forum member | 403 | `ForbiddenOperationException` |
+| listing unknown, hidden (made private), deleted, or its publisher left the Forum | 404 | `RecordNotFoundException` |
+| your own dictionary | 400 | `SelfRatingException` |
+| you have not imported it | 403 | `ForbiddenOperationException` ("…import it first") |
+| `stars` missing or outside 1–5 | 400 | validation error naming `stars` |
+
+- **Ratings survive hiding.** If the owner makes a dictionary private and later shares it again, its ratings
+  are still there. While it is hidden it cannot be rated (404), but you can still remove your rating.
+- **Importing is what counts.** Removing a dictionary from your vault does not take away your right to rate it.
+- **Deleted accounts:** their ratings are removed and the averages recomputed within seconds.
+- **Ranking:** `/top-rated` orders by a weighted score that treats every dictionary as if it already had 5
+  ratings of 3 stars. One 5-star rating therefore does not beat many 4-star ratings. Show `ratingAverage`
+  and `ratingCount` to users, never the score; it is not returned.
 
 ---
 
@@ -497,7 +540,8 @@ locale-independent conversion (`Locale.ROOT` / invariant culture) — Turkish lo
    never overwrite a newer one. The publisher-name search runs on tap. A tap on a tag chip may add
    that tag to the filter.
 4. Tap a publisher → `/publisher/{publisherId}` ("More from Anna Bauer").
-5. For each item where `publisherId == mySub`: show "Yours" and no import action.
+5. Your own dictionaries never appear in these lists — no "Yours" handling needed. (They do appear on
+   `/publisher/{yourSub}`; there, hide the import action.)
 6. Optional preview before importing: `GET /dictionaries/dictionary/{id}` and
    `GET /words/dictionary/{id}` work for any listed dictionary.
 
@@ -532,6 +576,14 @@ their dictionary (403).
   refresh them when online and drop the cache when the dictionary becomes unavailable (§6.7).
   **Never upload an imported dictionary or its words through your normal sync** — they are not
   yours and every write is a 403. Keep them out of the local "unsynced/dirty" set entirely.
+
+### 6.10 Rating
+1. On the details screen of a dictionary **you imported**, call `GET …/{dictionaryId}/rating`. **404** means
+   not rated yet: show empty stars. **200** means show `stars` as selected.
+2. A tap on a star sends `PUT …/rating {"stars": n}`; tapping the selected star again may send `DELETE`.
+   Update the shown `ratingAverage`/`ratingCount` from the next listing fetch rather than computing it.
+3. Do not offer rating on a dictionary you have not imported, or on your own (the server answers 403/400).
+4. Online only, like import (§6.9). Do not queue a rating offline.
 
 ---
 
@@ -632,7 +684,7 @@ show up — both are the rules, not bugs.
 
 | Missing | Status |
 |---|---|
-| Ratings, view counts | not designed |
+| View counts, written reviews | not designed |
 | Search by dictionary name or word text | not planned (filters are language pair, tag and publisher name) |
 | "Make my own editable copy" of an imported dictionary | not built — imports are references |
 | Automatic vault cleanup when a dictionary becomes unavailable | not built — clients handle it (§6.7) |
