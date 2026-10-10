@@ -19,6 +19,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import io.mockk.coEvery
+import de.coldtea.verborum.bibliotheca.dictionary.domain.model.DictionaryDeletion
 import org.junit.Test
 
 class DictionaryDetailsViewModelTest : BaseTest() {
@@ -219,16 +220,23 @@ class DictionaryDetailsViewModelTest : BaseTest() {
     }
 
     @Test
-    fun `deleteDictionary tombstones first then cleans words then deletes the dictionary`() = runTest {
+    fun `deleteDictionary deletes the shown dictionary`() = runTest {
         initSuccess("dict-1")
+        coEvery { dictionaryService.deleteDictionary("dict-1") } returns DictionaryDeletion.DELETED
 
         viewModel.deleteDictionary()
 
-        coVerifyOrder {
-            dictionaryService.markDictionaryDeleted("dict-1")
-            wordService.cleanWordsInDictionary("dict-1")
-            dictionaryService.deleteDictionary("dict-1")
-        }
+        coVerify(exactly = 1) { dictionaryService.deleteDictionary("dict-1") }
+    }
+
+    @Test
+    fun `a refused delete keeps the screen`() = runTest {
+        initSuccess("dict-1")
+        coEvery { dictionaryService.deleteDictionary("dict-1") } returns DictionaryDeletion.SHARING_REQUIRED
+
+        viewModel.deleteDictionary()
+
+        assertTrue(viewModel.dictionaryDetailState.first() is DictionaryDetailState.Success)
     }
 
     @Test
@@ -236,7 +244,6 @@ class DictionaryDetailsViewModelTest : BaseTest() {
         // init() was never called — state is still Loading.
         viewModel.deleteDictionary()
 
-        coVerify(exactly = 0) { dictionaryService.markDictionaryDeleted(any()) }
         coVerify(exactly = 0) { dictionaryService.deleteDictionary(any()) }
     }
 
@@ -252,7 +259,7 @@ class DictionaryDetailsViewModelTest : BaseTest() {
 
         coVerify(exactly = 1) { dictionaryService.unsubscribe("dl") }
         // Unsubscribing never touches the delete path.
-        coVerify(exactly = 0) { dictionaryService.markDictionaryDeleted(any()) }
+        coVerify(exactly = 0) { dictionaryService.deleteDictionary(any()) }
     }
 
     @Test

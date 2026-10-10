@@ -134,4 +134,5 @@
     <string name="unsubscribeDialogTitle">Se désabonner de « %1$s » ?</string>
     <string name="unsubscribeDialogMessage">Il sera retiré de votre Bibliotheca, avec votre progression. Vous pourrez le télécharger à nouveau depuis le Forum.</string>
     <string name="errorUnsubscribeFailed">Impossible de se désabonner. Vérifiez votre connexion et réessayez.</string>
+    <string name="errorDeleteLastShared">C’est votre dernier dictionnaire partagé. Partagez-en d’abord un autre, ou quittez le Forum pour tous les rendre privés.</string>
 </resources>

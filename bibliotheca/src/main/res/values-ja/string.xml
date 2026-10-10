@@ -133,4 +133,5 @@
     <string name="unsubscribeDialogTitle">「%1$s」の登録を解除しますか？</string>
     <string name="unsubscribeDialogMessage">練習の進捗とともに Bibliotheca から削除されます。Forum から再度ダウンロードできます。</string>
     <string name="errorUnsubscribeFailed">登録を解除できませんでした。接続を確認して、もう一度お試しください。</string>
+    <string name="errorDeleteLastShared">これは最後の共有辞書です。先に別の辞書を共有するか、Forum を退会してすべて非公開にしてください。</string>
 </resources>

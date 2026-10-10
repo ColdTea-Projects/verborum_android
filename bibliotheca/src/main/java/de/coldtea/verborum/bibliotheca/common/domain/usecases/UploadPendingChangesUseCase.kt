@@ -1,15 +1,13 @@
 package de.coldtea.verborum.bibliotheca.common.domain.usecases
 
 import de.coldtea.verborum.bibliotheca.dictionary.domain.model.Dictionary
-import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.api.DeleteDictionaryApiUseCase
+import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.api.DeleteDictionaryRemotelyUseCase
 import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.api.SaveDictionaryApiUseCase
 import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.api.SyncDictionaryTagsUseCase
-import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.local.DeleteDictionaryUseCase
 import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.local.GetDictionariesByUserUseCase
 import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.local.MarkDictionarySyncedUseCase
 import de.coldtea.verborum.core.auth.domain.usecase.GetActiveUserUseCase
 import de.coldtea.verborum.bibliotheca.word.domain.usecase.api.DeleteWordApiUseCase
-import de.coldtea.verborum.bibliotheca.word.domain.usecase.api.DeleteWordByDictionaryIdApiUseCase
 import de.coldtea.verborum.bibliotheca.word.domain.usecase.api.SaveWordApiUseCase
 import de.coldtea.verborum.bibliotheca.word.domain.usecase.local.DeleteWordUseCase
 import de.coldtea.verborum.bibliotheca.word.domain.usecase.local.GetWordsByDictionaryUseCase
@@ -38,10 +36,8 @@ class UploadPendingChangesUseCase @Inject constructor(
     private val saveWordApiUseCase: SaveWordApiUseCase,
     private val markDictionarySyncedUseCase: MarkDictionarySyncedUseCase,
     private val markWordSyncedUseCase: MarkWordSyncedUseCase,
-    private val deleteDictionaryApiUseCase: DeleteDictionaryApiUseCase,
+    private val deleteDictionaryRemotelyUseCase: DeleteDictionaryRemotelyUseCase,
     private val deleteWordApiUseCase: DeleteWordApiUseCase,
-    private val deleteWordByDictionaryIdApiUseCase: DeleteWordByDictionaryIdApiUseCase,
-    private val deleteDictionaryUseCase: DeleteDictionaryUseCase,
     private val deleteWordUseCase: DeleteWordUseCase,
 ) {
 
@@ -98,14 +94,11 @@ class UploadPendingChangesUseCase @Inject constructor(
         }
     }
 
+    /**
+     * A tombstoned dictionary: the server deletes it with its words, or refuses it (the sharing
+     * rule) — then the tombstone is lifted and it shows again rather than failing every run.
+     */
     private suspend fun uploadDictionaryDeletion(dictionary: Dictionary) {
-        val wordsDeleted =
-            deleteWordByDictionaryIdApiUseCase.invoke(dictionary.dictionaryId).isSuccessful
-        val dictionaryDeleted =
-            deleteDictionaryApiUseCase.invoke(dictionary.dictionaryId).isSuccessful
-
-        if (wordsDeleted && dictionaryDeleted) {
-            deleteDictionaryUseCase.invoke(dictionary.dictionaryId)
-        }
+        deleteDictionaryRemotelyUseCase.invoke(dictionary.dictionaryId)
     }
 }

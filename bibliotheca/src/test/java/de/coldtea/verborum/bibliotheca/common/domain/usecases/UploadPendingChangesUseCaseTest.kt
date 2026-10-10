@@ -1,16 +1,13 @@
 package de.coldtea.verborum.bibliotheca.common.domain.usecases
 
-import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.api.DeleteDictionaryApiUseCase
 import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.api.SaveDictionaryApiUseCase
 import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.api.SyncDictionaryTagsUseCase
-import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.local.DeleteDictionaryUseCase
 import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.local.GetDictionariesByUserUseCase
 import de.coldtea.verborum.core.auth.domain.usecase.GetActiveUserUseCase
 import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.local.MarkDictionarySyncedUseCase
 import de.coldtea.verborum.bibliotheca.testDictionary
 import de.coldtea.verborum.bibliotheca.testWord
 import de.coldtea.verborum.bibliotheca.word.domain.usecase.api.DeleteWordApiUseCase
-import de.coldtea.verborum.bibliotheca.word.domain.usecase.api.DeleteWordByDictionaryIdApiUseCase
 import de.coldtea.verborum.bibliotheca.word.domain.usecase.api.SaveWordApiUseCase
 import de.coldtea.verborum.bibliotheca.word.domain.usecase.local.DeleteWordUseCase
 import de.coldtea.verborum.bibliotheca.word.domain.usecase.local.GetWordsByDictionaryUseCase
@@ -22,6 +19,8 @@ import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
+import de.coldtea.verborum.bibliotheca.dictionary.domain.model.DictionaryDeletion
+import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.api.DeleteDictionaryRemotelyUseCase
 import org.junit.Test
 import retrofit2.Response
 
@@ -58,21 +57,13 @@ class UploadPendingChangesUseCaseTest : BaseTest() {
     @MockK
     private lateinit var markWordSyncedUseCase: MarkWordSyncedUseCase
 
-    // invoke returns Response<Unit> — stubbed per test with coEvery.
+    // invoke returns the deletion outcome — stubbed per test with coEvery.
     @MockK
-    private lateinit var deleteDictionaryApiUseCase: DeleteDictionaryApiUseCase
+    private lateinit var deleteDictionaryRemotelyUseCase: DeleteDictionaryRemotelyUseCase
 
     // invoke returns Response<Unit> — stubbed per test with coEvery.
     @MockK
     private lateinit var deleteWordApiUseCase: DeleteWordApiUseCase
-
-    // invoke returns Response<Unit> — stubbed per test with coEvery.
-    @MockK
-    private lateinit var deleteWordByDictionaryIdApiUseCase: DeleteWordByDictionaryIdApiUseCase
-
-    // invoke returns Unit — covered by relaxUnitFun.
-    @MockK
-    private lateinit var deleteDictionaryUseCase: DeleteDictionaryUseCase
 
     // invoke returns the repository result (non-Unit) — relax fully for verify-only use.
     @MockK(relaxed = true)
@@ -94,10 +85,8 @@ class UploadPendingChangesUseCaseTest : BaseTest() {
             saveWordApiUseCase = saveWordApiUseCase,
             markDictionarySyncedUseCase = markDictionarySyncedUseCase,
             markWordSyncedUseCase = markWordSyncedUseCase,
-            deleteDictionaryApiUseCase = deleteDictionaryApiUseCase,
+            deleteDictionaryRemotelyUseCase = deleteDictionaryRemotelyUseCase,
             deleteWordApiUseCase = deleteWordApiUseCase,
-            deleteWordByDictionaryIdApiUseCase = deleteWordByDictionaryIdApiUseCase,
-            deleteDictionaryUseCase = deleteDictionaryUseCase,
             deleteWordUseCase = deleteWordUseCase,
         )
         coEvery { getWordsByDictionaryUseCase.invoke(any()) } returns emptyList()
@@ -121,7 +110,7 @@ class UploadPendingChangesUseCaseTest : BaseTest() {
         coVerify(exactly = 0) { getDictionariesByUserUseCase.invoke(any()) }
         coVerify(exactly = 0) { saveDictionaryApiUseCase.invoke(any()) }
         coVerify(exactly = 0) { saveWordApiUseCase.invoke(any()) }
-        coVerify(exactly = 0) { deleteDictionaryApiUseCase.invoke(any()) }
+        coVerify(exactly = 0) { deleteDictionaryRemotelyUseCase.invoke(any()) }
         coVerify(exactly = 0) { deleteWordApiUseCase.invoke(any()) }
     }
 
@@ -227,30 +216,17 @@ class UploadPendingChangesUseCaseTest : BaseTest() {
     // region pending deletions
 
     @Test
-    fun `invoke deletes a tombstoned dictionary remotely then hard-deletes it locally`() = runTest {
+    fun `invoke settles a tombstoned dictionary through the remote delete`() = runTest {
         val tombstoned = testDictionary(dictionaryId = "dict-1", isDeleted = true)
         coEvery { getDictionariesByUserUseCase.invoke(SUBJECT) } returns listOf(tombstoned)
-        coEvery { deleteWordByDictionaryIdApiUseCase.invoke("dict-1") } returns successResponse
-        coEvery { deleteDictionaryApiUseCase.invoke("dict-1") } returns successResponse
+        coEvery { deleteDictionaryRemotelyUseCase.invoke("dict-1") } returns DictionaryDeletion.DELETED
 
         useCase.invoke()
 
-        coVerify(exactly = 1) { deleteDictionaryUseCase.invoke("dict-1") }
+        coVerify(exactly = 1) { deleteDictionaryRemotelyUseCase.invoke("dict-1") }
         // A tombstoned dictionary is never uploaded or word-scanned.
         coVerify(exactly = 0) { saveDictionaryApiUseCase.invoke(any()) }
         coVerify(exactly = 0) { getWordsByDictionaryUseCase.invoke("dict-1") }
-    }
-
-    @Test
-    fun `invoke keeps the dictionary tombstone when the remote delete fails`() = runTest {
-        val tombstoned = testDictionary(dictionaryId = "dict-1", isDeleted = true)
-        coEvery { getDictionariesByUserUseCase.invoke(SUBJECT) } returns listOf(tombstoned)
-        coEvery { deleteWordByDictionaryIdApiUseCase.invoke("dict-1") } returns successResponse
-        coEvery { deleteDictionaryApiUseCase.invoke("dict-1") } returns failureResponse
-
-        useCase.invoke()
-
-        coVerify(exactly = 0) { deleteDictionaryUseCase.invoke(any()) }
     }
 
     @Test

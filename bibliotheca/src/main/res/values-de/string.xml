@@ -134,4 +134,5 @@
     <string name="unsubscribeDialogTitle">Abo von „%1$s“ beenden?</string>
     <string name="unsubscribeDialogMessage">Es wird samt deinem Lernfortschritt aus deiner Bibliotheca entfernt. Du kannst es im Forum erneut herunterladen.</string>
     <string name="errorUnsubscribeFailed">Abo konnte nicht beendet werden. Prüfe deine Verbindung und versuche es erneut.</string>
+    <string name="errorDeleteLastShared">Das ist dein letztes geteiltes Wörterbuch. Teile zuerst ein anderes oder verlasse das Forum, um alle privat zu machen.</string>
 </resources>

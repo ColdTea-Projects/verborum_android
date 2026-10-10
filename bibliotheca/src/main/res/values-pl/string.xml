@@ -136,4 +136,5 @@
     <string name="unsubscribeDialogTitle">Anulować subskrypcję „%1$s”?</string>
     <string name="unsubscribeDialogMessage">Zostanie usunięty z Twojej Bibliotheca wraz z postępami w nauce. Możesz pobrać go ponownie z Forum.</string>
     <string name="errorUnsubscribeFailed">Nie udało się anulować subskrypcji. Sprawdź połączenie i spróbuj ponownie.</string>
+    <string name="errorDeleteLastShared">To Twój ostatni udostępniony słownik. Najpierw udostępnij inny albo opuść Forum, aby wszystkie stały się prywatne.</string>
 </resources>

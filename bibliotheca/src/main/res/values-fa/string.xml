@@ -134,4 +134,5 @@
     <string name="unsubscribeDialogTitle">اشتراک «%1$s» لغو شود؟</string>
     <string name="unsubscribeDialogMessage">این واژه‌نامه همراه با پیشرفت تمرین شما از Bibliotheca حذف می‌شود. می‌توانید دوباره آن را از Forum دانلود کنید.</string>
     <string name="errorUnsubscribeFailed">لغو اشتراک ممکن نشد. اتصال خود را بررسی کنید و دوباره تلاش کنید.</string>
+    <string name="errorDeleteLastShared">این آخرین واژه‌نامهٔ اشتراکی شماست. ابتدا یکی دیگر را به اشتراک بگذارید، یا از Forum خارج شوید تا همه خصوصی شوند.</string>
 </resources>

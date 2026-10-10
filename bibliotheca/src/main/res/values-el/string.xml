@@ -134,4 +134,5 @@
     <string name="unsubscribeDialogTitle">Κατάργηση εγγραφής από «%1$s»;</string>
     <string name="unsubscribeDialogMessage">Θα αφαιρεθεί από τη Bibliotheca σας μαζί με την πρόοδο εξάσκησης. Μπορείτε να το κατεβάσετε ξανά από το Forum.</string>
     <string name="errorUnsubscribeFailed">Δεν ήταν δυνατή η κατάργηση εγγραφής. Ελέγξτε τη σύνδεση και δοκιμάστε ξανά.</string>
+    <string name="errorDeleteLastShared">Αυτό είναι το τελευταίο κοινόχρηστο λεξικό σας. Μοιραστείτε πρώτα ένα άλλο ή αποχωρήστε από το Forum για να γίνουν όλα ιδιωτικά.</string>
 </resources>

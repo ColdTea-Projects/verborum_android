@@ -1,10 +1,10 @@
 package de.coldtea.verborum.bibliotheca.dictionary.domain
 
 import de.coldtea.verborum.core.auth.domain.usecase.GetActiveUserUseCase
-import de.coldtea.verborum.bibliotheca.common.domain.UploadService
 import de.coldtea.verborum.bibliotheca.dictionary.data.db.entity.DictionaryEntity.Companion.GUEST_USER_ID
 import de.coldtea.verborum.bibliotheca.dictionary.domain.model.Dictionary
-import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.local.DeleteDictionaryUseCase
+import de.coldtea.verborum.bibliotheca.dictionary.domain.model.DictionaryDeletion
+import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.api.DeleteDictionaryRemotelyUseCase
 import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.local.GetDictionaryUseCase
 import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.local.MarkDictionaryDeletedUseCase
 import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.local.ObserveAllDictionariesUseCase
@@ -46,16 +46,13 @@ class DictionaryServiceTest : BaseTest() {
     @MockK
     private lateinit var saveDictionaryUseCase: SaveDictionaryUseCase
 
-    // invoke returns Unit — covered by relaxUnitFun.
-    @MockK
-    private lateinit var deleteDictionaryUseCase: DeleteDictionaryUseCase
-
     // invoke returns the repository result (non-Unit) — relax fully for verify-only use.
     @MockK(relaxed = true)
     private lateinit var markDictionaryDeletedUseCase: MarkDictionaryDeletedUseCase
 
+    // invoke returns the deletion outcome — stubbed per test with coEvery.
     @MockK
-    private lateinit var uploadService: UploadService
+    private lateinit var deleteDictionaryRemotelyUseCase: DeleteDictionaryRemotelyUseCase
 
     // invoke returns String? — defaults to null (logged out) so createDictionary falls back to guest.
     @MockK
@@ -77,9 +74,8 @@ class DictionaryServiceTest : BaseTest() {
             observeDictionaryUseCase = observeDictionaryUseCase,
             getDictionaryUseCase = getDictionaryUseCase,
             saveDictionaryUseCase = saveDictionaryUseCase,
-            deleteDictionaryUseCase = deleteDictionaryUseCase,
             markDictionaryDeletedUseCase = markDictionaryDeletedUseCase,
-            uploadService = uploadService,
+            deleteDictionaryRemotelyUseCase = deleteDictionaryRemotelyUseCase,
             getActiveUserUseCase = getActiveUserUseCase,
             importedDictionaryService = importedDictionaryService,
         )
@@ -126,15 +122,6 @@ class DictionaryServiceTest : BaseTest() {
         )
 
         assertEquals("generated-uuid", result)
-    }
-
-    @Test
-    fun `createDictionary does not upload`() = runTest {
-        coEvery { saveDictionaryUseCase.invoke(any()) } returns "new-dict-id"
-
-        dictionaryService.createDictionary(name = "German Basics", fromLang = "de", toLang = "en")
-
-        coVerify(exactly = 0) { uploadService.createDictionary(any()) }
     }
 
     // endregion
@@ -200,7 +187,7 @@ class DictionaryServiceTest : BaseTest() {
     }
 
     @Test
-    fun `observeDictionaries emits both events when list content changes`() = runTest {
+    fun `observeDictionaries emits the changed content`() = runTest {
         val first = listOf(testDictionary(dictionaryId = "dict-1", name = "Old"))
         val second = listOf(testDictionary(dictionaryId = "dict-1", name = "New"))
         every { observeAllDictionariesUseCase.invoke() } returns flow {
@@ -210,9 +197,10 @@ class DictionaryServiceTest : BaseTest() {
 
         val emissions = dictionaryService.observeDictionaries().toList()
 
-        assertEquals(2, emissions.size)
-        assertEquals("Old", emissions[0].first().name)
-        assertEquals("New", emissions[1].first().name)
+        // Merged with the downloads through combine, which may conflate a back-to-back
+        // intermediate value — the list only ever needs the latest state.
+        assertEquals("New", emissions.last().first().name)
+        assertEquals(emissions.distinct(), emissions)
     }
 
     // endregion
@@ -270,41 +258,27 @@ class DictionaryServiceTest : BaseTest() {
     // region deleteDictionary
 
     @Test
-    fun `deleteDictionary deletes locally only after the api confirms`() = runTest {
-        coEvery { uploadService.deleteDictionary("dict-1") } returns
-            mockk { every { isSuccessful } returns true }
+    fun `a delete the server confirms needs no tombstone`() = runTest {
+        coEvery { deleteDictionaryRemotelyUseCase.invoke("dict-1") } returns DictionaryDeletion.DELETED
 
-        dictionaryService.deleteDictionary("dict-1")
-
-        coVerify(exactly = 1) { uploadService.deleteDictionary("dict-1") }
-        coVerify(exactly = 1) { deleteDictionaryUseCase.invoke("dict-1") }
+        assertEquals(DictionaryDeletion.DELETED, dictionaryService.deleteDictionary("dict-1"))
+        coVerify(exactly = 0) { markDictionaryDeletedUseCase.invoke(any()) }
     }
 
     @Test
-    fun `deleteDictionary keeps the local row when the api delete fails`() = runTest {
-        coEvery { uploadService.deleteDictionary("dict-1") } returns
-            mockk { every { isSuccessful } returns false }
+    fun `a delete the server could not get is tombstoned for sync to retry`() = runTest {
+        coEvery { deleteDictionaryRemotelyUseCase.invoke("dict-1") } returns DictionaryDeletion.PENDING
 
-        dictionaryService.deleteDictionary("dict-1")
-
-        coVerify(exactly = 0) { deleteDictionaryUseCase.invoke(any()) }
-    }
-
-    @Test
-    fun `deleteDictionary keeps the local row and does not throw when offline`() = runTest {
-        // The tombstone is already written; an offline API call must not read as a failed delete.
-        coEvery { uploadService.deleteDictionary("dict-1") } throws IOException("offline")
-
-        dictionaryService.deleteDictionary("dict-1")
-
-        coVerify(exactly = 0) { deleteDictionaryUseCase.invoke(any()) }
-    }
-
-    @Test
-    fun `markDictionaryDeleted delegates to the tombstone use case`() = runTest {
-        dictionaryService.markDictionaryDeleted("dict-1")
-
+        assertEquals(DictionaryDeletion.PENDING, dictionaryService.deleteDictionary("dict-1"))
         coVerify(exactly = 1) { markDictionaryDeletedUseCase.invoke("dict-1") }
+    }
+
+    @Test
+    fun `a refused delete leaves the dictionary in place`() = runTest {
+        coEvery { deleteDictionaryRemotelyUseCase.invoke("dict-1") } returns DictionaryDeletion.SHARING_REQUIRED
+
+        assertEquals(DictionaryDeletion.SHARING_REQUIRED, dictionaryService.deleteDictionary("dict-1"))
+        coVerify(exactly = 0) { markDictionaryDeletedUseCase.invoke(any()) }
     }
 
     // endregion

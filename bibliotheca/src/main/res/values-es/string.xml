@@ -134,4 +134,5 @@
     <string name="unsubscribeDialogTitle">¿Cancelar la suscripción a «%1$s»?</string>
     <string name="unsubscribeDialogMessage">Se quitará de tu Bibliotheca junto con tu progreso de práctica. Puedes volver a descargarlo desde el Forum.</string>
     <string name="errorUnsubscribeFailed">No se pudo cancelar la suscripción. Revisa tu conexión e inténtalo de nuevo.</string>
+    <string name="errorDeleteLastShared">Es tu último diccionario compartido. Comparte otro primero o sal del Forum para que todos sean privados.</string>
 </resources>

@@ -74,6 +74,17 @@ class DaoDictionaryTest {
     }
 
     @Test
+    fun `restoreDictionary lifts the tombstone so it shows again`() = runTest {
+        dao.insert(testDictionaryEntity(dictionaryId = "1"))
+        dao.markDictionaryDeleted("1")
+
+        dao.restoreDictionary("1")
+
+        assertFalse(dao.getDictionary("1").isDeleted)
+        assertEquals(listOf("1"), dao.observeAllDictionaries().first().map { it.dictionaryId })
+    }
+
+    @Test
     fun `markDictionarySynced flips only the flag for the version that was uploaded`() = runTest {
         dao.insert(
             testDictionaryEntity(

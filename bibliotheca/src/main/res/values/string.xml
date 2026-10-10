@@ -134,4 +134,5 @@
     <string name="unsubscribeDialogTitle">Unsubscribe from “%1$s”?</string>
     <string name="unsubscribeDialogMessage">It will be removed from your Bibliotheca, along with your practice progress on it. You can download it again from the Forum.</string>
     <string name="errorUnsubscribeFailed">Couldn’t unsubscribe. Check your connection and try again.</string>
+    <string name="errorDeleteLastShared">This is your last shared dictionary. Share another one first, or leave the Forum to make all of them private.</string>
 </resources>

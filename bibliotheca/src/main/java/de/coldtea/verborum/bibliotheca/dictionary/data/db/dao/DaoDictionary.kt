@@ -36,6 +36,11 @@ interface DaoDictionary: DaoBase<DictionaryEntity> {
     @Query("UPDATE dictionary SET is_deleted = 1 WHERE dictionary_id = :dictionaryId")
     suspend fun markDictionaryDeleted(dictionaryId: String)
 
+    // Undoes markDictionaryDeleted when the server refuses the delete (e.g. the sharing rule).
+    @Transaction
+    @Query("UPDATE dictionary SET is_deleted = 0 WHERE dictionary_id = :dictionaryId")
+    suspend fun restoreDictionary(dictionaryId: String)
+
     /**
      * Flips the synced flag after a successful upload, touching no other column.
      *

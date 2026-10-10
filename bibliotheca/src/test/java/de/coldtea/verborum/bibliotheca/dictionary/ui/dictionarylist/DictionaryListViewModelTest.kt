@@ -23,6 +23,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
+import de.coldtea.verborum.bibliotheca.dictionary.domain.model.DictionaryDeletion
 import org.junit.Test
 
 class DictionaryListViewModelTest : BaseTest() {
@@ -299,17 +300,14 @@ class DictionaryListViewModelTest : BaseTest() {
     // region deleteDictionary
 
     @Test
-    fun `deleteDictionary tombstones first then cleans words then deletes the dictionary`() = runTest {
+    fun `deleteDictionary asks the service to delete`() = runTest {
         every { dictionaryService.observeDictionaries() } returns emptyFlow()
+        coEvery { dictionaryService.deleteDictionary("dict-1") } returns DictionaryDeletion.DELETED
         val viewModel = buildViewModel()
 
         viewModel.deleteDictionary("dict-1")
 
-        coVerifyOrder {
-            dictionaryService.markDictionaryDeleted("dict-1")
-            wordService.cleanWordsInDictionary("dict-1")
-            dictionaryService.deleteDictionary("dict-1")
-        }
+        coVerify(exactly = 1) { dictionaryService.deleteDictionary("dict-1") }
     }
 
     // endregion

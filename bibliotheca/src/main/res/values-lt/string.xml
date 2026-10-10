@@ -136,4 +136,5 @@
     <string name="unsubscribeDialogTitle">Atsisakyti „%1$s“ prenumeratos?</string>
     <string name="unsubscribeDialogMessage">Jis bus pašalintas iš jūsų Bibliotheca kartu su mokymosi pažanga. Galite vėl jį atsisiųsti iš Forum.</string>
     <string name="errorUnsubscribeFailed">Nepavyko atsisakyti prenumeratos. Patikrinkite ryšį ir bandykite dar kartą.</string>
+    <string name="errorDeleteLastShared">Tai paskutinis jūsų bendrinamas žodynas. Pirmiausia pasidalykite kitu arba palikite Forum, kad visi taptų privatūs.</string>
 </resources>

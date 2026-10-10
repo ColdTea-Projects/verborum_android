@@ -36,6 +36,9 @@ class DictionaryRepository @Inject constructor(
     suspend fun markDictionaryDeleted(dictionaryId: String) =
         bibliothecaDatabase.daoDictionary.markDictionaryDeleted(dictionaryId)
 
+    suspend fun restoreDictionary(dictionaryId: String) =
+        bibliothecaDatabase.daoDictionary.restoreDictionary(dictionaryId)
+
     suspend fun markDictionarySynced(dictionaryId: String, updatedAt: Long) =
         bibliothecaDatabase.daoDictionary.markDictionarySynced(dictionaryId, updatedAt)
 

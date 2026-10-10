@@ -1,11 +1,10 @@
 package de.coldtea.verborum.bibliotheca.dictionary.domain
 
-import de.coldtea.verborum.bibliotheca.common.domain.UploadService
 import de.coldtea.verborum.bibliotheca.common.utils.getNowInMillis
-import de.coldtea.verborum.bibliotheca.common.utils.succeededRemotely
 import de.coldtea.verborum.bibliotheca.dictionary.data.db.entity.DictionaryEntity.Companion.GUEST_USER_ID
 import de.coldtea.verborum.bibliotheca.dictionary.domain.model.Dictionary
-import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.local.DeleteDictionaryUseCase
+import de.coldtea.verborum.bibliotheca.dictionary.domain.model.DictionaryDeletion
+import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.api.DeleteDictionaryRemotelyUseCase
 import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.local.GetDictionaryUseCase
 import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.local.MarkDictionaryDeletedUseCase
 import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.local.ObserveAllDictionariesUseCase
@@ -27,9 +26,8 @@ class DictionaryService @Inject constructor(
     private val observeDictionaryUseCase: ObserveDictionaryUseCase,
     private val getDictionaryUseCase: GetDictionaryUseCase,
     private val saveDictionaryUseCase: SaveDictionaryUseCase,
-    private val deleteDictionaryUseCase: DeleteDictionaryUseCase,
     private val markDictionaryDeletedUseCase: MarkDictionaryDeletedUseCase,
-    private val uploadService: UploadService,
+    private val deleteDictionaryRemotelyUseCase: DeleteDictionaryRemotelyUseCase,
     private val getActiveUserUseCase: GetActiveUserUseCase,
     private val importedDictionaryService: ImportedDictionaryService,
 ) {
@@ -105,17 +103,15 @@ class DictionaryService @Inject constructor(
         return saveDictionaryUseCase.invoke(dictionary)
     }
 
-    /** Tombstones the dictionary: hidden locally at once, offline-safe. */
-    suspend fun markDictionaryDeleted(dictionaryId: String) =
-        markDictionaryDeletedUseCase.invoke(dictionaryId)
-
     /**
-     * Hard-deletes locally only when the server confirms; otherwise the tombstone remains and the
-     * sync upload phase retries it — including when the device is offline and the call throws.
+     * Deletes one of the user's dictionaries. The server is asked first, because it may refuse
+     * (a member's last shared dictionary, marketplace guide §4.6) — then nothing changes and the
+     * caller tells the user why. Only when the server cannot be reached is the dictionary
+     * tombstoned: hidden at once, and the sync upload phase retries the delete.
      */
-    suspend fun deleteDictionary(dictionaryId: String) {
-        if (succeededRemotely { uploadService.deleteDictionary(dictionaryId) }) {
-            deleteDictionaryUseCase.invoke(dictionaryId)
-        }
+    suspend fun deleteDictionary(dictionaryId: String): DictionaryDeletion {
+        val result = deleteDictionaryRemotelyUseCase.invoke(dictionaryId)
+        if (result == DictionaryDeletion.PENDING) markDictionaryDeletedUseCase.invoke(dictionaryId)
+        return result
     }
 }

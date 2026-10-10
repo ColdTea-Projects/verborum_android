@@ -134,4 +134,5 @@
     <string name="unsubscribeDialogTitle">“%1$s” abunəliyindən çıxılsın?</string>
     <string name="unsubscribeDialogMessage">O, məşq irəliləyişinizlə birlikdə Bibliotheca-dan silinəcək. Onu Forum-dan yenidən yükləyə bilərsiniz.</string>
     <string name="errorUnsubscribeFailed">Abunəlikdən çıxmaq mümkün olmadı. Bağlantını yoxlayıb yenidən cəhd edin.</string>
+    <string name="errorDeleteLastShared">Bu, paylaşdığınız son lüğətdir. Əvvəlcə başqasını paylaşın və ya hamısını gizli etmək üçün Forum-dan çıxın.</string>
 </resources>

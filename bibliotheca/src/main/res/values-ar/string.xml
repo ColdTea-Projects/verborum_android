@@ -138,4 +138,5 @@
     <string name="unsubscribeDialogTitle">هل تريد إلغاء الاشتراك في “%1$s”؟</string>
     <string name="unsubscribeDialogMessage">ستتم إزالته من Bibliotheca مع تقدّمك في التدريب عليه. يمكنك تنزيله مرة أخرى من Forum.</string>
     <string name="errorUnsubscribeFailed">تعذّر إلغاء الاشتراك. تحقّق من اتصالك وحاول مرة أخرى.</string>
+    <string name="errorDeleteLastShared">هذا آخر قاموس تشاركه. شارك قاموسًا آخر أولًا، أو غادر Forum لجعلها كلها خاصة.</string>
 </resources>

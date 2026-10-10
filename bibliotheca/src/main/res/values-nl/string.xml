@@ -134,4 +134,5 @@
     <string name="unsubscribeDialogTitle">Afmelden voor ‘%1$s’?</string>
     <string name="unsubscribeDialogMessage">Het wordt uit je Bibliotheca verwijderd, samen met je oefenvoortgang. Je kunt het opnieuw downloaden via het Forum.</string>
     <string name="errorUnsubscribeFailed">Afmelden is mislukt. Controleer je verbinding en probeer het opnieuw.</string>
+    <string name="errorDeleteLastShared">Dit is je laatste gedeelde woordenboek. Deel eerst een ander, of verlaat het Forum om ze allemaal privé te maken.</string>
 </resources>

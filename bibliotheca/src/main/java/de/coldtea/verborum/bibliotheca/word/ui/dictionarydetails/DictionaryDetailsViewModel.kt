@@ -6,6 +6,7 @@ import de.coldtea.verborum.bibliotheca.common.utils.ResStrings
 import de.coldtea.verborum.bibliotheca.dictionary.domain.DictionaryService
 import de.coldtea.verborum.bibliotheca.word.domain.WordService
 import de.coldtea.verborum.bibliotheca.word.ui.dictionarydetails.model.DictionaryDetailState
+import de.coldtea.verborum.bibliotheca.dictionary.ui.dictionarylist.model.deletionMessage
 import de.coldtea.verborum.bibliotheca.word.ui.multiplechoice.REQUIRED_WORDS_FOR_TEST
 import de.coldtea.verborum.core.ui.BaseViewModel
 import de.coldtea.verborum.core.ui.UiText
@@ -96,18 +97,18 @@ class DictionaryDetailsViewModel @Inject constructor(
     }
 
     /**
-     * Tombstones the dictionary first so it disappears immediately and offline-safely, then cleans
-     * its words and performs the server-confirmed delete. A failed network call leaves the
-     * tombstone for the sync upload phase to retry; only a thrown local write is surfaced.
+     * Deletes the dictionary — or, offline, tombstones it for sync to finish; either way it goes
+     * away locally, the state becomes Deleted and the screen leaves. A refusal by the server (the
+     * member's last shared dictionary) keeps the screen and says why.
      */
     fun deleteDictionary() = viewModelScope.launch {
         val state = _dictionaryDetailState.value as? DictionaryDetailState.Success ?: return@launch
-        val dictionaryId = state.dictionaryUi.dictionaryId
 
         try {
-            dictionaryService.markDictionaryDeleted(dictionaryId)
-            wordService.cleanWordsInDictionary(dictionaryId)
-            dictionaryService.deleteDictionary(dictionaryId)
+            deletionMessage(dictionaryService.deleteDictionary(state.dictionaryUi.dictionaryId))
+                ?.let { _snackbarMessages.emit(it) }
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
             _snackbarMessages.emit(UiText.Resource(ResStrings.errorDeleteFailed))
         }

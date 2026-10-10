@@ -134,4 +134,5 @@
     <string name="unsubscribeDialogTitle">“%1$s” aboneliğinden çıkılsın mı?</string>
     <string name="unsubscribeDialogMessage">Bu sözlük, üzerindeki çalışma ilerlemenle birlikte Bibliotheca’ndan kaldırılacak. Forum’dan yeniden indirebilirsin.</string>
     <string name="errorUnsubscribeFailed">Abonelikten çıkılamadı. Bağlantını kontrol edip tekrar dene.</string>
+    <string name="errorDeleteLastShared">Bu, paylaştığın son sözlük. Önce başka bir sözlük paylaş ya da tümünü gizli yapmak için Forum’dan ayrıl.</string>
 </resources>

@@ -1,11 +1,9 @@
 package de.coldtea.verborum.core.profile.domain.usecase.api
 
-import de.coldtea.verborum.core.extensions.json
+import de.coldtea.verborum.core.extensions.apiError
 import de.coldtea.verborum.core.profile.data.api.UserApi
-import de.coldtea.verborum.core.profile.data.api.model.ApiErrorResponse
 import de.coldtea.verborum.core.profile.data.api.model.ProfileInfoRequest
 import de.coldtea.verborum.core.profile.domain.model.InvalidProfileException
-import kotlinx.serialization.ExperimentalSerializationApi
 import retrofit2.HttpException
 import javax.inject.Inject
 
@@ -17,16 +15,10 @@ import javax.inject.Inject
 class UpdateProfileInfoApiUseCase @Inject constructor(
     private val userApi: UserApi,
 ) {
-    @OptIn(ExperimentalSerializationApi::class)
     suspend fun invoke(request: ProfileInfoRequest) {
         val response = userApi.updateProfileInfo(request)
         if (response.isSuccessful) return
-        if (response.code() == HTTP_BAD_REQUEST) {
-            val detail = runCatching {
-                json.decodeFromString<ApiErrorResponse>(response.errorBody()?.string().orEmpty()).errorDetail
-            }.getOrNull()
-            throw InvalidProfileException(detail)
-        }
+        if (response.code() == HTTP_BAD_REQUEST) throw InvalidProfileException(response.apiError()?.errorDetail)
         throw HttpException(response)
     }
 

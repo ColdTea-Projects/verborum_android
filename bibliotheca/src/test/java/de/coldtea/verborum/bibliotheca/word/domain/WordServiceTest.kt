@@ -4,8 +4,6 @@ import de.coldtea.verborum.bibliotheca.testWord
 import de.coldtea.verborum.bibliotheca.testWordUi
 import de.coldtea.verborum.bibliotheca.word.domain.model.Word
 import de.coldtea.verborum.bibliotheca.word.domain.usecase.api.DeleteWordApiUseCase
-import de.coldtea.verborum.bibliotheca.word.domain.usecase.api.DeleteWordByDictionaryIdApiUseCase
-import de.coldtea.verborum.bibliotheca.word.domain.usecase.local.DeleteWordByDictionaryIdUseCase
 import de.coldtea.verborum.bibliotheca.word.domain.usecase.local.DeleteWordUseCase
 import de.coldtea.verborum.bibliotheca.word.domain.usecase.local.GetWordUseCase
 import de.coldtea.verborum.bibliotheca.word.domain.usecase.local.MarkWordDeletedUseCase
@@ -46,14 +44,6 @@ class WordServiceTest : BaseTest() {
 
     @MockK
     private lateinit var observeWordCountsUseCase: ObserveWordCountsUseCase
-
-    // invoke returns Response<Unit> — not covered by relaxUnitFun, so relax fully for verify-only use.
-    @MockK(relaxed = true)
-    private lateinit var deleteWordByDictionaryIdApiUseCase: DeleteWordByDictionaryIdApiUseCase
-
-    // invoke returns the repository result (non-Unit) — relax fully for verify-only use.
-    @MockK(relaxed = true)
-    private lateinit var deleteWordByDictionaryIdUseCase: DeleteWordByDictionaryIdUseCase
 
     // invoke returns Response<Unit> — stubbed per test with coEvery.
     @MockK
@@ -100,8 +90,6 @@ class WordServiceTest : BaseTest() {
             observeWordsByDictionaryUseCase = observeWordsByDictionaryUseCase,
             observeWordsInLanguagePairUseCase = observeWordsInLanguagePairUseCase,
             observeWordCountsUseCase = observeWordCountsUseCase,
-            deleteWordByDictionaryIdApiUseCase = deleteWordByDictionaryIdApiUseCase,
-            deleteWordByDictionaryIdUseCase = deleteWordByDictionaryIdUseCase,
             deleteWordApiUseCase = deleteWordApiUseCase,
             deleteWordUseCase = deleteWordUseCase,
             markWordDeletedUseCase = markWordDeletedUseCase,
@@ -207,7 +195,7 @@ class WordServiceTest : BaseTest() {
     }
 
     @Test
-    fun `observeWordsByDictionary emits both events when list content changes`() = runTest {
+    fun `observeWordsByDictionary emits the changed content`() = runTest {
         val dictionaryId = "dict-1"
         val first = listOf(testWord(wordId = "w-1", level = 0))
         val second = listOf(testWord(wordId = "w-1", level = 1))
@@ -218,9 +206,10 @@ class WordServiceTest : BaseTest() {
 
         val emissions = wordService.observeWordsByDictionary(dictionaryId).toList()
 
-        assertEquals(2, emissions.size)
-        assertEquals(0, emissions[0].first().level)
-        assertEquals(1, emissions[1].first().level)
+        // Merged with the downloaded words through combine, which may conflate a back-to-back
+        // intermediate value — the screen only ever needs the latest list.
+        assertEquals(1, emissions.last().first().level)
+        assertEquals(emissions.distinct(), emissions)
     }
 
     // endregion
@@ -289,50 +278,6 @@ class WordServiceTest : BaseTest() {
 
         coVerify(exactly = 1) { markWordDeletedUseCase.invoke("word-1") }
         coVerify(exactly = 0) { deleteWordUseCase.invoke(any()) }
-    }
-
-    @Test
-    fun `deleteWord keeps the tombstone and does not throw when offline`() = runTest {
-        // Offline a suspend Retrofit call throws rather than returning an unsuccessful response;
-        // the delete still succeeded locally, so this must not surface as a failure to the caller.
-        coEvery { deleteWordApiUseCase.invoke("word-1") } throws IOException("offline")
-
-        wordService.deleteWord("word-1")
-
-        coVerify(exactly = 1) { markWordDeletedUseCase.invoke("word-1") }
-        coVerify(exactly = 0) { deleteWordUseCase.invoke(any()) }
-    }
-
-    // endregion
-
-    // region cleanWordsInDictionary
-
-    @Test
-    fun `cleanWordsInDictionary deletes locally only after the api confirms`() = runTest {
-        coEvery { deleteWordByDictionaryIdApiUseCase.invoke("dict-1") } returns successResponse
-
-        wordService.cleanWordsInDictionary("dict-1")
-
-        coVerify(exactly = 1) { deleteWordByDictionaryIdApiUseCase.invoke("dict-1") }
-        coVerify(exactly = 1) { deleteWordByDictionaryIdUseCase.invoke("dict-1") }
-    }
-
-    @Test
-    fun `cleanWordsInDictionary skips the local delete when the api fails`() = runTest {
-        coEvery { deleteWordByDictionaryIdApiUseCase.invoke("dict-1") } returns failureResponse
-
-        wordService.cleanWordsInDictionary("dict-1")
-
-        coVerify(exactly = 0) { deleteWordByDictionaryIdUseCase.invoke(any()) }
-    }
-
-    @Test
-    fun `cleanWordsInDictionary does not throw when offline`() = runTest {
-        coEvery { deleteWordByDictionaryIdApiUseCase.invoke("dict-1") } throws IOException("offline")
-
-        wordService.cleanWordsInDictionary("dict-1")
-
-        coVerify(exactly = 0) { deleteWordByDictionaryIdUseCase.invoke(any()) }
     }
 
     // endregion

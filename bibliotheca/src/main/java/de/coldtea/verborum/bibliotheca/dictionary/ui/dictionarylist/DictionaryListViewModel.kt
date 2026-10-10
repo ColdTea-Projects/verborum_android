@@ -9,6 +9,7 @@ import de.coldtea.verborum.bibliotheca.common.utils.ResStrings
 import de.coldtea.verborum.bibliotheca.dictionary.ui.dictionarylist.model.DictionaryListState
 import de.coldtea.verborum.bibliotheca.dictionary.ui.dictionarylist.model.DictionarySort
 import de.coldtea.verborum.bibliotheca.dictionary.ui.dictionarylist.model.DictionaryUi
+import de.coldtea.verborum.bibliotheca.dictionary.ui.dictionarylist.model.deletionMessage
 import de.coldtea.verborum.bibliotheca.word.domain.WordService
 import de.coldtea.verborum.core.ui.BaseViewModel
 import de.coldtea.verborum.core.ui.UiText
@@ -155,12 +156,6 @@ class DictionaryListViewModel @Inject constructor(
         _isRefreshing.emit(false)
     }
 
-    /**
-     * Tombstones the dictionary first so it disappears immediately and offline-safely, then cleans
-     * its words and performs the server-confirmed delete — mirrors the details screen's delete.
-     * A failure here means the local tombstone write itself threw (the API-delete path is
-     * offline-safe and simply retries via sync), so it is surfaced rather than swallowed.
-     */
     /** Unsubscribes from a downloaded dictionary; online-only, so a failure is reported and nothing changes. */
     fun unsubscribe(dictionaryId: String) = viewModelScope.launch {
         try {
@@ -172,11 +167,16 @@ class DictionaryListViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Deletes the dictionary — or, offline, tombstones it for sync to finish. A refusal by the server
+     * (the member's last shared dictionary) leaves it in place and says why; a thrown local write
+     * is surfaced rather than swallowed. Mirrors the details screen's delete.
+     */
     fun deleteDictionary(dictionaryId: String) = viewModelScope.launch {
         try {
-            dictionaryService.markDictionaryDeleted(dictionaryId)
-            wordService.cleanWordsInDictionary(dictionaryId)
-            dictionaryService.deleteDictionary(dictionaryId)
+            deletionMessage(dictionaryService.deleteDictionary(dictionaryId))?.let { _snackbarMessages.emit(it) }
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
             _snackbarMessages.emit(UiText.Resource(ResStrings.errorDeleteFailed))
         }

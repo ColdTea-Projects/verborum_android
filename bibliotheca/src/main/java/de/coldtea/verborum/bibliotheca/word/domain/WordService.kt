@@ -4,8 +4,6 @@ import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.local.ObserveDi
 import de.coldtea.verborum.bibliotheca.imported.domain.ImportedDictionaryService
 import de.coldtea.verborum.bibliotheca.word.domain.model.Word
 import de.coldtea.verborum.bibliotheca.word.domain.usecase.api.DeleteWordApiUseCase
-import de.coldtea.verborum.bibliotheca.word.domain.usecase.api.DeleteWordByDictionaryIdApiUseCase
-import de.coldtea.verborum.bibliotheca.word.domain.usecase.local.DeleteWordByDictionaryIdUseCase
 import de.coldtea.verborum.bibliotheca.word.domain.usecase.local.DeleteWordUseCase
 import de.coldtea.verborum.bibliotheca.word.domain.usecase.local.GetWordUseCase
 import de.coldtea.verborum.bibliotheca.word.domain.usecase.local.MarkWordDeletedUseCase
@@ -32,8 +30,6 @@ class WordService @Inject constructor(
     private val observeWordsByDictionaryUseCase: ObserveWordsByDictionaryUseCase,
     private val observeWordsInLanguagePairUseCase: ObserveWordsInLanguagePairUseCase,
     private val observeWordCountsUseCase: ObserveWordCountsUseCase,
-    private val deleteWordByDictionaryIdApiUseCase: DeleteWordByDictionaryIdApiUseCase,
-    private val deleteWordByDictionaryIdUseCase: DeleteWordByDictionaryIdUseCase,
     private val deleteWordApiUseCase: DeleteWordApiUseCase,
     private val deleteWordUseCase: DeleteWordUseCase,
     private val markWordDeletedUseCase: MarkWordDeletedUseCase,
@@ -126,10 +122,5 @@ class WordService @Inject constructor(
         }
     }
 
-    suspend fun cleanWordsInDictionary(dictionaryId: String) {
-        if (succeededRemotely { deleteWordByDictionaryIdApiUseCase.invoke(dictionaryId) }) {
-            deleteWordByDictionaryIdUseCase.invoke(dictionaryId)
-        }
-    }
 
 }

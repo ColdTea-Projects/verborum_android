@@ -136,4 +136,5 @@
     <string name="unsubscribeDialogTitle">Отписаться от «%1$s»?</string>
     <string name="unsubscribeDialogMessage">Он будет удалён из вашей Bibliotheca вместе с прогрессом. Вы сможете снова скачать его в Forum.</string>
     <string name="errorUnsubscribeFailed">Не удалось отписаться. Проверьте подключение и попробуйте ещё раз.</string>
+    <string name="errorDeleteLastShared">Это ваш последний общий словарь. Сначала поделитесь другим или покиньте Forum, чтобы сделать все словари личными.</string>
 </resources>

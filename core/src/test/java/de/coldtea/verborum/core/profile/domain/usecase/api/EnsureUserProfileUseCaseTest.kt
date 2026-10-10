@@ -89,6 +89,29 @@ class EnsureUserProfileUseCaseTest : BaseTest() {
     }
 
     @Test
+    fun `a display name the server refuses is dropped rather than blocking the profile`() = runTest {
+        coEvery { userApi.getMe() } returnsMany listOf(error(404), Response.success(testUserProfileResponse(displayName = null)))
+        val bodies = mutableListOf<UserProfileRequest>()
+        coEvery { userApi.createProfile(capture(bodies)) } returnsMany listOf(error(400), Response.success(Unit))
+
+        useCase.invoke(subject = SUBJECT, email = EMAIL, displayName = "testadmin")
+
+        assertEquals(listOf("testadmin", null), bodies.map { it.displayName })
+    }
+
+    @Test(expected = HttpException::class)
+    fun `a 400 without a name to drop still fails`() = runTest {
+        coEvery { userApi.getMe() } returns error(404)
+        coEvery { userApi.createProfile(any()) } returns error(400)
+
+        try {
+            useCase.invoke(subject = SUBJECT, email = EMAIL, displayName = null)
+        } finally {
+            coVerify(exactly = 1) { userApi.createProfile(any()) }
+        }
+    }
+
+    @Test
     fun `a 409 on create recovers with users-me instead of failing`() = runTest {
         coEvery { userApi.getMe() } returnsMany listOf(error(404), Response.success(testUserProfileResponse()))
         coEvery { userApi.createProfile(any()) } returns error(409)
