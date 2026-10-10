@@ -109,4 +109,9 @@
     <string name="ratingShow">Afficher votre note</string>
     <string name="ratingHide">Masquer votre note</string>
     <string name="ratingCurrent">Votre note : %1$d sur 5</string>
+
+    <string name="leaveForumDialogTitle">Quitter le Forum ?</string>
+    <string name="leaveForumDialogMessage">Tous vos dictionnaires deviendront privés et les personnes qui les ont téléchargés n’y auront plus accès. Vous pouvez rejoindre le Forum à tout moment.</string>
+    <string name="leaveForumDialogConfirm">Quitter le Forum</string>
+    <string name="leaveForumDialogCancel">Rester</string>
 </resources>

@@ -111,4 +111,9 @@
     <string name="ratingShow">Показати вашу оцінку</string>
     <string name="ratingHide">Сховати вашу оцінку</string>
     <string name="ratingCurrent">Ваша оцінка: %1$d з 5</string>
+
+    <string name="leaveForumDialogTitle">Вийти з Forum?</string>
+    <string name="leaveForumDialogMessage">Усі ваші словники стануть приватними, а ті, хто їх завантажив, втратять доступ. Ви можете повернутися будь-коли.</string>
+    <string name="leaveForumDialogConfirm">Вийти з Forum</string>
+    <string name="leaveForumDialogCancel">Залишитися</string>
 </resources>

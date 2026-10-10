@@ -108,4 +108,9 @@
     <string name="ratingShow">評価を表示</string>
     <string name="ratingHide">評価を隠す</string>
     <string name="ratingCurrent">あなたの評価: 5 段階中 %1$d</string>
+
+    <string name="leaveForumDialogTitle">Forum から退出しますか？</string>
+    <string name="leaveForumDialogMessage">すべての辞書が非公開になり、ダウンロードした人はアクセスできなくなります。いつでも再度参加できます。</string>
+    <string name="leaveForumDialogConfirm">Forum から退出</string>
+    <string name="leaveForumDialogCancel">とどまる</string>
 </resources>

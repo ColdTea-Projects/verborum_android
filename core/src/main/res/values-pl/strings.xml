@@ -111,4 +111,9 @@
     <string name="ratingShow">Pokaż swoją ocenę</string>
     <string name="ratingHide">Ukryj swoją ocenę</string>
     <string name="ratingCurrent">Twoja ocena: %1$d z 5</string>
+
+    <string name="leaveForumDialogTitle">Opuścić Forum?</string>
+    <string name="leaveForumDialogMessage">Wszystkie Twoje słowniki staną się prywatne, a osoby, które je pobrały, stracą dostęp. Możesz dołączyć ponownie w dowolnej chwili.</string>
+    <string name="leaveForumDialogConfirm">Opuść Forum</string>
+    <string name="leaveForumDialogCancel">Zostań</string>
 </resources>

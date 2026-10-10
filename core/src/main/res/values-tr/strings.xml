@@ -109,4 +109,9 @@
     <string name="ratingShow">Puanını göster</string>
     <string name="ratingHide">Puanını gizle</string>
     <string name="ratingCurrent">Puanın: 5 üzerinden %1$d</string>
+
+    <string name="leaveForumDialogTitle">Forum’dan ayrılınsın mı?</string>
+    <string name="leaveForumDialogMessage">Tüm sözlüklerin gizli olacak ve onları indirenler erişimini kaybedecek. İstediğin zaman yeniden katılabilirsin.</string>
+    <string name="leaveForumDialogConfirm">Forum’dan ayrıl</string>
+    <string name="leaveForumDialogCancel">Kal</string>
 </resources>

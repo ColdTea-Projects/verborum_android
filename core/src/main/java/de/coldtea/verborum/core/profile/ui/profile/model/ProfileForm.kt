@@ -11,6 +11,7 @@ data class ProfileForm(
     val displayName: String,
     val agreementAccepted: Boolean,
     val isSaving: Boolean = false,
+    val isLeaveConfirmationShown: Boolean = false,
 ) {
     // The server trims names, so whitespace-only edits are not a change.
     val trimmedDisplayName: String get() = displayName.trim()
@@ -20,6 +21,9 @@ data class ProfileForm(
 
     /** A Forum member must have a name: the terms cannot be accepted while it is blank. */
     val isDisplayNameMissing: Boolean get() = agreementAccepted && trimmedDisplayName.isEmpty()
+
+    /** Unticking the terms of a current member leaves the Forum — confirmed first (guide §6.2). */
+    val isLeavingForum: Boolean get() = savedAgreementAccepted && !agreementAccepted
 
     val canUpdate: Boolean get() = hasChanges && !isDisplayNameMissing && !isSaving
 

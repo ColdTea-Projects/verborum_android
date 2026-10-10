@@ -108,4 +108,9 @@
     <string name="ratingShow">내 평점 보기</string>
     <string name="ratingHide">내 평점 숨기기</string>
     <string name="ratingCurrent">내 평점: 5점 만점에 %1$d점</string>
+
+    <string name="leaveForumDialogTitle">Forum에서 나갈까요?</string>
+    <string name="leaveForumDialogMessage">모든 사전이 비공개로 전환되고, 다운로드한 사람은 더 이상 볼 수 없습니다. 언제든 다시 참여할 수 있습니다.</string>
+    <string name="leaveForumDialogConfirm">Forum 나가기</string>
+    <string name="leaveForumDialogCancel">머무르기</string>
 </resources>

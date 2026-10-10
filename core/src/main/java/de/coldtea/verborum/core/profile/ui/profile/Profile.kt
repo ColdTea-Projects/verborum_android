@@ -29,6 +29,7 @@ import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import de.coldtea.verborum.core.profile.ui.profile.composables.LeaveForumDialog
 import de.coldtea.verborum.core.profile.ui.profile.composables.MarketplaceTermsSection
 import de.coldtea.verborum.core.profile.ui.profile.model.ProfileForm
 import de.coldtea.verborum.core.profile.ui.profile.model.ProfileState
@@ -66,6 +67,8 @@ fun ProfileScreen(viewModel: ProfileViewModel = hiltViewModel()) {
             onDisplayNameChange = viewModel::onDisplayNameChange,
             onAgreementChange = viewModel::onAgreementChange,
             onUpdate = viewModel::update,
+            onConfirmLeave = viewModel::confirmLeaveForum,
+            onDismissLeave = viewModel::dismissLeaveConfirmation,
         )
 
         ProfileState.Failed -> ScreenError(onRetry = viewModel::refresh)
@@ -78,7 +81,13 @@ private fun ProfileContent(
     onDisplayNameChange: (String) -> Unit,
     onAgreementChange: (Boolean) -> Unit,
     onUpdate: () -> Unit,
+    onConfirmLeave: () -> Unit,
+    onDismissLeave: () -> Unit,
 ) {
+    if (form.isLeaveConfirmationShown) {
+        LeaveForumDialog(onConfirm = onConfirmLeave, onDismiss = onDismissLeave)
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -184,6 +193,8 @@ private fun ProfileContentPreview() {
             onDisplayNameChange = {},
             onAgreementChange = {},
             onUpdate = {},
+            onConfirmLeave = {},
+            onDismissLeave = {},
         )
     }
 }

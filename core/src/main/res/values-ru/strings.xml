@@ -111,4 +111,9 @@
     <string name="ratingShow">Показать вашу оценку</string>
     <string name="ratingHide">Скрыть вашу оценку</string>
     <string name="ratingCurrent">Ваша оценка: %1$d из 5</string>
+
+    <string name="leaveForumDialogTitle">Выйти из Forum?</string>
+    <string name="leaveForumDialogMessage">Все ваши словари станут приватными, а скачавшие их потеряют доступ. Вы можете вернуться в любой момент.</string>
+    <string name="leaveForumDialogConfirm">Выйти из Forum</string>
+    <string name="leaveForumDialogCancel">Остаться</string>
 </resources>

@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
+import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class ProfileViewModelTest : BaseTest() {
@@ -120,6 +121,65 @@ class ProfileViewModelTest : BaseTest() {
         val form = successForm(viewModel)
         assertEquals("Anna Bauer", form.displayName)
         assertFalse(form.isSaving)
+    }
+    // endregion
+
+    // region leaving the Forum
+    private fun memberViewModel(): ProfileViewModel {
+        coEvery { profileService.refreshProfile() } coAnswers {
+            testProfileUi(isMarketplaceMember = true).also { profile.value = it }
+        }
+        return ProfileViewModel(profileService)
+    }
+
+    @Test
+    fun `unticking the terms asks for confirmation instead of saving`() = runTest {
+        val viewModel = memberViewModel()
+
+        viewModel.onAgreementChange(false)
+        viewModel.update()
+
+        assertTrue(successForm(viewModel).isLeaveConfirmationShown)
+        coVerify(exactly = 0) { profileService.updateProfile(any(), any()) }
+    }
+
+    @Test
+    fun `confirming leaves the Forum`() = runTest {
+        coEvery { profileService.updateProfile(any(), any()) } returns testProfileUi()
+        val viewModel = memberViewModel()
+
+        viewModel.onAgreementChange(false)
+        viewModel.update()
+        viewModel.confirmLeaveForum()
+
+        assertFalse(successForm(viewModel).isLeaveConfirmationShown)
+        coVerify { profileService.updateProfile(displayName = null, marketplaceAgreementAccepted = false) }
+    }
+
+    @Test
+    fun `dismissing keeps the drafts and sends nothing`() = runTest {
+        val viewModel = memberViewModel()
+
+        viewModel.onAgreementChange(false)
+        viewModel.update()
+        viewModel.dismissLeaveConfirmation()
+
+        val form = successForm(viewModel)
+        assertFalse(form.isLeaveConfirmationShown)
+        assertFalse(form.agreementAccepted)
+        coVerify(exactly = 0) { profileService.updateProfile(any(), any()) }
+    }
+
+    @Test
+    fun `renaming a member needs no confirmation`() = runTest {
+        coEvery { profileService.updateProfile(any(), any()) } returns testProfileUi()
+        val viewModel = memberViewModel()
+
+        viewModel.onDisplayNameChange("Anna Bauer")
+        viewModel.update()
+
+        assertFalse(successForm(viewModel).isLeaveConfirmationShown)
+        coVerify { profileService.updateProfile(displayName = "Anna Bauer", marketplaceAgreementAccepted = null) }
     }
     // endregion
 }

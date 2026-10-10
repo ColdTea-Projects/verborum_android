@@ -109,4 +109,9 @@
     <string name="ratingShow">Εμφάνιση της βαθμολογίας σας</string>
     <string name="ratingHide">Απόκρυψη της βαθμολογίας σας</string>
     <string name="ratingCurrent">Η βαθμολογία σας: %1$d στα 5</string>
+
+    <string name="leaveForumDialogTitle">Αποχώρηση από το Forum;</string>
+    <string name="leaveForumDialogMessage">Όλα τα λεξικά σας θα γίνουν ιδιωτικά και όσοι τα κατέβασαν θα χάσουν την πρόσβαση. Μπορείτε να εγγραφείτε ξανά οποτεδήποτε.</string>
+    <string name="leaveForumDialogConfirm">Αποχώρηση</string>
+    <string name="leaveForumDialogCancel">Παραμονή</string>
 </resources>

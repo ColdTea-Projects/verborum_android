@@ -109,4 +109,9 @@
     <string name="ratingShow">Mostrar sua avaliação</string>
     <string name="ratingHide">Ocultar sua avaliação</string>
     <string name="ratingCurrent">Sua avaliação: %1$d de 5</string>
+
+    <string name="leaveForumDialogTitle">Sair do Forum?</string>
+    <string name="leaveForumDialogMessage">Todos os seus dicionários ficarão privados e quem os baixou perderá o acesso. Você pode entrar de novo quando quiser.</string>
+    <string name="leaveForumDialogConfirm">Sair do Forum</string>
+    <string name="leaveForumDialogCancel">Ficar</string>
 </resources>

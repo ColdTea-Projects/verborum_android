@@ -109,4 +109,9 @@
     <string name="ratingShow">نمایش امتیاز شما</string>
     <string name="ratingHide">پنهان کردن امتیاز شما</string>
     <string name="ratingCurrent">امتیاز شما: %1$d از ۵</string>
+
+    <string name="leaveForumDialogTitle">از Forum خارج می‌شوید؟</string>
+    <string name="leaveForumDialogMessage">همهٔ واژه‌نامه‌های شما خصوصی می‌شوند و کسانی که آن‌ها را دانلود کرده‌اند دسترسی خود را از دست می‌دهند. هر زمان بخواهید می‌توانید دوباره بپیوندید.</string>
+    <string name="leaveForumDialogConfirm">خروج از Forum</string>
+    <string name="leaveForumDialogCancel">ماندن</string>
 </resources>

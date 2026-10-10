@@ -113,4 +113,9 @@
     <string name="ratingShow">إظهار تقييمك</string>
     <string name="ratingHide">إخفاء تقييمك</string>
     <string name="ratingCurrent">تقييمك: %1$d من 5</string>
+
+    <string name="leaveForumDialogTitle">هل تريد مغادرة Forum؟</string>
+    <string name="leaveForumDialogMessage">ستصبح جميع قواميسك خاصة، وسيفقد من نزّلوها إمكانية الوصول إليها. يمكنك الانضمام مرة أخرى في أي وقت.</string>
+    <string name="leaveForumDialogConfirm">مغادرة Forum</string>
+    <string name="leaveForumDialogCancel">البقاء</string>
 </resources>

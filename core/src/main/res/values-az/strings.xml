@@ -109,4 +109,9 @@
     <string name="ratingShow">Qiymətinizi göstər</string>
     <string name="ratingHide">Qiymətinizi gizlət</string>
     <string name="ratingCurrent">Qiymətiniz: 5 üzərindən %1$d</string>
+
+    <string name="leaveForumDialogTitle">Forum-dan çıxılsın?</string>
+    <string name="leaveForumDialogMessage">Bütün lüğətləriniz gizli olacaq və onları yükləyənlər girişi itirəcək. İstədiyiniz vaxt yenidən qoşula bilərsiniz.</string>
+    <string name="leaveForumDialogConfirm">Forum-dan çıx</string>
+    <string name="leaveForumDialogCancel">Qal</string>
 </resources>

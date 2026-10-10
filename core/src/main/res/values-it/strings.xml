@@ -109,4 +109,9 @@
     <string name="ratingShow">Mostra la tua valutazione</string>
     <string name="ratingHide">Nascondi la tua valutazione</string>
     <string name="ratingCurrent">La tua valutazione: %1$d su 5</string>
+
+    <string name="leaveForumDialogTitle">Lasciare il Forum?</string>
+    <string name="leaveForumDialogMessage">Tutti i tuoi dizionari diventeranno privati e chi li ha scaricati perderà l’accesso. Puoi unirti di nuovo in qualsiasi momento.</string>
+    <string name="leaveForumDialogConfirm">Lascia il Forum</string>
+    <string name="leaveForumDialogCancel">Resta</string>
 </resources>

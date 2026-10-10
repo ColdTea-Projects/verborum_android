@@ -111,4 +111,9 @@
     <string name="ratingShow">Show your rating</string>
     <string name="ratingHide">Hide your rating</string>
     <string name="ratingCurrent">Your rating: %1$d out of 5</string>
+
+    <string name="leaveForumDialogTitle">Leave the Forum?</string>
+    <string name="leaveForumDialogMessage">All your dictionaries will become private, and people who downloaded them will lose access. You can join again anytime.</string>
+    <string name="leaveForumDialogConfirm">Leave the Forum</string>
+    <string name="leaveForumDialogCancel">Stay</string>
 </resources>

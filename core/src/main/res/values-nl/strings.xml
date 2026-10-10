@@ -109,4 +109,9 @@
     <string name="ratingShow">Toon je beoordeling</string>
     <string name="ratingHide">Verberg je beoordeling</string>
     <string name="ratingCurrent">Jouw beoordeling: %1$d van 5</string>
+
+    <string name="leaveForumDialogTitle">Het Forum verlaten?</string>
+    <string name="leaveForumDialogMessage">Al je woordenboeken worden privé en wie ze heeft gedownload, verliest de toegang. Je kunt op elk moment weer lid worden.</string>
+    <string name="leaveForumDialogConfirm">Forum verlaten</string>
+    <string name="leaveForumDialogCancel">Blijven</string>
 </resources>

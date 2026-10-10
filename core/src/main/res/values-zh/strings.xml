@@ -108,4 +108,9 @@
     <string name="ratingShow">显示你的评分</string>
     <string name="ratingHide">隐藏你的评分</string>
     <string name="ratingCurrent">你的评分：%1$d / 5</string>
+
+    <string name="leaveForumDialogTitle">要退出 Forum 吗？</string>
+    <string name="leaveForumDialogMessage">你的所有词典都将变为私有，已下载的人将无法再访问。你可以随时重新加入。</string>
+    <string name="leaveForumDialogConfirm">退出 Forum</string>
+    <string name="leaveForumDialogCancel">留下</string>
 </resources>

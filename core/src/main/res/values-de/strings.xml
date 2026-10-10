@@ -109,4 +109,9 @@
     <string name="ratingShow">Deine Bewertung anzeigen</string>
     <string name="ratingHide">Deine Bewertung ausblenden</string>
     <string name="ratingCurrent">Deine Bewertung: %1$d von 5</string>
+
+    <string name="leaveForumDialogTitle">Das Forum verlassen?</string>
+    <string name="leaveForumDialogMessage">Alle deine Wörterbücher werden privat, und wer sie heruntergeladen hat, verliert den Zugriff. Du kannst jederzeit wieder beitreten.</string>
+    <string name="leaveForumDialogConfirm">Forum verlassen</string>
+    <string name="leaveForumDialogCancel">Bleiben</string>
 </resources>

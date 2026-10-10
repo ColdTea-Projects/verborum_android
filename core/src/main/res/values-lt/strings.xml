@@ -111,4 +111,9 @@
     <string name="ratingShow">Rodyti jūsų įvertinimą</string>
     <string name="ratingHide">Slėpti jūsų įvertinimą</string>
     <string name="ratingCurrent">Jūsų įvertinimas: %1$d iš 5</string>
+
+    <string name="leaveForumDialogTitle">Palikti Forum?</string>
+    <string name="leaveForumDialogMessage">Visi jūsų žodynai taps privatūs, o juos atsisiuntę praras prieigą. Galite vėl prisijungti bet kada.</string>
+    <string name="leaveForumDialogConfirm">Palikti Forum</string>
+    <string name="leaveForumDialogCancel">Likti</string>
 </resources>

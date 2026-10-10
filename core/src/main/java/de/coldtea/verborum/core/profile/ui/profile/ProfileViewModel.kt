@@ -58,10 +58,30 @@ class ProfileViewModel @Inject constructor(
 
     fun onAgreementChange(accepted: Boolean) = updateForm { it.copy(agreementAccepted = accepted) }
 
-    /** Sends only the fields that differ from the saved profile (a null one is left unchanged). */
+    /**
+     * Leaving the Forum makes every dictionary private, so that one is confirmed first; any other
+     * change is saved right away.
+     */
     fun update() {
         val form = (_state.value as? ProfileState.Success)?.form ?: return
         if (!form.canUpdate) return
+        if (form.isLeavingForum) {
+            updateForm { it.copy(isLeaveConfirmationShown = true) }
+        } else {
+            save(form)
+        }
+    }
+
+    fun confirmLeaveForum() {
+        val form = (_state.value as? ProfileState.Success)?.form ?: return
+        updateForm { it.copy(isLeaveConfirmationShown = false) }
+        if (form.canUpdate) save(form)
+    }
+
+    fun dismissLeaveConfirmation() = updateForm { it.copy(isLeaveConfirmationShown = false) }
+
+    /** Sends only the fields that differ from the saved profile (a null one is left unchanged). */
+    private fun save(form: ProfileForm) {
         updateForm { it.copy(isSaving = true) }
 
         viewModelScope.launch(exceptionHandler) {
