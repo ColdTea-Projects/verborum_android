@@ -24,6 +24,8 @@ import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import de.coldtea.verborum.bibliotheca.dictionary.domain.model.DictionaryDeletion
+import de.coldtea.verborum.bibliotheca.dictionary.domain.model.SharingState
+import kotlinx.coroutines.flow.MutableStateFlow
 import org.junit.Test
 
 class DictionaryListViewModelTest : BaseTest() {
@@ -44,7 +46,11 @@ class DictionaryListViewModelTest : BaseTest() {
         coEvery { syncService.syncDictionaries() } returns Unit
         // Word counts merge into the dictionaries; default to none unless a test overrides it.
         every { wordService.observeWordCounts() } returns flowOf(emptyMap())
+        // Not a Forum member unless a test says otherwise.
+        every { dictionaryService.observeSharingState() } returns sharing
     }
+
+    private val sharing = MutableStateFlow(SharingState())
 
     /**
      * The init block observes dictionaries and syncs immediately, so the view model is
@@ -310,5 +316,17 @@ class DictionaryListViewModelTest : BaseTest() {
         coVerify(exactly = 1) { dictionaryService.deleteDictionary("dict-1") }
     }
 
+    // endregion
+
+    // region keep-one-shared
+    @Test
+    fun `the sharing state reaches the screen`() = runTest {
+        every { dictionaryService.observeDictionaries() } returns emptyFlow()
+        val viewModel = buildViewModel()
+
+        sharing.value = SharingState(isMember = true, sharedDictionaryIds = setOf("only"))
+
+        assertTrue(viewModel.sharingState.value.isLastShared("only"))
+    }
     // endregion
 }

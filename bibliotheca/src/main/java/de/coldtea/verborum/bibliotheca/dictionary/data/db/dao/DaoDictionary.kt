@@ -36,6 +36,12 @@ interface DaoDictionary: DaoBase<DictionaryEntity> {
     @Query("UPDATE dictionary SET is_deleted = 1 WHERE dictionary_id = :dictionaryId")
     suspend fun markDictionaryDeleted(dictionaryId: String)
 
+    // Sharing is the server's to decide (joining/leaving the Forum flips it there), so it is written
+    // on its own — whatever else the row has pending stays pending.
+    @Transaction
+    @Query("UPDATE dictionary SET is_public = :isPublic WHERE dictionary_id = :dictionaryId")
+    suspend fun updateIsPublic(dictionaryId: String, isPublic: Boolean)
+
     // Undoes markDictionaryDeleted when the server refuses the delete (e.g. the sharing rule).
     @Transaction
     @Query("UPDATE dictionary SET is_deleted = 0 WHERE dictionary_id = :dictionaryId")

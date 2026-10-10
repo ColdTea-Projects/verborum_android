@@ -50,6 +50,7 @@ import de.coldtea.verborum.bibliotheca.dictionary.ui.dictionarylist.composables.
 import de.coldtea.verborum.bibliotheca.dictionary.ui.dictionarylist.composables.UnsubscribeDictionaryDialog
 import de.coldtea.verborum.core.ui.components.languagePairLabel
 import de.coldtea.verborum.core.ui.components.DictionaryTagsText
+import de.coldtea.verborum.bibliotheca.word.ui.dictionarydetails.composables.DictionarySharingSwitch
 import de.coldtea.verborum.bibliotheca.word.ui.dictionarydetails.composables.PracticeModeButton
 import de.coldtea.verborum.bibliotheca.word.ui.dictionarydetails.composables.WordListItem
 import de.coldtea.verborum.bibliotheca.word.ui.dictionarydetails.model.DictionaryDetailState
@@ -160,6 +161,16 @@ fun DictionaryDetailsScreen(
                         DictionaryTagsText(tagCodes = dictionary.tags)
                     }
 
+                    // Forum sharing — a member's own dictionaries only.
+                    dictionaryDetailState.sharing?.let { sharing ->
+                        Spacer(modifier = Modifier.height(16.dp))
+                        DictionarySharingSwitch(
+                            sharing = sharing,
+                            dictionaryName = dictionary.name,
+                            onSharedChange = viewModel::setShared,
+                        )
+                    }
+
                     Spacer(modifier = Modifier.height(32.dp))
                 }
 
@@ -265,7 +276,11 @@ fun DictionaryDetailsScreen(
                 }
 
                 Button(
-                    onClick = { showDeleteDialog = true },
+                    onClick = {
+                        // A member's last shared dictionary must stay while they are in the Forum.
+                        if (dictionaryDetailState.sharing?.isLastShared == true) viewModel.explainLastShared()
+                        else showDeleteDialog = true
+                    },
                     shape = RoundedCornerShape(16.dp),
                     colors = ButtonDefaults.outlinedButtonColors(
                         containerColor = MaterialTheme.colorScheme.primary,

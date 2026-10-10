@@ -28,6 +28,17 @@ import java.io.IOException
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import de.coldtea.verborum.bibliotheca.imported.domain.ImportedDictionaryService
+import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.api.UpdateDictionaryApiUseCase
+import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.local.UpdateDictionarySharingUseCase
+import de.coldtea.verborum.core.profile.domain.ProfileService
+import de.coldtea.verborum.core.profile.ui.profile.model.ProfileUi
+import kotlinx.coroutines.flow.MutableStateFlow
+import de.coldtea.verborum.bibliotheca.dictionary.domain.model.SharingChange
+import de.coldtea.verborum.bibliotheca.dictionary.domain.model.SharingState
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.ResponseBody.Companion.toResponseBody
+import retrofit2.Response
+import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class DictionaryServiceTest : BaseTest() {
@@ -61,6 +72,18 @@ class DictionaryServiceTest : BaseTest() {
     @MockK
     private lateinit var importedDictionaryService: ImportedDictionaryService
 
+    @MockK
+    private lateinit var updateDictionaryApiUseCase: UpdateDictionaryApiUseCase
+
+    // invoke returns Unit — covered by relaxUnitFun.
+    @MockK
+    private lateinit var updateDictionarySharingUseCase: UpdateDictionarySharingUseCase
+
+    @MockK
+    private lateinit var profileService: ProfileService
+
+    private val profile = MutableStateFlow<ProfileUi?>(null)
+
     private lateinit var dictionaryService: DictionaryService
 
     override fun setUp() {
@@ -69,6 +92,9 @@ class DictionaryServiceTest : BaseTest() {
         // No downloads unless a test says otherwise.
         every { importedDictionaryService.observeDictionaries() } returns flowOf(emptyList())
         every { importedDictionaryService.observeDictionary(any()) } returns flowOf(null)
+        every { profileService.observeProfile() } returns profile
+        // No own dictionaries unless a test says otherwise (createDictionary reads the sharing state).
+        every { observeAllDictionariesUseCase.invoke() } returns flowOf(emptyList())
         dictionaryService = DictionaryService(
             observeAllDictionariesUseCase = observeAllDictionariesUseCase,
             observeDictionaryUseCase = observeDictionaryUseCase,
@@ -78,6 +104,9 @@ class DictionaryServiceTest : BaseTest() {
             deleteDictionaryRemotelyUseCase = deleteDictionaryRemotelyUseCase,
             getActiveUserUseCase = getActiveUserUseCase,
             importedDictionaryService = importedDictionaryService,
+            updateDictionaryApiUseCase = updateDictionaryApiUseCase,
+            updateDictionarySharingUseCase = updateDictionarySharingUseCase,
+            profileService = profileService,
         )
     }
 
@@ -253,6 +282,77 @@ class DictionaryServiceTest : BaseTest() {
         assertFalse(saved.isSynced)
     }
 
+    // endregion
+
+    // region sharing
+    private fun member() = ProfileUi(email = "a@b.c", displayName = "Anna", isMarketplaceMember = true)
+
+    @Test
+    fun `a member's first dictionary is created shared`() = runTest {
+        profile.value = member()
+        val saved = slot<Dictionary>()
+        coEvery { saveDictionaryUseCase.invoke(capture(saved)) } returns "new"
+
+        dictionaryService.createDictionary(name = "First", fromLang = "de", toLang = "en")
+
+        assertTrue(saved.captured.isPublic)
+    }
+
+    @Test
+    fun `a member who already shares one creates the next private`() = runTest {
+        profile.value = member()
+        every { observeAllDictionariesUseCase.invoke() } returns flowOf(listOf(testDictionary(dictionaryId = "s", isPublic = true)))
+        val saved = slot<Dictionary>()
+        coEvery { saveDictionaryUseCase.invoke(capture(saved)) } returns "new"
+
+        dictionaryService.createDictionary(name = "Second", fromLang = "de", toLang = "en")
+
+        assertFalse(saved.captured.isPublic)
+    }
+
+    @Test
+    fun `the sharing state names the member's shared dictionaries`() = runTest {
+        profile.value = member()
+        every { observeAllDictionariesUseCase.invoke() } returns flowOf(
+            listOf(testDictionary(dictionaryId = "s", isPublic = true), testDictionary(dictionaryId = "p", isPublic = false))
+        )
+
+        val state = dictionaryService.observeSharingState().first()
+
+        assertEquals(SharingState(isMember = true, sharedDictionaryIds = setOf("s")), state)
+        assertTrue(state.isLastShared("s"))
+    }
+
+    @Test
+    fun `setShared updates the local row only once the server agrees`() = runTest {
+        coEvery { getDictionaryUseCase.invoke("d1") } returns testDictionary(dictionaryId = "d1", isPublic = true)
+        coEvery { updateDictionaryApiUseCase.invoke(any()) } returns Response.success(Unit)
+
+        assertEquals(SharingChange.UPDATED, dictionaryService.setShared("d1", isPublic = false))
+        coVerify { updateDictionaryApiUseCase.invoke(match { !it.isPublic && it.dictionaryId == "d1" }) }
+        coVerify(exactly = 1) { updateDictionarySharingUseCase.invoke("d1", false) }
+    }
+
+    @Test
+    fun `setShared reports the keep-one-shared refusal and changes nothing`() = runTest {
+        coEvery { getDictionaryUseCase.invoke("d1") } returns testDictionary(dictionaryId = "d1", isPublic = true)
+        coEvery { updateDictionaryApiUseCase.invoke(any()) } returns Response.error(
+            400,
+            "{\"error\":\"SharingRequiredException\"}".toResponseBody("application/json".toMediaType()),
+        )
+
+        assertEquals(SharingChange.LAST_SHARED, dictionaryService.setShared("d1", isPublic = false))
+        coVerify(exactly = 0) { updateDictionarySharingUseCase.invoke(any(), any()) }
+    }
+
+    @Test
+    fun `setShared offline fails without touching the local row`() = runTest {
+        coEvery { getDictionaryUseCase.invoke("d1") } returns testDictionary(dictionaryId = "d1")
+        coEvery { updateDictionaryApiUseCase.invoke(any()) } throws IOException("offline")
+
+        assertEquals(SharingChange.FAILED, dictionaryService.setShared("d1", isPublic = true))
+        coVerify(exactly = 0) { updateDictionarySharingUseCase.invoke(any(), any()) }
+    }
     // endregion
 
     // region deleteDictionary

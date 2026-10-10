@@ -134,4 +134,13 @@
     <string name="unsubscribeDialogMessage">練習の進捗とともに Bibliotheca から削除されます。Forum から再度ダウンロードできます。</string>
     <string name="errorUnsubscribeFailed">登録を解除できませんでした。接続を確認して、もう一度お試しください。</string>
     <string name="errorDeleteLastShared">これは最後の共有辞書です。先に別の辞書を共有するか、Forum を退会してすべて非公開にしてください。</string>
+
+    <string name="dictionarySharingTitle">Forum で共有中</string>
+    <string name="dictionarySharingOn">Forum のメンバーが閲覧・ダウンロードできます</string>
+    <string name="dictionarySharingOff">自分だけが表示できます</string>
+    <string name="dictionarySharingLastShared">最後の共有辞書です。Forum に参加している間は 1 つ共有したままにする必要があります</string>
+    <string name="unshareDialogTitle">「%1$s」の共有を停止しますか？</string>
+    <string name="unshareDialogMessage">Forum から削除され、ダウンロードした人はアクセスできなくなります。</string>
+    <string name="unshareDialogConfirm">共有を停止</string>
+    <string name="errorSharingFailed">共有を変更できませんでした。接続を確認して、もう一度お試しください。</string>
 </resources>

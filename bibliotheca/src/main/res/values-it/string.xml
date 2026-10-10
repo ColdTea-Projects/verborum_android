@@ -135,4 +135,13 @@
     <string name="unsubscribeDialogMessage">Verrà rimosso dalla tua Bibliotheca insieme ai tuoi progressi. Puoi scaricarlo di nuovo dal Forum.</string>
     <string name="errorUnsubscribeFailed">Impossibile annullare l’iscrizione. Controlla la connessione e riprova.</string>
     <string name="errorDeleteLastShared">È il tuo ultimo dizionario condiviso. Condividine prima un altro o lascia il Forum per renderli tutti privati.</string>
+
+    <string name="dictionarySharingTitle">Condiviso nel Forum</string>
+    <string name="dictionarySharingOn">I membri del Forum possono vederlo e scaricarlo</string>
+    <string name="dictionarySharingOff">Solo tu puoi vederlo</string>
+    <string name="dictionarySharingLastShared">Il tuo ultimo dizionario condiviso: finché sei nel Forum, uno deve restare condiviso</string>
+    <string name="unshareDialogTitle">Smettere di condividere «%1$s»?</string>
+    <string name="unshareDialogMessage">Lascia il Forum e chi l’ha scaricato perde l’accesso.</string>
+    <string name="unshareDialogConfirm">Smetti di condividere</string>
+    <string name="errorSharingFailed">Impossibile modificare la condivisione. Controlla la connessione e riprova.</string>
 </resources>

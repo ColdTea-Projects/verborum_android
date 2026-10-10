@@ -31,13 +31,16 @@ class ProfileServiceTest : BaseTest() {
     @MockK
     private lateinit var getSessionIdentityUseCase: GetSessionIdentityUseCase
 
+    @MockK
+    private lateinit var membershipHook: MarketplaceMembershipHook
+
     private lateinit var service: ProfileService
 
     override fun setUp() {
         super.setUp()
         every { getSessionIdentityUseCase.invoke() } returns SessionIdentity(SUBJECT, EMAIL, "Ada")
         coEvery { ensureUserProfileUseCase.invoke(SUBJECT, EMAIL, "Ada") } returns testUserProfile()
-        service = ProfileService(ensureUserProfileUseCase, updateProfileInfoApiUseCase, getSessionIdentityUseCase)
+        service = ProfileService(ensureUserProfileUseCase, updateProfileInfoApiUseCase, getSessionIdentityUseCase, setOf(membershipHook))
     }
 
     // region refresh & observe
@@ -100,6 +103,29 @@ class ProfileServiceTest : BaseTest() {
         service.updateProfile(displayName = "Anna Bauer", marketplaceAgreementAccepted = null)
 
         coVerify { updateProfileInfoApiUseCase.invoke(ProfileInfoRequest(displayName = "Anna Bauer")) }
+    }
+    // endregion
+
+    // region membership hooks
+    @Test
+    fun `joining or leaving notifies the membership hooks`() = runTest {
+        service.updateProfile(displayName = null, marketplaceAgreementAccepted = true)
+
+        coVerify(exactly = 1) { membershipHook.onMembershipChanged(false) }
+    }
+
+    @Test
+    fun `a rename alone notifies nobody`() = runTest {
+        service.updateProfile(displayName = "Anna Bauer", marketplaceAgreementAccepted = null)
+
+        coVerify(exactly = 0) { membershipHook.onMembershipChanged(any()) }
+    }
+
+    @Test
+    fun `a failing hook does not fail the profile update`() = runTest {
+        coEvery { membershipHook.onMembershipChanged(any()) } throws RuntimeException("scheduler")
+
+        service.updateProfile(displayName = null, marketplaceAgreementAccepted = false)
     }
     // endregion
 

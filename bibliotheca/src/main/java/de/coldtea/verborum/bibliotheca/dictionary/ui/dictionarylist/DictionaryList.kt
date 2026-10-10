@@ -112,7 +112,9 @@ fun DictionaryListScreen(
             },
             onDelete = {
                 optionsFor = null
-                confirmDeleteFor = dictionary
+                // A member's last shared dictionary must stay while they are in the Forum.
+                if (viewModel.sharingState.value.isLastShared(dictionary.dictionaryId)) viewModel.explainLastShared()
+                else confirmDeleteFor = dictionary
             },
             onUnsubscribe = {
                 optionsFor = null

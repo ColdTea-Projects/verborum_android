@@ -7,6 +7,7 @@ import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.api.SyncDiction
 import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.local.DeleteDictionaryUseCase
 import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.local.GetDictionariesByUserUseCase
 import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.local.SaveDictionaryUseCase
+import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.local.UpdateDictionarySharingUseCase
 import de.coldtea.verborum.bibliotheca.word.data.api.WordApi
 import de.coldtea.verborum.bibliotheca.word.domain.usecase.local.DeleteWordUseCase
 import de.coldtea.verborum.bibliotheca.word.domain.usecase.local.GetWordsByDictionaryUseCase
@@ -20,7 +21,8 @@ import javax.inject.Inject
  * reconcile is scoped to the signed-in user — the remote list covers only their dictionaries, so
  * every local comparison must be drawn from the same owner:
  * - remote rows are upserted, except where the local copy has unsynced changes or a deletion
- *   tombstone (local wins until [UploadPendingChangesUseCase] pushes it),
+ *   tombstone (local wins until [UploadPendingChangesUseCase] pushes it) — sharing (`isPublic`)
+ *   excepted, which always comes from the server,
  * - local rows are deleted only when they are synced yet absent remotely (deleted on the server),
  * - tombstoned local rows absent remotely are hard-deleted (the server no longer has them),
  * - a null API response means "no information" and leaves the local state untouched,
@@ -38,6 +40,7 @@ class SyncUserDictionariesUseCase @Inject constructor(
     private val deleteWordUseCase: DeleteWordUseCase,
     private val getActiveUserUseCase: GetActiveUserUseCase,
     private val syncDictionaryTagsUseCase: SyncDictionaryTagsUseCase,
+    private val updateDictionarySharingUseCase: UpdateDictionarySharingUseCase,
 ) {
 
     suspend fun invoke() = withContext(Dispatchers.IO) {
@@ -96,6 +99,13 @@ class SyncUserDictionariesUseCase @Inject constructor(
                 // deletes and re-inserts the row, invalidating Room's observers for no reason.
                 if (merged != existing) {
                     saveDictionaryUseCase.invoke(merged)
+                }
+            } else {
+                // Local edits win — except sharing, which only the server decides (joining or leaving
+                // the Forum flips it there). The upload never sends it for an existing dictionary.
+                val existing = localDictionaryById[dictionaryResponse.dictionaryId]
+                if (existing != null && existing.isPublic != dictionaryResponse.isPublic) {
+                    updateDictionarySharingUseCase.invoke(dictionaryResponse.dictionaryId, dictionaryResponse.isPublic)
                 }
             }
             syncWords(dictionaryResponse.dictionaryId)

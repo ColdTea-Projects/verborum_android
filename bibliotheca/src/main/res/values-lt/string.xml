@@ -137,4 +137,13 @@
     <string name="unsubscribeDialogMessage">Jis bus pašalintas iš jūsų Bibliotheca kartu su mokymosi pažanga. Galite vėl jį atsisiųsti iš Forum.</string>
     <string name="errorUnsubscribeFailed">Nepavyko atsisakyti prenumeratos. Patikrinkite ryšį ir bandykite dar kartą.</string>
     <string name="errorDeleteLastShared">Tai paskutinis jūsų bendrinamas žodynas. Pirmiausia pasidalykite kitu arba palikite Forum, kad visi taptų privatūs.</string>
+
+    <string name="dictionarySharingTitle">Bendrinamas Forum</string>
+    <string name="dictionarySharingOn">Forum nariai gali jį matyti ir atsisiųsti</string>
+    <string name="dictionarySharingOff">Matote tik jūs</string>
+    <string name="dictionarySharingLastShared">Paskutinis jūsų bendrinamas žodynas — kol esate Forum, vienas turi likti bendrinamas</string>
+    <string name="unshareDialogTitle">Nebebendrinti „%1$s“?</string>
+    <string name="unshareDialogMessage">Jis dings iš Forum, o jį atsisiuntę praras prieigą.</string>
+    <string name="unshareDialogConfirm">Nebebendrinti</string>
+    <string name="errorSharingFailed">Nepavyko pakeisti bendrinimo. Patikrinkite ryšį ir bandykite dar kartą.</string>
 </resources>

@@ -135,4 +135,13 @@
     <string name="unsubscribeDialogMessage">این واژه‌نامه همراه با پیشرفت تمرین شما از Bibliotheca حذف می‌شود. می‌توانید دوباره آن را از Forum دانلود کنید.</string>
     <string name="errorUnsubscribeFailed">لغو اشتراک ممکن نشد. اتصال خود را بررسی کنید و دوباره تلاش کنید.</string>
     <string name="errorDeleteLastShared">این آخرین واژه‌نامهٔ اشتراکی شماست. ابتدا یکی دیگر را به اشتراک بگذارید، یا از Forum خارج شوید تا همه خصوصی شوند.</string>
+
+    <string name="dictionarySharingTitle">اشتراک‌گذاری‌شده در Forum</string>
+    <string name="dictionarySharingOn">اعضای Forum می‌توانند آن را ببینند و دانلود کنند</string>
+    <string name="dictionarySharingOff">فقط شما می‌توانید آن را ببینید</string>
+    <string name="dictionarySharingLastShared">آخرین واژه‌نامهٔ اشتراکی شما — تا وقتی در Forum هستید، یکی باید اشتراکی بماند</string>
+    <string name="unshareDialogTitle">اشتراک‌گذاری «%1$s» متوقف شود؟</string>
+    <string name="unshareDialogMessage">از Forum خارج می‌شود و کسانی که آن را دانلود کرده‌اند دسترسی خود را از دست می‌دهند.</string>
+    <string name="unshareDialogConfirm">توقف اشتراک‌گذاری</string>
+    <string name="errorSharingFailed">تغییر اشتراک‌گذاری ممکن نشد. اتصال خود را بررسی کنید و دوباره تلاش کنید.</string>
 </resources>

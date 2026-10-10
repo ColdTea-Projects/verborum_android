@@ -135,4 +135,13 @@
     <string name="unsubscribeDialogMessage">Es wird samt deinem Lernfortschritt aus deiner Bibliotheca entfernt. Du kannst es im Forum erneut herunterladen.</string>
     <string name="errorUnsubscribeFailed">Abo konnte nicht beendet werden. Prüfe deine Verbindung und versuche es erneut.</string>
     <string name="errorDeleteLastShared">Das ist dein letztes geteiltes Wörterbuch. Teile zuerst ein anderes oder verlasse das Forum, um alle privat zu machen.</string>
+
+    <string name="dictionarySharingTitle">Im Forum geteilt</string>
+    <string name="dictionarySharingOn">Forum-Mitglieder können es sehen und herunterladen</string>
+    <string name="dictionarySharingOff">Nur du kannst es sehen</string>
+    <string name="dictionarySharingLastShared">Dein letztes geteiltes Wörterbuch – solange du im Forum bist, muss eines geteilt bleiben</string>
+    <string name="unshareDialogTitle">„%1$s“ nicht mehr teilen?</string>
+    <string name="unshareDialogMessage">Es verschwindet aus dem Forum, und wer es heruntergeladen hat, verliert den Zugriff.</string>
+    <string name="unshareDialogConfirm">Nicht mehr teilen</string>
+    <string name="errorSharingFailed">Teilen konnte nicht geändert werden. Prüfe deine Verbindung und versuche es erneut.</string>
 </resources>

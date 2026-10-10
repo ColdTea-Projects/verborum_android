@@ -106,7 +106,28 @@ class SyncScheduler @Inject constructor(
         )
     }
 
+    /**
+     * A full sync a few seconds from now — after joining or leaving the Forum, once the server has
+     * flipped every dictionary's sharing (it does so by event, within about a second). A newer
+     * request replaces a pending one.
+     */
+    fun requestSyncAfterMembershipChange() {
+        val request = OneTimeWorkRequestBuilder<SyncWorker>()
+            .setConstraints(constraints)
+            .setInitialDelay(MEMBERSHIP_SYNC_DELAY_SECONDS, TimeUnit.SECONDS)
+            .setInputData(workDataOf(SyncWorker.KEY_UPLOAD_ONLY to false))
+            .build()
+
+        WorkManager.getInstance(context).enqueueUniqueWork(
+            MEMBERSHIP_WORK_NAME,
+            ExistingWorkPolicy.REPLACE,
+            request,
+        )
+    }
+
     private companion object {
+        const val MEMBERSHIP_WORK_NAME = "verborum-membership-sync"
+        const val MEMBERSHIP_SYNC_DELAY_SECONDS = 3L
         const val PERIODIC_WORK_NAME = "verborum-periodic-sync"
         const val IMMEDIATE_WORK_NAME = "verborum-immediate-sync"
         const val PERIODIC_INTERVAL_HOURS = 6L

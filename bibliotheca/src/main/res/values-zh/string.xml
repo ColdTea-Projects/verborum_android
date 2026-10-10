@@ -134,4 +134,13 @@
     <string name="unsubscribeDialogMessage">它将连同你的练习进度一起从 Bibliotheca 中移除。你可以在 Forum 中重新下载。</string>
     <string name="errorUnsubscribeFailed">无法取消订阅。请检查网络连接后重试。</string>
     <string name="errorDeleteLastShared">这是你最后一本共享的词典。请先共享另一本，或退出 Forum 将所有词典设为私密。</string>
+
+    <string name="dictionarySharingTitle">在 Forum 中共享</string>
+    <string name="dictionarySharingOn">Forum 成员可以查看和下载</string>
+    <string name="dictionarySharingOff">仅你可见</string>
+    <string name="dictionarySharingLastShared">你最后一本共享词典——在 Forum 期间必须保留一本共享</string>
+    <string name="unshareDialogTitle">要停止共享“%1$s”吗？</string>
+    <string name="unshareDialogMessage">它将离开 Forum，已下载的人将无法再访问。</string>
+    <string name="unshareDialogConfirm">停止共享</string>
+    <string name="errorSharingFailed">无法更改共享设置。请检查网络连接后重试。</string>
 </resources>

@@ -135,4 +135,13 @@
     <string name="unsubscribeDialogMessage">It will be removed from your Bibliotheca, along with your practice progress on it. You can download it again from the Forum.</string>
     <string name="errorUnsubscribeFailed">Couldn’t unsubscribe. Check your connection and try again.</string>
     <string name="errorDeleteLastShared">This is your last shared dictionary. Share another one first, or leave the Forum to make all of them private.</string>
+
+    <string name="dictionarySharingTitle">Shared in the Forum</string>
+    <string name="dictionarySharingOn">Forum members can see and download it</string>
+    <string name="dictionarySharingOff">Only you can see it</string>
+    <string name="dictionarySharingLastShared">Your last shared dictionary — while you’re in the Forum, one must stay shared</string>
+    <string name="unshareDialogTitle">Stop sharing “%1$s”?</string>
+    <string name="unshareDialogMessage">It leaves the Forum, and people who downloaded it lose access.</string>
+    <string name="unshareDialogConfirm">Stop sharing</string>
+    <string name="errorSharingFailed">Couldn’t change sharing. Check your connection and try again.</string>
 </resources>

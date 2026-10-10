@@ -15,6 +15,10 @@ import de.coldtea.verborum.core.ui.BaseViewModel
 import de.coldtea.verborum.core.ui.UiText
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.stateIn
+import de.coldtea.verborum.bibliotheca.dictionary.domain.model.SharingState
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
@@ -52,10 +56,22 @@ class DictionaryListViewModel @Inject constructor(
     private val _sortOrder = MutableStateFlow(DictionarySort.NEWEST)
     val sortOrder = _sortOrder.asStateFlow()
 
+    /** Whether the user is a Forum member and which dictionaries are shared — for the delete rule. */
+    val sharingState: StateFlow<SharingState> = dictionaryService.observeSharingState()
+        .stateIn(viewModelScope, SharingStarted.Eagerly, SharingState())
+
     init {
         observeDictionaries()
         viewModelScope.launch {
             syncService.syncDictionaries()
+        }
+        viewModelScope.launch(exceptionHandler) { dictionaryService.refreshMembership() }
+    }
+
+    /** Why the member's last shared dictionary cannot be deleted while they stay in the Forum. */
+    fun explainLastShared() {
+        viewModelScope.launch(exceptionHandler) {
+            _snackbarMessages.emit(UiText.Resource(ResStrings.errorDeleteLastShared))
         }
     }
 

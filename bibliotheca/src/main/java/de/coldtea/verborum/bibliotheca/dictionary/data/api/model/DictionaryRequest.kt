@@ -15,8 +15,10 @@ data class DictionaryRequest(
     val userId: String,
     @SerialName("name")
     val name: String,
+    // Null = "unchanged" (left out of the body): joining or leaving the Forum flips every dictionary
+    // on the server, and a stale local copy must not undo that. Required for a new dictionary.
     @SerialName("isPublic")
-    val isPublic: Boolean,
+    val isPublic: Boolean? = null,
     @SerialName("fromLang")
     val fromLang: String,
     @SerialName("toLang")

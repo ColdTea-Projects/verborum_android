@@ -137,4 +137,13 @@
     <string name="unsubscribeDialogMessage">Zostanie usunięty z Twojej Bibliotheca wraz z postępami w nauce. Możesz pobrać go ponownie z Forum.</string>
     <string name="errorUnsubscribeFailed">Nie udało się anulować subskrypcji. Sprawdź połączenie i spróbuj ponownie.</string>
     <string name="errorDeleteLastShared">To Twój ostatni udostępniony słownik. Najpierw udostępnij inny albo opuść Forum, aby wszystkie stały się prywatne.</string>
+
+    <string name="dictionarySharingTitle">Udostępniony na Forum</string>
+    <string name="dictionarySharingOn">Członkowie Forum mogą go zobaczyć i pobrać</string>
+    <string name="dictionarySharingOff">Tylko Ty go widzisz</string>
+    <string name="dictionarySharingLastShared">Twój ostatni udostępniony słownik — dopóki jesteś na Forum, jeden musi pozostać udostępniony</string>
+    <string name="unshareDialogTitle">Przestać udostępniać „%1$s”?</string>
+    <string name="unshareDialogMessage">Zniknie z Forum, a osoby, które go pobrały, stracą dostęp.</string>
+    <string name="unshareDialogConfirm">Przestań udostępniać</string>
+    <string name="errorSharingFailed">Nie udało się zmienić udostępniania. Sprawdź połączenie i spróbuj ponownie.</string>
 </resources>

@@ -34,7 +34,8 @@ data class Dictionary(
         tags = DictionaryEntity.encodeTags(tags),
     )
 
-    fun convertToRequest() = DictionaryRequest(
+    /** [isPublic] defaults to this dictionary's own; pass null to leave the server's value alone. */
+    fun convertToRequest(isPublic: Boolean? = this.isPublic) = DictionaryRequest(
         dictionaryId = dictionaryId,
         userId = userId,
         name = name,

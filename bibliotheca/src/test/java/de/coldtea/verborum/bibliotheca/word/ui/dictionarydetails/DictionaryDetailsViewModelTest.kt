@@ -20,6 +20,10 @@ import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import io.mockk.coEvery
 import de.coldtea.verborum.bibliotheca.dictionary.domain.model.DictionaryDeletion
+import de.coldtea.verborum.bibliotheca.dictionary.domain.model.SharingState
+import de.coldtea.verborum.bibliotheca.dictionary.domain.model.SharingChange
+import kotlinx.coroutines.flow.MutableStateFlow
+import org.junit.Assert.assertNull
 import org.junit.Test
 
 class DictionaryDetailsViewModelTest : BaseTest() {
@@ -32,8 +36,12 @@ class DictionaryDetailsViewModelTest : BaseTest() {
 
     private lateinit var viewModel: DictionaryDetailsViewModel
 
+    private val sharing = MutableStateFlow(SharingState())
+
     override fun setUp() {
         super.setUp()
+        // Not a Forum member unless a test says otherwise.
+        every { dictionaryService.observeSharingState() } returns sharing
         viewModel = DictionaryDetailsViewModel(dictionaryService, wordService)
         // Distractor pool for the test gate; tests that care about it override this stub.
         every { wordService.observeWordsInLanguagePair(any()) } returns flowOf(emptyList())
@@ -270,6 +278,59 @@ class DictionaryDetailsViewModelTest : BaseTest() {
         viewModel.unsubscribe()
 
         assertTrue(viewModel.dictionaryDetailState.first() is DictionaryDetailState.Success)
+    }
+    // endregion
+
+    // region sharing
+    private suspend fun successState() = viewModel.dictionaryDetailState.first() as DictionaryDetailState.Success
+
+    @Test
+    fun `a non-member sees no sharing switch`() = runTest {
+        initSuccess("dict-1")
+
+        assertNull(successState().sharing)
+    }
+
+    @Test
+    fun `a member's last shared dictionary is locked on`() = runTest {
+        every { dictionaryService.observeDictionary("dict-1") } returns
+            flowOf(testDictionaryUi(dictionaryId = "dict-1", isPublic = true))
+        every { wordService.observeWordsByDictionary("dict-1") } returns flowOf(emptyList())
+        sharing.value = SharingState(isMember = true, sharedDictionaryIds = setOf("dict-1"))
+        viewModel.init("dict-1")
+
+        val switch = successState().sharing!!
+        assertTrue(switch.isShared && switch.isLastShared)
+        assertFalse(switch.canToggle)
+
+        viewModel.setShared(false)
+        coVerify(exactly = 0) { dictionaryService.setShared(any(), any()) }
+    }
+
+    @Test
+    fun `a member can unshare one of several shared dictionaries`() = runTest {
+        every { dictionaryService.observeDictionary("dict-1") } returns
+            flowOf(testDictionaryUi(dictionaryId = "dict-1", isPublic = true))
+        every { wordService.observeWordsByDictionary("dict-1") } returns flowOf(emptyList())
+        sharing.value = SharingState(isMember = true, sharedDictionaryIds = setOf("dict-1", "dict-2"))
+        coEvery { dictionaryService.setShared("dict-1", false) } returns SharingChange.UPDATED
+        viewModel.init("dict-1")
+
+        viewModel.setShared(false)
+
+        coVerify(exactly = 1) { dictionaryService.setShared("dict-1", false) }
+        assertFalse(successState().sharing!!.isUpdating)
+    }
+
+    @Test
+    fun `a downloaded dictionary has no sharing switch`() = runTest {
+        every { dictionaryService.observeDictionary("dl") } returns
+            flowOf(testDictionaryUi(dictionaryId = "dl").copy(isImported = true))
+        every { wordService.observeWordsByDictionary("dl") } returns flowOf(emptyList())
+        sharing.value = SharingState(isMember = true, sharedDictionaryIds = setOf("x"))
+        viewModel.init("dl")
+
+        assertNull(successState().sharing)
     }
     // endregion
 }

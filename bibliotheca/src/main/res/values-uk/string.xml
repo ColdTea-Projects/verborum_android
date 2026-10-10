@@ -137,4 +137,13 @@
     <string name="unsubscribeDialogMessage">Його буде видалено з вашої Bibliotheca разом із прогресом. Ви зможете знову завантажити його у Forum.</string>
     <string name="errorUnsubscribeFailed">Не вдалося відписатися. Перевірте з’єднання та спробуйте ще раз.</string>
     <string name="errorDeleteLastShared">Це ваш останній спільний словник. Спершу поділіться іншим або залиште Forum, щоб зробити всі словники приватними.</string>
+
+    <string name="dictionarySharingTitle">Спільний у Forum</string>
+    <string name="dictionarySharingOn">Учасники Forum можуть бачити й завантажувати його</string>
+    <string name="dictionarySharingOff">Бачите лише ви</string>
+    <string name="dictionarySharingLastShared">Ваш останній спільний словник — поки ви у Forum, один має лишатися спільним</string>
+    <string name="unshareDialogTitle">Припинити ділитися «%1$s»?</string>
+    <string name="unshareDialogMessage">Він зникне з Forum, а ті, хто його завантажив, втратять доступ.</string>
+    <string name="unshareDialogConfirm">Припинити ділитися</string>
+    <string name="errorSharingFailed">Не вдалося змінити спільний доступ. Перевірте з’єднання та спробуйте ще раз.</string>
 </resources>

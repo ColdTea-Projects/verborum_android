@@ -19,5 +19,7 @@ sealed class DictionaryDetailState{
         val wordsUi: List<WordUi>,
         val canSelfPractice: Boolean = false,
         val canTest: Boolean = false,
+        // Only for a Forum member's own dictionary; null otherwise (a download, or not a member).
+        val sharing: DictionarySharingUi? = null,
     ) : DictionaryDetailState()
 }

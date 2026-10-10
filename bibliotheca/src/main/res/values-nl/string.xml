@@ -135,4 +135,13 @@
     <string name="unsubscribeDialogMessage">Het wordt uit je Bibliotheca verwijderd, samen met je oefenvoortgang. Je kunt het opnieuw downloaden via het Forum.</string>
     <string name="errorUnsubscribeFailed">Afmelden is mislukt. Controleer je verbinding en probeer het opnieuw.</string>
     <string name="errorDeleteLastShared">Dit is je laatste gedeelde woordenboek. Deel eerst een ander, of verlaat het Forum om ze allemaal privé te maken.</string>
+
+    <string name="dictionarySharingTitle">Gedeeld in het Forum</string>
+    <string name="dictionarySharingOn">Forumleden kunnen het zien en downloaden</string>
+    <string name="dictionarySharingOff">Alleen jij kunt het zien</string>
+    <string name="dictionarySharingLastShared">Je laatste gedeelde woordenboek — zolang je in het Forum zit, moet er één gedeeld blijven</string>
+    <string name="unshareDialogTitle">Stoppen met delen van ‘%1$s’?</string>
+    <string name="unshareDialogMessage">Het verdwijnt uit het Forum en wie het heeft gedownload, verliest de toegang.</string>
+    <string name="unshareDialogConfirm">Stoppen met delen</string>
+    <string name="errorSharingFailed">Delen kon niet worden gewijzigd. Controleer je verbinding en probeer het opnieuw.</string>
 </resources>

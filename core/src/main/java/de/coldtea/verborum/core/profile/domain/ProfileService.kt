@@ -7,6 +7,7 @@ import de.coldtea.verborum.core.profile.domain.usecase.api.EnsureUserProfileUseC
 import de.coldtea.verborum.core.profile.domain.usecase.local.GetSessionIdentityUseCase
 import de.coldtea.verborum.core.profile.domain.usecase.api.UpdateProfileInfoApiUseCase
 import de.coldtea.verborum.core.profile.ui.profile.model.ProfileUi
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -24,6 +25,7 @@ class ProfileService @Inject constructor(
     private val ensureUserProfileUseCase: EnsureUserProfileUseCase,
     private val updateProfileInfoApiUseCase: UpdateProfileInfoApiUseCase,
     private val getSessionIdentityUseCase: GetSessionIdentityUseCase,
+    private val membershipHooks: Set<@JvmSuppressWildcards MarketplaceMembershipHook>,
 ) {
     private val profile = MutableStateFlow<UserProfile?>(null)
 
@@ -67,7 +69,22 @@ class ProfileService @Inject constructor(
                 marketplaceAgreementVersion = MarketplaceTerms.VERSION.takeIf { marketplaceAgreementAccepted == true },
             )
         )
-        return refreshProfile()
+        val updated = refreshProfile()
+        if (marketplaceAgreementAccepted != null) notifyMembershipChanged(updated.isMarketplaceMember)
+        return updated
+    }
+
+    /** Each hook is isolated: the profile update already succeeded, so none may fail it. */
+    private suspend fun notifyMembershipChanged(isMember: Boolean) {
+        membershipHooks.forEach { hook ->
+            try {
+                hook.onMembershipChanged(isMember)
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                // Best-effort: the next regular sync re-reads the dictionaries anyway.
+            }
+        }
     }
 
     /** Forgets the profile — the next account on this device must never see it. */

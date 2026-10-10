@@ -135,4 +135,13 @@
     <string name="unsubscribeDialogMessage">Θα αφαιρεθεί από τη Bibliotheca σας μαζί με την πρόοδο εξάσκησης. Μπορείτε να το κατεβάσετε ξανά από το Forum.</string>
     <string name="errorUnsubscribeFailed">Δεν ήταν δυνατή η κατάργηση εγγραφής. Ελέγξτε τη σύνδεση και δοκιμάστε ξανά.</string>
     <string name="errorDeleteLastShared">Αυτό είναι το τελευταίο κοινόχρηστο λεξικό σας. Μοιραστείτε πρώτα ένα άλλο ή αποχωρήστε από το Forum για να γίνουν όλα ιδιωτικά.</string>
+
+    <string name="dictionarySharingTitle">Κοινόχρηστο στο Forum</string>
+    <string name="dictionarySharingOn">Τα μέλη του Forum μπορούν να το δουν και να το κατεβάσουν</string>
+    <string name="dictionarySharingOff">Μόνο εσείς μπορείτε να το δείτε</string>
+    <string name="dictionarySharingLastShared">Το τελευταίο κοινόχρηστο λεξικό σας — όσο είστε στο Forum, ένα πρέπει να μένει κοινόχρηστο</string>
+    <string name="unshareDialogTitle">Διακοπή κοινής χρήσης του «%1$s»;</string>
+    <string name="unshareDialogMessage">Θα αφαιρεθεί από το Forum και όσοι το κατέβασαν θα χάσουν την πρόσβαση.</string>
+    <string name="unshareDialogConfirm">Διακοπή κοινής χρήσης</string>
+    <string name="errorSharingFailed">Δεν ήταν δυνατή η αλλαγή κοινής χρήσης. Ελέγξτε τη σύνδεση και δοκιμάστε ξανά.</string>
 </resources>

@@ -135,4 +135,13 @@
     <string name="unsubscribeDialogMessage">Se quitará de tu Bibliotheca junto con tu progreso de práctica. Puedes volver a descargarlo desde el Forum.</string>
     <string name="errorUnsubscribeFailed">No se pudo cancelar la suscripción. Revisa tu conexión e inténtalo de nuevo.</string>
     <string name="errorDeleteLastShared">Es tu último diccionario compartido. Comparte otro primero o sal del Forum para que todos sean privados.</string>
+
+    <string name="dictionarySharingTitle">Compartido en el Forum</string>
+    <string name="dictionarySharingOn">Los miembros del Forum pueden verlo y descargarlo</string>
+    <string name="dictionarySharingOff">Solo tú puedes verlo</string>
+    <string name="dictionarySharingLastShared">Tu último diccionario compartido: mientras estés en el Forum, uno debe seguir compartido</string>
+    <string name="unshareDialogTitle">¿Dejar de compartir «%1$s»?</string>
+    <string name="unshareDialogMessage">Saldrá del Forum y quienes lo descargaron perderán el acceso.</string>
+    <string name="unshareDialogConfirm">Dejar de compartir</string>
+    <string name="errorSharingFailed">No se pudo cambiar el uso compartido. Revisa tu conexión e inténtalo de nuevo.</string>
 </resources>

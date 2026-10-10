@@ -6,11 +6,11 @@ import de.coldtea.verborum.bibliotheca.testDictionary
 import de.coldtea.verborum.core.BaseTest
 import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
-import io.mockk.mockk
-import io.mockk.slot
 import kotlinx.coroutines.test.runTest
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.ResponseBody.Companion.toResponseBody
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertSame
+import org.junit.Assert.assertTrue
 import org.junit.Test
 import retrofit2.Response
 
@@ -21,47 +21,53 @@ class SaveDictionaryApiUseCaseTest : BaseTest() {
 
     private lateinit var useCase: SaveDictionaryApiUseCase
 
+    private val sent = mutableListOf<DictionaryRequest>()
+
     override fun setUp() {
         super.setUp()
         useCase = SaveDictionaryApiUseCase(dictionaryApi)
     }
 
-    // region invoke
+    private fun refused(error: String): Response<Unit> =
+        Response.error(400, """{"status":400,"error":"$error"}""".toResponseBody("application/json".toMediaType()))
 
     @Test
-    fun `invoke converts the dictionary to a request and posts it`() = runTest {
-        val dictionary = testDictionary(
-            dictionaryId = "dict-42",
-            userId = "user-7",
-            name = "Spanish Food",
-            isPublic = true,
-            fromLang = "es",
-            toLang = "en",
+    fun `an existing dictionary goes up without its sharing state`() = runTest {
+        coEvery { dictionaryApi.createDictionary(capture(sent)) } returns Response.success(Unit)
+
+        assertTrue(useCase.invoke(testDictionary(isPublic = false)).isSuccessful)
+
+        assertEquals(listOf<Boolean?>(null), sent.map { it.isPublic })
+    }
+
+    @Test
+    fun `a new dictionary states the local choice when the server asks for it`() = runTest {
+        coEvery { dictionaryApi.createDictionary(capture(sent)) } returnsMany
+            listOf(refused("InvalidRequestException"), Response.success(Unit))
+
+        assertTrue(useCase.invoke(testDictionary(isPublic = false)).isSuccessful)
+
+        assertEquals(listOf(null, false), sent.map { it.isPublic })
+    }
+
+    @Test
+    fun `a member's private first dictionary goes up shared`() = runTest {
+        coEvery { dictionaryApi.createDictionary(capture(sent)) } returnsMany listOf(
+            refused("InvalidRequestException"),
+            refused("SharingRequiredException"),
+            Response.success(Unit),
         )
-        val requestSlot = slot<DictionaryRequest>()
-        coEvery { dictionaryApi.createDictionary(capture(requestSlot)) } returns mockk()
 
-        useCase.invoke(dictionary)
+        assertTrue(useCase.invoke(testDictionary(isPublic = false)).isSuccessful)
 
-        with(requestSlot.captured) {
-            assertEquals("dict-42", dictionaryId)
-            assertEquals("user-7", userId)
-            assertEquals("Spanish Food", name)
-            assertEquals(true, isPublic)
-            assertEquals("es", fromLang)
-            assertEquals("en", toLang)
-        }
+        assertEquals(listOf(null, false, true), sent.map { it.isPublic })
     }
 
     @Test
-    fun `invoke returns the api response unchanged`() = runTest {
-        val response = mockk<Response<Unit>>()
-        coEvery { dictionaryApi.createDictionary(any()) } returns response
+    fun `any other refusal is returned as is`() = runTest {
+        coEvery { dictionaryApi.createDictionary(capture(sent)) } returns refused("MethodArgumentNotValidException")
 
-        val result = useCase.invoke(testDictionary())
-
-        assertSame(response, result)
+        assertEquals(400, useCase.invoke(testDictionary()).code())
+        assertEquals(1, sent.size)
     }
-
-    // endregion
 }

@@ -29,6 +29,7 @@ import kotlinx.serialization.json.JsonPrimitive
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
+import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.local.UpdateDictionarySharingUseCase
 import org.junit.Test
 
 private const val FIXED_NOW = 1_700_000_000_000L
@@ -73,6 +74,10 @@ class SyncUserDictionariesUseCaseTest : BaseTest() {
     @MockK
     private lateinit var syncDictionaryTagsUseCase: SyncDictionaryTagsUseCase
 
+    // invoke returns Unit — covered by relaxUnitFun.
+    @MockK
+    private lateinit var updateDictionarySharingUseCase: UpdateDictionarySharingUseCase
+
     private lateinit var useCase: SyncUserDictionariesUseCase
 
     override fun setUp() {
@@ -88,6 +93,7 @@ class SyncUserDictionariesUseCaseTest : BaseTest() {
             deleteWordUseCase = deleteWordUseCase,
             getActiveUserUseCase = getActiveUserUseCase,
             syncDictionaryTagsUseCase = syncDictionaryTagsUseCase,
+            updateDictionarySharingUseCase = updateDictionarySharingUseCase,
         )
         // Existing cases stub the api against GUEST_USER_ID, so pin the active user to it.
         every { getActiveUserUseCase.invoke() } returns GUEST_USER_ID
@@ -453,5 +459,23 @@ class SyncUserDictionariesUseCaseTest : BaseTest() {
         coVerify(exactly = 1) { deleteWordUseCase.invoke("word-1") }
     }
 
+    // endregion
+
+    // region sharing
+    @Test
+    fun `sharing comes from the server even for a dictionary with local edits`() = runTest {
+        val local = testDictionary(dictionaryId = "dict-1", userId = GUEST_USER_ID, isPublic = false, isSynced = false)
+        coEvery { getDictionariesByUserUseCase.invoke(GUEST_USER_ID) } returns listOf(local)
+        coEvery { dictionaryApi.getAllDictionariesByUser(GUEST_USER_ID) } returns
+            listOf(testDictionaryResponse(dictionaryId = "dict-1", userId = GUEST_USER_ID).copy(isPublic = true))
+        coEvery { getWordsByDictionaryUseCase.invoke(any()) } returns emptyList()
+        coEvery { wordApi.getWordsByDictionary(any()) } returns emptyList()
+
+        useCase.invoke()
+
+        // The local edit itself is kept for upload; only the sharing flag follows the server.
+        coVerify(exactly = 0) { saveDictionaryUseCase.invoke(any()) }
+        coVerify(exactly = 1) { updateDictionarySharingUseCase.invoke("dict-1", true) }
+    }
     // endregion
 }
