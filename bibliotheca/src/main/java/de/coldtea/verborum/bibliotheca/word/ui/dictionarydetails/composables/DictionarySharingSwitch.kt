@@ -11,6 +11,8 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
+import androidx.compose.material3.SwitchColors
+import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -20,6 +22,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
@@ -103,8 +106,53 @@ fun DictionarySharingSwitch(
                 )
             }
             // The row handles the toggle, so the switch itself takes no clicks.
-            Switch(checked = sharing.isShared, onCheckedChange = null, enabled = sharing.canToggle)
+            Switch(
+                checked = sharing.isShared,
+                onCheckedChange = null,
+                enabled = sharing.canToggle,
+                colors = sharingSwitchColors(),
+            )
         }
+    }
+}
+
+/**
+ * Explicit colors: the card is `surfaceVariant`, and the Material defaults draw an off switch's
+ * thumb and outline in `outline` — nearly the same grey as that card, so it stopped looking like a
+ * switch. Off is a contrasting track (`background`) with a clearly darker/lighter thumb and border
+ * (`onSurfaceVariant`); on is the accent; a locked-on switch keeps the accent, just softened.
+ */
+@Composable
+private fun sharingSwitchColors(): SwitchColors {
+    val colors = MaterialTheme.colorScheme
+    return SwitchDefaults.colors(
+        checkedThumbColor = colors.onPrimary,
+        checkedTrackColor = colors.primary,
+        checkedBorderColor = colors.primary,
+        uncheckedThumbColor = colors.onSurfaceVariant,
+        uncheckedTrackColor = colors.background,
+        uncheckedBorderColor = colors.onSurfaceVariant,
+        disabledCheckedThumbColor = colors.onPrimary,
+        disabledCheckedTrackColor = colors.primary.copy(alpha = DISABLED_ON_ALPHA),
+        disabledCheckedBorderColor = Color.Transparent,
+        disabledUncheckedThumbColor = colors.onSurfaceVariant.copy(alpha = DISABLED_OFF_ALPHA),
+        disabledUncheckedTrackColor = colors.background.copy(alpha = DISABLED_OFF_ALPHA),
+        disabledUncheckedBorderColor = colors.onSurfaceVariant.copy(alpha = DISABLED_OFF_ALPHA),
+    )
+}
+
+private const val DISABLED_ON_ALPHA = 0.55f
+private const val DISABLED_OFF_ALPHA = 0.5f
+
+@PreviewLightDark
+@Composable
+private fun DictionarySharingSwitchOffPreview() {
+    VerborumTheme {
+        DictionarySharingSwitch(
+            sharing = DictionarySharingUi(isShared = false, isLastShared = false),
+            dictionaryName = "German Basics",
+            onSharedChange = {},
+        )
     }
 }
 
