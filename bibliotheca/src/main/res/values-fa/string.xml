@@ -128,4 +128,10 @@
         <item quantity="one">%1$d واژه در واژه‌نامه</item>
         <item quantity="other">%1$d واژه در واژه‌نامه</item>
     </plurals>
+
+    <string name="dictionaryOptionsUnsubscribe">لغو اشتراک</string>
+    <string name="dictionaryDetailsPublishedBy">از %1$s</string>
+    <string name="unsubscribeDialogTitle">اشتراک «%1$s» لغو شود؟</string>
+    <string name="unsubscribeDialogMessage">این واژه‌نامه همراه با پیشرفت تمرین شما از Bibliotheca حذف می‌شود. می‌توانید دوباره آن را از Forum دانلود کنید.</string>
+    <string name="errorUnsubscribeFailed">لغو اشتراک ممکن نشد. اتصال خود را بررسی کنید و دوباره تلاش کنید.</string>
 </resources>

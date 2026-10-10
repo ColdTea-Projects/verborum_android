@@ -48,6 +48,7 @@ import de.coldtea.verborum.core.ui.model.SupportedLanguage
 import de.coldtea.verborum.bibliotheca.common.utils.ResDrawables
 import de.coldtea.verborum.bibliotheca.common.utils.ResStrings
 import de.coldtea.verborum.bibliotheca.dictionary.ui.dictionarylist.composables.DeleteDictionaryDialog
+import de.coldtea.verborum.bibliotheca.dictionary.ui.dictionarylist.composables.UnsubscribeDictionaryDialog
 import de.coldtea.verborum.bibliotheca.dictionary.ui.dictionarylist.composables.DictionaryCard
 import de.coldtea.verborum.core.ui.components.ScreenError
 import de.coldtea.verborum.core.ui.components.DictionaryCardSkeleton
@@ -91,6 +92,7 @@ fun DictionaryListScreen(
     // Long-press target for the options sheet, and the dictionary pending delete confirmation.
     var optionsFor by remember { mutableStateOf<DictionaryUi?>(null) }
     var confirmDeleteFor by remember { mutableStateOf<DictionaryUi?>(null) }
+    var confirmUnsubscribeFor by remember { mutableStateOf<DictionaryUi?>(null) }
 
     // Which filter/sort bottom sheet (if any) is open.
     var showFromSheet by remember { mutableStateOf(false) }
@@ -102,6 +104,7 @@ fun DictionaryListScreen(
 
     optionsFor?.let { dictionary ->
         DictionaryOptionsSheet(
+            isImported = dictionary.isImported,
             onDismiss = { optionsFor = null },
             onEdit = {
                 optionsFor = null
@@ -111,6 +114,21 @@ fun DictionaryListScreen(
                 optionsFor = null
                 confirmDeleteFor = dictionary
             },
+            onUnsubscribe = {
+                optionsFor = null
+                confirmUnsubscribeFor = dictionary
+            },
+        )
+    }
+
+    confirmUnsubscribeFor?.let { dictionary ->
+        UnsubscribeDictionaryDialog(
+            dictionaryName = dictionary.name,
+            onConfirm = {
+                confirmUnsubscribeFor = null
+                viewModel.unsubscribe(dictionary.dictionaryId)
+            },
+            onDismiss = { confirmUnsubscribeFor = null },
         )
     }
 
@@ -314,32 +332,47 @@ private fun SortSheet(
     )
 }
 
+/**
+ * Edit/Delete for an own dictionary; a downloaded one is read-only, so it offers only
+ * Unsubscribe.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun DictionaryOptionsSheet(
+    isImported: Boolean,
     onDismiss: () -> Unit,
     onEdit: () -> Unit,
     onDelete: () -> Unit,
+    onUnsubscribe: () -> Unit,
 ) {
     ModalBottomSheet(
         onDismissRequest = onDismiss,
         sheetState = rememberModalBottomSheetState(),
     ) {
         Column(modifier = Modifier.padding(bottom = 24.dp)) {
-            DictionaryOptionRow(
-                iconRes = ResDrawables.ic_edit_24,
-                text = stringResource(ResStrings.dictionaryOptionsEdit),
-                // Neutral action — reads against the background like normal content.
-                color = MaterialTheme.colorScheme.onBackground,
-                onClick = onEdit,
-            )
-            DictionaryOptionRow(
-                iconRes = ResDrawables.ic_delete_24,
-                text = stringResource(ResStrings.dictionaryOptionsDelete),
-                // Destructive action — flagged in the error color.
-                color = MaterialTheme.colorScheme.error,
-                onClick = onDelete,
-            )
+            if (isImported) {
+                DictionaryOptionRow(
+                    iconRes = ResDrawables.ic_delete_24,
+                    text = stringResource(ResStrings.dictionaryOptionsUnsubscribe),
+                    color = MaterialTheme.colorScheme.error,
+                    onClick = onUnsubscribe,
+                )
+            } else {
+                DictionaryOptionRow(
+                    iconRes = ResDrawables.ic_edit_24,
+                    text = stringResource(ResStrings.dictionaryOptionsEdit),
+                    // Neutral action — reads against the background like normal content.
+                    color = MaterialTheme.colorScheme.onBackground,
+                    onClick = onEdit,
+                )
+                DictionaryOptionRow(
+                    iconRes = ResDrawables.ic_delete_24,
+                    text = stringResource(ResStrings.dictionaryOptionsDelete),
+                    // Destructive action — flagged in the error color.
+                    color = MaterialTheme.colorScheme.error,
+                    onClick = onDelete,
+                )
+            }
         }
     }
 }

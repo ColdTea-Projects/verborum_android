@@ -99,4 +99,6 @@
     <string name="profileUpdate">Aktualizuj</string>
     <string name="profileUpdated">Profil zaktualizowany</string>
     <string name="profileUpdateError">Nie udało się zaktualizować profilu. Spróbuj ponownie.</string>
+
+    <string name="dictionaryBadgeDownloaded">Pobrany</string>
 </resources>

@@ -47,6 +47,7 @@ import de.coldtea.verborum.bibliotheca.common.utils.CoreResStrings
 import de.coldtea.verborum.bibliotheca.common.utils.ResStrings
 import de.coldtea.verborum.core.ui.components.ScreenError
 import de.coldtea.verborum.bibliotheca.dictionary.ui.dictionarylist.composables.DeleteDictionaryDialog
+import de.coldtea.verborum.bibliotheca.dictionary.ui.dictionarylist.composables.UnsubscribeDictionaryDialog
 import de.coldtea.verborum.core.ui.components.languagePairLabel
 import de.coldtea.verborum.core.ui.components.DictionaryTagsText
 import de.coldtea.verborum.bibliotheca.word.ui.dictionarydetails.composables.PracticeModeButton
@@ -73,6 +74,7 @@ fun DictionaryDetailsScreen(
     ShowSnackbarMessages(viewModel.snackbarMessages)
 
     var showDeleteDialog by remember { mutableStateOf(false) }
+    var showUnsubscribeDialog by remember { mutableStateOf(false) }
 
     // Navigation is driven by the observed state, not the delete button: once the dictionary is
     // gone the screen leaves exactly once, so the async delete can't race the back navigation and
@@ -103,9 +105,12 @@ fun DictionaryDetailsScreen(
                 words.size,
             )
 
+            // A downloaded dictionary also names its publisher, when known.
+            val publishedBy = dictionary.publisherName
+                ?.let { stringResource(ResStrings.dictionaryDetailsPublishedBy, it) }
             RegisterTopBar(
                 title = dictionary.name,
-                subtitle = "$languagePair · $wordCount",
+                subtitle = listOfNotNull(languagePair, wordCount, publishedBy).joinToString(" · "),
                 showBackButton = true,
             )
 
@@ -189,6 +194,7 @@ fun DictionaryDetailsScreen(
                                 words.forEach { word ->
                                     WordListItem(
                                         word = word,
+                                        readOnly = dictionary.isImported,
                                         onEditClick = onEditWordClicked,
                                         onDeleteClick = viewModel::deleteWord,
                                     )
@@ -201,59 +207,100 @@ fun DictionaryDetailsScreen(
                 }
             }
 
-            // Sticky bottom actions
-            OutlinedButton(
-                onClick = onCreateWordClicked,
-                shape = RoundedCornerShape(16.dp),
-                border = BorderStroke(2.dp, MaterialTheme.colorScheme.primary),
-                colors = ButtonDefaults.outlinedButtonColors(
-                    containerColor = Color.Transparent,
-                    contentColor = MaterialTheme.colorScheme.primary,
-                ),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 8.dp)
-                    .height(56.dp)
-            ) {
-                Icon(
-                    painter = painterResource(CoreResDrawables.ic_plus_24),
-                    contentDescription = null,
-                    modifier = Modifier.size(18.dp)
-                )
-                Spacer(modifier = Modifier.width(8.dp))
-                Text(
-                    text = stringResource(ResStrings.dictionaryDetailsScreenCreateWord),
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    letterSpacing = 0.5.sp
-                )
+            // Sticky bottom actions. A downloaded dictionary is read-only: no new words, and
+            // Unsubscribe takes the place of Delete.
+            if (dictionary.isImported) {
+                Button(
+                    onClick = { showUnsubscribeDialog = true },
+                    shape = RoundedCornerShape(16.dp),
+                    colors = ButtonDefaults.outlinedButtonColors(
+                        containerColor = MaterialTheme.colorScheme.primary,
+                        contentColor = MaterialTheme.colorScheme.surface,
+                    ),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 8.dp, bottom = 16.dp)
+                        .height(56.dp)
+                ) {
+                    Icon(
+                        painter = painterResource(ResDrawables.ic_delete_24),
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.error,
+                        modifier = Modifier.size(20.dp)
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = stringResource(ResStrings.dictionaryOptionsUnsubscribe),
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        letterSpacing = 0.5.sp
+                    )
+                }
+            } else {
+                OutlinedButton(
+                    onClick = onCreateWordClicked,
+                    shape = RoundedCornerShape(16.dp),
+                    border = BorderStroke(2.dp, MaterialTheme.colorScheme.primary),
+                    colors = ButtonDefaults.outlinedButtonColors(
+                        containerColor = Color.Transparent,
+                        contentColor = MaterialTheme.colorScheme.primary,
+                    ),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 8.dp)
+                        .height(56.dp)
+                ) {
+                    Icon(
+                        painter = painterResource(CoreResDrawables.ic_plus_24),
+                        contentDescription = null,
+                        modifier = Modifier.size(18.dp)
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = stringResource(ResStrings.dictionaryDetailsScreenCreateWord),
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        letterSpacing = 0.5.sp
+                    )
+                }
+
+                Button(
+                    onClick = { showDeleteDialog = true },
+                    shape = RoundedCornerShape(16.dp),
+                    colors = ButtonDefaults.outlinedButtonColors(
+                        containerColor = MaterialTheme.colorScheme.primary,
+                        contentColor = MaterialTheme.colorScheme.surface,
+                    ),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 12.dp, bottom = 16.dp)
+                        .height(56.dp)
+                ) {
+                    Icon(
+                        painter = painterResource(ResDrawables.ic_delete_24),
+                        contentDescription = null,
+                        // Inherits the button's error content color to match the red text.
+                        tint = MaterialTheme.colorScheme.error,
+                        modifier = Modifier.size(20.dp)
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = stringResource(ResStrings.dictionaryDetailsScreenDeleteDictionary),
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        letterSpacing = 0.5.sp
+                    )
+                }
             }
 
-            Button(
-                onClick = { showDeleteDialog = true },
-                shape = RoundedCornerShape(16.dp),
-                colors = ButtonDefaults.outlinedButtonColors(
-                    containerColor = MaterialTheme.colorScheme.primary,
-                    contentColor = MaterialTheme.colorScheme.surface,
-                ),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 12.dp, bottom = 16.dp)
-                    .height(56.dp)
-            ) {
-                Icon(
-                    painter = painterResource(ResDrawables.ic_delete_24),
-                    contentDescription = null,
-                    // Inherits the button's error content color to match the red text.
-                    tint = MaterialTheme.colorScheme.error,
-                    modifier = Modifier.size(20.dp)
-                )
-                Spacer(modifier = Modifier.width(8.dp))
-                Text(
-                    text = stringResource(ResStrings.dictionaryDetailsScreenDeleteDictionary),
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    letterSpacing = 0.5.sp
+            if (showUnsubscribeDialog) {
+                UnsubscribeDictionaryDialog(
+                    dictionaryName = dictionary.name,
+                    onConfirm = {
+                        showUnsubscribeDialog = false
+                        viewModel.unsubscribe()
+                    },
+                    onDismiss = { showUnsubscribeDialog = false },
                 )
             }
 

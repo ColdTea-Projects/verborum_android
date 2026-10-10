@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -37,6 +38,8 @@ import de.coldtea.verborum.core.theme.VerborumTheme
 fun WordListItem(
     modifier: Modifier = Modifier,
     word: WordUi,
+    // A downloaded dictionary's words cannot be edited or deleted: no action buttons.
+    readOnly: Boolean = false,
     onEditClick: (String) -> Unit = {},
     onDeleteClick: (String) -> Unit = {},
 ) {
@@ -64,6 +67,8 @@ fun WordListItem(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
+                    // Keeps a read-only row (no 48dp action buttons) as tall as an editable one.
+                    .heightIn(min = 48.dp)
                     .padding(horizontal = 16.dp, vertical = 4.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
@@ -82,24 +87,26 @@ fun WordListItem(
                         .padding(end = 8.dp)
                 )
 
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    IconButton(onClick = { onEditClick(word.wordId) }) {
-                        Icon(
-                            painter = painterResource(ResDrawables.ic_edit_24),
-                            contentDescription = stringResource(ResStrings.dictionaryDetailsScreenEditWord),
-                            tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                            modifier = Modifier.size(20.dp)
-                        )
-                    }
+                if (!readOnly) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        IconButton(onClick = { onEditClick(word.wordId) }) {
+                            Icon(
+                                painter = painterResource(ResDrawables.ic_edit_24),
+                                contentDescription = stringResource(ResStrings.dictionaryDetailsScreenEditWord),
+                                tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                                modifier = Modifier.size(20.dp)
+                            )
+                        }
 
-                    IconButton(onClick = { onDeleteClick(word.wordId) }) {
-                        Icon(
-                            painter = painterResource(ResDrawables.ic_delete_24),
-                            contentDescription = stringResource(ResStrings.dictionaryDetailsScreenDeleteWord),
-                            // The drawable carries its own colors — don't tint over them.
-                            tint = MaterialTheme.colorScheme.error,
-                            modifier = Modifier.size(20.dp)
-                        )
+                        IconButton(onClick = { onDeleteClick(word.wordId) }) {
+                            Icon(
+                                painter = painterResource(ResDrawables.ic_delete_24),
+                                contentDescription = stringResource(ResStrings.dictionaryDetailsScreenDeleteWord),
+                                // The drawable carries its own colors — don't tint over them.
+                                tint = MaterialTheme.colorScheme.error,
+                                modifier = Modifier.size(20.dp)
+                            )
+                        }
                     }
                 }
             }

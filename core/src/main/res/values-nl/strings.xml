@@ -97,4 +97,6 @@
     <string name="profileUpdate">Bijwerken</string>
     <string name="profileUpdated">Profiel bijgewerkt</string>
     <string name="profileUpdateError">Je profiel kon niet worden bijgewerkt. Probeer het opnieuw.</string>
+
+    <string name="dictionaryBadgeDownloaded">Gedownload</string>
 </resources>

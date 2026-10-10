@@ -96,4 +96,6 @@
     <string name="profileUpdate">更新</string>
     <string name="profileUpdated">プロフィールを更新しました</string>
     <string name="profileUpdateError">プロフィールを更新できませんでした。もう一度お試しください。</string>
+
+    <string name="dictionaryBadgeDownloaded">ダウンロード済み</string>
 </resources>

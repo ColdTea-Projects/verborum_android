@@ -6,6 +6,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import de.coldtea.verborum.core.profile.data.api.UserApi
+import de.coldtea.verborum.core.profile.data.api.VaultApi
 import de.coldtea.verborum.core.BuildConfig
 import de.coldtea.verborum.core.extensions.json
 import kotlinx.serialization.ExperimentalSerializationApi
@@ -38,4 +39,9 @@ object UserNetworkModule {
     @Singleton
     fun provideUserApi(@Named("userRetrofit") retrofit: Retrofit): UserApi =
         retrofit.create(UserApi::class.java)
+
+    @Provides
+    @Singleton
+    fun provideVaultApi(@Named("userRetrofit") retrofit: Retrofit): VaultApi =
+        retrofit.create(VaultApi::class.java)
 }

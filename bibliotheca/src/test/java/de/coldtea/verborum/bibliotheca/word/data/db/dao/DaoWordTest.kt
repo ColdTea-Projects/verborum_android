@@ -63,7 +63,7 @@ class DaoWordTest {
     }
 
     @Test
-    fun `observeWordsInLanguagePairOf draws from every dictionary with the same pair`() = runTest {
+    fun `observeWordsInLanguagePair draws from every dictionary with the same pair, in any case`() = runTest {
         // Two en→de dictionaries and one en→fr; the pair pool must span both en→de, not en→fr.
         db.daoDictionary.insert(testDictionaryEntity(dictionaryId = "d1", fromLang = "en", toLang = "de"))
         db.daoDictionary.insert(testDictionaryEntity(dictionaryId = "d2", fromLang = "en", toLang = "de"))
@@ -73,7 +73,7 @@ class DaoWordTest {
         dao.insert(testWordEntity(wordId = "w3", dictionaryId = "d3"))
         dao.insert(testWordEntity(wordId = "w4", dictionaryId = "d2", isDeleted = true))
 
-        val ids = dao.observeWordsInLanguagePairOf("d1").first().map { it.wordId }.sorted()
+        val ids = dao.observeWordsInLanguagePair("EN", "DE").first().map { it.wordId }.sorted()
 
         assertEquals(listOf("w1", "w2"), ids)
     }

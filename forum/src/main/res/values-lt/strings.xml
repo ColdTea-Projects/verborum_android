@@ -37,4 +37,9 @@
 
     <string name="forumMembershipTitle">Prisijunkite prie Forum</string>
     <string name="forumMembershipMessage">Norėdami naršyti ir importuoti bendrinamus žodynus, eikite į Parinktys → Profilis, pridėkite rodomą vardą ir sutikite su Forum sąlygomis.</string>
+
+    <string name="forumBadgeYours">Jūsų</string>
+    <string name="forumDownloadSucceeded">Atsisiųsta į jūsų Bibliotheca</string>
+    <string name="forumDownloadUnavailable">Šis žodynas nebepasiekiamas</string>
+    <string name="forumDownloadFailed">Nepavyko atsisiųsti žodyno. Bandykite dar kartą.</string>
 </resources>

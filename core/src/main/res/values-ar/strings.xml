@@ -101,4 +101,6 @@
     <string name="profileUpdate">تحديث</string>
     <string name="profileUpdated">تم تحديث الملف الشخصي</string>
     <string name="profileUpdateError">تعذّر تحديث ملفك الشخصي. يُرجى المحاولة مرة أخرى.</string>
+
+    <string name="dictionaryBadgeDownloaded">تم التنزيل</string>
 </resources>

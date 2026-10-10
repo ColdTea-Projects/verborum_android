@@ -96,4 +96,6 @@
     <string name="profileUpdate">更新</string>
     <string name="profileUpdated">个人资料已更新</string>
     <string name="profileUpdateError">无法更新个人资料，请重试。</string>
+
+    <string name="dictionaryBadgeDownloaded">已下载</string>
 </resources>

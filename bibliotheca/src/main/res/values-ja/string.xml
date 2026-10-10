@@ -127,4 +127,10 @@
     <plurals name="dictionaryDetailsScreenWordListCount">
         <item quantity="other">辞書に%1$d語</item>
     </plurals>
+
+    <string name="dictionaryOptionsUnsubscribe">登録を解除</string>
+    <string name="dictionaryDetailsPublishedBy">作成者: %1$s</string>
+    <string name="unsubscribeDialogTitle">「%1$s」の登録を解除しますか？</string>
+    <string name="unsubscribeDialogMessage">練習の進捗とともに Bibliotheca から削除されます。Forum から再度ダウンロードできます。</string>
+    <string name="errorUnsubscribeFailed">登録を解除できませんでした。接続を確認して、もう一度お試しください。</string>
 </resources>

@@ -97,4 +97,6 @@
     <string name="profileUpdate">Actualizar</string>
     <string name="profileUpdated">Perfil actualizado</string>
     <string name="profileUpdateError">No se pudo actualizar tu perfil. Inténtalo de nuevo.</string>
+
+    <string name="dictionaryBadgeDownloaded">Descargado</string>
 </resources>

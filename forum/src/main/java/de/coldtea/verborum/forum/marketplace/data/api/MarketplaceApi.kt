@@ -1,7 +1,10 @@
 package de.coldtea.verborum.forum.marketplace.data.api
 
 import de.coldtea.verborum.forum.marketplace.data.api.model.MarketplacePageResponse
+import retrofit2.Response
 import retrofit2.http.GET
+import retrofit2.http.POST
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 /**
@@ -21,6 +24,13 @@ interface MarketplaceApi {
         // Part of the publisher's display name, 3–255 characters.
         @Query("publisher") publisher: String?,
     ): MarketplacePageResponse
+
+    /**
+     * Downloads a dictionary: adds a reference to it to the caller's vault (no body, no user id —
+     * the server uses the token). 201 also on a repeat.
+     */
+    @POST("marketplace/dictionaries/{dictionaryId}/import")
+    suspend fun importDictionary(@Path("dictionaryId") dictionaryId: String): Response<Unit>
 
     /** Same filters and paging; most imported first, newest first among equals. */
     @GET("marketplace/dictionaries/popular")

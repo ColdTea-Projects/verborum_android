@@ -11,6 +11,10 @@ import retrofit2.http.PUT
 import retrofit2.http.Path
 
 interface DictionaryApi {
+    /** One dictionary — also someone else's public one (404 once private or deleted). */
+    @GET("dictionaries/dictionary/{dictionaryId}")
+    suspend fun getDictionary(@Path("dictionaryId") dictionaryId: String): DictionaryResponse
+
     @GET("dictionaries/{userId}")
     suspend fun getAllDictionariesByUser(@Path("userId") userId: String): List<DictionaryResponse>?
 

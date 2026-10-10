@@ -37,4 +37,9 @@
 
     <string name="forumMembershipTitle">Forum-a qoşulun</string>
     <string name="forumMembershipMessage">Paylaşılan lüğətlərə baxmaq və idxal etmək üçün Seçimlər → Profil bölməsinə keçin, görünən ad əlavə edin və Forum şərtlərini qəbul edin.</string>
+
+    <string name="forumBadgeYours">Sizin</string>
+    <string name="forumDownloadSucceeded">Bibliotheca-nıza yükləndi</string>
+    <string name="forumDownloadUnavailable">Bu lüğət artıq mövcud deyil</string>
+    <string name="forumDownloadFailed">Lüğəti yükləmək mümkün olmadı. Yenidən cəhd edin.</string>
 </resources>

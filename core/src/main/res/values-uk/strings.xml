@@ -99,4 +99,6 @@
     <string name="profileUpdate">Оновити</string>
     <string name="profileUpdated">Профіль оновлено</string>
     <string name="profileUpdateError">Не вдалося оновити профіль. Спробуйте ще раз.</string>
+
+    <string name="dictionaryBadgeDownloaded">Завантажено</string>
 </resources>

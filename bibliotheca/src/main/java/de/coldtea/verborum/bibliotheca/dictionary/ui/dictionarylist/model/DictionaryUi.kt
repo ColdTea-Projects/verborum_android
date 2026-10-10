@@ -14,6 +14,10 @@ data class DictionaryUi(
     val tags: List<String> = emptyList(),
     // UI-only: live word count, populated by combining with word data (0 when unknown).
     val wordCount: Int = 0,
+    // Downloaded from the Forum: someone else's, read-only, never converted back or uploaded.
+    val isImported: Boolean = false,
+    // The publisher's display name, for a downloaded dictionary whose name is known.
+    val publisherName: String? = null,
 ) {
     fun convertToDictionary() = Dictionary(
         dictionaryId = dictionaryId,

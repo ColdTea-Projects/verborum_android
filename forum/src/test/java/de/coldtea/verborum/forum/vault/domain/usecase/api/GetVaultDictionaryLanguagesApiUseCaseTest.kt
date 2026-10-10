@@ -4,7 +4,7 @@ import de.coldtea.verborum.core.BaseTest
 import de.coldtea.verborum.core.library.domain.model.DictionaryLanguages
 import de.coldtea.verborum.forum.marketplace.data.api.model.SharedDictionaryResponse
 import de.coldtea.verborum.forum.vault.data.VaultRepository
-import de.coldtea.verborum.forum.vault.data.api.model.VaultEntryResponse
+import de.coldtea.verborum.core.profile.data.api.model.VaultEntryResponse
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.impl.annotations.MockK

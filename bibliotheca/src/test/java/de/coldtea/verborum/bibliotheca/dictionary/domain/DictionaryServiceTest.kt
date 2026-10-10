@@ -27,6 +27,7 @@ import kotlinx.coroutines.test.runTest
 import java.io.IOException
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
+import de.coldtea.verborum.bibliotheca.imported.domain.ImportedDictionaryService
 import org.junit.Test
 
 class DictionaryServiceTest : BaseTest() {
@@ -60,11 +61,17 @@ class DictionaryServiceTest : BaseTest() {
     @MockK
     private lateinit var getActiveUserUseCase: GetActiveUserUseCase
 
+    @MockK
+    private lateinit var importedDictionaryService: ImportedDictionaryService
+
     private lateinit var dictionaryService: DictionaryService
 
     override fun setUp() {
         super.setUp()
         every { getActiveUserUseCase.invoke() } returns null
+        // No downloads unless a test says otherwise.
+        every { importedDictionaryService.observeDictionaries() } returns flowOf(emptyList())
+        every { importedDictionaryService.observeDictionary(any()) } returns flowOf(null)
         dictionaryService = DictionaryService(
             observeAllDictionariesUseCase = observeAllDictionariesUseCase,
             observeDictionaryUseCase = observeDictionaryUseCase,
@@ -74,6 +81,7 @@ class DictionaryServiceTest : BaseTest() {
             markDictionaryDeletedUseCase = markDictionaryDeletedUseCase,
             uploadService = uploadService,
             getActiveUserUseCase = getActiveUserUseCase,
+            importedDictionaryService = importedDictionaryService,
         )
     }
 
@@ -129,6 +137,37 @@ class DictionaryServiceTest : BaseTest() {
         coVerify(exactly = 0) { uploadService.createDictionary(any()) }
     }
 
+    // endregion
+
+    // region downloads
+    @Test
+    fun `observeDictionaries lists downloads after the own dictionaries`() = runTest {
+        val own = testDictionary(dictionaryId = "own")
+        val downloaded = testDictionaryUi(dictionaryId = "dl").copy(isImported = true, publisherName = "Anna")
+        every { observeAllDictionariesUseCase.invoke() } returns flowOf(listOf(own))
+        every { importedDictionaryService.observeDictionaries() } returns flowOf(listOf(downloaded))
+
+        val result = dictionaryService.observeDictionaries().first()
+
+        assertEquals(listOf("own", "dl"), result.map { it.dictionaryId })
+        assertEquals(listOf(false, true), result.map { it.isImported })
+    }
+
+    @Test
+    fun `observeDictionary falls back to a downloaded dictionary`() = runTest {
+        val downloaded = testDictionaryUi(dictionaryId = "dl").copy(isImported = true)
+        every { observeDictionaryUseCase.invoke("dl") } returns flowOf(null)
+        every { importedDictionaryService.observeDictionary("dl") } returns flowOf(downloaded)
+
+        assertEquals(downloaded, dictionaryService.observeDictionary("dl").first())
+    }
+
+    @Test
+    fun `unsubscribe delegates to the downloads`() = runTest {
+        dictionaryService.unsubscribe("dl")
+
+        coVerify(exactly = 1) { importedDictionaryService.unsubscribe("dl") }
+    }
     // endregion
 
     // region observeDictionaries

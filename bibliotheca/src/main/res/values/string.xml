@@ -128,4 +128,10 @@
         <item quantity="one">%1$d word in the dictionary</item>
         <item quantity="other">%1$d words in the dictionary</item>
     </plurals>
+
+    <string name="dictionaryOptionsUnsubscribe">Unsubscribe</string>
+    <string name="dictionaryDetailsPublishedBy">by %1$s</string>
+    <string name="unsubscribeDialogTitle">Unsubscribe from “%1$s”?</string>
+    <string name="unsubscribeDialogMessage">It will be removed from your Bibliotheca, along with your practice progress on it. You can download it again from the Forum.</string>
+    <string name="errorUnsubscribeFailed">Couldn’t unsubscribe. Check your connection and try again.</string>
 </resources>

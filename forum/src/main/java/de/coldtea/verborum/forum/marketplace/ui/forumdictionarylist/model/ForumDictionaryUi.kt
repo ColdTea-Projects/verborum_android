@@ -19,4 +19,13 @@ data class ForumDictionaryUi(
     val wordCount: Int?,
     // Tag codes (resolved to translated labels at render time); empty when there are none.
     val tags: List<String> = emptyList(),
-)
+    // The user's own listing ("Yours"): never downloadable (the server answers 400).
+    val isOwn: Boolean = false,
+    // Already in the user's Bibliotheca ("Downloaded").
+    val isDownloaded: Boolean = false,
+    // A download request is in flight — the action is disabled meanwhile (guide §3 rule 5).
+    val isDownloading: Boolean = false,
+) {
+    /** Whether the Download action is offered at all. */
+    val canDownload: Boolean get() = !isOwn && !isDownloaded
+}

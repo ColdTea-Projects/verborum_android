@@ -12,6 +12,7 @@ import io.mockk.impl.annotations.MockK
 import io.mockk.mockkStatic
 import io.mockk.verify
 import kotlinx.coroutines.test.runTest
+import de.coldtea.verborum.bibliotheca.imported.domain.ImportedDictionaryService
 import org.junit.Test
 
 class SyncServiceTest : BaseTest() {
@@ -24,14 +25,40 @@ class SyncServiceTest : BaseTest() {
     @MockK
     private lateinit var syncUserDictionariesUseCase: SyncUserDictionariesUseCase
 
+    // refreshFromVault returns Unit — covered by relaxUnitFun.
+    @MockK
+    private lateinit var importedDictionaryService: ImportedDictionaryService
+
     private lateinit var syncService: SyncService
 
     override fun setUp() {
         super.setUp()
-        syncService = SyncService(uploadPendingChangesUseCase, syncUserDictionariesUseCase)
+        syncService = SyncService(uploadPendingChangesUseCase, syncUserDictionariesUseCase, importedDictionaryService)
     }
 
     // region syncDictionaries
+
+    @Test
+    fun `syncDictionaries refreshes downloads from the vault after the own dictionaries`() = runTest {
+        syncService.syncDictionaries()
+
+        coVerifyOrder {
+            uploadPendingChangesUseCase.invoke()
+            syncUserDictionariesUseCase.invoke()
+            importedDictionaryService.refreshFromVault()
+        }
+    }
+
+    @Test
+    fun `a failed download refresh is logged and does not throw`() = runTest {
+        mockkStatic(Log::class)
+        every { Log.e(any(), any()) } returns 0
+        coEvery { importedDictionaryService.refreshFromVault() } throws RuntimeException("vault down")
+
+        syncService.syncDictionaries()
+
+        verify(exactly = 1) { Log.e("Imported sync error", "vault down") }
+    }
 
     @Test
     fun `syncDictionaries uploads pending changes before downloading`() = runTest {

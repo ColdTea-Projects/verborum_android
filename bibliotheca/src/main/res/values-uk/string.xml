@@ -130,4 +130,10 @@
         <item quantity="many">%1$d слів у словнику</item>
         <item quantity="other">%1$d слова в словнику</item>
     </plurals>
+
+    <string name="dictionaryOptionsUnsubscribe">Відписатися</string>
+    <string name="dictionaryDetailsPublishedBy">автор: %1$s</string>
+    <string name="unsubscribeDialogTitle">Відписатися від «%1$s»?</string>
+    <string name="unsubscribeDialogMessage">Його буде видалено з вашої Bibliotheca разом із прогресом. Ви зможете знову завантажити його у Forum.</string>
+    <string name="errorUnsubscribeFailed">Не вдалося відписатися. Перевірте з’єднання та спробуйте ще раз.</string>
 </resources>

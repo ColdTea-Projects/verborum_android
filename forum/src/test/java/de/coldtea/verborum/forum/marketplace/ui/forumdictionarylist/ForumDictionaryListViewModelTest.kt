@@ -26,6 +26,8 @@ import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
+import io.mockk.coVerify
+import de.coldtea.verborum.forum.marketplace.domain.model.MarketplaceImportResult
 import org.junit.Test
 
 class ForumDictionaryListViewModelTest : BaseTest() {
@@ -42,7 +44,11 @@ class ForumDictionaryListViewModelTest : BaseTest() {
         super.setUp()
         every { profileService.observeProfile() } returns profile
         coEvery { marketplaceService.getDefaultFilter() } returns ForumDictionaryFilter()
+        every { marketplaceService.observeDownloadedDictionaryIds() } returns downloaded
+        every { marketplaceService.currentUserId() } returns "me"
     }
+
+    private val downloaded = MutableStateFlow<Set<String>>(emptySet())
 
     private fun viewModel(): ForumDictionaryListViewModel {
         every { marketplaceService.getDictionaries(any(), any()) } returns
@@ -257,4 +263,38 @@ class ForumDictionaryListViewModelTest : BaseTest() {
 
     private fun member(accepted: Boolean) =
         ProfileUi(email = "anna@example.com", displayName = "Anna", isMarketplaceMember = accepted)
+
+    // region downloads
+    @Test
+    fun `listings carry the user's relation to them`() = runTest {
+        every { marketplaceService.getDictionaries(any(), any()) } returns flowOf(
+            PagingData.from(
+                listOf(
+                    testForumDictionaryUi(dictionaryId = "mine", publisherId = "me"),
+                    testForumDictionaryUi(dictionaryId = "got", publisherId = "anna"),
+                    testForumDictionaryUi(dictionaryId = "new", publisherId = "anna"),
+                )
+            )
+        )
+        downloaded.value = setOf("got")
+        val viewModel = ForumDictionaryListViewModel(marketplaceService, profileService)
+
+        val items = flowOf(viewModel.dictionaries(ForumDictionaryTab.FRESH).first()).asSnapshot()
+
+        assertEquals(listOf(true, false, false), items.map { it.isOwn })
+        assertEquals(listOf(false, true, false), items.map { it.isDownloaded })
+        assertEquals(listOf(false, false, true), items.map { it.canDownload })
+    }
+
+    @Test
+    fun `download goes through the service`() = runTest {
+        coEvery { marketplaceService.downloadDictionary(any()) } returns MarketplaceImportResult.Imported
+        val viewModel = viewModel()
+        val dictionary = testForumDictionaryUi(dictionaryId = "d1", publisherId = "anna")
+
+        viewModel.download(dictionary)
+
+        coVerify(exactly = 1) { marketplaceService.downloadDictionary(dictionary) }
+    }
+    // endregion
 }

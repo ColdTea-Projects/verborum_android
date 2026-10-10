@@ -128,4 +128,10 @@
         <item quantity="one">%1$d Wort im Wörterbuch</item>
         <item quantity="other">%1$d Wörter im Wörterbuch</item>
     </plurals>
+
+    <string name="dictionaryOptionsUnsubscribe">Abo beenden</string>
+    <string name="dictionaryDetailsPublishedBy">von %1$s</string>
+    <string name="unsubscribeDialogTitle">Abo von „%1$s“ beenden?</string>
+    <string name="unsubscribeDialogMessage">Es wird samt deinem Lernfortschritt aus deiner Bibliotheca entfernt. Du kannst es im Forum erneut herunterladen.</string>
+    <string name="errorUnsubscribeFailed">Abo konnte nicht beendet werden. Prüfe deine Verbindung und versuche es erneut.</string>
 </resources>

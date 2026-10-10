@@ -18,6 +18,7 @@ import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
+import io.mockk.coEvery
 import org.junit.Test
 
 class DictionaryDetailsViewModelTest : BaseTest() {
@@ -239,5 +240,29 @@ class DictionaryDetailsViewModelTest : BaseTest() {
         coVerify(exactly = 0) { dictionaryService.deleteDictionary(any()) }
     }
 
+    // endregion
+
+    // region unsubscribe
+    @Test
+    fun `unsubscribe removes the shown downloaded dictionary`() = runTest {
+        initSuccess("dl")
+        coEvery { dictionaryService.unsubscribe("dl") } returns Unit
+
+        viewModel.unsubscribe()
+
+        coVerify(exactly = 1) { dictionaryService.unsubscribe("dl") }
+        // Unsubscribing never touches the delete path.
+        coVerify(exactly = 0) { dictionaryService.markDictionaryDeleted(any()) }
+    }
+
+    @Test
+    fun `a failed unsubscribe keeps the screen`() = runTest {
+        initSuccess("dl")
+        coEvery { dictionaryService.unsubscribe("dl") } throws RuntimeException("offline")
+
+        viewModel.unsubscribe()
+
+        assertTrue(viewModel.dictionaryDetailState.first() is DictionaryDetailState.Success)
+    }
     // endregion
 }

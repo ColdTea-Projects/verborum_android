@@ -37,4 +37,9 @@
 
     <string name="forumMembershipTitle">Forum 가입하기</string>
     <string name="forumMembershipMessage">공유 사전을 둘러보고 가져오려면 옵션 → 프로필로 이동해 표시 이름을 추가하고 Forum 약관에 동의하세요.</string>
+
+    <string name="forumBadgeYours">내 사전</string>
+    <string name="forumDownloadSucceeded">Bibliotheca에 다운로드했습니다</string>
+    <string name="forumDownloadUnavailable">이 사전은 더 이상 사용할 수 없습니다</string>
+    <string name="forumDownloadFailed">사전을 다운로드하지 못했습니다. 다시 시도하세요.</string>
 </resources>

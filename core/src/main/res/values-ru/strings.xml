@@ -99,4 +99,6 @@
     <string name="profileUpdate">Обновить</string>
     <string name="profileUpdated">Профиль обновлён</string>
     <string name="profileUpdateError">Не удалось обновить профиль. Попробуйте ещё раз.</string>
+
+    <string name="dictionaryBadgeDownloaded">Скачан</string>
 </resources>

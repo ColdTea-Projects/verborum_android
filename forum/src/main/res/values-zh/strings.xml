@@ -37,4 +37,9 @@
 
     <string name="forumMembershipTitle">加入 Forum</string>
     <string name="forumMembershipMessage">要浏览和导入共享词典，请前往 选项 → 个人资料，填写显示名称并接受 Forum 条款。</string>
+
+    <string name="forumBadgeYours">我的</string>
+    <string name="forumDownloadSucceeded">已下载到你的 Bibliotheca</string>
+    <string name="forumDownloadUnavailable">该词典已不可用</string>
+    <string name="forumDownloadFailed">无法下载该词典，请重试。</string>
 </resources>

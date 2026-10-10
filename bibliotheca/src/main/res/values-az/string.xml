@@ -128,4 +128,10 @@
         <item quantity="one">lüğətdə %1$d söz</item>
         <item quantity="other">lüğətdə %1$d söz</item>
     </plurals>
+
+    <string name="dictionaryOptionsUnsubscribe">Abunəlikdən çıx</string>
+    <string name="dictionaryDetailsPublishedBy">%1$s tərəfindən</string>
+    <string name="unsubscribeDialogTitle">“%1$s” abunəliyindən çıxılsın?</string>
+    <string name="unsubscribeDialogMessage">O, məşq irəliləyişinizlə birlikdə Bibliotheca-dan silinəcək. Onu Forum-dan yenidən yükləyə bilərsiniz.</string>
+    <string name="errorUnsubscribeFailed">Abunəlikdən çıxmaq mümkün olmadı. Bağlantını yoxlayıb yenidən cəhd edin.</string>
 </resources>

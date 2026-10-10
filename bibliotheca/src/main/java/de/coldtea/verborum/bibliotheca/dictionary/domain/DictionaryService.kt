@@ -12,9 +12,11 @@ import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.local.ObserveAl
 import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.local.ObserveDictionaryUseCase
 import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.local.SaveDictionaryUseCase
 import de.coldtea.verborum.bibliotheca.dictionary.ui.dictionarylist.model.DictionaryUi
+import de.coldtea.verborum.bibliotheca.imported.domain.ImportedDictionaryService
 import de.coldtea.verborum.core.auth.domain.usecase.GetActiveUserUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
@@ -29,6 +31,7 @@ class DictionaryService @Inject constructor(
     private val markDictionaryDeletedUseCase: MarkDictionaryDeletedUseCase,
     private val uploadService: UploadService,
     private val getActiveUserUseCase: GetActiveUserUseCase,
+    private val importedDictionaryService: ImportedDictionaryService,
 ) {
 
     /**
@@ -37,18 +40,33 @@ class DictionaryService @Inject constructor(
      * those writes produce no emission at all, so the list does not recompose for changes it
      * cannot show. Tags are dropped from the projection so a tag-only edit can't re-emit the list.
      */
-    fun observeDictionaries(): Flow<List<DictionaryUi>> = observeAllDictionariesUseCase
-        .invoke()
-        .map { it.map { dictionary -> dictionary.convertToUi().copy(tags = emptyList()) } }
+    fun observeDictionaries(): Flow<List<DictionaryUi>> = combine(
+        observeAllDictionariesUseCase
+            .invoke()
+            .map { it.map { dictionary -> dictionary.convertToUi().copy(tags = emptyList()) } },
+        // Downloaded dictionaries sit beside the user's own, marked isImported.
+        importedDictionaryService.observeDictionaries()
+            .map { it.map { dictionary -> dictionary.copy(tags = emptyList()) } },
+    ) { own, imported -> own + imported }
         .distinctUntilChanged()
         .flowOn(Dispatchers.IO)
 
-    /** Emits null once the dictionary is tombstoned or removed, letting screens react to deletion. */
-    fun observeDictionary(dictionaryId: String): Flow<DictionaryUi?> = observeDictionaryUseCase
-        .invoke(dictionaryId)
+    /**
+     * Own or downloaded. Emits null once the dictionary is tombstoned, removed or unsubscribed,
+     * letting screens react to it going away.
+     */
+    fun observeDictionary(dictionaryId: String): Flow<DictionaryUi?> = combine(
+        observeDictionaryUseCase.invoke(dictionaryId).distinctUntilChanged().map { it?.convertToUi() },
+        importedDictionaryService.observeDictionary(dictionaryId),
+    ) { own, imported -> own ?: imported }
         .distinctUntilChanged()
-        .map { it?.convertToUi() }
         .flowOn(Dispatchers.IO)
+
+    /**
+     * Stops following a downloaded dictionary: removed from the vault, then from this device.
+     * Online-only — throws when the server cannot be reached, and nothing changes locally then.
+     */
+    suspend fun unsubscribe(dictionaryId: String) = importedDictionaryService.unsubscribe(dictionaryId)
 
     /** One-shot read for prefilling the edit screen. */
     suspend fun getDictionary(dictionaryId: String): DictionaryUi =

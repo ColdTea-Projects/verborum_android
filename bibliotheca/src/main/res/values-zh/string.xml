@@ -127,4 +127,10 @@
     <plurals name="dictionaryDetailsScreenWordListCount">
         <item quantity="other">词典中有%1$d个单词</item>
     </plurals>
+
+    <string name="dictionaryOptionsUnsubscribe">取消订阅</string>
+    <string name="dictionaryDetailsPublishedBy">作者：%1$s</string>
+    <string name="unsubscribeDialogTitle">要取消订阅“%1$s”吗？</string>
+    <string name="unsubscribeDialogMessage">它将连同你的练习进度一起从 Bibliotheca 中移除。你可以在 Forum 中重新下载。</string>
+    <string name="errorUnsubscribeFailed">无法取消订阅。请检查网络连接后重试。</string>
 </resources>

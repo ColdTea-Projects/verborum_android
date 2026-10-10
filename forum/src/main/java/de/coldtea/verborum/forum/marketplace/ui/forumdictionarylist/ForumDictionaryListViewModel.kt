@@ -20,6 +20,9 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filterNotNull
+import androidx.paging.filter
+import androidx.paging.map
+import de.coldtea.verborum.forum.marketplace.ui.model.ForumDownloads
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
@@ -61,8 +64,10 @@ class ForumDictionaryListViewModel @Inject constructor(
     private val _selectedTab = MutableStateFlow(ForumDictionaryTab.POPULAR)
     val selectedTab: StateFlow<ForumDictionaryTab> = _selectedTab.asStateFlow()
 
-    private val popularDictionaries = pagedList(ForumDictionaryTab.POPULAR)
-    private val freshDictionaries = pagedList(ForumDictionaryTab.FRESH)
+    private val downloads = ForumDownloads(marketplaceService)
+
+    private val popularDictionaries = decorated(pagedList(ForumDictionaryTab.POPULAR))
+    private val freshDictionaries = decorated(pagedList(ForumDictionaryTab.FRESH))
 
     init {
         viewModelScope.launch(exceptionHandler) {
@@ -87,6 +92,28 @@ class ForumDictionaryListViewModel @Inject constructor(
     fun selectTab(tab: ForumDictionaryTab) {
         _selectedTab.value = tab
     }
+
+    /** Downloads [dictionary] into the user's Bibliotheca; the outcome is reported on the snackbar. */
+    fun download(dictionary: ForumDictionaryUi) {
+        viewModelScope.launch(exceptionHandler) {
+            downloads.download(dictionary, onNotMember = ::refreshAccess)
+                ?.let { _snackbarMessages.emit(it) }
+        }
+    }
+
+    /**
+     * Marks each listing as the user's own / downloaded / downloading, and drops one that turned
+     * out to be gone. Applied after [cachedIn][androidx.paging.cachedIn], so a download changes
+     * the badges without reloading a page.
+     */
+    private fun decorated(
+        pages: Flow<PagingData<ForumDictionaryUi>>,
+    ): Flow<PagingData<ForumDictionaryUi>> =
+        combine(pages, downloads.userState) { pagingData, userState ->
+            pagingData
+                .filter { it.dictionaryId !in userState.unavailableIds }
+                .map(userState::applyTo)
+        }
 
     /**
      * One tab's paged list. Every filter change starts a new pager from page 0 (flatMapLatest drops

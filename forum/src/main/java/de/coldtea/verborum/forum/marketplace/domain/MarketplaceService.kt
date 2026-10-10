@@ -4,8 +4,10 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.map
+import de.coldtea.verborum.core.auth.domain.usecase.GetActiveUserUseCase
 import de.coldtea.verborum.core.library.domain.model.DictionaryLanguages
 import de.coldtea.verborum.core.profile.domain.ProfileService
+import de.coldtea.verborum.forum.marketplace.domain.model.MarketplaceImportResult
 import de.coldtea.verborum.forum.marketplace.domain.model.MarketplaceListing
 import de.coldtea.verborum.forum.marketplace.domain.model.MarketplaceListingOrder
 import de.coldtea.verborum.forum.marketplace.domain.model.MarketplaceWord
@@ -13,7 +15,10 @@ import de.coldtea.verborum.forum.marketplace.domain.paging.MarketplaceListingPag
 import de.coldtea.verborum.forum.marketplace.domain.usecase.api.GetMarketplaceListingApiUseCase
 import de.coldtea.verborum.forum.marketplace.domain.usecase.api.GetMarketplaceListingsApiUseCase
 import de.coldtea.verborum.forum.marketplace.domain.usecase.api.GetMarketplaceWordsApiUseCase
+import de.coldtea.verborum.forum.marketplace.domain.usecase.api.ImportMarketplaceDictionaryApiUseCase
 import de.coldtea.verborum.forum.marketplace.domain.usecase.local.GetOwnedDictionaryLanguagesUseCase
+import de.coldtea.verborum.forum.marketplace.domain.usecase.local.ObserveDownloadedDictionaryIdsUseCase
+import de.coldtea.verborum.forum.marketplace.domain.usecase.local.SaveDownloadedDictionaryUseCase
 import de.coldtea.verborum.forum.marketplace.ui.forumdictionarydetails.model.ForumWordUi
 import de.coldtea.verborum.forum.marketplace.ui.forumdictionarylist.model.ForumDictionaryFilter
 import de.coldtea.verborum.forum.marketplace.ui.forumdictionarylist.model.ForumDictionaryUi
@@ -36,6 +41,10 @@ class MarketplaceService @Inject constructor(
     private val getOwnedDictionaryLanguagesUseCase: GetOwnedDictionaryLanguagesUseCase,
     private val getVaultDictionaryLanguagesApiUseCase: GetVaultDictionaryLanguagesApiUseCase,
     private val profileService: ProfileService,
+    private val importMarketplaceDictionaryApiUseCase: ImportMarketplaceDictionaryApiUseCase,
+    private val observeDownloadedDictionaryIdsUseCase: ObserveDownloadedDictionaryIdsUseCase,
+    private val saveDownloadedDictionaryUseCase: SaveDownloadedDictionaryUseCase,
+    private val getActiveUserUseCase: GetActiveUserUseCase,
 ) {
     /** The browse list narrowed by [filter], sorted by [order], loaded [LISTING_PAGE_SIZE] at a time. */
     fun getDictionaries(
@@ -65,6 +74,31 @@ class MarketplaceService @Inject constructor(
 
     suspend fun getWords(dictionaryId: String): List<ForumWordUi> =
         getMarketplaceWordsApiUseCase(dictionaryId).map(MarketplaceWord::convertToUi)
+
+    /** The signed-in user's `sub` — a listing with this publisherId is their own. */
+    fun currentUserId(): String? = getActiveUserUseCase.invoke()
+
+    /** The dictionaries already downloaded to this device. */
+    fun observeDownloadedDictionaryIds(): Flow<Set<String>> = observeDownloadedDictionaryIdsUseCase()
+
+    /**
+     * Downloads [dictionary] (guide §6.6): the import is recorded by the marketplace, then the
+     * dictionary is copied into the user's Bibliotheca straight away. That copy is best-effort —
+     * the next vault refresh repairs a missed one — so only the import decides the result.
+     */
+    suspend fun downloadDictionary(dictionary: ForumDictionaryUi): MarketplaceImportResult {
+        val result = importMarketplaceDictionaryApiUseCase(dictionary.dictionaryId)
+        if (result == MarketplaceImportResult.Imported) {
+            try {
+                saveDownloadedDictionaryUseCase(dictionary.dictionaryId, dictionary.publisherName)
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                // Left to the vault refresh.
+            }
+        }
+        return result
+    }
 
     /**
      * The filter the Forum opens with: the user's [DEFAULT_PAIR_COUNT] most used language pairs

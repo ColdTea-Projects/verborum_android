@@ -130,4 +130,10 @@
         <item quantity="many">%1$d žodžio žodyne</item>
         <item quantity="other">%1$d žodžių žodyne</item>
     </plurals>
+
+    <string name="dictionaryOptionsUnsubscribe">Atsisakyti prenumeratos</string>
+    <string name="dictionaryDetailsPublishedBy">autorius: %1$s</string>
+    <string name="unsubscribeDialogTitle">Atsisakyti „%1$s“ prenumeratos?</string>
+    <string name="unsubscribeDialogMessage">Jis bus pašalintas iš jūsų Bibliotheca kartu su mokymosi pažanga. Galite vėl jį atsisiųsti iš Forum.</string>
+    <string name="errorUnsubscribeFailed">Nepavyko atsisakyti prenumeratos. Patikrinkite ryšį ir bandykite dar kartą.</string>
 </resources>

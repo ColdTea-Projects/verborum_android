@@ -1,4 +1,4 @@
-package de.coldtea.verborum.forum.vault.data.api.model
+package de.coldtea.verborum.core.profile.data.api.model
 
 import android.annotation.SuppressLint
 import androidx.annotation.Keep

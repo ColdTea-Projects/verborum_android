@@ -17,8 +17,8 @@ class WordRepository @Inject constructor(
     fun observeWordsByDictionary(dictionaryId: String): Flow<List<WordEntity>> =
         bibliothecaDatabase.daoWord.observeWordsByDictionary(dictionaryId)
 
-    fun observeWordsInLanguagePairOf(dictionaryId: String): Flow<List<WordEntity>> =
-        bibliothecaDatabase.daoWord.observeWordsInLanguagePairOf(dictionaryId)
+    fun observeWordsInLanguagePair(fromLang: String, toLang: String): Flow<List<WordEntity>> =
+        bibliothecaDatabase.daoWord.observeWordsInLanguagePair(fromLang, toLang)
 
     fun observeWordCounts(): Flow<List<DictionaryWordCount>> =
         bibliothecaDatabase.daoWord.observeWordCounts()

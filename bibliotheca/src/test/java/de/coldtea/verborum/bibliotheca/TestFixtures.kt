@@ -1,5 +1,7 @@
 package de.coldtea.verborum.bibliotheca
 
+import de.coldtea.verborum.bibliotheca.imported.domain.model.ImportedDictionary
+import de.coldtea.verborum.bibliotheca.imported.domain.model.ImportedWord
 import de.coldtea.verborum.bibliotheca.dictionary.data.api.model.DictionaryResponse
 import de.coldtea.verborum.bibliotheca.dictionary.data.db.entity.DictionaryEntity
 import de.coldtea.verborum.bibliotheca.dictionary.domain.model.Dictionary
@@ -187,4 +189,40 @@ fun testDictionaryUi(
     toLang = toLang,
     createdAt = createdAt,
     updatedAt = updatedAt,
+)
+
+fun testImportedDictionary(
+    dictionaryId: String = "imported-id",
+    publisherId: String = "publisher-sub",
+    publisherName: String? = "Anna Bauer",
+    name: String = "Polish → Ukrainian",
+    fromLang: String = "PL",
+    toLang: String = "UK",
+    tags: List<String> = listOf("travel"),
+    importedAt: Long = 1_000L,
+) = ImportedDictionary(
+    dictionaryId = dictionaryId,
+    publisherId = publisherId,
+    publisherName = publisherName,
+    name = name,
+    fromLang = fromLang,
+    toLang = toLang,
+    tags = tags,
+    importedAt = importedAt,
+)
+
+fun testImportedWord(
+    wordId: String = "imported-word",
+    dictionaryId: String = "imported-id",
+    level: Int = 0,
+) = ImportedWord(
+    wordId = wordId,
+    dictionaryId = dictionaryId,
+    word = "[\"kot\"]",
+    wordMeta = "{}",
+    translation = "[\"кіт\"]",
+    translationMeta = "{}",
+    level = level,
+    createdAt = 1_000L,
+    updatedAt = 1_000L,
 )

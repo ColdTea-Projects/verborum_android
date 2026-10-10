@@ -8,14 +8,14 @@ import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 /**
- * Every word across all dictionaries sharing the language pair of [dictionaryId]. Used to source
+ * Every word across the user's own dictionaries of this language direction. Used to source
  * multiple-choice distractors and to decide whether a test can be built at all.
  */
 class ObserveWordsInLanguagePairUseCase @Inject constructor(
     private val wordRepository: WordRepository,
 ) {
-    fun invoke(dictionaryId: String): Flow<List<Word>> =
+    fun invoke(fromLang: String, toLang: String): Flow<List<Word>> =
         wordRepository
-            .observeWordsInLanguagePairOf(dictionaryId)
+            .observeWordsInLanguagePair(fromLang, toLang)
             .map { it.map(WordEntity::convertToWord) }
 }

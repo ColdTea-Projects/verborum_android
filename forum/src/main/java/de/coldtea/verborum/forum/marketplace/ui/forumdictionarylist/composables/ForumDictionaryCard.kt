@@ -1,5 +1,8 @@
 package de.coldtea.verborum.forum.marketplace.ui.forumdictionarylist.composables
 
+import de.coldtea.verborum.forum.common.utils.CoreResStrings
+import de.coldtea.verborum.core.ui.components.DictionaryBadge
+import androidx.compose.material3.CircularProgressIndicator
 import android.text.format.DateUtils
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateDpAsState
@@ -159,16 +162,40 @@ fun ForumDictionaryCard(
                         tagCodes = dictionary.tags,
                         modifier = Modifier.padding(top = 10.dp),
                     )
+
+                    // The user's relation to it; their own listing can never be downloaded.
+                    when {
+                        dictionary.isOwn -> DictionaryBadge(
+                            text = stringResource(ResStrings.forumBadgeYours),
+                            modifier = Modifier.padding(top = 10.dp),
+                            containerColor = MaterialTheme.colorScheme.primary,
+                            contentColor = MaterialTheme.colorScheme.onPrimary,
+                        )
+                        dictionary.isDownloaded -> DictionaryBadge(
+                            text = stringResource(CoreResStrings.dictionaryBadgeDownloaded),
+                            modifier = Modifier.padding(top = 10.dp),
+                        )
+                    }
                 }
 
-                // Overflow menu — opens the Download options sheet.
-                IconButton(onClick = { onMenuClick(dictionary) }) {
-                    Icon(
-                        painter = painterResource(ResDrawables.ic_more_vert_24),
-                        contentDescription = stringResource(ResStrings.forumMoreOptions),
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                        modifier = Modifier.size(24.dp)
+                when {
+                    dictionary.isDownloading -> CircularProgressIndicator(
+                        strokeWidth = 2.dp,
+                        color = MaterialTheme.colorScheme.primary,
+                        // Same footprint as the menu button it replaces.
+                        modifier = Modifier
+                            .padding(12.dp)
+                            .size(24.dp),
                     )
+                    // Overflow menu — opens the Download options sheet; nothing to offer otherwise.
+                    dictionary.canDownload -> IconButton(onClick = { onMenuClick(dictionary) }) {
+                        Icon(
+                            painter = painterResource(ResDrawables.ic_more_vert_24),
+                            contentDescription = stringResource(ResStrings.forumMoreOptions),
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                            modifier = Modifier.size(24.dp)
+                        )
+                    }
                 }
             }
         }

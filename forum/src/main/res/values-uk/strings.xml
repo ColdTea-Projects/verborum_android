@@ -37,4 +37,9 @@
 
     <string name="forumMembershipTitle">Приєднайтеся до Forum</string>
     <string name="forumMembershipMessage">Щоб переглядати й імпортувати спільні словники, відкрийте Параметри → Профіль, додайте відображуване ім’я та прийміть умови Forum.</string>
+
+    <string name="forumBadgeYours">Ваш</string>
+    <string name="forumDownloadSucceeded">Завантажено до вашої Bibliotheca</string>
+    <string name="forumDownloadUnavailable">Цей словник більше недоступний</string>
+    <string name="forumDownloadFailed">Не вдалося завантажити словник. Спробуйте ще раз.</string>
 </resources>

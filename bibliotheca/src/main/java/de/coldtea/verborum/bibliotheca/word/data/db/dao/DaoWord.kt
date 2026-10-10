@@ -21,22 +21,22 @@ interface DaoWord: DaoBase<WordEntity> {
     fun observeWordsByDictionary(dictionaryId: String): Flow<List<WordEntity>>
 
     /**
-     * Every live word that belongs to a dictionary with the *same language pair* as
-     * [dictionaryId] — including that dictionary's own words.
+     * Every live word that belongs to a dictionary of exactly this language direction.
      *
      * Feeds the multiple-choice distractor pool: wrong answers are drawn from the whole language
      * pair rather than a single dictionary, so a small dictionary still gets plausible choices.
-     * Tombstoned words and tombstoned dictionaries are excluded on both sides of the join.
+     * Takes the languages rather than a dictionary id so a downloaded dictionary (another table)
+     * can draw from the user's own words too. Codes compare case-insensitively — the server's are
+     * uppercase. Tombstoned words and tombstoned dictionaries are excluded on both sides of the join.
      */
     @Transaction
     @Query(
         "SELECT w.* FROM word w " +
             "INNER JOIN dictionary d ON w.fk_dictionary_id = d.dictionary_id " +
             "WHERE w.is_deleted = 0 AND d.is_deleted = 0 " +
-            "AND d.from_lang = (SELECT from_lang FROM dictionary WHERE dictionary_id = :dictionaryId) " +
-            "AND d.to_lang = (SELECT to_lang FROM dictionary WHERE dictionary_id = :dictionaryId)"
+            "AND UPPER(d.from_lang) = UPPER(:fromLang) AND UPPER(d.to_lang) = UPPER(:toLang)"
     )
-    fun observeWordsInLanguagePairOf(dictionaryId: String): Flow<List<WordEntity>>
+    fun observeWordsInLanguagePair(fromLang: String, toLang: String): Flow<List<WordEntity>>
 
     // Live word count per dictionary; tombstoned rows are excluded.
     @Query(

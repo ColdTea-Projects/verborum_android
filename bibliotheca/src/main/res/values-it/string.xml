@@ -128,4 +128,10 @@
         <item quantity="one">%1$d parola nel dizionario</item>
         <item quantity="other">%1$d parole nel dizionario</item>
     </plurals>
+
+    <string name="dictionaryOptionsUnsubscribe">Annulla iscrizione</string>
+    <string name="dictionaryDetailsPublishedBy">di %1$s</string>
+    <string name="unsubscribeDialogTitle">Annullare l’iscrizione a «%1$s»?</string>
+    <string name="unsubscribeDialogMessage">Verrà rimosso dalla tua Bibliotheca insieme ai tuoi progressi. Puoi scaricarlo di nuovo dal Forum.</string>
+    <string name="errorUnsubscribeFailed">Impossibile annullare l’iscrizione. Controlla la connessione e riprova.</string>
 </resources>

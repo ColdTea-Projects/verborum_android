@@ -37,4 +37,9 @@
 
     <string name="forumMembershipTitle">Dem Forum beitreten</string>
     <string name="forumMembershipMessage">Um geteilte Wörterbücher zu durchsuchen und zu importieren, öffne Optionen → Profil, gib einen Anzeigenamen ein und akzeptiere die Forum-Bedingungen.</string>
+
+    <string name="forumBadgeYours">Deins</string>
+    <string name="forumDownloadSucceeded">In deine Bibliotheca heruntergeladen</string>
+    <string name="forumDownloadUnavailable">Dieses Wörterbuch ist nicht mehr verfügbar</string>
+    <string name="forumDownloadFailed">Das Wörterbuch konnte nicht heruntergeladen werden. Bitte versuche es erneut.</string>
 </resources>

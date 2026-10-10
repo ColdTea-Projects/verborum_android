@@ -30,6 +30,10 @@ import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.runTest
 import java.io.IOException
 import org.junit.Assert.assertEquals
+import de.coldtea.verborum.bibliotheca.imported.domain.ImportedDictionaryService
+import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.local.ObserveDictionaryUseCase
+import de.coldtea.verborum.bibliotheca.testDictionary
+import de.coldtea.verborum.bibliotheca.testDictionaryUi
 import org.junit.Test
 
 class WordServiceTest : BaseTest() {
@@ -73,6 +77,13 @@ class WordServiceTest : BaseTest() {
     @MockK
     private lateinit var updateWordLevelUseCase: UpdateWordLevelUseCase
 
+    @MockK
+    private lateinit var observeDictionaryUseCase: ObserveDictionaryUseCase
+
+    // updateWordLevel returns Unit — covered by relaxUnitFun.
+    @MockK
+    private lateinit var importedDictionaryService: ImportedDictionaryService
+
     private val successResponse = mockk<Response<Unit>> { every { isSuccessful } returns true }
     private val failureResponse = mockk<Response<Unit>> { every { isSuccessful } returns false }
 
@@ -80,6 +91,11 @@ class WordServiceTest : BaseTest() {
 
     override fun setUp() {
         super.setUp()
+        // No downloads unless a test says otherwise.
+        every { importedDictionaryService.observeWords(any()) } returns flowOf(emptyList())
+        every { importedDictionaryService.observeWordCounts() } returns flowOf(emptyMap())
+        every { importedDictionaryService.observeDictionary(any()) } returns flowOf(null)
+        every { importedDictionaryService.observeWordsInLanguagePair(any(), any()) } returns flowOf(emptyList())
         wordService = WordService(
             observeWordsByDictionaryUseCase = observeWordsByDictionaryUseCase,
             observeWordsInLanguagePairUseCase = observeWordsInLanguagePairUseCase,
@@ -92,8 +108,60 @@ class WordServiceTest : BaseTest() {
             getWordUseCase = getWordUseCase,
             saveWordUseCase = saveWordUseCase,
             updateWordLevelUseCase = updateWordLevelUseCase,
+            observeDictionaryUseCase = observeDictionaryUseCase,
+            importedDictionaryService = importedDictionaryService,
         )
     }
+
+    // region downloads
+    @Test
+    fun `observeWordsByDictionary includes a downloaded dictionary's words`() = runTest {
+        val downloaded = testWordUi(wordId = "dl-word", dictionaryId = "dl")
+        every { observeWordsByDictionaryUseCase.invoke("dl") } returns flowOf(emptyList())
+        every { importedDictionaryService.observeWords("dl") } returns flowOf(listOf(downloaded))
+
+        assertEquals(listOf(downloaded), wordService.observeWordsByDictionary("dl").first())
+    }
+
+    @Test
+    fun `the language pair pool spans own and downloaded words of the same direction`() = runTest {
+        val own = testWord(wordId = "own-word")
+        val downloaded = testWordUi(wordId = "dl-word")
+        every { observeDictionaryUseCase.invoke("dl") } returns flowOf(null)
+        every { importedDictionaryService.observeDictionary("dl") } returns
+            flowOf(testDictionaryUi(dictionaryId = "dl", fromLang = "DE", toLang = "EN").copy(isImported = true))
+        every { observeWordsInLanguagePairUseCase.invoke("DE", "EN") } returns flowOf(listOf(own))
+        every { importedDictionaryService.observeWordsInLanguagePair("DE", "EN") } returns flowOf(listOf(downloaded))
+
+        val result = wordService.observeWordsInLanguagePair("dl").first()
+
+        assertEquals(listOf("own-word", "dl-word"), result.map { it.wordId })
+    }
+
+    @Test
+    fun `the language pair pool of an unknown dictionary is empty`() = runTest {
+        every { observeDictionaryUseCase.invoke("gone") } returns flowOf(null)
+
+        assertEquals(emptyList<WordUi>(), wordService.observeWordsInLanguagePair("gone").first())
+    }
+
+    @Test
+    fun `observeWordCounts merges own and downloaded counts`() = runTest {
+        every { observeWordCountsUseCase.invoke() } returns flowOf(mapOf("own" to 3))
+        every { importedDictionaryService.observeWordCounts() } returns flowOf(mapOf("dl" to 5))
+
+        assertEquals(mapOf("own" to 3, "dl" to 5), wordService.observeWordCounts().first())
+    }
+
+    @Test
+    fun `updateWordLevel also reaches a downloaded word's local progress`() = runTest {
+        coEvery { updateWordLevelUseCase.invoke(any(), any(), any()) } returns Unit
+
+        wordService.updateWordLevel(wordId = "dl-word", level = 4)
+
+        coVerify(exactly = 1) { importedDictionaryService.updateWordLevel("dl-word", 4) }
+    }
+    // endregion
 
     // region observeWordsByDictionary
 

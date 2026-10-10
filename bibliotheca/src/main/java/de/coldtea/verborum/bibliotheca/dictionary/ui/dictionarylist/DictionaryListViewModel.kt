@@ -12,6 +12,7 @@ import de.coldtea.verborum.bibliotheca.dictionary.ui.dictionarylist.model.Dictio
 import de.coldtea.verborum.bibliotheca.word.domain.WordService
 import de.coldtea.verborum.core.ui.BaseViewModel
 import de.coldtea.verborum.core.ui.UiText
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
@@ -160,6 +161,17 @@ class DictionaryListViewModel @Inject constructor(
      * A failure here means the local tombstone write itself threw (the API-delete path is
      * offline-safe and simply retries via sync), so it is surfaced rather than swallowed.
      */
+    /** Unsubscribes from a downloaded dictionary; online-only, so a failure is reported and nothing changes. */
+    fun unsubscribe(dictionaryId: String) = viewModelScope.launch {
+        try {
+            dictionaryService.unsubscribe(dictionaryId)
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            _snackbarMessages.emit(UiText.Resource(ResStrings.errorUnsubscribeFailed))
+        }
+    }
+
     fun deleteDictionary(dictionaryId: String) = viewModelScope.launch {
         try {
             dictionaryService.markDictionaryDeleted(dictionaryId)

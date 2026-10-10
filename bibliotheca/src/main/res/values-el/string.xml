@@ -128,4 +128,10 @@
         <item quantity="one">%1$d λέξη στο λεξικό</item>
         <item quantity="other">%1$d λέξεις στο λεξικό</item>
     </plurals>
+
+    <string name="dictionaryOptionsUnsubscribe">Κατάργηση εγγραφής</string>
+    <string name="dictionaryDetailsPublishedBy">από %1$s</string>
+    <string name="unsubscribeDialogTitle">Κατάργηση εγγραφής από «%1$s»;</string>
+    <string name="unsubscribeDialogMessage">Θα αφαιρεθεί από τη Bibliotheca σας μαζί με την πρόοδο εξάσκησης. Μπορείτε να το κατεβάσετε ξανά από το Forum.</string>
+    <string name="errorUnsubscribeFailed">Δεν ήταν δυνατή η κατάργηση εγγραφής. Ελέγξτε τη σύνδεση και δοκιμάστε ξανά.</string>
 </resources>

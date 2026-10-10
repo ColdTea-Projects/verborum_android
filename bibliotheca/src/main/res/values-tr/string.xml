@@ -128,4 +128,10 @@
         <item quantity="one">sözlükte %1$d kelime</item>
         <item quantity="other">sözlükte %1$d kelime</item>
     </plurals>
+
+    <string name="dictionaryOptionsUnsubscribe">Abonelikten çık</string>
+    <string name="dictionaryDetailsPublishedBy">%1$s tarafından</string>
+    <string name="unsubscribeDialogTitle">“%1$s” aboneliğinden çıkılsın mı?</string>
+    <string name="unsubscribeDialogMessage">Bu sözlük, üzerindeki çalışma ilerlemenle birlikte Bibliotheca’ndan kaldırılacak. Forum’dan yeniden indirebilirsin.</string>
+    <string name="errorUnsubscribeFailed">Abonelikten çıkılamadı. Bağlantını kontrol edip tekrar dene.</string>
 </resources>

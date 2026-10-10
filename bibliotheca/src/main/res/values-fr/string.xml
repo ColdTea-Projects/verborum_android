@@ -128,4 +128,10 @@
         <item quantity="one">%1$d mot dans le dictionnaire</item>
         <item quantity="other">%1$d mots dans le dictionnaire</item>
     </plurals>
+
+    <string name="dictionaryOptionsUnsubscribe">Se désabonner</string>
+    <string name="dictionaryDetailsPublishedBy">par %1$s</string>
+    <string name="unsubscribeDialogTitle">Se désabonner de « %1$s » ?</string>
+    <string name="unsubscribeDialogMessage">Il sera retiré de votre Bibliotheca, avec votre progression. Vous pourrez le télécharger à nouveau depuis le Forum.</string>
+    <string name="errorUnsubscribeFailed">Impossible de se désabonner. Vérifiez votre connexion et réessayez.</string>
 </resources>

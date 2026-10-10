@@ -1,6 +1,7 @@
 package de.coldtea.verborum.bibliotheca.auth.domain.usecase
 
 import de.coldtea.verborum.bibliotheca.dictionary.data.db.DictionaryRepository
+import de.coldtea.verborum.bibliotheca.imported.data.ImportedDictionaryRepository
 import de.coldtea.verborum.bibliotheca.word.data.WordRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -17,9 +18,12 @@ import javax.inject.Inject
 class ClearLocalDataUseCase @Inject constructor(
     private val dictionaryRepository: DictionaryRepository,
     private val wordRepository: WordRepository,
+    private val importedDictionaryRepository: ImportedDictionaryRepository,
 ) {
     suspend fun invoke() = withContext(Dispatchers.IO) {
         wordRepository.deleteAllWords()
         dictionaryRepository.deleteAllDictionaries()
+        // Downloads are per account too: the vault is the next user's, not this one's.
+        importedDictionaryRepository.deleteAll()
     }
 }

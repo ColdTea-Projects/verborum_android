@@ -97,4 +97,6 @@
     <string name="profileUpdate">به‌روزرسانی</string>
     <string name="profileUpdated">نمایه به‌روز شد</string>
     <string name="profileUpdateError">به‌روزرسانی نمایه ممکن نشد. لطفاً دوباره تلاش کنید.</string>
+
+    <string name="dictionaryBadgeDownloaded">دانلودشده</string>
 </resources>

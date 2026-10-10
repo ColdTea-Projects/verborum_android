@@ -97,4 +97,6 @@
     <string name="profileUpdate">Yenilə</string>
     <string name="profileUpdated">Profil yeniləndi</string>
     <string name="profileUpdateError">Profilinizi yeniləmək mümkün olmadı. Yenidən cəhd edin.</string>
+
+    <string name="dictionaryBadgeDownloaded">Yüklənib</string>
 </resources>

@@ -9,6 +9,7 @@ import de.coldtea.verborum.bibliotheca.word.ui.dictionarydetails.model.Dictionar
 import de.coldtea.verborum.bibliotheca.word.ui.multiplechoice.REQUIRED_WORDS_FOR_TEST
 import de.coldtea.verborum.core.ui.BaseViewModel
 import de.coldtea.verborum.core.ui.UiText
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -76,6 +77,21 @@ class DictionaryDetailsViewModel @Inject constructor(
             wordService.deleteWord(wordId)
         } catch (e: Exception) {
             _snackbarMessages.emit(UiText.Resource(ResStrings.errorDeleteFailed))
+        }
+    }
+
+    /**
+     * Unsubscribes from a downloaded dictionary. Once it is gone locally the observed dictionary
+     * turns null, the state becomes Deleted and the screen leaves — as after a delete.
+     */
+    fun unsubscribe() = viewModelScope.launch {
+        val state = _dictionaryDetailState.value as? DictionaryDetailState.Success ?: return@launch
+        try {
+            dictionaryService.unsubscribe(state.dictionaryUi.dictionaryId)
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            _snackbarMessages.emit(UiText.Resource(ResStrings.errorUnsubscribeFailed))
         }
     }
 

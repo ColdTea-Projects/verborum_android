@@ -130,4 +130,10 @@
         <item quantity="many">%1$d słów w słowniku</item>
         <item quantity="other">%1$d słowa w słowniku</item>
     </plurals>
+
+    <string name="dictionaryOptionsUnsubscribe">Anuluj subskrypcję</string>
+    <string name="dictionaryDetailsPublishedBy">autor: %1$s</string>
+    <string name="unsubscribeDialogTitle">Anulować subskrypcję „%1$s”?</string>
+    <string name="unsubscribeDialogMessage">Zostanie usunięty z Twojej Bibliotheca wraz z postępami w nauce. Możesz pobrać go ponownie z Forum.</string>
+    <string name="errorUnsubscribeFailed">Nie udało się anulować subskrypcji. Sprawdź połączenie i spróbuj ponownie.</string>
 </resources>

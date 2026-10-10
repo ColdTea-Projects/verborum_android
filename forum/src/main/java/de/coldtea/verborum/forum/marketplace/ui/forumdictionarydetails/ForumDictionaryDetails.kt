@@ -36,6 +36,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import de.coldtea.verborum.core.theme.VerborumTheme
 import de.coldtea.verborum.core.ui.RegisterTopBar
+import de.coldtea.verborum.core.ui.ShowSnackbarMessages
 import de.coldtea.verborum.core.ui.components.DictionaryTagsText
 import de.coldtea.verborum.core.ui.components.ScreenError
 import de.coldtea.verborum.core.ui.components.languagePairLabel
@@ -51,14 +52,17 @@ import de.coldtea.verborum.forum.marketplace.ui.forumdictionarylist.model.ForumD
 
 /**
  * A marketplace dictionary, laid out like bibliotheca's details screen: an info panel instead of
- * the practice buttons, a read-only word list, and a single Download action.
+ * the practice buttons, a read-only word list, and a single Download action — none on the user's
+ * own dictionary, and a disabled "Downloaded" once it is in their Bibliotheca.
  */
 @Composable
 fun ForumDictionaryDetailsScreen(
     viewModel: ForumDictionaryDetailsViewModel = hiltViewModel(),
-    onDownloadClick: () -> Unit = {},
 ) {
     val state by viewModel.dictionaryDetailState.collectAsState()
+
+    // Download outcomes surface here.
+    ShowSnackbarMessages(viewModel.snackbarMessages)
 
     when (val detailState = state) {
         is ForumDictionaryDetailState.Loading -> {
@@ -94,7 +98,7 @@ fun ForumDictionaryDetailsScreen(
             ForumDictionaryDetailsContent(
                 dictionary = dictionary,
                 words = detailState.words,
-                onDownloadClick = onDownloadClick,
+                onDownloadClick = viewModel::download,
             )
         }
     }
@@ -159,31 +163,45 @@ private fun ForumDictionaryDetailsContent(
             }
         }
 
-        // Sticky bottom action — Download has no behaviour yet.
-        Button(
-            onClick = onDownloadClick,
-            shape = RoundedCornerShape(16.dp),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.primary,
-                contentColor = MaterialTheme.colorScheme.onPrimary,
-            ),
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 8.dp, bottom = 16.dp)
-                .height(56.dp)
-        ) {
-            Icon(
-                painter = painterResource(ResDrawables.ic_download_24),
-                contentDescription = null,
-                modifier = Modifier.size(18.dp)
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-            Text(
-                text = stringResource(ResStrings.forumDownload),
-                fontSize = 16.sp,
-                fontWeight = FontWeight.SemiBold,
-                letterSpacing = 0.5.sp
-            )
+        // Sticky bottom action — nothing to download on the user's own dictionary.
+        if (!dictionary.isOwn) {
+            Button(
+                onClick = onDownloadClick,
+                enabled = dictionary.canDownload && !dictionary.isDownloading,
+                shape = RoundedCornerShape(16.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = MaterialTheme.colorScheme.onPrimary,
+                ),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 8.dp, bottom = 16.dp)
+                    .height(56.dp)
+            ) {
+                if (dictionary.isDownloading) {
+                    CircularProgressIndicator(
+                        strokeWidth = 2.dp,
+                        color = MaterialTheme.colorScheme.onPrimary,
+                        modifier = Modifier.size(24.dp),
+                    )
+                } else {
+                    Icon(
+                        painter = painterResource(ResDrawables.ic_download_24),
+                        contentDescription = null,
+                        modifier = Modifier.size(18.dp)
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = stringResource(
+                            if (dictionary.isDownloaded) CoreResStrings.dictionaryBadgeDownloaded
+                            else ResStrings.forumDownload
+                        ),
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        letterSpacing = 0.5.sp
+                    )
+                }
+            }
         }
     }
 }

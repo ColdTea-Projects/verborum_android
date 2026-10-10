@@ -37,4 +37,9 @@
 
     <string name="forumMembershipTitle">به Forum بپیوندید</string>
     <string name="forumMembershipMessage">برای مرور و وارد کردن واژه‌نامه‌های اشتراکی، به تنظیمات ← نمایه بروید، یک نام نمایشی اضافه کنید و شرایط Forum را بپذیرید.</string>
+
+    <string name="forumBadgeYours">مال شما</string>
+    <string name="forumDownloadSucceeded">در Bibliotheca شما دانلود شد</string>
+    <string name="forumDownloadUnavailable">این واژه‌نامه دیگر در دسترس نیست</string>
+    <string name="forumDownloadFailed">دانلود واژه‌نامه ممکن نشد. لطفاً دوباره تلاش کنید.</string>
 </resources>

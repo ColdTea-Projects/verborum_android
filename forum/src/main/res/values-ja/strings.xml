@@ -37,4 +37,9 @@
 
     <string name="forumMembershipTitle">Forumに参加する</string>
     <string name="forumMembershipMessage">共有辞書を閲覧・インポートするには、オプション → プロフィールで表示名を入力し、Forumの規約に同意してください。</string>
+
+    <string name="forumBadgeYours">自分の辞書</string>
+    <string name="forumDownloadSucceeded">Bibliotheca にダウンロードしました</string>
+    <string name="forumDownloadUnavailable">この辞書は利用できなくなりました</string>
+    <string name="forumDownloadFailed">辞書をダウンロードできませんでした。もう一度お試しください。</string>
 </resources>

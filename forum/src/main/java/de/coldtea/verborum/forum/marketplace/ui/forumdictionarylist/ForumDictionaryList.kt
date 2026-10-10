@@ -51,6 +51,7 @@ import androidx.paging.compose.itemKey
 import de.coldtea.verborum.core.theme.VerborumTheme
 import de.coldtea.verborum.core.ui.LocalSnackbarHostState
 import de.coldtea.verborum.core.ui.RegisterTopBar
+import de.coldtea.verborum.core.ui.ShowSnackbarMessages
 import de.coldtea.verborum.core.ui.VerborumTopBarAction
 import de.coldtea.verborum.core.ui.components.DictionaryCardSkeleton
 import de.coldtea.verborum.core.ui.components.ScreenError
@@ -78,6 +79,9 @@ fun ForumDictionaryListScreen(
     onSearchClick: () -> Unit,
 ) {
     val access by viewModel.accessState.collectAsState()
+
+    // Download outcomes surface here.
+    ShowSnackbarMessages(viewModel.snackbarMessages)
 
     // Every visit re-checks membership: the user may have joined or left since the last one.
     LaunchedEffect(Unit) { viewModel.refreshAccess() }
@@ -191,6 +195,7 @@ private fun ForumDictionaryTabContent(
         dictionaries = dictionaries,
         filter = filter,
         onDictionaryClick = onDictionaryClick,
+        onDownload = viewModel::download,
         activeFilters = {
             ForumActiveFilters(
                 filter = filter,
@@ -208,6 +213,7 @@ private fun ForumDictionaryListContent(
     dictionaries: LazyPagingItems<ForumDictionaryUi>,
     filter: ForumDictionaryFilter,
     onDictionaryClick: (String) -> Unit,
+    onDownload: (ForumDictionaryUi) -> Unit = {},
     activeFilters: @Composable () -> Unit = {},
 ) {
     // Hoisted so the scroll position survives the skeleton -> list switch and back-navigation;
@@ -215,11 +221,13 @@ private fun ForumDictionaryListContent(
     val listState = rememberSaveable(filter, saver = LazyListState.Saver) { LazyListState() }
     var optionsFor by remember { mutableStateOf<ForumDictionaryUi?>(null) }
 
-    optionsFor?.let {
+    optionsFor?.let { dictionary ->
         ForumDictionaryOptionsSheet(
             onDismiss = { optionsFor = null },
-            // Download has no action yet — the sheet just closes.
-            onDownload = { optionsFor = null },
+            onDownload = {
+                optionsFor = null
+                onDownload(dictionary)
+            },
         )
     }
 

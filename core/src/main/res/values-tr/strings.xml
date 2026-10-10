@@ -97,4 +97,6 @@
     <string name="profileUpdate">Güncelle</string>
     <string name="profileUpdated">Profil güncellendi</string>
     <string name="profileUpdateError">Profilin güncellenemedi. Lütfen tekrar dene.</string>
+
+    <string name="dictionaryBadgeDownloaded">İndirildi</string>
 </resources>

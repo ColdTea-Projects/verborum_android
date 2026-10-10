@@ -283,6 +283,19 @@ class DictionaryListViewModelTest : BaseTest() {
 
     // endregion
 
+    // region unsubscribe
+    @Test
+    fun `unsubscribe delegates to the service`() = runTest {
+        every { dictionaryService.observeDictionaries() } returns emptyFlow()
+        coEvery { dictionaryService.unsubscribe("dl") } returns Unit
+        val viewModel = buildViewModel()
+
+        viewModel.unsubscribe("dl")
+
+        coVerify(exactly = 1) { dictionaryService.unsubscribe("dl") }
+    }
+    // endregion
+
     // region deleteDictionary
 
     @Test

@@ -37,4 +37,9 @@
 
     <string name="forumMembershipTitle">انضم إلى Forum</string>
     <string name="forumMembershipMessage">لتصفح القواميس المشتركة واستيرادها، انتقل إلى الخيارات ← الملف الشخصي، وأضف اسمًا معروضًا واقبل شروط Forum.</string>
+
+    <string name="forumBadgeYours">لك</string>
+    <string name="forumDownloadSucceeded">تم التنزيل إلى Bibliotheca</string>
+    <string name="forumDownloadUnavailable">هذا القاموس لم يعد متاحًا</string>
+    <string name="forumDownloadFailed">تعذّر تنزيل القاموس. يُرجى المحاولة مرة أخرى.</string>
 </resources>

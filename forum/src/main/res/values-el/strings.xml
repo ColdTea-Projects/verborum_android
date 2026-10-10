@@ -37,4 +37,9 @@
 
     <string name="forumMembershipTitle">Γίνετε μέλος του Forum</string>
     <string name="forumMembershipMessage">Για να περιηγηθείτε και να εισαγάγετε κοινόχρηστα λεξικά, μεταβείτε στις Επιλογές → Προφίλ, προσθέστε ένα εμφανιζόμενο όνομα και αποδεχτείτε τους όρους του Forum.</string>
+
+    <string name="forumBadgeYours">Δικό σας</string>
+    <string name="forumDownloadSucceeded">Λήφθηκε στη Bibliotheca σας</string>
+    <string name="forumDownloadUnavailable">Αυτό το λεξικό δεν είναι πλέον διαθέσιμο</string>
+    <string name="forumDownloadFailed">Δεν ήταν δυνατή η λήψη του λεξικού. Δοκιμάστε ξανά.</string>
 </resources>

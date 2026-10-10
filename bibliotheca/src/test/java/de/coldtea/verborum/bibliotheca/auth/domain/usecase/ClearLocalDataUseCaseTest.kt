@@ -1,6 +1,7 @@
 package de.coldtea.verborum.bibliotheca.auth.domain.usecase
 
 import de.coldtea.verborum.bibliotheca.dictionary.data.db.DictionaryRepository
+import de.coldtea.verborum.bibliotheca.imported.data.ImportedDictionaryRepository
 import de.coldtea.verborum.bibliotheca.word.data.WordRepository
 import de.coldtea.verborum.core.BaseTest
 import io.mockk.coVerify
@@ -16,18 +17,22 @@ class ClearLocalDataUseCaseTest : BaseTest() {
     @MockK
     private lateinit var wordRepository: WordRepository
 
+    @MockK
+    private lateinit var importedDictionaryRepository: ImportedDictionaryRepository
+
     private lateinit var useCase: ClearLocalDataUseCase
 
     override fun setUp() {
         super.setUp()
-        useCase = ClearLocalDataUseCase(dictionaryRepository, wordRepository)
+        useCase = ClearLocalDataUseCase(dictionaryRepository, wordRepository, importedDictionaryRepository)
     }
 
     @Test
-    fun `invoke deletes every local word and dictionary`() = runTest {
+    fun `invoke deletes every local word and dictionary, downloads included`() = runTest {
         useCase.invoke()
 
         coVerify(exactly = 1) { wordRepository.deleteAllWords() }
         coVerify(exactly = 1) { dictionaryRepository.deleteAllDictionaries() }
+        coVerify(exactly = 1) { importedDictionaryRepository.deleteAll() }
     }
 }

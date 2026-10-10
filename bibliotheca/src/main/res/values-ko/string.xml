@@ -127,4 +127,10 @@
     <plurals name="dictionaryDetailsScreenWordListCount">
         <item quantity="other">사전에 %1$d개 단어</item>
     </plurals>
+
+    <string name="dictionaryOptionsUnsubscribe">구독 해지</string>
+    <string name="dictionaryDetailsPublishedBy">작성자: %1$s</string>
+    <string name="unsubscribeDialogTitle">‘%1$s’ 구독을 해지할까요?</string>
+    <string name="unsubscribeDialogMessage">연습 진행 상황과 함께 Bibliotheca에서 삭제됩니다. Forum에서 다시 다운로드할 수 있습니다.</string>
+    <string name="errorUnsubscribeFailed">구독을 해지하지 못했습니다. 연결을 확인하고 다시 시도하세요.</string>
 </resources>

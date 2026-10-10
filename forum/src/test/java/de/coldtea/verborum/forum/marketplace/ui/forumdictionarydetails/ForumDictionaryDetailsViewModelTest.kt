@@ -9,6 +9,10 @@ import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
+import io.mockk.every
+import io.mockk.coVerify
+import kotlinx.coroutines.flow.flowOf
+import de.coldtea.verborum.forum.marketplace.domain.model.MarketplaceImportResult
 import org.junit.Test
 
 class ForumDictionaryDetailsViewModelTest : BaseTest() {
@@ -20,6 +24,8 @@ class ForumDictionaryDetailsViewModelTest : BaseTest() {
 
     override fun setUp() {
         super.setUp()
+        every { marketplaceService.observeDownloadedDictionaryIds() } returns flowOf(setOf("downloaded"))
+        every { marketplaceService.currentUserId() } returns "me"
         subject = ForumDictionaryDetailsViewModel(marketplaceService)
     }
 
@@ -70,5 +76,29 @@ class ForumDictionaryDetailsViewModelTest : BaseTest() {
         subject.retry()
 
         assertEquals(ForumDictionaryDetailState.Success(dictionary, emptyList()), subject.dictionaryDetailState.value)
+    }
+
+    @Test
+    fun `the shown dictionary is marked downloaded when it already is`() = runTest {
+        coEvery { marketplaceService.getDictionary("downloaded") } returns testForumDictionaryUi(dictionaryId = "downloaded")
+        coEvery { marketplaceService.getWords("downloaded") } returns emptyList()
+
+        subject.init("downloaded")
+
+        val state = subject.dictionaryDetailState.value as ForumDictionaryDetailState.Success
+        assertEquals(true, state.dictionary.isDownloaded)
+    }
+
+    @Test
+    fun `download downloads the shown dictionary`() = runTest {
+        val dictionary = testForumDictionaryUi(dictionaryId = "d1", publisherId = "anna")
+        coEvery { marketplaceService.getDictionary("d1") } returns dictionary
+        coEvery { marketplaceService.getWords("d1") } returns emptyList()
+        coEvery { marketplaceService.downloadDictionary(any()) } returns MarketplaceImportResult.Imported
+        subject.init("d1")
+
+        subject.download()
+
+        coVerify(exactly = 1) { marketplaceService.downloadDictionary(dictionary) }
     }
 }

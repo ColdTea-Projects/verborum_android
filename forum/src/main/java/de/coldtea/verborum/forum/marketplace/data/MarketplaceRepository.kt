@@ -9,6 +9,7 @@ import de.coldtea.verborum.forum.marketplace.data.api.model.MarketplaceWordRespo
 import de.coldtea.verborum.forum.marketplace.data.api.model.SharedDictionaryResponse
 import de.coldtea.verborum.forum.marketplace.data.api.model.SharedDictionaryTagResponse
 import de.coldtea.verborum.forum.marketplace.domain.model.MarketplaceListingOrder
+import retrofit2.Response
 import java.util.concurrent.ConcurrentHashMap
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -44,6 +45,9 @@ class MarketplaceRepository @Inject constructor(
             MarketplaceListingOrder.POPULAR ->
                 marketplaceApi.getPopularListings(page = page, size = size, pairs = pairs, tags = tags, publisher = publisherName)
         }.also { response -> response.items.forEach { loadedListings[it.dictionaryId] = it } }
+
+    suspend fun importDictionary(dictionaryId: String): Response<Unit> =
+        marketplaceApi.importDictionary(dictionaryId)
 
     /** The listing as the browse list last delivered it; null if it was never loaded this session. */
     fun getLoadedListing(dictionaryId: String): MarketplaceListingResponse? = loadedListings[dictionaryId]

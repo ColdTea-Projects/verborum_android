@@ -99,4 +99,6 @@
     <string name="profileUpdate">Atnaujinti</string>
     <string name="profileUpdated">Profilis atnaujintas</string>
     <string name="profileUpdateError">Nepavyko atnaujinti profilio. Bandykite dar kartą.</string>
+
+    <string name="dictionaryBadgeDownloaded">Atsisiųstas</string>
 </resources>

@@ -37,4 +37,9 @@
 
     <string name="forumMembershipTitle">Word lid van het Forum</string>
     <string name="forumMembershipMessage">Ga naar Opties → Profiel, voeg een weergavenaam toe en accepteer de Forum-voorwaarden om gedeelde woordenboeken te bekijken en te importeren.</string>
+
+    <string name="forumBadgeYours">Van jou</string>
+    <string name="forumDownloadSucceeded">Gedownload naar je Bibliotheca</string>
+    <string name="forumDownloadUnavailable">Dit woordenboek is niet meer beschikbaar</string>
+    <string name="forumDownloadFailed">Het woordenboek kon niet worden gedownload. Probeer het opnieuw.</string>
 </resources>

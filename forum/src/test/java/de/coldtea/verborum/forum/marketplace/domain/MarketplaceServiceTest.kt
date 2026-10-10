@@ -20,6 +20,11 @@ import de.coldtea.verborum.forum.testForumWordUi
 import de.coldtea.verborum.forum.testMarketplaceListing
 import de.coldtea.verborum.forum.testMarketplaceWord
 import de.coldtea.verborum.forum.vault.domain.usecase.api.GetVaultDictionaryLanguagesApiUseCase
+import de.coldtea.verborum.core.auth.domain.usecase.GetActiveUserUseCase
+import de.coldtea.verborum.forum.marketplace.domain.model.MarketplaceImportResult
+import de.coldtea.verborum.forum.marketplace.domain.usecase.api.ImportMarketplaceDictionaryApiUseCase
+import de.coldtea.verborum.forum.marketplace.domain.usecase.local.ObserveDownloadedDictionaryIdsUseCase
+import de.coldtea.verborum.forum.marketplace.domain.usecase.local.SaveDownloadedDictionaryUseCase
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.impl.annotations.MockK
@@ -48,6 +53,19 @@ class MarketplaceServiceTest : BaseTest() {
     @MockK
     private lateinit var profileService: ProfileService
 
+    @MockK
+    private lateinit var importMarketplaceDictionaryApiUseCase: ImportMarketplaceDictionaryApiUseCase
+
+    @MockK
+    private lateinit var observeDownloadedDictionaryIdsUseCase: ObserveDownloadedDictionaryIdsUseCase
+
+    // invoke returns Unit — covered by relaxUnitFun.
+    @MockK
+    private lateinit var saveDownloadedDictionaryUseCase: SaveDownloadedDictionaryUseCase
+
+    @MockK
+    private lateinit var getActiveUserUseCase: GetActiveUserUseCase
+
     private lateinit var subject: MarketplaceService
 
     override fun setUp() {
@@ -59,6 +77,10 @@ class MarketplaceServiceTest : BaseTest() {
             getOwnedDictionaryLanguagesUseCase,
             getVaultDictionaryLanguagesApiUseCase,
             profileService,
+            importMarketplaceDictionaryApiUseCase,
+            observeDownloadedDictionaryIdsUseCase,
+            saveDownloadedDictionaryUseCase,
+            getActiveUserUseCase,
         )
     }
 
@@ -180,6 +202,38 @@ class MarketplaceServiceTest : BaseTest() {
         coEvery { getVaultDictionaryLanguagesApiUseCase("user-id") } returns emptyList()
 
         assertEquals(ForumDictionaryFilter(), subject.getDefaultFilter())
+    }
+    // endregion
+
+    // region download
+    @Test
+    fun `a recorded import is copied into the Bibliotheca with the publisher's name`() = runTest {
+        coEvery { importMarketplaceDictionaryApiUseCase("d1") } returns MarketplaceImportResult.Imported
+
+        val result = subject.downloadDictionary(testForumDictionaryUi(dictionaryId = "d1", publisherName = "Anna"))
+
+        assertEquals(MarketplaceImportResult.Imported, result)
+        coVerify(exactly = 1) { saveDownloadedDictionaryUseCase("d1", "Anna") }
+    }
+
+    @Test
+    fun `a failed local copy does not fail the download`() = runTest {
+        coEvery { importMarketplaceDictionaryApiUseCase("d1") } returns MarketplaceImportResult.Imported
+        coEvery { saveDownloadedDictionaryUseCase(any(), any()) } throws RuntimeException("offline")
+
+        assertEquals(
+            MarketplaceImportResult.Imported,
+            subject.downloadDictionary(testForumDictionaryUi(dictionaryId = "d1")),
+        )
+    }
+
+    @Test
+    fun `nothing is copied when the import was refused`() = runTest {
+        coEvery { importMarketplaceDictionaryApiUseCase("d1") } returns MarketplaceImportResult.Unavailable
+
+        subject.downloadDictionary(testForumDictionaryUi(dictionaryId = "d1"))
+
+        coVerify(exactly = 0) { saveDownloadedDictionaryUseCase(any(), any()) }
     }
     // endregion
 }

@@ -2,8 +2,8 @@ package de.coldtea.verborum.forum.vault.data
 
 import de.coldtea.verborum.forum.marketplace.data.api.SharedDictionaryApi
 import de.coldtea.verborum.forum.marketplace.data.api.model.SharedDictionaryResponse
-import de.coldtea.verborum.forum.vault.data.api.VaultApi
-import de.coldtea.verborum.forum.vault.data.api.model.VaultEntryResponse
+import de.coldtea.verborum.core.profile.data.api.VaultApi
+import de.coldtea.verborum.core.profile.data.api.model.VaultEntryResponse
 import javax.inject.Inject
 
 /** The user's vault and the dictionaries it points at — always read live, nothing stored. */

@@ -37,4 +37,9 @@
 
     <string name="forumMembershipTitle">Dołącz do Forum</string>
     <string name="forumMembershipMessage">Aby przeglądać i importować udostępnione słowniki, przejdź do Opcje → Profil, dodaj nazwę wyświetlaną i zaakceptuj warunki Forum.</string>
+
+    <string name="forumBadgeYours">Twój</string>
+    <string name="forumDownloadSucceeded">Pobrano do Twojej Bibliotheca</string>
+    <string name="forumDownloadUnavailable">Ten słownik nie jest już dostępny</string>
+    <string name="forumDownloadFailed">Nie udało się pobrać słownika. Spróbuj ponownie.</string>
 </resources>

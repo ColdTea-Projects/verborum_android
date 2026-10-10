@@ -1,5 +1,7 @@
 package de.coldtea.verborum.bibliotheca.dictionary.ui.dictionarylist.composables
 
+import de.coldtea.verborum.bibliotheca.common.utils.CoreResStrings
+import de.coldtea.verborum.core.ui.components.DictionaryBadge
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.spring
@@ -163,6 +165,14 @@ fun DictionaryCard(
                             text = relativeTimeAgo(dictionary.createdAt),
                             fontSize = 14.sp,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+
+                    // Someone else's dictionary, downloaded from the Forum (read-only).
+                    if (dictionary.isImported) {
+                        DictionaryBadge(
+                            text = stringResource(CoreResStrings.dictionaryBadgeDownloaded),
+                            modifier = Modifier.padding(top = 8.dp),
                         )
                     }
                 }

@@ -37,4 +37,9 @@
 
     <string name="forumMembershipTitle">Únete al Forum</string>
     <string name="forumMembershipMessage">Para explorar e importar diccionarios compartidos, ve a Opciones → Perfil, añade un nombre visible y acepta las condiciones del Forum.</string>
+
+    <string name="forumBadgeYours">Tuyo</string>
+    <string name="forumDownloadSucceeded">Descargado en tu Bibliotheca</string>
+    <string name="forumDownloadUnavailable">Este diccionario ya no está disponible</string>
+    <string name="forumDownloadFailed">No se pudo descargar el diccionario. Inténtalo de nuevo.</string>
 </resources>

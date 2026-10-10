@@ -10,7 +10,6 @@ import de.coldtea.verborum.core.extensions.json
 import de.coldtea.verborum.forum.marketplace.data.api.MarketplaceApi
 import de.coldtea.verborum.forum.marketplace.data.api.SharedDictionaryApi
 import de.coldtea.verborum.forum.marketplace.data.api.SharedWordApi
-import de.coldtea.verborum.forum.vault.data.api.VaultApi
 import kotlinx.serialization.ExperimentalSerializationApi
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
@@ -21,7 +20,7 @@ import javax.inject.Singleton
 /**
  * ms_marketplace lives at its own origin (`:8087`), so it gets its own Retrofit on the shared
  * authenticated [OkHttpClient] (bearer + refresh-once-on-401). The shared-dictionary reads go to
- * ms_dictionary through core's default Retrofit, and the vault to ms_user through core's.
+ * ms_dictionary through core's default Retrofit. The vault API is core's (ms_user).
  */
 @InstallIn(SingletonComponent::class)
 @Module
@@ -50,9 +49,4 @@ object NetworkModule {
     @Provides
     @Singleton
     fun provideSharedWordApi(retrofit: Retrofit): SharedWordApi = retrofit.create(SharedWordApi::class.java)
-
-    /** The vault is an ms_user resource, so it rides core's ms_user Retrofit. */
-    @Provides
-    @Singleton
-    fun provideVaultApi(@Named("userRetrofit") retrofit: Retrofit): VaultApi = retrofit.create(VaultApi::class.java)
 }

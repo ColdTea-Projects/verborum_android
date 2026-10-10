@@ -128,4 +128,10 @@
         <item quantity="one">%1$d woord in het woordenboek</item>
         <item quantity="other">%1$d woorden in het woordenboek</item>
     </plurals>
+
+    <string name="dictionaryOptionsUnsubscribe">Afmelden</string>
+    <string name="dictionaryDetailsPublishedBy">door %1$s</string>
+    <string name="unsubscribeDialogTitle">Afmelden voor ‘%1$s’?</string>
+    <string name="unsubscribeDialogMessage">Het wordt uit je Bibliotheca verwijderd, samen met je oefenvoortgang. Je kunt het opnieuw downloaden via het Forum.</string>
+    <string name="errorUnsubscribeFailed">Afmelden is mislukt. Controleer je verbinding en probeer het opnieuw.</string>
 </resources>
