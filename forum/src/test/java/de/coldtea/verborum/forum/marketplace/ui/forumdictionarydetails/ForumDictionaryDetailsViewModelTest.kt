@@ -13,6 +13,10 @@ import io.mockk.every
 import io.mockk.coVerify
 import kotlinx.coroutines.flow.flowOf
 import de.coldtea.verborum.forum.marketplace.domain.model.MarketplaceImportResult
+import de.coldtea.verborum.core.library.domain.model.RatingOutcome
+import de.coldtea.verborum.core.ui.model.DictionaryRatingUi
+import de.coldtea.verborum.forum.marketplace.domain.MarketplaceRatingService
+import org.junit.Assert.assertNull
 import org.junit.Test
 
 class ForumDictionaryDetailsViewModelTest : BaseTest() {
@@ -20,13 +24,16 @@ class ForumDictionaryDetailsViewModelTest : BaseTest() {
     @MockK
     private lateinit var marketplaceService: MarketplaceService
 
+    @MockK
+    private lateinit var ratingService: MarketplaceRatingService
+
     private lateinit var subject: ForumDictionaryDetailsViewModel
 
     override fun setUp() {
         super.setUp()
         every { marketplaceService.observeDownloadedDictionaryIds() } returns flowOf(setOf("downloaded"))
         every { marketplaceService.currentUserId() } returns "me"
-        subject = ForumDictionaryDetailsViewModel(marketplaceService)
+        subject = ForumDictionaryDetailsViewModel(marketplaceService, ratingService)
     }
 
     @Test
@@ -101,4 +108,95 @@ class ForumDictionaryDetailsViewModelTest : BaseTest() {
 
         coVerify(exactly = 1) { marketplaceService.downloadDictionary(dictionary) }
     }
+
+    // region rating
+    private fun downloaded(id: String = "downloaded") {
+        coEvery { marketplaceService.getDictionary(id) } returns testForumDictionaryUi(dictionaryId = id, publisherId = "anna")
+        coEvery { marketplaceService.getWords(id) } returns emptyList()
+    }
+
+    private fun successState() = subject.dictionaryDetailState.value as ForumDictionaryDetailState.Success
+
+    @Test
+    fun `a downloaded dictionary shows the user's rating`() = runTest {
+        downloaded()
+        coEvery { ratingService.getMyRating("downloaded") } returns 4
+
+        subject.init("downloaded")
+
+        assertEquals(DictionaryRatingUi(stars = 4), successState().rating)
+    }
+
+    @Test
+    fun `an unrated downloaded dictionary shows empty stars`() = runTest {
+        downloaded()
+        coEvery { ratingService.getMyRating("downloaded") } returns null
+
+        subject.init("downloaded")
+
+        assertEquals(DictionaryRatingUi(stars = null), successState().rating)
+    }
+
+    @Test
+    fun `a dictionary that is not downloaded is not offered for rating`() = runTest {
+        coEvery { marketplaceService.getDictionary("fresh") } returns testForumDictionaryUi(dictionaryId = "fresh", publisherId = "anna")
+        coEvery { marketplaceService.getWords("fresh") } returns emptyList()
+
+        subject.init("fresh")
+
+        assertNull(successState().rating)
+        coVerify(exactly = 0) { ratingService.getMyRating(any()) }
+    }
+
+    @Test
+    fun `the user's own dictionary is never rated`() = runTest {
+        coEvery { marketplaceService.getDictionary("downloaded") } returns
+            testForumDictionaryUi(dictionaryId = "downloaded", publisherId = "me")
+        coEvery { marketplaceService.getWords("downloaded") } returns emptyList()
+
+        subject.init("downloaded")
+
+        assertNull(successState().rating)
+        coVerify(exactly = 0) { ratingService.getMyRating(any()) }
+    }
+
+    @Test
+    fun `being offline hides the control instead of showing not rated`() = runTest {
+        downloaded()
+        coEvery { ratingService.getMyRating("downloaded") } throws RuntimeException("offline")
+
+        subject.init("downloaded")
+
+        assertNull(successState().rating)
+    }
+
+    @Test
+    fun `tapping a star rates, tapping the chosen star again removes the rating`() = runTest {
+        downloaded()
+        coEvery { ratingService.getMyRating("downloaded") } returns null
+        coEvery { ratingService.setRating("downloaded", 5) } returns RatingOutcome.DONE
+        coEvery { ratingService.removeRating("downloaded") } returns RatingOutcome.DONE
+        subject.init("downloaded")
+
+        subject.rate(5)
+        assertEquals(DictionaryRatingUi(stars = 5), successState().rating)
+
+        subject.rate(5)
+        assertEquals(DictionaryRatingUi(stars = null), successState().rating)
+        coVerify(exactly = 1) { ratingService.setRating("downloaded", 5) }
+        coVerify(exactly = 1) { ratingService.removeRating("downloaded") }
+    }
+
+    @Test
+    fun `a refused rating keeps the previous one`() = runTest {
+        downloaded()
+        coEvery { ratingService.getMyRating("downloaded") } returns 2
+        coEvery { ratingService.setRating("downloaded", 5) } returns RatingOutcome.FAILED
+        subject.init("downloaded")
+
+        subject.rate(5)
+
+        assertEquals(DictionaryRatingUi(stars = 2), successState().rating)
+    }
+    // endregion
 }

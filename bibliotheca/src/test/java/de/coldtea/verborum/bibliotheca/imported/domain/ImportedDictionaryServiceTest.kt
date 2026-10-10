@@ -5,7 +5,11 @@ import de.coldtea.verborum.bibliotheca.common.utils.getNowInMillis
 import de.coldtea.verborum.bibliotheca.imported.domain.model.ImportedDictionaryContent
 import de.coldtea.verborum.bibliotheca.imported.domain.model.VaultEntry
 import de.coldtea.verborum.bibliotheca.imported.domain.usecase.api.FetchImportedDictionaryApiUseCase
+import de.coldtea.verborum.bibliotheca.imported.domain.usecase.api.GetImportedDictionaryRatingApiUseCase
 import de.coldtea.verborum.bibliotheca.imported.domain.usecase.api.GetVaultApiUseCase
+import de.coldtea.verborum.bibliotheca.imported.domain.usecase.api.RemoveImportedDictionaryRatingApiUseCase
+import de.coldtea.verborum.bibliotheca.imported.domain.usecase.api.SetImportedDictionaryRatingApiUseCase
+import de.coldtea.verborum.core.library.domain.model.RatingOutcome
 import de.coldtea.verborum.bibliotheca.imported.domain.usecase.api.RemoveFromVaultApiUseCase
 import de.coldtea.verborum.bibliotheca.imported.domain.usecase.local.DeleteImportedDictionaryUseCase
 import de.coldtea.verborum.bibliotheca.imported.domain.usecase.local.GetImportedDictionariesUseCase
@@ -50,6 +54,9 @@ class ImportedDictionaryServiceTest : BaseTest() {
     @MockK private lateinit var getVaultApiUseCase: GetVaultApiUseCase
     @MockK private lateinit var removeFromVaultApiUseCase: RemoveFromVaultApiUseCase
     @MockK private lateinit var profileService: ProfileService
+    @MockK private lateinit var getImportedDictionaryRatingApiUseCase: GetImportedDictionaryRatingApiUseCase
+    @MockK private lateinit var setImportedDictionaryRatingApiUseCase: SetImportedDictionaryRatingApiUseCase
+    @MockK private lateinit var removeImportedDictionaryRatingApiUseCase: RemoveImportedDictionaryRatingApiUseCase
 
     private lateinit var service: ImportedDictionaryService
 
@@ -71,6 +78,9 @@ class ImportedDictionaryServiceTest : BaseTest() {
             getVaultApiUseCase,
             removeFromVaultApiUseCase,
             profileService,
+            getImportedDictionaryRatingApiUseCase,
+            setImportedDictionaryRatingApiUseCase,
+            removeImportedDictionaryRatingApiUseCase,
         )
     }
 
@@ -200,6 +210,19 @@ class ImportedDictionaryServiceTest : BaseTest() {
         } finally {
             coVerify(exactly = 0) { deleteImportedDictionaryUseCase.invoke(any()) }
         }
+    }
+    // endregion
+
+    // region rating
+    @Test
+    fun `rating calls go to the marketplace use cases`() = runTest {
+        coEvery { getImportedDictionaryRatingApiUseCase.invoke("d1") } returns 3
+        coEvery { setImportedDictionaryRatingApiUseCase.invoke("d1", 5) } returns RatingOutcome.DONE
+        coEvery { removeImportedDictionaryRatingApiUseCase.invoke("d1") } returns RatingOutcome.UNAVAILABLE
+
+        assertEquals(3, service.getMyRating("d1"))
+        assertEquals(RatingOutcome.DONE, service.setRating("d1", 5))
+        assertEquals(RatingOutcome.UNAVAILABLE, service.removeRating("d1"))
     }
     // endregion
 

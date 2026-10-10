@@ -24,6 +24,8 @@ import de.coldtea.verborum.bibliotheca.dictionary.domain.model.SharingState
 import de.coldtea.verborum.bibliotheca.dictionary.domain.model.SharingChange
 import kotlinx.coroutines.flow.MutableStateFlow
 import org.junit.Assert.assertNull
+import de.coldtea.verborum.core.library.domain.model.RatingOutcome
+import de.coldtea.verborum.core.ui.model.DictionaryRatingUi
 import org.junit.Test
 
 class DictionaryDetailsViewModelTest : BaseTest() {
@@ -331,6 +333,64 @@ class DictionaryDetailsViewModelTest : BaseTest() {
         viewModel.init("dl")
 
         assertNull(successState().sharing)
+    }
+    // endregion
+
+    // region rating
+    private fun initDownloaded(id: String = "dl") {
+        every { dictionaryService.observeDictionary(id) } returns
+            flowOf(testDictionaryUi(dictionaryId = id).copy(isImported = true))
+        every { wordService.observeWordsByDictionary(id) } returns flowOf(emptyList())
+        viewModel.init(id)
+    }
+
+    @Test
+    fun `a downloaded dictionary shows the user's rating`() = runTest {
+        coEvery { dictionaryService.getMyRating("dl") } returns 4
+        initDownloaded()
+
+        assertEquals(DictionaryRatingUi(stars = 4), successState().rating)
+    }
+
+    @Test
+    fun `an own dictionary has no rating control`() = runTest {
+        initSuccess("dict-1")
+
+        assertNull(successState().rating)
+        coVerify(exactly = 0) { dictionaryService.getMyRating(any()) }
+    }
+
+    @Test
+    fun `a star tap rates and the same star again removes the rating`() = runTest {
+        coEvery { dictionaryService.getMyRating("dl") } returns null
+        coEvery { dictionaryService.setRating("dl", 3) } returns RatingOutcome.DONE
+        coEvery { dictionaryService.removeRating("dl") } returns RatingOutcome.DONE
+        initDownloaded()
+
+        viewModel.rate(3)
+        assertEquals(DictionaryRatingUi(stars = 3), successState().rating)
+
+        viewModel.rate(3)
+        assertEquals(DictionaryRatingUi(stars = null), successState().rating)
+    }
+
+    @Test
+    fun `a failed rating keeps the previous one`() = runTest {
+        coEvery { dictionaryService.getMyRating("dl") } returns 2
+        coEvery { dictionaryService.setRating("dl", 5) } returns RatingOutcome.NOT_ALLOWED
+        initDownloaded()
+
+        viewModel.rate(5)
+
+        assertEquals(DictionaryRatingUi(stars = 2), successState().rating)
+    }
+
+    @Test
+    fun `being offline hides the rating control`() = runTest {
+        coEvery { dictionaryService.getMyRating("dl") } throws RuntimeException("offline")
+        initDownloaded()
+
+        assertNull(successState().rating)
     }
     // endregion
 }

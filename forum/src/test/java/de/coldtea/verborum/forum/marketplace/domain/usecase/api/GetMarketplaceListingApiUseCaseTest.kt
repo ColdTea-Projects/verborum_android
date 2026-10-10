@@ -44,6 +44,8 @@ class GetMarketplaceListingApiUseCaseTest : BaseTest() {
         toLang = "DE",
         tags = listOf("a1", "food_drink"),
         importCount = 12,
+        ratingAverage = 4.3f,
+        ratingCount = 12,
         publishedAt = "1970-01-01T00:00:01Z",
     )
 
@@ -58,7 +60,12 @@ class GetMarketplaceListingApiUseCaseTest : BaseTest() {
         every { repository.getLoadedListing("d1") } returns loaded
 
         assertEquals(
-            testMarketplaceListing(dictionaryId = "d1", name = "Renamed by the owner"),
+            testMarketplaceListing(
+                dictionaryId = "d1",
+                name = "Renamed by the owner",
+                ratingAverage = 4.3f,
+                ratingCount = 12,
+            ),
             subject("d1"),
         )
         coVerify(exactly = 0) { repository.getTags(any()) }

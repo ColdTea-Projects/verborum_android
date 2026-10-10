@@ -101,4 +101,14 @@
     <string name="profileUpdateError">Не удалось обновить профиль. Попробуйте ещё раз.</string>
 
     <string name="dictionaryBadgeDownloaded">Скачан</string>
+
+    <string name="ratingYourRating">Ваша оценка</string>
+    <string name="ratingHint">Коснитесь звезды, чтобы оценить. Коснитесь её снова, чтобы убрать оценку.</string>
+    <string name="ratingStarDescription">Оценить на %1$d из 5</string>
+    <string name="errorRatingFailed">Не удалось сохранить оценку. Проверьте подключение и попробуйте ещё раз.</string>
+    <string name="errorRatingUnavailable">Этот словарь больше недоступен, поэтому его нельзя оценить.</string>
+    <string name="ratingTapToRate">Нажмите, чтобы оценить</string>
+    <string name="ratingShow">Показать вашу оценку</string>
+    <string name="ratingHide">Скрыть вашу оценку</string>
+    <string name="ratingCurrent">Ваша оценка: %1$d из 5</string>
 </resources>

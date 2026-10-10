@@ -13,6 +13,8 @@ fun testMarketplaceListing(
     fromLang: String = "EN",
     toLang: String = "DE",
     importCount: Int = 12,
+    ratingAverage: Float? = null,
+    ratingCount: Int = 0,
     publishedAt: Long = 1_000L,
     tags: List<String> = listOf("a1", "food_drink"),
 ) = MarketplaceListing(
@@ -23,6 +25,8 @@ fun testMarketplaceListing(
     fromLang = fromLang,
     toLang = toLang,
     importCount = importCount,
+    ratingAverage = ratingAverage,
+    ratingCount = ratingCount,
     publishedAt = publishedAt,
     tags = tags,
 )
@@ -39,6 +43,7 @@ fun testForumDictionaryUi(
     rating: Float? = null,
     wordCount: Int? = null,
     tags: List<String> = listOf("a1", "food_drink"),
+    ratingCount: Int = 0,
 ) = ForumDictionaryUi(
     dictionaryId = dictionaryId,
     publisherId = publisherId,
@@ -51,6 +56,7 @@ fun testForumDictionaryUi(
     rating = rating,
     wordCount = wordCount,
     tags = tags,
+    ratingCount = ratingCount,
 )
 
 fun testMarketplaceWord(

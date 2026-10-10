@@ -99,4 +99,14 @@
     <string name="profileUpdateError">به‌روزرسانی نمایه ممکن نشد. لطفاً دوباره تلاش کنید.</string>
 
     <string name="dictionaryBadgeDownloaded">دانلودشده</string>
+
+    <string name="ratingYourRating">امتیاز شما</string>
+    <string name="ratingHint">برای امتیاز دادن روی یک ستاره بزنید. برای حذف امتیاز دوباره روی آن بزنید.</string>
+    <string name="ratingStarDescription">امتیاز %1$d از ۵</string>
+    <string name="errorRatingFailed">ذخیرهٔ امتیاز ممکن نشد. اتصال خود را بررسی کنید و دوباره تلاش کنید.</string>
+    <string name="errorRatingUnavailable">این واژه‌نامه دیگر در دسترس نیست و نمی‌توان به آن امتیاز داد.</string>
+    <string name="ratingTapToRate">برای امتیاز دادن بزنید</string>
+    <string name="ratingShow">نمایش امتیاز شما</string>
+    <string name="ratingHide">پنهان کردن امتیاز شما</string>
+    <string name="ratingCurrent">امتیاز شما: %1$d از ۵</string>
 </resources>

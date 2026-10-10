@@ -25,7 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import de.coldtea.verborum.core.theme.VerborumTheme
 import de.coldtea.verborum.forum.common.ui.components.RatingStars
-import de.coldtea.verborum.forum.common.ui.components.formatRating
+import de.coldtea.verborum.forum.common.ui.components.formatRatingWithCount
 import de.coldtea.verborum.forum.common.utils.ResStrings
 import java.text.NumberFormat
 
@@ -39,6 +39,7 @@ fun ForumDictionaryInfoPanel(
     rating: Float?,
     downloadCount: Int,
     modifier: Modifier = Modifier,
+    ratingCount: Int = 0,
 ) {
     Surface(
         modifier = modifier.fillMaxWidth(),
@@ -60,7 +61,7 @@ fun ForumDictionaryInfoPanel(
                 } else {
                     RatingStars(rating = rating, modifier = Modifier.padding(top = 2.dp))
                     Text(
-                        text = formatRating(rating),
+                        text = formatRatingWithCount(rating, ratingCount),
                         fontSize = 13.sp,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.padding(top = 2.dp),

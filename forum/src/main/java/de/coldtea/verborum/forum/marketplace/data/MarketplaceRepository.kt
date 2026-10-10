@@ -6,6 +6,8 @@ import de.coldtea.verborum.forum.marketplace.data.api.SharedWordApi
 import de.coldtea.verborum.forum.marketplace.data.api.model.MarketplaceListingResponse
 import de.coldtea.verborum.forum.marketplace.data.api.model.MarketplacePageResponse
 import de.coldtea.verborum.forum.marketplace.data.api.model.MarketplaceWordResponse
+import de.coldtea.verborum.forum.marketplace.data.api.model.RatingRequest
+import de.coldtea.verborum.forum.marketplace.data.api.model.RatingResponse
 import de.coldtea.verborum.forum.marketplace.data.api.model.SharedDictionaryResponse
 import de.coldtea.verborum.forum.marketplace.data.api.model.SharedDictionaryTagResponse
 import de.coldtea.verborum.forum.marketplace.domain.model.MarketplaceListingOrder
@@ -48,6 +50,15 @@ class MarketplaceRepository @Inject constructor(
 
     suspend fun importDictionary(dictionaryId: String): Response<Unit> =
         marketplaceApi.importDictionary(dictionaryId)
+
+    suspend fun getRating(dictionaryId: String): Response<RatingResponse> =
+        marketplaceApi.getRating(dictionaryId)
+
+    suspend fun setRating(dictionaryId: String, stars: Int): Response<Unit> =
+        marketplaceApi.putRating(dictionaryId, RatingRequest(stars))
+
+    suspend fun removeRating(dictionaryId: String): Response<Unit> =
+        marketplaceApi.deleteRating(dictionaryId)
 
     /** The listing as the browse list last delivered it; null if it was never loaded this session. */
     fun getLoadedListing(dictionaryId: String): MarketplaceListingResponse? = loadedListings[dictionaryId]

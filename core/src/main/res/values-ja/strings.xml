@@ -98,4 +98,14 @@
     <string name="profileUpdateError">プロフィールを更新できませんでした。もう一度お試しください。</string>
 
     <string name="dictionaryBadgeDownloaded">ダウンロード済み</string>
+
+    <string name="ratingYourRating">あなたの評価</string>
+    <string name="ratingHint">星をタップして評価します。もう一度タップすると評価を取り消します。</string>
+    <string name="ratingStarDescription">5 段階中 %1$d で評価</string>
+    <string name="errorRatingFailed">評価を保存できませんでした。接続を確認して、もう一度お試しください。</string>
+    <string name="errorRatingUnavailable">この辞書は利用できなくなったため、評価できません。</string>
+    <string name="ratingTapToRate">タップして評価</string>
+    <string name="ratingShow">評価を表示</string>
+    <string name="ratingHide">評価を隠す</string>
+    <string name="ratingCurrent">あなたの評価: 5 段階中 %1$d</string>
 </resources>

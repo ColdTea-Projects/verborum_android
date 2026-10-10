@@ -99,4 +99,14 @@
     <string name="profileUpdateError">Profilinizi yeniləmək mümkün olmadı. Yenidən cəhd edin.</string>
 
     <string name="dictionaryBadgeDownloaded">Yüklənib</string>
+
+    <string name="ratingYourRating">Sizin qiymətiniz</string>
+    <string name="ratingHint">Qiymətləndirmək üçün ulduza toxunun. Qiyməti silmək üçün ona yenidən toxunun.</string>
+    <string name="ratingStarDescription">5 üzərindən %1$d qiymət ver</string>
+    <string name="errorRatingFailed">Qiymətiniz saxlanmadı. Bağlantını yoxlayıb yenidən cəhd edin.</string>
+    <string name="errorRatingUnavailable">Bu lüğət artıq mövcud deyil, ona görə də qiymətləndirilə bilməz.</string>
+    <string name="ratingTapToRate">Qiymətləndirmək üçün toxunun</string>
+    <string name="ratingShow">Qiymətinizi göstər</string>
+    <string name="ratingHide">Qiymətinizi gizlət</string>
+    <string name="ratingCurrent">Qiymətiniz: 5 üzərindən %1$d</string>
 </resources>

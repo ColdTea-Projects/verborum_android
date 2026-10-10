@@ -12,6 +12,9 @@ data class MarketplaceListing(
     val fromLang: String,
     val toLang: String,
     val importCount: Int,
+    // Null while nobody has rated it.
+    val ratingAverage: Float?,
+    val ratingCount: Int,
     val publishedAt: Long,
     val tags: List<String>,
 ) {
@@ -24,8 +27,9 @@ data class MarketplaceListing(
         toLang = toLang,
         downloadCount = importCount,
         publishedAt = publishedAt,
-        // Ratings and word counts are not in the marketplace contract (guide §10).
-        rating = null,
+        rating = ratingAverage,
+        ratingCount = ratingCount,
+        // Listings carry no word count (guide §10).
         wordCount = null,
         tags = tags,
     )

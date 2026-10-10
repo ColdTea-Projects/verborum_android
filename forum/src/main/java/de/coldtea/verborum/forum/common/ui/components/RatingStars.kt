@@ -15,8 +15,10 @@ import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import de.coldtea.verborum.core.theme.VerborumTheme
+import de.coldtea.verborum.forum.common.utils.CoreResDrawables
 import de.coldtea.verborum.forum.common.utils.ResDrawables
 import de.coldtea.verborum.forum.common.utils.ResStrings
+import java.text.NumberFormat
 import kotlin.math.roundToInt
 
 /**
@@ -39,9 +41,9 @@ fun RatingStars(
     ) {
         repeat(STAR_COUNT) { index ->
             val iconRes = when {
-                halves >= (index + 1) * 2 -> ResDrawables.ic_star_24
+                halves >= (index + 1) * 2 -> CoreResDrawables.ic_star_24
                 halves == index * 2 + 1 -> ResDrawables.ic_star_half_24
-                else -> ResDrawables.ic_star_outline_24
+                else -> CoreResDrawables.ic_star_outline_24
             }
             Icon(
                 painter = painterResource(iconRes),
@@ -55,6 +57,11 @@ fun RatingStars(
 
 /** One decimal, localized ("4.5" / "4,5"). */
 internal fun formatRating(rating: Float): String = "%.1f".format(rating)
+
+/** "4.3 (12)": the average and how many users rated it — digits only, so it needs no translation. */
+internal fun formatRatingWithCount(rating: Float, ratingCount: Int): String =
+    if (ratingCount > 0) "${formatRating(rating)} (${NumberFormat.getIntegerInstance().format(ratingCount)})"
+    else formatRating(rating)
 
 private const val STAR_COUNT = 5
 

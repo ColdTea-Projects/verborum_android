@@ -15,6 +15,8 @@ class MarketplaceResponseConversionTest {
         publishedAt: String? = "2026-07-19T17:01:21.303971Z",
         publisherName: String? = "Anna Bauer",
         tags: List<String> = emptyList(),
+        ratingAverage: Float? = null,
+        ratingCount: Int = 0,
     ) = MarketplaceListingResponse(
         dictionaryId = "00000006-0000-4000-8000-000000000000",
         publisherId = "765a81ed-2612-4dcc-bf7a-3d5fecf3d0d6",
@@ -24,6 +26,8 @@ class MarketplaceResponseConversionTest {
         toLang = "UK",
         tags = tags,
         importCount = 7,
+        ratingAverage = ratingAverage,
+        ratingCount = ratingCount,
         publishedAt = publishedAt,
     )
 
@@ -34,13 +38,17 @@ class MarketplaceResponseConversionTest {
             {"items":[{"dictionaryId":"00000006-0000-4000-8000-000000000000",
               "publisherId":"765a81ed-2612-4dcc-bf7a-3d5fecf3d0d6","publisherName":"Anna Bauer",
               "name":"Polish → Ukrainian","fromLang":"PL","toLang":"UK","tags":["grammar","travel"],
-              "importCount":7,"publishedAt":"2026-07-19T17:01:21.303971Z"}],
+              "importCount":7,"ratingAverage":4.3,"ratingCount":12,
+              "publishedAt":"2026-07-19T17:01:21.303971Z"}],
              "page":0,"size":20,"hasNext":true,"addedLater":"ignored"}
         """.trimIndent()
 
         val page = json.decodeFromString<MarketplacePageResponse>(body)
 
-        assertEquals(listing(tags = listOf("grammar", "travel")), page.items.single())
+        assertEquals(
+            listing(tags = listOf("grammar", "travel"), ratingAverage = 4.3f, ratingCount = 12),
+            page.items.single(),
+        )
         assertEquals(20, page.size)
         assertTrue(page.hasNext)
     }
@@ -58,6 +66,28 @@ class MarketplaceResponseConversionTest {
         assertEquals("UK", result.toLang)
         assertEquals(7, result.importCount)
         assertEquals(1_784_480_481_303L, result.publishedAt)
+    }
+
+    @Test
+    fun `a rated listing carries its average and count`() {
+        val result = listing(ratingAverage = 4.3f, ratingCount = 12).convertToListing()
+
+        assertEquals(4.3f, result.ratingAverage)
+        assertEquals(12, result.ratingCount)
+    }
+
+    @Test
+    fun `an unrated listing has no average, never zero stars`() {
+        val result = listing().convertToListing()
+
+        assertNull(result.ratingAverage)
+        assertEquals(0, result.ratingCount)
+    }
+
+    @Test
+    fun `an out-of-range average is clamped into 1 to 5`() {
+        assertEquals(5f, listing(ratingAverage = 7.3f, ratingCount = 1).convertToListing().ratingAverage)
+        assertEquals(1f, listing(ratingAverage = 0f, ratingCount = 1).convertToListing().ratingAverage)
     }
 
     @Test

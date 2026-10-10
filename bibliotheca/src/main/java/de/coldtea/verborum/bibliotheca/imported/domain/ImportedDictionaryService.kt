@@ -6,7 +6,11 @@ import de.coldtea.verborum.bibliotheca.dictionary.ui.dictionarylist.model.Dictio
 import de.coldtea.verborum.bibliotheca.imported.domain.model.ImportedDictionary
 import de.coldtea.verborum.bibliotheca.imported.domain.model.ImportedWord
 import de.coldtea.verborum.bibliotheca.imported.domain.usecase.api.FetchImportedDictionaryApiUseCase
+import de.coldtea.verborum.bibliotheca.imported.domain.usecase.api.GetImportedDictionaryRatingApiUseCase
 import de.coldtea.verborum.bibliotheca.imported.domain.usecase.api.GetVaultApiUseCase
+import de.coldtea.verborum.bibliotheca.imported.domain.usecase.api.RemoveImportedDictionaryRatingApiUseCase
+import de.coldtea.verborum.bibliotheca.imported.domain.usecase.api.SetImportedDictionaryRatingApiUseCase
+import de.coldtea.verborum.core.library.domain.model.RatingOutcome
 import de.coldtea.verborum.bibliotheca.imported.domain.usecase.api.RemoveFromVaultApiUseCase
 import de.coldtea.verborum.bibliotheca.imported.domain.usecase.local.DeleteImportedDictionaryUseCase
 import de.coldtea.verborum.bibliotheca.imported.domain.usecase.local.GetImportedDictionariesUseCase
@@ -52,6 +56,9 @@ class ImportedDictionaryService @Inject constructor(
     private val getVaultApiUseCase: GetVaultApiUseCase,
     private val removeFromVaultApiUseCase: RemoveFromVaultApiUseCase,
     private val profileService: ProfileService,
+    private val getImportedDictionaryRatingApiUseCase: GetImportedDictionaryRatingApiUseCase,
+    private val setImportedDictionaryRatingApiUseCase: SetImportedDictionaryRatingApiUseCase,
+    private val removeImportedDictionaryRatingApiUseCase: RemoveImportedDictionaryRatingApiUseCase,
 ) {
     fun observeDictionaries(): Flow<List<DictionaryUi>> =
         observeImportedDictionariesUseCase.invoke()
@@ -150,6 +157,15 @@ class ImportedDictionaryService @Inject constructor(
         removeFromVaultApiUseCase.invoke(userId = profileService.getUserId(), dictionaryId = dictionaryId)
         deleteImportedDictionaryUseCase.invoke(dictionaryId)
     }
+
+    /** The user's own stars for a downloaded dictionary; null when not rated. Throws offline. */
+    suspend fun getMyRating(dictionaryId: String): Int? = getImportedDictionaryRatingApiUseCase.invoke(dictionaryId)
+
+    suspend fun setRating(dictionaryId: String, stars: Int): RatingOutcome =
+        setImportedDictionaryRatingApiUseCase.invoke(dictionaryId, stars)
+
+    suspend fun removeRating(dictionaryId: String): RatingOutcome =
+        removeImportedDictionaryRatingApiUseCase.invoke(dictionaryId)
 
     private companion object {
         const val VAULT_PROPAGATION_GRACE_MILLIS = 10 * 60 * 1000L

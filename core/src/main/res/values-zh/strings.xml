@@ -98,4 +98,14 @@
     <string name="profileUpdateError">无法更新个人资料，请重试。</string>
 
     <string name="dictionaryBadgeDownloaded">已下载</string>
+
+    <string name="ratingYourRating">你的评分</string>
+    <string name="ratingHint">点按星星即可评分，再次点按可取消评分。</string>
+    <string name="ratingStarDescription">评 %1$d 分（满分 5 分）</string>
+    <string name="errorRatingFailed">无法保存你的评分。请检查网络连接后重试。</string>
+    <string name="errorRatingUnavailable">该词典已不可用，因此无法评分。</string>
+    <string name="ratingTapToRate">点按评分</string>
+    <string name="ratingShow">显示你的评分</string>
+    <string name="ratingHide">隐藏你的评分</string>
+    <string name="ratingCurrent">你的评分：%1$d / 5</string>
 </resources>

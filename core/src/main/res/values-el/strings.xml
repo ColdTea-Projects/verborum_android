@@ -99,4 +99,14 @@
     <string name="profileUpdateError">Δεν ήταν δυνατή η ενημέρωση του προφίλ. Δοκιμάστε ξανά.</string>
 
     <string name="dictionaryBadgeDownloaded">Λήφθηκε</string>
+
+    <string name="ratingYourRating">Η βαθμολογία σας</string>
+    <string name="ratingHint">Πατήστε ένα αστέρι για να βαθμολογήσετε. Πατήστε το ξανά για να αφαιρέσετε τη βαθμολογία.</string>
+    <string name="ratingStarDescription">Βαθμολογία %1$d στα 5</string>
+    <string name="errorRatingFailed">Δεν ήταν δυνατή η αποθήκευση της βαθμολογίας. Ελέγξτε τη σύνδεση και δοκιμάστε ξανά.</string>
+    <string name="errorRatingUnavailable">Αυτό το λεξικό δεν είναι πλέον διαθέσιμο και δεν μπορεί να βαθμολογηθεί.</string>
+    <string name="ratingTapToRate">Πατήστε για βαθμολογία</string>
+    <string name="ratingShow">Εμφάνιση της βαθμολογίας σας</string>
+    <string name="ratingHide">Απόκρυψη της βαθμολογίας σας</string>
+    <string name="ratingCurrent">Η βαθμολογία σας: %1$d στα 5</string>
 </resources>

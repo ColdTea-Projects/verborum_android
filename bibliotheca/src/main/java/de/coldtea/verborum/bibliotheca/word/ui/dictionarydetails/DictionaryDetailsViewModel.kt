@@ -12,6 +12,9 @@ import de.coldtea.verborum.core.ui.BaseViewModel
 import de.coldtea.verborum.core.ui.UiText
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Job
+import de.coldtea.verborum.core.library.domain.model.RatingOutcome
+import de.coldtea.verborum.core.ui.model.DictionaryRatingUi
+import de.coldtea.verborum.core.ui.model.errorMessage
 import de.coldtea.verborum.bibliotheca.dictionary.domain.model.SharingChange
 import de.coldtea.verborum.bibliotheca.word.ui.dictionarydetails.model.DictionarySharingUi
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -35,6 +38,10 @@ class DictionaryDetailsViewModel @Inject constructor(
 
     private val updatingSharing = MutableStateFlow(false)
 
+    // The user's own rating; null until it is loaded (or if it could not be), which hides the control.
+    private val myRating = MutableStateFlow<DictionaryRatingUi?>(null)
+    private var ratingRequested = false
+
     fun init(dictionaryId: String) {
         this.dictionaryId = dictionaryId
         observeDetails()
@@ -50,13 +57,18 @@ class DictionaryDetailsViewModel @Inject constructor(
 
     private fun observeDetails() {
         loadJob?.cancel()
+        val sharingAndRating = combine(
+            dictionaryService.observeSharingState(),
+            updatingSharing,
+            myRating,
+        ) { sharingState, isUpdatingSharing, rating -> Triple(sharingState, isUpdatingSharing, rating) }
+
         loadJob = combine(
             dictionaryService.observeDictionary(dictionaryId),
             wordService.observeWordsByDictionary(dictionaryId),
             wordService.observeWordsInLanguagePair(dictionaryId),
-            dictionaryService.observeSharingState(),
-            updatingSharing,
-        ) { dictionary, words, languagePairWords, sharingState, isUpdatingSharing ->
+            sharingAndRating,
+        ) { dictionary, words, languagePairWords, (sharingState, isUpdatingSharing, rating) ->
             // A null dictionary means it was tombstoned/removed — surface it as Deleted so the
             // screen navigates back instead of re-rendering (and re-registering) a stale header.
             if (dictionary == null) {
@@ -74,11 +86,17 @@ class DictionaryDetailsViewModel @Inject constructor(
                         isLastShared = sharingState.isLastShared(dictionary.dictionaryId),
                         isUpdating = isUpdatingSharing,
                     ),
+                    rating = rating.takeIf { dictionary.isImported },
                 )
             }
         }.observe (
             onSuccess = { state ->
                 _dictionaryDetailState.emit(state)
+                // A downloaded dictionary can be rated; read the user's rating once.
+                if (state is DictionaryDetailState.Success && state.dictionaryUi.isImported && !ratingRequested) {
+                    ratingRequested = true
+                    loadRating()
+                }
             },
             onError = {
                 _dictionaryDetailState.emit(DictionaryDetailState.Failed)
@@ -112,6 +130,42 @@ class DictionaryDetailsViewModel @Inject constructor(
                 }
             } finally {
                 updatingSharing.value = false
+            }
+        }
+    }
+
+    private fun loadRating() {
+        viewModelScope.launch(exceptionHandler) {
+            try {
+                myRating.value = DictionaryRatingUi(stars = dictionaryService.getMyRating(dictionaryId))
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                // Offline: no control rather than a wrong "not rated" — it is offered again next time.
+                ratingRequested = false
+            }
+        }
+    }
+
+    /**
+     * A tap on a star: rates with it, or — on the star already chosen — removes the rating
+     * (marketplace guide §6.10). Online-only; a failure keeps the previous rating and says why.
+     */
+    fun rate(stars: Int) {
+        val current = myRating.value ?: return
+        if (current.isUpdating) return
+        val removing = current.stars == stars
+
+        myRating.value = current.copy(isUpdating = true)
+        viewModelScope.launch(exceptionHandler) {
+            val outcome = if (removing) dictionaryService.removeRating(dictionaryId)
+            else dictionaryService.setRating(dictionaryId, stars)
+
+            if (outcome == RatingOutcome.DONE) {
+                myRating.value = DictionaryRatingUi(stars = stars.takeUnless { removing })
+            } else {
+                myRating.value = current
+                outcome.errorMessage()?.let { _snackbarMessages.emit(it) }
             }
         }
     }

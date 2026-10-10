@@ -99,4 +99,14 @@
     <string name="profileUpdateError">Impossible de mettre à jour votre profil. Veuillez réessayer.</string>
 
     <string name="dictionaryBadgeDownloaded">Téléchargé</string>
+
+    <string name="ratingYourRating">Votre note</string>
+    <string name="ratingHint">Touchez une étoile pour noter. Touchez-la à nouveau pour retirer votre note.</string>
+    <string name="ratingStarDescription">Noter %1$d sur 5</string>
+    <string name="errorRatingFailed">Impossible d’enregistrer votre note. Vérifiez votre connexion et réessayez.</string>
+    <string name="errorRatingUnavailable">Ce dictionnaire n’est plus disponible et ne peut pas être noté.</string>
+    <string name="ratingTapToRate">Touchez pour noter</string>
+    <string name="ratingShow">Afficher votre note</string>
+    <string name="ratingHide">Masquer votre note</string>
+    <string name="ratingCurrent">Votre note : %1$d sur 5</string>
 </resources>

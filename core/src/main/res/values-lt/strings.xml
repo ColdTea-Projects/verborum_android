@@ -101,4 +101,14 @@
     <string name="profileUpdateError">Nepavyko atnaujinti profilio. Bandykite dar kartą.</string>
 
     <string name="dictionaryBadgeDownloaded">Atsisiųstas</string>
+
+    <string name="ratingYourRating">Jūsų įvertinimas</string>
+    <string name="ratingHint">Palieskite žvaigždutę, kad įvertintumėte. Palieskite ją dar kartą, kad pašalintumėte įvertinimą.</string>
+    <string name="ratingStarDescription">Įvertinti %1$d iš 5</string>
+    <string name="errorRatingFailed">Nepavyko išsaugoti įvertinimo. Patikrinkite ryšį ir bandykite dar kartą.</string>
+    <string name="errorRatingUnavailable">Šis žodynas nebepasiekiamas, todėl jo įvertinti negalima.</string>
+    <string name="ratingTapToRate">Palieskite, kad įvertintumėte</string>
+    <string name="ratingShow">Rodyti jūsų įvertinimą</string>
+    <string name="ratingHide">Slėpti jūsų įvertinimą</string>
+    <string name="ratingCurrent">Jūsų įvertinimas: %1$d iš 5</string>
 </resources>

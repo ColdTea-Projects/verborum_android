@@ -56,6 +56,7 @@ import de.coldtea.verborum.bibliotheca.word.ui.dictionarydetails.composables.Wor
 import de.coldtea.verborum.bibliotheca.word.ui.dictionarydetails.model.DictionaryDetailState
 import de.coldtea.verborum.core.theme.VerborumTheme
 import de.coldtea.verborum.core.ui.RegisterTopBar
+import de.coldtea.verborum.core.ui.components.DictionaryRatingInput
 import de.coldtea.verborum.core.ui.ShowSnackbarMessages
 import de.coldtea.verborum.bibliotheca.common.utils.CoreResDrawables
 
@@ -159,6 +160,12 @@ fun DictionaryDetailsScreen(
                     if (dictionary.tags.isNotEmpty()) {
                         Spacer(modifier = Modifier.height(12.dp))
                         DictionaryTagsText(tagCodes = dictionary.tags)
+                    }
+
+                    // Your own rating — a downloaded dictionary only.
+                    dictionaryDetailState.rating?.let { rating ->
+                        Spacer(modifier = Modifier.height(16.dp))
+                        DictionaryRatingInput(rating = rating, onStarClick = viewModel::rate)
                     }
 
                     // Forum sharing — a member's own dictionaries only.

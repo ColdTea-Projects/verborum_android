@@ -50,7 +50,7 @@ import de.coldtea.verborum.core.theme.VerborumTheme
 import de.coldtea.verborum.core.ui.components.languagePairLabel
 import de.coldtea.verborum.core.ui.components.relativeTimeAgo
 import de.coldtea.verborum.forum.common.ui.components.RatingStars
-import de.coldtea.verborum.forum.common.ui.components.formatRating
+import de.coldtea.verborum.forum.common.ui.components.formatRatingWithCount
 import de.coldtea.verborum.forum.common.utils.CoreResDrawables
 import de.coldtea.verborum.forum.common.utils.CoreResPlurals
 import de.coldtea.verborum.forum.common.utils.ResDrawables
@@ -148,9 +148,13 @@ fun ForumDictionaryCard(
                         modifier = Modifier.padding(top = 2.dp)
                     )
 
-                    // Left out when the backend has no rating (ratings are not in the contract, guide §10).
+                    // Left out while nobody has rated it.
                     dictionary.rating?.let { rating ->
-                        CardRating(rating = rating, modifier = Modifier.padding(top = 6.dp))
+                        CardRating(
+                            rating = rating,
+                            ratingCount = dictionary.ratingCount,
+                            modifier = Modifier.padding(top = 6.dp),
+                        )
                     }
 
                     ForumDictionaryMetaLine(
@@ -202,10 +206,11 @@ fun ForumDictionaryCard(
     }
 }
 
-/** The details panel's rating, inline: five stars and the value ("★★★★½ 4.7"). */
+/** The card's rating, inline: five stars, the average and how many rated it ("★★★★½ 4.7 (12)"). */
 @Composable
 private fun CardRating(
     rating: Float,
+    ratingCount: Int,
     modifier: Modifier = Modifier,
 ) {
     Row(
@@ -215,7 +220,7 @@ private fun CardRating(
     ) {
         RatingStars(rating = rating, starSize = 14.dp)
         Text(
-            text = formatRating(rating),
+            text = formatRatingWithCount(rating, ratingCount),
             fontSize = 13.sp,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             // The stars already announce "Rated 4.7 out of 5"; don't read the number twice.

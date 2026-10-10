@@ -99,4 +99,14 @@
     <string name="profileUpdateError">Profil konnte nicht aktualisiert werden. Bitte versuche es erneut.</string>
 
     <string name="dictionaryBadgeDownloaded">Heruntergeladen</string>
+
+    <string name="ratingYourRating">Deine Bewertung</string>
+    <string name="ratingHint">Tippe auf einen Stern zum Bewerten. Tippe erneut darauf, um deine Bewertung zu entfernen.</string>
+    <string name="ratingStarDescription">Mit %1$d von 5 bewerten</string>
+    <string name="errorRatingFailed">Deine Bewertung konnte nicht gespeichert werden. Prüfe deine Verbindung und versuche es erneut.</string>
+    <string name="errorRatingUnavailable">Dieses Wörterbuch ist nicht mehr verfügbar und kann nicht bewertet werden.</string>
+    <string name="ratingTapToRate">Zum Bewerten tippen</string>
+    <string name="ratingShow">Deine Bewertung anzeigen</string>
+    <string name="ratingHide">Deine Bewertung ausblenden</string>
+    <string name="ratingCurrent">Deine Bewertung: %1$d von 5</string>
 </resources>

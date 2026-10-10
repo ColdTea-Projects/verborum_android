@@ -1,9 +1,14 @@
 package de.coldtea.verborum.forum.marketplace.data.api
 
 import de.coldtea.verborum.forum.marketplace.data.api.model.MarketplacePageResponse
+import de.coldtea.verborum.forum.marketplace.data.api.model.RatingRequest
+import de.coldtea.verborum.forum.marketplace.data.api.model.RatingResponse
 import retrofit2.Response
+import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.PUT
 import retrofit2.http.Path
 import retrofit2.http.Query
 
@@ -31,6 +36,21 @@ interface MarketplaceApi {
      */
     @POST("marketplace/dictionaries/{dictionaryId}/import")
     suspend fun importDictionary(@Path("dictionaryId") dictionaryId: String): Response<Unit>
+
+    /** The caller's own rating: 200, or 404 when they have not rated it (guide §5.6). */
+    @GET("marketplace/dictionaries/{dictionaryId}/rating")
+    suspend fun getRating(@Path("dictionaryId") dictionaryId: String): Response<RatingResponse>
+
+    /** Creates or changes the caller's rating (201); members who downloaded it only. */
+    @PUT("marketplace/dictionaries/{dictionaryId}/rating")
+    suspend fun putRating(
+        @Path("dictionaryId") dictionaryId: String,
+        @Body body: RatingRequest,
+    ): Response<Unit>
+
+    /** Removes the caller's rating (200, also when they had none). */
+    @DELETE("marketplace/dictionaries/{dictionaryId}/rating")
+    suspend fun deleteRating(@Path("dictionaryId") dictionaryId: String): Response<Unit>
 
     /** Same filters and paging; most imported first, newest first among equals. */
     @GET("marketplace/dictionaries/popular")

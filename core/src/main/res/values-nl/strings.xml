@@ -99,4 +99,14 @@
     <string name="profileUpdateError">Je profiel kon niet worden bijgewerkt. Probeer het opnieuw.</string>
 
     <string name="dictionaryBadgeDownloaded">Gedownload</string>
+
+    <string name="ratingYourRating">Jouw beoordeling</string>
+    <string name="ratingHint">Tik op een ster om te beoordelen. Tik er nogmaals op om je beoordeling te verwijderen.</string>
+    <string name="ratingStarDescription">Beoordeel met %1$d van 5</string>
+    <string name="errorRatingFailed">Je beoordeling kon niet worden opgeslagen. Controleer je verbinding en probeer het opnieuw.</string>
+    <string name="errorRatingUnavailable">Dit woordenboek is niet meer beschikbaar en kan niet worden beoordeeld.</string>
+    <string name="ratingTapToRate">Tik om te beoordelen</string>
+    <string name="ratingShow">Toon je beoordeling</string>
+    <string name="ratingHide">Verberg je beoordeling</string>
+    <string name="ratingCurrent">Jouw beoordeling: %1$d van 5</string>
 </resources>

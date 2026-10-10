@@ -36,6 +36,8 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import de.coldtea.verborum.core.theme.VerborumTheme
 import de.coldtea.verborum.core.ui.RegisterTopBar
+import de.coldtea.verborum.core.ui.components.DictionaryRatingInput
+import de.coldtea.verborum.core.ui.model.DictionaryRatingUi
 import de.coldtea.verborum.core.ui.ShowSnackbarMessages
 import de.coldtea.verborum.core.ui.components.DictionaryTagsText
 import de.coldtea.verborum.core.ui.components.ScreenError
@@ -98,6 +100,8 @@ fun ForumDictionaryDetailsScreen(
             ForumDictionaryDetailsContent(
                 dictionary = dictionary,
                 words = detailState.words,
+                rating = detailState.rating,
+                onRate = viewModel::rate,
                 onDownloadClick = viewModel::download,
             )
         }
@@ -109,6 +113,8 @@ private fun ForumDictionaryDetailsContent(
     dictionary: ForumDictionaryUi,
     words: List<ForumWordUi>,
     onDownloadClick: () -> Unit,
+    rating: DictionaryRatingUi? = null,
+    onRate: (Int) -> Unit = {},
 ) {
     Column(
         modifier = Modifier
@@ -122,6 +128,7 @@ private fun ForumDictionaryDetailsContent(
                 ForumDictionaryInfoPanel(
                     publisherName = dictionary.publisherName,
                     rating = dictionary.rating,
+                    ratingCount = dictionary.ratingCount,
                     downloadCount = dictionary.downloadCount,
                 )
 
@@ -130,6 +137,12 @@ private fun ForumDictionaryDetailsContent(
                 if (dictionary.tags.isNotEmpty()) {
                     Spacer(modifier = Modifier.height(12.dp))
                     DictionaryTagsText(tagCodes = dictionary.tags)
+                }
+
+                // Your own rating — only for a dictionary you downloaded.
+                rating?.let {
+                    Spacer(modifier = Modifier.height(16.dp))
+                    DictionaryRatingInput(rating = it, onStarClick = onRate)
                 }
 
                 Spacer(modifier = Modifier.height(32.dp))

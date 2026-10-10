@@ -101,4 +101,14 @@
     <string name="profileUpdateError">Nie udało się zaktualizować profilu. Spróbuj ponownie.</string>
 
     <string name="dictionaryBadgeDownloaded">Pobrany</string>
+
+    <string name="ratingYourRating">Twoja ocena</string>
+    <string name="ratingHint">Dotknij gwiazdki, aby ocenić. Dotknij jej ponownie, aby usunąć ocenę.</string>
+    <string name="ratingStarDescription">Oceń na %1$d z 5</string>
+    <string name="errorRatingFailed">Nie udało się zapisać oceny. Sprawdź połączenie i spróbuj ponownie.</string>
+    <string name="errorRatingUnavailable">Ten słownik nie jest już dostępny, więc nie można go ocenić.</string>
+    <string name="ratingTapToRate">Dotknij, aby ocenić</string>
+    <string name="ratingShow">Pokaż swoją ocenę</string>
+    <string name="ratingHide">Ukryj swoją ocenę</string>
+    <string name="ratingCurrent">Twoja ocena: %1$d z 5</string>
 </resources>

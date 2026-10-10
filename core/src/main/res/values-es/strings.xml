@@ -99,4 +99,14 @@
     <string name="profileUpdateError">No se pudo actualizar tu perfil. Inténtalo de nuevo.</string>
 
     <string name="dictionaryBadgeDownloaded">Descargado</string>
+
+    <string name="ratingYourRating">Tu valoración</string>
+    <string name="ratingHint">Toca una estrella para valorar. Tócala de nuevo para quitar tu valoración.</string>
+    <string name="ratingStarDescription">Valorar con %1$d de 5</string>
+    <string name="errorRatingFailed">No se pudo guardar tu valoración. Revisa tu conexión e inténtalo de nuevo.</string>
+    <string name="errorRatingUnavailable">Este diccionario ya no está disponible, así que no se puede valorar.</string>
+    <string name="ratingTapToRate">Toca para valorar</string>
+    <string name="ratingShow">Mostrar tu valoración</string>
+    <string name="ratingHide">Ocultar tu valoración</string>
+    <string name="ratingCurrent">Tu valoración: %1$d de 5</string>
 </resources>

@@ -99,4 +99,14 @@
     <string name="profileUpdateError">Profilin güncellenemedi. Lütfen tekrar dene.</string>
 
     <string name="dictionaryBadgeDownloaded">İndirildi</string>
+
+    <string name="ratingYourRating">Puanın</string>
+    <string name="ratingHint">Puanlamak için bir yıldıza dokun. Puanını kaldırmak için aynı yıldıza tekrar dokun.</string>
+    <string name="ratingStarDescription">5 üzerinden %1$d puan ver</string>
+    <string name="errorRatingFailed">Puanın kaydedilemedi. Bağlantını kontrol edip tekrar dene.</string>
+    <string name="errorRatingUnavailable">Bu sözlük artık mevcut değil, bu yüzden puanlanamaz.</string>
+    <string name="ratingTapToRate">Puanlamak için dokun</string>
+    <string name="ratingShow">Puanını göster</string>
+    <string name="ratingHide">Puanını gizle</string>
+    <string name="ratingCurrent">Puanın: 5 üzerinden %1$d</string>
 </resources>

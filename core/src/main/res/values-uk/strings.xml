@@ -101,4 +101,14 @@
     <string name="profileUpdateError">Не вдалося оновити профіль. Спробуйте ще раз.</string>
 
     <string name="dictionaryBadgeDownloaded">Завантажено</string>
+
+    <string name="ratingYourRating">Ваша оцінка</string>
+    <string name="ratingHint">Торкніться зірки, щоб оцінити. Торкніться її знову, щоб прибрати оцінку.</string>
+    <string name="ratingStarDescription">Оцінити на %1$d з 5</string>
+    <string name="errorRatingFailed">Не вдалося зберегти оцінку. Перевірте з’єднання та спробуйте ще раз.</string>
+    <string name="errorRatingUnavailable">Цей словник більше недоступний, тому його не можна оцінити.</string>
+    <string name="ratingTapToRate">Торкніться, щоб оцінити</string>
+    <string name="ratingShow">Показати вашу оцінку</string>
+    <string name="ratingHide">Сховати вашу оцінку</string>
+    <string name="ratingCurrent">Ваша оцінка: %1$d з 5</string>
 </resources>

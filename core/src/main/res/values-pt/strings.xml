@@ -99,4 +99,14 @@
     <string name="profileUpdateError">Não foi possível atualizar seu perfil. Tente novamente.</string>
 
     <string name="dictionaryBadgeDownloaded">Baixado</string>
+
+    <string name="ratingYourRating">Sua avaliação</string>
+    <string name="ratingHint">Toque em uma estrela para avaliar. Toque nela novamente para remover sua avaliação.</string>
+    <string name="ratingStarDescription">Avaliar com %1$d de 5</string>
+    <string name="errorRatingFailed">Não foi possível salvar sua avaliação. Verifique sua conexão e tente novamente.</string>
+    <string name="errorRatingUnavailable">Este dicionário não está mais disponível e não pode ser avaliado.</string>
+    <string name="ratingTapToRate">Toque para avaliar</string>
+    <string name="ratingShow">Mostrar sua avaliação</string>
+    <string name="ratingHide">Ocultar sua avaliação</string>
+    <string name="ratingCurrent">Sua avaliação: %1$d de 5</string>
 </resources>

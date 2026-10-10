@@ -103,4 +103,14 @@
     <string name="profileUpdateError">تعذّر تحديث ملفك الشخصي. يُرجى المحاولة مرة أخرى.</string>
 
     <string name="dictionaryBadgeDownloaded">تم التنزيل</string>
+
+    <string name="ratingYourRating">تقييمك</string>
+    <string name="ratingHint">اضغط على نجمة للتقييم. اضغط عليها مرة أخرى لإزالة تقييمك.</string>
+    <string name="ratingStarDescription">قيّم %1$d من 5</string>
+    <string name="errorRatingFailed">تعذّر حفظ تقييمك. تحقّق من اتصالك وحاول مرة أخرى.</string>
+    <string name="errorRatingUnavailable">هذا القاموس لم يعد متاحًا، لذا لا يمكن تقييمه.</string>
+    <string name="ratingTapToRate">اضغط للتقييم</string>
+    <string name="ratingShow">إظهار تقييمك</string>
+    <string name="ratingHide">إخفاء تقييمك</string>
+    <string name="ratingCurrent">تقييمك: %1$d من 5</string>
 </resources>

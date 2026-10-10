@@ -96,7 +96,7 @@ class MarketplaceServiceTest : BaseTest() {
             )
         } returns MarketplaceListingPage(
             listings = listOf(
-                testMarketplaceListing(dictionaryId = "a", importCount = 42),
+                testMarketplaceListing(dictionaryId = "a", importCount = 42, ratingAverage = 4.5f, ratingCount = 8),
                 testMarketplaceListing(dictionaryId = "b", publisherName = null),
             ),
             page = 0,
@@ -105,7 +105,7 @@ class MarketplaceServiceTest : BaseTest() {
 
         assertEquals(
             listOf(
-                testForumDictionaryUi(dictionaryId = "a", downloadCount = 42),
+                testForumDictionaryUi(dictionaryId = "a", downloadCount = 42, rating = 4.5f, ratingCount = 8),
                 testForumDictionaryUi(dictionaryId = "b", publisherName = null),
             ),
             subject.getDictionaries(ForumDictionaryFilter(), MarketplaceListingOrder.NEWEST).asSnapshot(),

@@ -2,6 +2,7 @@ package de.coldtea.verborum.bibliotheca.word.ui.dictionarydetails.model
 
 import de.coldtea.verborum.bibliotheca.dictionary.ui.dictionarylist.model.DictionaryUi
 import de.coldtea.verborum.bibliotheca.word.ui.model.WordUi
+import de.coldtea.verborum.core.ui.model.DictionaryRatingUi
 
 sealed class DictionaryDetailState{
     data object Failed: DictionaryDetailState()
@@ -21,5 +22,7 @@ sealed class DictionaryDetailState{
         val canTest: Boolean = false,
         // Only for a Forum member's own dictionary; null otherwise (a download, or not a member).
         val sharing: DictionarySharingUi? = null,
+        // The user's own rating — only for a downloaded dictionary, once it loaded; null otherwise.
+        val rating: DictionaryRatingUi? = null,
     ) : DictionaryDetailState()
 }

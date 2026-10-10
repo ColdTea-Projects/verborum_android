@@ -101,4 +101,14 @@
     <string name="profileTermsText" translatable="false">To use the Forum you agree that the dictionaries you choose to share are visible to other Verborum users, together with your display name, and that they can import them. You can withdraw at any time from your profile: your shared dictionaries then stop appearing in the Forum. This is placeholder text; the full terms will follow.</string>
 
     <string name="dictionaryBadgeDownloaded">Downloaded</string>
+
+    <string name="ratingYourRating">Your rating</string>
+    <string name="ratingHint">Tap a star to rate. Tap it again to remove your rating.</string>
+    <string name="ratingStarDescription">Rate %1$d out of 5</string>
+    <string name="errorRatingFailed">Couldn’t save your rating. Check your connection and try again.</string>
+    <string name="errorRatingUnavailable">This dictionary is no longer available, so it can’t be rated.</string>
+    <string name="ratingTapToRate">Tap to rate</string>
+    <string name="ratingShow">Show your rating</string>
+    <string name="ratingHide">Hide your rating</string>
+    <string name="ratingCurrent">Your rating: %1$d out of 5</string>
 </resources>

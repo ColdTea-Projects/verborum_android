@@ -12,7 +12,7 @@ class GetMarketplaceListingApiUseCase @Inject constructor(
 ) {
     /**
      * A shared dictionary for the details screen. Its name and languages are read fresh from
-     * ms_dictionary; the publisher's name, import count and publish date only exist on the
+     * ms_dictionary; the publisher's name, import count, rating and publish date only exist on the
      * marketplace listing, so they come from the browse list's last load. Tags come from the
      * listing too, or are read fresh when it was not loaded this session.
      *
@@ -35,6 +35,8 @@ class GetMarketplaceListingApiUseCase @Inject constructor(
             fromLang = dictionary.fromLang,
             toLang = dictionary.toLang,
             importCount = listing?.importCount ?: 0,
+            ratingAverage = listing?.ratingAverage,
+            ratingCount = listing?.ratingCount ?: 0,
             publishedAt = ApiTimestamp.parse(listing?.publishedAt)
                 ?: ApiTimestamp.parse(dictionary.createdAt)
                 ?: 0L,

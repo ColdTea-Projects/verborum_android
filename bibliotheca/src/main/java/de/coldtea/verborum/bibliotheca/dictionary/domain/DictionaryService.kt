@@ -9,6 +9,7 @@ import de.coldtea.verborum.bibliotheca.dictionary.domain.model.SharingState
 import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.api.UpdateDictionaryApiUseCase
 import de.coldtea.verborum.bibliotheca.dictionary.domain.usecase.local.UpdateDictionarySharingUseCase
 import de.coldtea.verborum.core.extensions.apiError
+import de.coldtea.verborum.core.library.domain.model.RatingOutcome
 import de.coldtea.verborum.core.profile.domain.ProfileService
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.first
@@ -119,6 +120,15 @@ class DictionaryService @Inject constructor(
             else -> SharingChange.FAILED
         }
     }
+
+    /** The user's own stars for a downloaded dictionary; null when not rated. Online-only. */
+    suspend fun getMyRating(dictionaryId: String): Int? = importedDictionaryService.getMyRating(dictionaryId)
+
+    suspend fun setRating(dictionaryId: String, stars: Int): RatingOutcome =
+        importedDictionaryService.setRating(dictionaryId, stars)
+
+    suspend fun removeRating(dictionaryId: String): RatingOutcome =
+        importedDictionaryService.removeRating(dictionaryId)
 
     /**
      * Stops following a downloaded dictionary: removed from the vault, then from this device.
