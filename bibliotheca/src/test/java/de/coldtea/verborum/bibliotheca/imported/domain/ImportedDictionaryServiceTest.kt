@@ -25,6 +25,7 @@ import de.coldtea.verborum.bibliotheca.testImportedDictionary
 import de.coldtea.verborum.bibliotheca.testImportedWord
 import de.coldtea.verborum.core.BaseTest
 import de.coldtea.verborum.core.profile.domain.ProfileService
+import de.coldtea.verborum.core.profile.ui.profile.model.ProfileUi
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.coVerifyOrder
@@ -63,6 +64,7 @@ class ImportedDictionaryServiceTest : BaseTest() {
     override fun setUp() {
         super.setUp()
         coEvery { profileService.getUserId() } returns USER_ID
+        every { profileService.observeProfile() } returns flowOf(profile(isMember = true))
         service = ImportedDictionaryService(
             observeImportedDictionariesUseCase,
             observeImportedDictionaryUseCase,
@@ -84,6 +86,9 @@ class ImportedDictionaryServiceTest : BaseTest() {
         )
     }
 
+    private fun profile(isMember: Boolean) =
+        ProfileUi(email = "a@b.c", displayName = "Anna", isMarketplaceMember = isMember)
+
     private fun content(id: String, publisherName: String? = "Anna Bauer", importedAt: Long = 1_000L) =
         ImportedDictionaryContent(
             dictionary = testImportedDictionary(dictionaryId = id, publisherName = publisherName, importedAt = importedAt),
@@ -100,6 +105,30 @@ class ImportedDictionaryServiceTest : BaseTest() {
         assertTrue(result.isImported)
         assertEquals("Anna Bauer", result.publisherName)
         assertEquals("publisher-sub", result.userId)
+    }
+
+    @Test
+    fun `downloads are hidden everywhere once the user is known not to be a member`() = runTest {
+        every { profileService.observeProfile() } returns flowOf(profile(isMember = false))
+        every { observeImportedDictionariesUseCase.invoke() } returns flowOf(listOf(testImportedDictionary()))
+        every { observeImportedDictionaryUseCase.invoke("d1") } returns flowOf(testImportedDictionary())
+        every { observeImportedWordsUseCase.invoke("d1") } returns flowOf(listOf(testImportedWord()))
+        every { observeImportedWordsInLanguagePairUseCase.invoke("de", "en") } returns flowOf(listOf(testImportedWord()))
+        every { observeImportedWordCountsUseCase.invoke() } returns flowOf(mapOf("d1" to 1))
+
+        assertTrue(service.observeDictionaries().first().isEmpty())
+        assertEquals(null, service.observeDictionary("d1").first())
+        assertTrue(service.observeWords("d1").first().isEmpty())
+        assertTrue(service.observeWordsInLanguagePair("de", "en").first().isEmpty())
+        assertTrue(service.observeWordCounts().first().isEmpty())
+    }
+
+    @Test
+    fun `downloads stay visible while the profile is not loaded yet`() = runTest {
+        every { profileService.observeProfile() } returns flowOf(null)
+        every { observeImportedDictionariesUseCase.invoke() } returns flowOf(listOf(testImportedDictionary()))
+
+        assertEquals(1, service.observeDictionaries().first().size)
     }
     // endregion
 

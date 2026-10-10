@@ -26,8 +26,11 @@ import de.coldtea.verborum.bibliotheca.word.ui.model.WordUi
 import de.coldtea.verborum.core.profile.domain.ProfileService
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
@@ -64,12 +67,14 @@ class ImportedDictionaryService @Inject constructor(
         observeImportedDictionariesUseCase.invoke()
             .map { it.map(ImportedDictionary::convertToUi) }
             .distinctUntilChanged()
+            .forMembersOnly(emptyList())
             .flowOn(Dispatchers.IO)
 
     fun observeDictionary(dictionaryId: String): Flow<DictionaryUi?> =
         observeImportedDictionaryUseCase.invoke(dictionaryId)
             .map { it?.convertToUi() }
             .distinctUntilChanged()
+            .forMembersOnly(null)
             .flowOn(Dispatchers.IO)
 
     fun observeDictionaryIds(): Flow<Set<String>> =
@@ -81,17 +86,20 @@ class ImportedDictionaryService @Inject constructor(
         observeImportedWordsUseCase.invoke(dictionaryId)
             .map { it.map(ImportedWord::convertToUi) }
             .distinctUntilChanged()
+            .forMembersOnly(emptyList())
             .flowOn(Dispatchers.IO)
 
     fun observeWordsInLanguagePair(fromLang: String, toLang: String): Flow<List<WordUi>> =
         observeImportedWordsInLanguagePairUseCase.invoke(fromLang, toLang)
             .map { it.map(ImportedWord::convertToUi) }
             .distinctUntilChanged()
+            .forMembersOnly(emptyList())
             .flowOn(Dispatchers.IO)
 
     fun observeWordCounts(): Flow<Map<String, Int>> =
         observeImportedWordCountsUseCase.invoke()
             .distinctUntilChanged()
+            .forMembersOnly(emptyMap())
             .flowOn(Dispatchers.IO)
 
     /** No-op for a word that is not a downloaded one. */
@@ -166,6 +174,21 @@ class ImportedDictionaryService @Inject constructor(
 
     suspend fun removeRating(dictionaryId: String): RatingOutcome =
         removeImportedDictionaryRatingApiUseCase.invoke(dictionaryId)
+
+    /**
+     * Downloads belong to the Forum: once the user is known not to be a member they are hidden
+     * everywhere (list, details, practice) but kept on the device, so joining again brings them
+     * back. An unloaded profile does not hide them — an offline start must not lose a member's
+     * downloads.
+     */
+    @OptIn(ExperimentalCoroutinesApi::class)
+    private fun <T> Flow<T>.forMembersOnly(whenBlocked: T): Flow<T> {
+        val source = this
+        return profileService.observeProfile()
+            .map { it?.isMarketplaceMember != false }
+            .distinctUntilChanged()
+            .flatMapLatest { allowed -> if (allowed) source else flowOf(whenBlocked) }
+    }
 
     private companion object {
         const val VAULT_PROPAGATION_GRACE_MILLIS = 10 * 60 * 1000L
