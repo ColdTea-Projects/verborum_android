@@ -6,6 +6,7 @@ import androidx.work.Configuration
 import dagger.hilt.android.HiltAndroidApp
 import de.coldtea.verborum.bibliotheca.common.domain.PendingUploadSyncTrigger
 import de.coldtea.verborum.bibliotheca.common.domain.SyncScheduler
+import de.coldtea.verborum.core.push.domain.PushRegistrationScheduler
 import javax.inject.Inject
 
 @HiltAndroidApp
@@ -19,6 +20,9 @@ class VerborumApplication : Application(), Configuration.Provider {
 
     @Inject
     lateinit var pendingUploadSyncTrigger: PendingUploadSyncTrigger
+
+    @Inject
+    lateinit var pushRegistrationScheduler: PushRegistrationScheduler
 
     // On-demand WorkManager init (the default initializer is removed in the manifest) so Hilt can
     // inject the worker factory before WorkManager reads this configuration.
@@ -34,5 +38,8 @@ class VerborumApplication : Application(), Configuration.Provider {
         syncScheduler.syncOnReconnect()
         // Push local changes to the server within seconds of a save/edit/delete.
         pendingUploadSyncTrigger.start()
+        // Keep this install's push address current (a rotated token, a reinstall). The worker does
+        // nothing when signed out, and a token change also arrives through the messaging service.
+        pushRegistrationScheduler.requestRegistration()
     }
 }

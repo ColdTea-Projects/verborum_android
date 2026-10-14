@@ -41,6 +41,8 @@ android {
             buildConfigField("String", "ROOT_URL_VERBORUM_USER_API", "\"http://10.0.2.2:8086/\"")
             // ms_marketplace — the Forum
             buildConfigField("String", "ROOT_URL_VERBORUM_MARKETPLACE_API", "\"http://10.0.2.2:8087/\"")
+            // ms_notification — device registration for silent push
+            buildConfigField("String", "ROOT_URL_VERBORUM_NOTIFICATION_API", "\"http://10.0.2.2:8088/\"")
             // Keycloak is pinned to localhost:8180 on the backend (KC_HOSTNAME_URL default), so it
             // renders/redirects the browser to localhost — 10.0.2.2 would break the browser flow.
             // Reach it via `adb reverse tcp:8180 tcp:8180` so the emulator's localhost hits the host.
@@ -64,6 +66,7 @@ android {
             buildConfigField("String", "ROOT_URL_VERBORUM_API", "\"http://192.168.0.241:8085/\"")
             buildConfigField("String", "ROOT_URL_VERBORUM_USER_API", "\"http://192.168.0.241:8086/\"")
             buildConfigField("String", "ROOT_URL_VERBORUM_MARKETPLACE_API", "\"http://192.168.0.241:8087/\"")
+            buildConfigField("String", "ROOT_URL_VERBORUM_NOTIFICATION_API", "\"http://192.168.0.241:8088/\"")
             buildConfigField(
                 "String",
                 "KEYCLOAK_ISSUER",
@@ -130,6 +133,14 @@ dependencies {
     // Compose compiler is applied module-wide; testFixtures needs the Compose runtime on its classpath.
     testFixturesImplementation(platform(libs.androidx.activity.compose.bom))
     testFixturesImplementation(libs.androidx.compose.ui)
+
+    //Push (P4N-09) — FCM data messages; the BoM aligns the Firebase artifact versions
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.messaging)
+    //WorkManager (token registration with retry; Hilt-injected worker)
+    implementation(libs.androidx.work.runtime)
+    implementation(libs.androidx.hilt.work)
+    ksp(libs.androidx.hilt.compiler)
 
     //Retrofit
     implementation(libs.retrofit2)

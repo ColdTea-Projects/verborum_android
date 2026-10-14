@@ -41,6 +41,9 @@ class AuthServiceTest : BaseTest() {
     private lateinit var firstLogoutHook: PostLogoutHook
 
     @MockK
+    private lateinit var preLogoutHook: PreLogoutHook
+
+    @MockK
     private lateinit var secondLogoutHook: PostLogoutHook
 
     private val redirectData = mockk<Intent>()
@@ -70,6 +73,7 @@ class AuthServiceTest : BaseTest() {
             tokenStore = tokenStore,
             ensureUserProfileUseCase = ensureUserProfileUseCase,
             postLoginHooks = linkedSetOf(firstHook, secondHook),
+            preLogoutHooks = linkedSetOf(preLogoutHook),
             postLogoutHooks = linkedSetOf(firstLogoutHook, secondLogoutHook),
         )
     }
@@ -208,6 +212,34 @@ class AuthServiceTest : BaseTest() {
             firstLogoutHook.onLoggedOut()
             secondLogoutHook.onLoggedOut()
         }
+    }
+
+    @Test
+    fun `logout runs the pre-logout hooks while the session is still valid`() = runTest {
+        every { tokenStore.currentRefreshToken() } returns REFRESH_TOKEN
+
+        authService.logout()
+
+        // A step that needs the bearer token (telling the server to forget this device) can only
+        // happen before the session is ended and the tokens are cleared
+        coVerifyOrder {
+            preLogoutHook.onLoggingOut()
+            authManager.endSession(REFRESH_TOKEN)
+            tokenStore.clear()
+        }
+    }
+
+    @Test
+    fun `logout still completes when a pre-logout hook throws`() = runTest {
+        every { tokenStore.currentRefreshToken() } returns REFRESH_TOKEN
+        coEvery { preLogoutHook.onLoggingOut() } throws RuntimeException("server unreachable")
+
+        authService.logout()
+
+        // Best-effort: an offline logout must never be blocked by a hook
+        verify(exactly = 1) { authManager.endSession(REFRESH_TOKEN) }
+        verify(exactly = 1) { tokenStore.clear() }
+        coVerify(exactly = 1) { firstLogoutHook.onLoggedOut() }
     }
 
     @Test

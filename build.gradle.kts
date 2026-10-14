@@ -6,5 +6,6 @@ plugins {
     alias(libs.plugins.hiltAndroid) apply false
     alias(libs.plugins.kotlinCompose) apply false
     alias(libs.plugins.ksp) apply false
+    alias(libs.plugins.googleServices) apply false
     kotlin("plugin.serialization") version "2.1.0"
 }

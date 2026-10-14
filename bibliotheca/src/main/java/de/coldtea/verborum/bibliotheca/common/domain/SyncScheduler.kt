@@ -26,9 +26,9 @@ import javax.inject.Singleton
  * ([SyncWorker] → [SyncService]) is trigger-agnostic, so the mechanism here can be replaced
  * without touching the sync logic.
  *
- * Today: a network-constrained periodic worker is the background refresh. When push notifications
- * arrive, the message handler only needs to call [requestImmediateSync] and the periodic cadence
- * can be relaxed to a rare safety net — no other code changes.
+ * A network-constrained periodic worker is the background refresh; a silent push from another of the
+ * account's devices triggers [requestSyncAfterRemoteChange]. The periodic cadence stays as the safety
+ * net — a push can be dropped, so it is never the only way a change arrives.
  */
 @Singleton
 class SyncScheduler @Inject constructor(
@@ -125,7 +125,29 @@ class SyncScheduler @Inject constructor(
         )
     }
 
+    /**
+     * A full sync a couple of seconds from now, because a silent push said this account changed on
+     * another device (P4N-09). The delay is what coalesces a burst of edits into one run, and REPLACE
+     * lets the newest push restart a pending one — the sync is idempotent, so an aborted run costs
+     * nothing. Pull only matters here, so unlike [requestImmediateSync] it is always a full reconcile.
+     */
+    fun requestSyncAfterRemoteChange() {
+        val request = OneTimeWorkRequestBuilder<SyncWorker>()
+            .setConstraints(constraints)
+            .setInitialDelay(PUSH_SYNC_DELAY_SECONDS, TimeUnit.SECONDS)
+            .setInputData(workDataOf(SyncWorker.KEY_UPLOAD_ONLY to false))
+            .build()
+
+        WorkManager.getInstance(context).enqueueUniqueWork(
+            PUSH_WORK_NAME,
+            ExistingWorkPolicy.REPLACE,
+            request,
+        )
+    }
+
     private companion object {
+        const val PUSH_WORK_NAME = "verborum-push-sync"
+        const val PUSH_SYNC_DELAY_SECONDS = 2L
         const val MEMBERSHIP_WORK_NAME = "verborum-membership-sync"
         const val MEMBERSHIP_SYNC_DELAY_SECONDS = 3L
         const val PERIODIC_WORK_NAME = "verborum-periodic-sync"

@@ -8,6 +8,7 @@ import dagger.hilt.components.SingletonComponent
 import de.coldtea.verborum.core.BuildConfig
 import de.coldtea.verborum.core.auth.AuthInterceptor
 import de.coldtea.verborum.core.auth.TokenAuthenticator
+import de.coldtea.verborum.core.push.data.DeviceIdInterceptor
 import de.coldtea.verborum.core.extensions.json
 import kotlinx.serialization.ExperimentalSerializationApi
 import okhttp3.MediaType.Companion.toMediaType
@@ -33,10 +34,13 @@ object NetworkModule {
     @Singleton
     fun provideOkHttpClient(
         authInterceptor: AuthInterceptor,
+        deviceIdInterceptor: DeviceIdInterceptor,
         tokenAuthenticator: TokenAuthenticator,
     ): OkHttpClient = OkHttpClient().newBuilder()
         // Bearer on every call; refresh-and-retry once on 401.
         .addInterceptor(authInterceptor)
+        // X-Device-Id on ms_dictionary writes, so the server can skip this install in its sync push.
+        .addInterceptor(deviceIdInterceptor)
         .authenticator(tokenAuthenticator)
         .apply {
             if (BuildConfig.DEBUG) {

@@ -4,6 +4,9 @@ plugins {
     alias(libs.plugins.hiltAndroid)
     alias(libs.plugins.kotlinCompose)
     alias(libs.plugins.ksp)
+    // FCM (P4N-09): reads app/google-services.json, which is git-ignored — each developer takes it from the
+    // Firebase console (project verborum-dev). The build fails without it.
+    alias(libs.plugins.googleServices)
 }
 
 android {

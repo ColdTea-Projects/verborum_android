@@ -11,4 +11,6 @@
        out, which is the correct outcome for a credential store — see AuthTokenStore.
     -->
     <exclude domain="sharedpref" path="verborum_auth_prefs.xml" />
+    <!-- The push device id identifies this physical install; a restored copy must not claim it. -->
+    <exclude domain="sharedpref" path="verborum_push.xml" />
 </full-backup-content>

@@ -7,6 +7,7 @@ import de.coldtea.verborum.core.auth.JwtDecoder
 import de.coldtea.verborum.core.auth.domain.model.LoginOutcome
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import kotlinx.coroutines.withTimeoutOrNull
 import javax.inject.Inject
 
 /**
@@ -23,6 +24,7 @@ class AuthService @Inject constructor(
     private val tokenStore: AuthTokenStore,
     private val ensureUserProfileUseCase: EnsureUserProfileUseCase,
     private val postLoginHooks: Set<@JvmSuppressWildcards PostLoginHook>,
+    private val preLogoutHooks: Set<@JvmSuppressWildcards PreLogoutHook>,
     private val postLogoutHooks: Set<@JvmSuppressWildcards PostLogoutHook>,
 ) {
     fun loginIntent(): Intent = authManager.loginIntent()
@@ -67,10 +69,19 @@ class AuthService @Inject constructor(
      * seen or synced by the next account on this device.
      */
     suspend fun logout() = withContext(Dispatchers.IO) {
+        // Whatever still needs the bearer token (telling the server to forget this device) goes first,
+        // best-effort and bounded: logout can happen offline and must never wait on a slow server
+        preLogoutHooks.forEach { hook ->
+            runCatching { withTimeoutOrNull(PRE_LOGOUT_TIMEOUT_MS) { hook.onLoggingOut() } }
+        }
         // Back-channel logout is a blocking network call — keep it off the main thread.
         runCatching { authManager.endSession(tokenStore.currentRefreshToken()) }
         tokenStore.clear()
         // Each hook is isolated: one feature's failure must not skip another's cleanup.
         postLogoutHooks.forEach { hook -> runCatching { hook.onLoggedOut() } }
+    }
+
+    private companion object {
+        const val PRE_LOGOUT_TIMEOUT_MS = 4_000L
     }
 }
