@@ -66,9 +66,36 @@ class DeviceIdInterceptorTest : BaseTest() {
     }
 
     @Test
-    fun `a write to another service carries no device id`() {
-        // ms_user, ms_marketplace and ms_notification have no use for it
-        val sent = proceeded(write("${BuildConfig.ROOT_URL_VERBORUM_USER_API}users/"))
+    fun `a Forum download carries the device id`() {
+        // ms_marketplace turns an import into a vault change the other devices must hear about
+        val sent = proceeded(write("${BuildConfig.ROOT_URL_VERBORUM_MARKETPLACE_API}marketplace/dictionaries/d1/import"))
+
+        assertEquals(DEVICE_ID, sent.header("X-Device-Id"))
+    }
+
+    @Test
+    fun `removing a download from the vault carries the device id`() {
+        val request = Request.Builder()
+            .url("${BuildConfig.ROOT_URL_VERBORUM_USER_API}users/u1/vault/d1").delete().build()
+
+        assertEquals(DEVICE_ID, proceeded(request).header("X-Device-Id"))
+    }
+
+    @Test
+    fun `a read from the marketplace or the vault carries no device id`() {
+        val browse = Request.Builder()
+            .url("${BuildConfig.ROOT_URL_VERBORUM_MARKETPLACE_API}marketplace/dictionaries").get().build()
+        val vault = Request.Builder()
+            .url("${BuildConfig.ROOT_URL_VERBORUM_USER_API}users/u1/vault").get().build()
+
+        assertNull(proceeded(browse).header("X-Device-Id"))
+        assertNull(proceeded(vault).header("X-Device-Id"))
+    }
+
+    @Test
+    fun `a write to ms_notification carries no device id`() {
+        // Registration names the device in its body, so the header would only repeat it
+        val sent = proceeded(write("${BuildConfig.ROOT_URL_VERBORUM_NOTIFICATION_API}notifications/devices", "PUT"))
 
         assertNull(sent.header("X-Device-Id"))
     }
