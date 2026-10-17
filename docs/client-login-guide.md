@@ -25,10 +25,10 @@ which had been amended ahead of it — where the two differed, the Android copy 
 | Facebook sign-in | **Live** (P3B-05, browser-verified 2026-07-28) — same shape as Google. Public access still gated on Meta App Review; testers must be added as Testers on the Meta app |
 | Passwordless email-code login | **Live** (P3B-06, browser-verified 2026-07-28) — "Try another way" → "Email me a sign-in code", hand-written Keycloak SPI baked into the custom image. No client code |
 | Login page branding | **Themed** — hosted login/registration/verify-email carry the Verborum design (crimson/gold, light + dark). Nothing to build client-side; the page AppAuth opens is simply branded |
-| ms_user (`:8086`) | Secured. All endpoints require a valid JWT |
-| ms_dictionary (`:8085`) | **Secured (P3-03)**, and since **P3-05/P3-08 the owner comes from the token** — a client-supplied `userId` is no longer trusted. See §9 item 2 for the exact status codes |
+| ms_user | Secured. All endpoints require a valid JWT |
+| ms_dictionary | **Secured (P3-03)**, and since **P3-05/P3-08 the owner comes from the token** — a client-supplied `userId` is no longer trusted. See §9 item 2 for the exact status codes |
 | Field limits | Enforced server-side as of 2026-08-06: `level` must be 0..7, and `word`/`translation`/`*Meta` are length-bounded. A violation is a 400 naming the field, not a silent accept |
-| API gateway | Not built (backend Phase 5). Talk to services directly for now |
+| API gateway | **Built (backend Phase 5).** One API origin for every client — `http://localhost:8080` locally — validating the token before any service; Keycloak stays its own origin |
 
 ---
 
@@ -153,6 +153,12 @@ exists — and signing up again produces a genuinely new account.
 Clients should treat it as irreversible, confirm it explicitly, and afterwards clear local data and
 return to the login screen rather than attempting a refresh (which will fail).
 
+**It needs a recent login (SEC-13, since 2026-10-05).** The backend refuses the delete with **403**
+`ReauthenticationRequiredException` unless the token's `auth_time` is under 5 minutes old. A refresh does not
+help, because it keeps the original `auth_time`. Flow: the user confirms → start a normal login with
+`max_age=0` (or `prompt=login`), so Keycloak asks for the password or code again → call `DELETE` with the new
+access token. Treat a 403 with that `error` as "sign in again", not as a failure, and never auto-retry it.
+
 ## 6. Logout
 
 1. `POST {issuer}/protocol/openid-connect/logout`, form-encoded `client_id` + `refresh_token`.
@@ -176,7 +182,7 @@ used: a phone hitting `http://192.168.0.x:8180` gets `iss: http://192.168.0.x:81
 services validate `iss: http://localhost:8180/...`. **Every API call then fails with a 401 that looks
 like a broken token rather than a config mismatch.**
 
-The backend compose pins the issuer via `KC_HOSTNAME_URL` (default `http://localhost:8180`). For
+The backend compose pins the issuer via `KC_HOSTNAME` (env `KEYCLOAK_HOSTNAME_URL`, default `http://localhost:8180`). For
 device testing, all three must name the same origin:
 
 ```
@@ -211,7 +217,7 @@ clients are PKCE-only. Dev users: `testuser`/`testuser` (role `user`),
 ## 9. Known gaps — plan around these
 
 1. **ms_dictionary now requires a token (breaking change, 2026-07-23).** It was open until backend
-   P3-03; any client calling `:8085` without `Authorization: Bearer <access>` gets **401** on every
+   P3-03; any client calling the dictionary API without `Authorization: Bearer <access>` gets **401** on every
    endpoint — dictionaries, words, batch fetches, the lot. If your sync suddenly fails everywhere,
    this is why. `/actuator/health` and Swagger stay open.
 2. **The server now enforces ownership (breaking change, 2026-07-23, backend P3-05 + P3-08).**

@@ -38,7 +38,7 @@ non-member, offer "Join the Forum" instead of a share toggle.
 When the user joins (accepts the terms on the profile page):
 
 ```
-PUT /users/me/profile-info                         (ms_user :8086)
+PUT /users/me/profile-info                         (ms_user)
 { "displayName": "Anna Bauer", "marketplaceAgreementAccepted": true, "marketplaceAgreementVersion": "2026-10-01" }
 → 201
 ```
@@ -82,7 +82,7 @@ After joining, the user can hide or show individual dictionaries with the normal
 body as any dictionary update, with `isPublic` set:
 
 ```
-PUT /dictionaries/                                 (ms_dictionary :8085)
+PUT /dictionaries/                                 (ms_dictionary)
 {
   "dictionaryId": "4160c0de-0000-4000-8000-000000000001",
   "userId":       "<the token's sub>",
@@ -97,8 +97,9 @@ PUT /dictionaries/                                 (ms_dictionary :8085)
 - **Show** (`true`): it appears in the Forum within about a second.
 - **Hide** (`false`): it leaves the Forum and **everyone who imported it loses access**. If the listing
   has `importCount > 0`, warn the user first.
-- Every field is required on this `PUT` (`isPublic` included) — send the whole dictionary as you have
-  it, with only `isPublic` changed.
+- Send `isPublic` on this `PUT` **only when the user changed it** (since 2026-10-05, P4-18). Left out, the
+  server keeps the stored value. All other fields are still required. On a create (`POST`, or a `PUT` with a
+  new id) `isPublic` stays mandatory (400 otherwise).
 
 ### The one rule: a member keeps at least one dictionary shared
 
@@ -146,7 +147,7 @@ Non-members create dictionaries as always; send `isPublic: false`.
 ## 6. Deleting a dictionary
 
 ```
-DELETE /dictionaries/{dictionaryId}                (ms_dictionary :8085)
+DELETE /dictionaries/{dictionaryId}                (ms_dictionary)
 → 200 { "status": 200, "message": "Deleted successfully <id>", ... }
 ```
 
@@ -171,21 +172,17 @@ and will lose it."
 
 ## 7. Keeping the app's local copy in sync — important
 
-Joining and leaving change `isPublic` **on the server**, for all of the user's dictionaries. The app's
-local copies still hold the old values. If the sync engine then uploads a dictionary with its stale
-`isPublic`, it **silently undoes the join or leave** for that dictionary (un-shares it after a join, or
-re-shares it after a leave).
+Joining and leaving change `isPublic` **on the server**, for all of the user's dictionaries, while the app's
+local copies still hold the old values. Before 2026-10-05 a sync upload carrying that stale `isPublic`
+**silently undid the join or leave**. Since P4-18 the fix is on the server, and the client rule is simple:
 
-**Rule:** after a successful join or leave —
+**Rule: an upload (`PUT /dictionaries/`) leaves `isPublic` out unless the user toggled sharing on that
+dictionary.** Track the toggle as its own pending change: a "share changed" flag next to the row's unsynced
+flag. Then a rename, a language fix or any offline edit can never touch visibility.
 
-1. wait for the `201` from `profile-info`;
-2. wait about a second (the server applies it asynchronously);
-3. **re-fetch the user's dictionaries** — `GET /dictionaries/{sub}` — and overwrite the local
-   `isPublic` with the server's value;
-4. only then let the sync engine upload again.
-
-Treat `isPublic` from the server as authoritative whenever the two disagree after a join or leave.
-If an upload still hits 400 `SharingRequiredException`, the local copy is stale: re-fetch and retry.
+After a join or leave, still re-fetch the user's dictionaries (`GET /dictionaries/{sub}`) about a second later
+and take `isPublic` from the server, so the share toggles show the truth. If an upload that *does* carry a
+toggle hits 400 `SharingRequiredException`, re-fetch: the user's last shared dictionary would have gone private.
 
 ---
 
@@ -232,13 +229,13 @@ SUB=<the token's sub>
 H="Authorization: Bearer $TOKEN"
 
 # two private dictionaries
-for n in 1 2; do curl -s -H "$H" -H 'content-type: application/json' -X POST http://localhost:8085/dictionaries/ \
+for n in 1 2; do curl -s -H "$H" -H 'content-type: application/json' -X POST http://localhost:8080/dictionaries/ \
   -d "{\"dictionaryId\":\"4160c0de-0000-4000-8000-00000000000$n\",\"userId\":\"$SUB\",\"name\":\"Test $n\",\"isPublic\":false,\"fromLang\":\"de\",\"toLang\":\"tr\"}"; done
 
 # join (needs a profile first: GET /users/me, POST /users/ on 404) -> both become public
-curl -s -H "$H" -H 'content-type: application/json' -X PUT http://localhost:8086/users/me/profile-info \
+curl -s -H "$H" -H 'content-type: application/json' -X PUT http://localhost:8080/users/me/profile-info \
   -d '{"displayName":"Anna Bauer","marketplaceAgreementAccepted":true,"marketplaceAgreementVersion":"2026-10-01"}'
-sleep 2; curl -s -H "$H" http://localhost:8085/dictionaries/$SUB     # isPublic: true on both
+sleep 2; curl -s -H "$H" http://localhost:8080/dictionaries/$SUB     # isPublic: true on both
 
 # hide one -> 201; hide the other (the last shared) -> 400 SharingRequiredException
 ```

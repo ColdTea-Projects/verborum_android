@@ -159,8 +159,8 @@ the Integration document §6.4 and summarized in §8.2 below.
 
 ## 6. Backend Endpoints & Requirements (Android view)
 
-Base URL today: `http://192.168.0.241:8085/` (LAN, straight to ms_dictionary, cleartext —
-development only; see §8.3). All request/response DTOs mirror the backend contract
+Base URL: the API gateway (`ROOT_URL_VERBORUM_API`) — debug `http://10.0.2.2:8080/`; release from the
+`verborumApiUrl` build property (see `docs/production-cutover.md` §1). Every service is reached by path through it. All request/response DTOs mirror the backend contract
 (`Response`/`ErrorResponse` envelope for mutations; plain DTO lists for reads).
 
 ### 6.1 In use today (ms_dictionary)

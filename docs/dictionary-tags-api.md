@@ -3,7 +3,7 @@
 Endpoints for tagging a dictionary. Tags live on their own sub-resource (not inside the dictionary
 payload) so tagging never requires re-sending the whole dictionary.
 
-- **Service:** `ms_dictionary` (port **8085**)
+- **Service:** `ms_dictionary`, reached through the API gateway (`/dictionaries/**`)
 - **Base path:** `/dictionaries/{dictionaryId}/tags`
 - **Auth:** every call requires a valid Keycloak JWT — `Authorization: Bearer <access_token>`.
   A missing/invalid token → **401**. The owner is taken from the token (`sub` claim); never send a

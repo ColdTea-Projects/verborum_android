@@ -49,15 +49,23 @@ first — readiness on the BE side is decoupled from client release order.
 
 ```
 Client (Android / Web / iOS)
-   │  HTTPS + Authorization: Bearer <JWT>
+   │  HTTPS + Authorization: Bearer <JWT>          local: http://localhost:8080  (Android emulator: http://10.0.2.2:8080)
    ▼
-API Gateway (Spring Cloud Gateway, single public origin)      ← BE Phase 5
-   ├── /dictionaries/**, /words/**  → ms_dictionary (8085)
-   ├── /users/**                    → ms_user       (8086)   ← BE Phase 2
-   └── /marketplace/**              → ms_marketplace (8087)  ← BE Phase 4
+API Gateway (Spring Cloud Gateway, single public origin)      ← BE Phase 5, built (P5-01..P5-06)
+   ├── /dictionaries/**, /words/**  → ms_dictionary
+   ├── /users/**                    → ms_user
+   ├── /marketplace/**              → ms_marketplace
+   └── /notifications/**            → ms_notification
 Keycloak (auth server, Google SSO federated)                  ← BE Phase 3
 RabbitMQ (verborum.events)   — INTERNAL ONLY, never client-visible
 ```
+
+**One API origin.** A client never addresses a service directly: it holds one base URL, and the gateway routes by the
+first path segment. The gateway validates the JWT (issuer, audience, expiry) and answers 401 before any service is
+called; it strips any identity header a client sends (`X-User-*` and the like) — identity is the token and nothing
+else. `Authorization` and `X-Device-Id` pass through. An unknown path is a 404 in the usual error envelope; a service
+that is down is a 502, one that does not answer a 504, both in the same envelope. Request bodies must declare
+`Content-Length` (no chunked uploads: 411), and are capped at 2 MB (413).
 
 Rules for every client:
 
@@ -127,12 +135,18 @@ backend (BE task P3-05).
 **ms_user — BE Phase 2:** `POST/PUT /users/`, `GET/DELETE /users/{userId}`, and since 2026-10-04
 `GET /users/me` + `PUT /users/me/profile-info` (profile page, marketplace agreement — marketplace guide
 §4), vault:
-`GET/POST /users/{userId}/vault`, `DELETE /users/{userId}/vault/{dictionaryId}`.
+`GET /users/{userId}/vault`, `DELETE /users/{userId}/vault/{dictionaryId}` (no POST since 2026-10-05 — entries come only from
+`POST /marketplace/dictionaries/{id}/import`).
 
 **ms_marketplace — live since BE Phase 4 (2026-09-27):** `GET /marketplace/dictionaries`
 (paginated, `?pair=EN-TR` filter since 2026-10-04), `…/popular`, `…/publisher/{publisherId}`,
 `POST /marketplace/dictionaries/{id}/import`. Full client guide — endpoints, flows, security rules and
 per-platform notes: `docs/integration/marketplace-client-guide.md`.
+
+**Request limits (SEC-07, since 2026-10-05):** `POST`/`PUT /words` takes at most 5 bundles of at most 500 words;
+batch reads take at most 100 ids (400 otherwise). An account holds at most 1,000 dictionaries and a dictionary
+at most 5,000 words (400 `QuotaExceededException` on the create that would exceed it). Any request body is at
+most 2 MB (413) and must declare `Content-Length` (411 for chunked). A wrong HTTP method is 405.
 
 **ms_autofil — BE Phase 6 (V2):** `GET /autofil?word=…&from=…&to=…` → ranked community
 translations.
@@ -212,6 +226,13 @@ for days must resume sync without re-login. Web: short everything; re-authentica
 acceptable in a browser. All clients: send `Authorization: Bearer <access>`; refresh on 401
 once, then surface login.
 
+**Refresh-token rotation (SEC-06, since 2026-10-05):** every refresh returns a **new** refresh token and
+the old one stops working. Presenting a used one again revokes the whole session (reuse detection), so
+the user is logged out. Clients must store the new refresh token from every refresh, atomically with the
+access token, and refresh **single-flight**: one refresh at a time, re-reading the stored token inside the
+lock. An offline session ends after **180 days** however often it is used (`offlineSessionMaxLifespan`),
+as well as after 60 days unused.
+
 ### 6.3 Web token storage — decision pending, backend must stay compatible with both
 
 Browsers have no secure token storage. Two options:
@@ -238,9 +259,12 @@ the records globally valid already. The guest UUID must never reach the server p
 Two things only browsers need — both land with their natural backend phases regardless of
 whether Android releases first:
 
-- **CORS** (BE Phase 5, gateway): allowed origins per environment for the web app's domains;
-  `Authorization` + `Content-Type` headers; all verbs. Keycloak realm clients get matching
-  *Web Origins*. Mobile clients are unaffected.
+- **CORS** (built, P5-06 — answered by the gateway, never by a service): an exact list of web origins per
+  environment (`CORS_ALLOWED_ORIGINS`, never `*`; local default `http://localhost:8280`), methods `GET POST PUT
+  DELETE OPTIONS`, headers `Authorization`, `Content-Type`, `Accept`, `Accept-Language`, `X-Device-Id`, no credentials
+  (a Bearer header, never a cookie), preflight cached for an hour. A preflight needs no token. A new client header
+  must be added to that list or the browser refuses the call. Keycloak realm clients keep matching *Web Origins*
+  (`"+"`). Mobile clients are unaffected.
 - **Cookie/session tolerance:** only relevant if BFF is chosen — and then it is the BFF's
   concern, not the gateway's; the gateway keeps seeing bearer tokens (§6.3).
 
@@ -248,14 +272,13 @@ whether Android releases first:
 
 | Environment | API origin | Keycloak | Transport |
 |---|---|---|---|
-| dev | `http://localhost:8085–8087` or LAN (per-service, no gateway) | `http://localhost:8180` | cleartext allowed |
+| dev | the gateway: `http://localhost:8080` (emulator `http://10.0.2.2:8080`, phone `http://<lan-ip>:8080`) | `http://localhost:8180` | cleartext allowed |
 | staging | gateway origin, HTTPS | staging realm | HTTPS only |
 | prod | gateway origin, HTTPS | prod realm | HTTPS only |
 
 Per-platform mechanics: Android build types / product flavors (`BuildConfig`); the KMP project
-uses build-time configuration per target (web, iOS). The current Android hardcoded LAN URL
-(`192.168.0.241:8085`, cleartext in release) is a dev artifact scheduled for removal
-(Android roadmap A3).
+uses build-time configuration per target (web, iOS). The Android release API origin is a build property
+(`verborumApiUrl`, Android P5-09), never a literal address; unset, it is a name that cannot resolve.
 
 ## 9. Backend Events as Client-Visible Behavior
 
