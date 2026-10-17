@@ -94,6 +94,7 @@
     <string name="dictionaryDetailsScreenNoWordsToPractice">Füge zuerst ein Wort hinzu — es gibt noch nichts zu üben</string>
     <string name="dictionaryDetailsScreenNotEnoughWordsForTest">Ein Test braucht mindestens 4 Wörter in diesem Sprachpaar</string>
     <string name="offlineBannerMessage">Du bist offline — Änderungen werden synchronisiert, sobald du wieder verbunden bist</string>
+    <string name="offlineOnlineOnlyBannerMessage">Du bist offline — Forum und Profil benötigen eine Internetverbindung</string>
     <string name="errorSaveFailed">Speichern fehlgeschlagen — prüfe deine Verbindung und versuche es erneut</string>
     <string name="errorDeleteFailed">Löschen fehlgeschlagen — bitte versuche es erneut</string>
     <string name="testScreenTitle">Testmodus</string>

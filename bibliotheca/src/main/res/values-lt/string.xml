@@ -94,6 +94,7 @@
     <string name="dictionaryDetailsScreenNoWordsToPractice">Pirmiausia pridėkite žodį – dar nėra ko mokytis</string>
     <string name="dictionaryDetailsScreenNotEnoughWordsForTest">Testui reikia bent 4 žodžių šioje kalbų poroje</string>
     <string name="offlineBannerMessage">Esate neprisijungę – pakeitimai bus sinchronizuoti prisijungus</string>
+    <string name="offlineOnlineOnlyBannerMessage">Esate neprisijungę — Forumui ir Profiliui reikia interneto ryšio</string>
     <string name="errorSaveFailed">Nepavyko išsaugoti — patikrinkite ryšį ir bandykite dar kartą</string>
     <string name="errorDeleteFailed">Nepavyko ištrinti — bandykite dar kartą</string>
     <string name="testScreenTitle">Testo režimas</string>

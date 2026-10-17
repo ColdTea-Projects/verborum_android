@@ -94,6 +94,7 @@
     <string name="dictionaryDetailsScreenNoWordsToPractice">أضف كلمة أولاً — لا يوجد شيء للتدرب عليه بعد</string>
     <string name="dictionaryDetailsScreenNotEnoughWordsForTest">يحتاج الاختبار إلى 4 كلمات على الأقل في زوج اللغات هذا</string>
     <string name="offlineBannerMessage">أنت غير متصل — ستتم مزامنة التغييرات عند إعادة الاتصال</string>
+    <string name="offlineOnlineOnlyBannerMessage">أنت غير متصل — يتطلب المنتدى والملف الشخصي اتصالاً بالإنترنت</string>
     <string name="errorSaveFailed">تعذّر الحفظ — تحقق من اتصالك وحاول مرة أخرى</string>
     <string name="errorDeleteFailed">تعذّر الحذف — يرجى المحاولة مرة أخرى</string>
     <string name="testScreenTitle">وضع الاختبار</string>

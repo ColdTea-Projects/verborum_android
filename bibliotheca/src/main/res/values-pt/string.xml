@@ -94,6 +94,7 @@
     <string name="dictionaryDetailsScreenNoWordsToPractice">Adicione primeiro uma palavra — ainda não há nada para praticar</string>
     <string name="dictionaryDetailsScreenNotEnoughWordsForTest">Um teste precisa de pelo menos 4 palavras neste par de idiomas</string>
     <string name="offlineBannerMessage">Está offline — as alterações serão sincronizadas ao reconectar</string>
+    <string name="offlineOnlineOnlyBannerMessage">Você está offline — o Fórum e o Perfil precisam de conexão com a internet</string>
     <string name="errorSaveFailed">Não foi possível salvar — verifique a conexão e tente novamente</string>
     <string name="errorDeleteFailed">Não foi possível excluir — tente novamente</string>
     <string name="testScreenTitle">Modo de teste</string>

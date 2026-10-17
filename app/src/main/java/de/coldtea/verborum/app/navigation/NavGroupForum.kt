@@ -48,7 +48,8 @@ fun NavGraphBuilder.insertForumSearch(navController: NavHostController) = compos
     )
 }
 
-fun NavGraphBuilder.insertForumDictionaryDetails() = composable(
+// The details are online-only: the screen is left as soon as the connection goes (or is) off.
+fun NavGraphBuilder.insertForumDictionaryDetails(navController: NavHostController) = composable(
     "$SCREEN_FORUM_DICTIONARY_DETAILS/{dictionaryId}"
 ) { navBackStackEntry ->
     val viewModel = hiltViewModel<ForumDictionaryDetailsViewModel>()
@@ -56,5 +57,8 @@ fun NavGraphBuilder.insertForumDictionaryDetails() = composable(
 
     LaunchedEffect(dictionaryId) { viewModel.init(dictionaryId) }
 
-    ForumDictionaryDetailsScreen(viewModel = viewModel)
+    ForumDictionaryDetailsScreen(
+        viewModel = viewModel,
+        onConnectionLost = { navController.popBackStack() },
+    )
 }

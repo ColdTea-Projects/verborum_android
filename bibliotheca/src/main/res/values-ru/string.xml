@@ -94,6 +94,7 @@
     <string name="dictionaryDetailsScreenNoWordsToPractice">Сначала добавьте слово — пока нечего практиковать</string>
     <string name="dictionaryDetailsScreenNotEnoughWordsForTest">Для теста нужно минимум 4 слова в этой языковой паре</string>
     <string name="offlineBannerMessage">Вы офлайн — изменения синхронизируются после восстановления связи</string>
+    <string name="offlineOnlineOnlyBannerMessage">Вы офлайн — для Форума и Профиля нужно подключение к интернету</string>
     <string name="errorSaveFailed">Не удалось сохранить — проверьте соединение и повторите</string>
     <string name="errorDeleteFailed">Не удалось удалить — повторите попытку</string>
     <string name="testScreenTitle">Режим теста</string>

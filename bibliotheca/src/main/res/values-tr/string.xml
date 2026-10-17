@@ -94,6 +94,7 @@
     <string name="dictionaryDetailsScreenNoWordsToPractice">Önce bir kelime ekleyin — henüz çalışılacak bir şey yok</string>
     <string name="dictionaryDetailsScreenNotEnoughWordsForTest">Test için bu dil çiftinde en az 4 kelime gerekir</string>
     <string name="offlineBannerMessage">Çevrimdışısınız — değişiklikler yeniden bağlandığınızda eşitlenecek</string>
+    <string name="offlineOnlineOnlyBannerMessage">Çevrimdışısınız — Forum ve Profil için internet bağlantısı gerekir</string>
     <string name="errorSaveFailed">Kaydedilemedi — bağlantını kontrol edip tekrar dene</string>
     <string name="errorDeleteFailed">Silinemedi — lütfen tekrar dene</string>
     <string name="testScreenTitle">Test modu</string>

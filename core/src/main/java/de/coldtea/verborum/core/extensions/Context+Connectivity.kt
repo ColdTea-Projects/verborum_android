@@ -17,6 +17,9 @@ fun Context.hasInternet(): Boolean {
     val network = manager.activeNetwork ?: return false
     val capabilities = manager.getNetworkCapabilities(network) ?: return false
 
-    return capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) &&
-            capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED)
+    return capabilities.isUsable()
 }
+
+fun NetworkCapabilities.isUsable(): Boolean =
+    hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) &&
+        hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED)

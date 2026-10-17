@@ -19,6 +19,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -34,6 +38,7 @@ import de.coldtea.verborum.core.profile.ui.profile.composables.MarketplaceTermsS
 import de.coldtea.verborum.core.profile.ui.profile.model.ProfileForm
 import de.coldtea.verborum.core.profile.ui.profile.model.ProfileState
 import de.coldtea.verborum.core.theme.VerborumTheme
+import de.coldtea.verborum.core.ui.LocalIsOnline
 import de.coldtea.verborum.core.ui.RegisterTopBar
 import de.coldtea.verborum.core.ui.ShowSnackbarMessages
 import de.coldtea.verborum.core.ui.components.ScreenError
@@ -48,6 +53,17 @@ fun ProfileScreen(viewModel: ProfileViewModel = hiltViewModel()) {
     val state by viewModel.state.collectAsState()
 
     RegisterTopBar(title = stringResource(ResStrings.optionsProfile))
+
+    // Offline the saved profile stays visible but read-only; coming back online re-enables it and
+    // reloads (which also recovers a first load that failed while offline).
+    val isOnline = LocalIsOnline.current
+    var wasOnline by remember { mutableStateOf(isOnline) }
+    LaunchedEffect(isOnline) {
+        if (isOnline && !wasOnline) viewModel.refresh()
+        // A pending leave-Forum confirmation cannot be completed offline, so it is withdrawn.
+        if (!isOnline) viewModel.dismissLeaveConfirmation()
+        wasOnline = isOnline
+    }
 
     // Update failures surface here; the form keeps the user's drafts so they can retry.
     ShowSnackbarMessages(viewModel.snackbarMessages)
@@ -64,6 +80,7 @@ fun ProfileScreen(viewModel: ProfileViewModel = hiltViewModel()) {
 
         is ProfileState.Success -> ProfileContent(
             form = current.form,
+            isOnline = isOnline,
             onDisplayNameChange = viewModel::onDisplayNameChange,
             onAgreementChange = viewModel::onAgreementChange,
             onUpdate = viewModel::update,
@@ -78,6 +95,7 @@ fun ProfileScreen(viewModel: ProfileViewModel = hiltViewModel()) {
 @Composable
 private fun ProfileContent(
     form: ProfileForm,
+    isOnline: Boolean,
     onDisplayNameChange: (String) -> Unit,
     onAgreementChange: (Boolean) -> Unit,
     onUpdate: () -> Unit,
@@ -118,7 +136,7 @@ private fun ProfileContent(
             OutlinedTextField(
                 value = form.displayName,
                 onValueChange = onDisplayNameChange,
-                enabled = !form.isSaving,
+                enabled = isOnline && !form.isSaving,
                 label = { Text(text = stringResource(ResStrings.profileDisplayNameLabel)) },
                 singleLine = true,
                 isError = form.isDisplayNameMissing,
@@ -138,7 +156,7 @@ private fun ProfileContent(
             MarketplaceTermsSection(
                 accepted = form.agreementAccepted,
                 onAcceptedChange = onAgreementChange,
-                enabled = !form.isSaving,
+                enabled = isOnline && !form.isSaving,
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -148,7 +166,7 @@ private fun ProfileContent(
 
         Button(
             onClick = onUpdate,
-            enabled = form.canUpdate,
+            enabled = isOnline && form.canUpdate,
             shape = RoundedCornerShape(16.dp),
             colors = ButtonDefaults.buttonColors(
                 containerColor = MaterialTheme.colorScheme.primary,
@@ -183,6 +201,7 @@ private fun ProfileContent(
 private fun ProfileContentPreview() {
     VerborumTheme {
         ProfileContent(
+            isOnline = true,
             form = ProfileForm(
                 email = "anna@example.com",
                 savedDisplayName = "Anna",

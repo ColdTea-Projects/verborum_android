@@ -94,6 +94,7 @@
     <string name="dictionaryDetailsScreenNoWordsToPractice">Əvvəlcə söz əlavə edin — hələ məşq ediləcək bir şey yoxdur</string>
     <string name="dictionaryDetailsScreenNotEnoughWordsForTest">Test üçün bu dil cütündə ən azı 4 söz lazımdır</string>
     <string name="offlineBannerMessage">Oflaynsınız — dəyişikliklər yenidən qoşulduqda sinxronlaşdırılacaq</string>
+    <string name="offlineOnlineOnlyBannerMessage">Oflaynsınız — Forum və Profil üçün internet bağlantısı lazımdır</string>
     <string name="errorSaveFailed">Yadda saxlanılmadı — bağlantını yoxlayıb yenidən cəhd et</string>
     <string name="errorDeleteFailed">Silinmədi — zəhmət olmasa yenidən cəhd et</string>
     <string name="testScreenTitle">Test rejimi</string>

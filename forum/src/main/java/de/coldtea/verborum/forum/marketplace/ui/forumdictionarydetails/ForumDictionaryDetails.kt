@@ -22,6 +22,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -35,6 +36,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import de.coldtea.verborum.core.theme.VerborumTheme
+import de.coldtea.verborum.core.ui.LocalIsOnline
 import de.coldtea.verborum.core.ui.RegisterTopBar
 import de.coldtea.verborum.core.ui.components.DictionaryRatingInput
 import de.coldtea.verborum.core.ui.model.DictionaryRatingUi
@@ -60,8 +62,13 @@ import de.coldtea.verborum.forum.marketplace.ui.forumdictionarylist.model.ForumD
 @Composable
 fun ForumDictionaryDetailsScreen(
     viewModel: ForumDictionaryDetailsViewModel = hiltViewModel(),
+    onConnectionLost: () -> Unit = {},
 ) {
     val state by viewModel.dictionaryDetailState.collectAsState()
+
+    // Online-only content: leave the moment the connection is gone (or already off on arrival).
+    val isOnline = LocalIsOnline.current
+    LaunchedEffect(isOnline) { if (!isOnline) onConnectionLost() }
 
     // Download outcomes surface here.
     ShowSnackbarMessages(viewModel.snackbarMessages)

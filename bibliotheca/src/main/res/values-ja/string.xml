@@ -94,6 +94,7 @@
     <string name="dictionaryDetailsScreenNoWordsToPractice">まず単語を追加してください — 練習できるものがありません</string>
     <string name="dictionaryDetailsScreenNotEnoughWordsForTest">テストにはこの言語ペアで少なくとも4語が必要です</string>
     <string name="offlineBannerMessage">オフラインです — 変更は再接続時に同期されます</string>
+    <string name="offlineOnlineOnlyBannerMessage">オフラインです — フォーラムとプロフィールにはインターネット接続が必要です</string>
     <string name="errorSaveFailed">保存できませんでした — 接続を確認してもう一度お試しください</string>
     <string name="errorDeleteFailed">削除できませんでした — もう一度お試しください</string>
     <string name="testScreenTitle">テストモード</string>

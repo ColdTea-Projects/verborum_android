@@ -44,6 +44,7 @@ import de.coldtea.verborum.app.R
 // Translations live in bibliotheca, which carries all 19 locales; the app module has none.
 import de.coldtea.verborum.bibliotheca.R as BibliothecaR
 import de.coldtea.verborum.core.R as CoreR
+import de.coldtea.verborum.core.ui.LocalIsOnline
 import de.coldtea.verborum.core.ui.LocalSnackbarHostState
 import de.coldtea.verborum.core.ui.LocalVerborumTopBarController
 import de.coldtea.verborum.core.ui.VerborumTopBarController
@@ -69,10 +70,15 @@ fun NavigationCentral(showWelcome: Boolean = false) {
 
     val topBarState = topBarController.state
     val isOnline = rememberIsOnline()
+    // Forum and Profile work against the server only, so offline they get a different notice than
+    // the local-first screens (whose changes simply sync later).
+    val needsInternet = navBackStackEntry?.destination?.hierarchy?.any { it.route == GROUP_FORUM } == true ||
+        currentRoute == SCREEN_PROFILE
 
     CompositionLocalProvider(
         LocalVerborumTopBarController provides topBarController,
         LocalSnackbarHostState provides snackbarHostState,
+        LocalIsOnline provides isOnline,
     ) {
         Scaffold(
             topBar = {
@@ -88,7 +94,7 @@ fun NavigationCentral(showWelcome: Boolean = false) {
                     // is a standing condition, so it should stay visible instead of timing out
                     // like a transient message would.
                     AnimatedVisibility(visible = !isOnline && !isOnWelcomeScreen) {
-                        OfflineBanner()
+                        OfflineBanner(needsInternet)
                     }
                 }
             },
@@ -117,7 +123,7 @@ fun NavigationCentral(showWelcome: Boolean = false) {
                     }
                     navigation(startDestination = SCREEN_FORUM_MAIN_SCREEN, route = GROUP_FORUM) {
                         insertForumMain(navController)
-                        insertForumDictionaryDetails()
+                        insertForumDictionaryDetails(navController)
                         insertForumSearch(navController)
                     }
                     navigation(startDestination = SCREEN_OPTIONS, route = GROUP_OPTIONS) {
@@ -134,7 +140,7 @@ fun NavigationCentral(showWelcome: Boolean = false) {
  * error container so it reads as a warning in both light and dark.
  */
 @Composable
-private fun OfflineBanner() {
+private fun OfflineBanner(onlineOnlyScreen: Boolean) {
     Surface(
         modifier = Modifier.fillMaxWidth(),
         color = MaterialTheme.colorScheme.errorContainer,
@@ -146,7 +152,13 @@ private fun OfflineBanner() {
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
-                text = stringResource(BibliothecaR.string.offlineBannerMessage),
+                text = stringResource(
+                    if (onlineOnlyScreen) {
+                        BibliothecaR.string.offlineOnlineOnlyBannerMessage
+                    } else {
+                        BibliothecaR.string.offlineBannerMessage
+                    }
+                ),
                 fontSize = 13.sp,
                 fontWeight = FontWeight.Medium,
                 color = MaterialTheme.colorScheme.onErrorContainer,

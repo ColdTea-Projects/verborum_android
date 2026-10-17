@@ -94,6 +94,7 @@
     <string name="dictionaryDetailsScreenNoWordsToPractice">ابتدا واژه‌ای بیفزایید — هنوز چیزی برای تمرین نیست</string>
     <string name="dictionaryDetailsScreenNotEnoughWordsForTest">آزمون به دست‌کم ۴ واژه در این جفت زبان نیاز دارد</string>
     <string name="offlineBannerMessage">آفلاین هستید — تغییرات پس از اتصال دوباره همگام‌سازی می‌شوند</string>
+    <string name="offlineOnlineOnlyBannerMessage">شما آفلاین هستید — انجمن و پروفایل به اتصال اینترنت نیاز دارند</string>
     <string name="errorSaveFailed">ذخیره نشد — اتصال خود را بررسی کنید و دوباره تلاش کنید</string>
     <string name="errorDeleteFailed">حذف نشد — لطفاً دوباره تلاش کنید</string>
     <string name="testScreenTitle">حالت آزمون</string>

@@ -49,6 +49,7 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemContentType
 import androidx.paging.compose.itemKey
 import de.coldtea.verborum.core.theme.VerborumTheme
+import de.coldtea.verborum.core.ui.LocalIsOnline
 import de.coldtea.verborum.core.ui.LocalSnackbarHostState
 import de.coldtea.verborum.core.ui.RegisterTopBar
 import de.coldtea.verborum.core.ui.ShowSnackbarMessages
@@ -85,6 +86,14 @@ fun ForumDictionaryListScreen(
 
     // Every visit re-checks membership: the user may have joined or left since the last one.
     LaunchedEffect(Unit) { viewModel.refreshAccess() }
+
+    // Coming back online re-checks membership too, which also retries a check that failed offline.
+    val isOnline = LocalIsOnline.current
+    var wasOnline by remember { mutableStateOf(isOnline) }
+    LaunchedEffect(isOnline) {
+        if (isOnline && !wasOnline) viewModel.refreshAccess()
+        wasOnline = isOnline
+    }
 
     RegisterTopBar(
         title = stringResource(ResStrings.forumListScreenTitle),
@@ -172,7 +181,10 @@ private fun ForumDictionaryListMember(
     }
 }
 
-/** One tab's paged list. */
+/**
+ * One tab's paged list. Offline there is no list at all — the pager is not even collected, so
+ * nothing stale is shown (the banner explains why) — and the way back online reloads it from page 0.
+ */
 @Composable
 private fun ForumDictionaryTabContent(
     viewModel: ForumDictionaryListViewModel,
@@ -180,8 +192,44 @@ private fun ForumDictionaryTabContent(
     onDictionaryClick: (String) -> Unit,
     onSearchClick: () -> Unit,
 ) {
-    val dictionaries = viewModel.dictionaries(tab).collectAsLazyPagingItems()
     val filter by viewModel.filter.collectAsState()
+    val isOnline = LocalIsOnline.current
+
+    // Outlives the online branch below, which leaves composition while offline.
+    var wasOffline by remember { mutableStateOf(!isOnline) }
+    LaunchedEffect(isOnline) { if (!isOnline) wasOffline = true }
+
+    val activeFilters: @Composable () -> Unit = {
+        ForumActiveFilters(
+            filter = filter,
+            onFilterClick = onSearchClick,
+            onClearClick = viewModel::clearFilters,
+            modifier = Modifier.padding(bottom = 16.dp),
+        )
+    }
+
+    if (!isOnline) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.background)
+                .padding(horizontal = 24.dp),
+        ) {
+            Spacer(modifier = Modifier.height(16.dp))
+            activeFilters()
+        }
+        return
+    }
+
+    val dictionaries = viewModel.dictionaries(tab).collectAsLazyPagingItems()
+
+    // The cached pages replay on resubscribing, so a fresh load from page 0 follows a reconnect.
+    LaunchedEffect(Unit) {
+        if (wasOffline) {
+            wasOffline = false
+            dictionaries.refresh()
+        }
+    }
 
     // Refused as a non-member (left on another device): re-check, so the gate shows how to join.
     val refresh = dictionaries.loadState.refresh
@@ -196,14 +244,7 @@ private fun ForumDictionaryTabContent(
         filter = filter,
         onDictionaryClick = onDictionaryClick,
         onDownload = viewModel::download,
-        activeFilters = {
-            ForumActiveFilters(
-                filter = filter,
-                onFilterClick = onSearchClick,
-                onClearClick = viewModel::clearFilters,
-                modifier = Modifier.padding(bottom = 16.dp),
-            )
-        },
+        activeFilters = activeFilters,
     )
 }
 
