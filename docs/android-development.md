@@ -33,8 +33,9 @@ The Android app is the **first and reference client**. Its goals:
 | Practice — Self practice | ✅ | Flip-style self-check |
 | Practice — Multiple choice | ✅ | Generated distractors |
 | Sync engine | ✅ | Offline-first, upload-then-download (see §5) |
-| Marketplace ("Forum" tab) | 🟡 dummy data | Browse list (Paging 3, 15 per page) + details screen on canned data; ms_marketplace not wired yet |
-| Authentication | 🔲 none | Runs entirely as guest user (see §7, §8.2) |
+| Marketplace ("Forum" tab) | ✅ live | Browse/filter/search (Paging 3), details, import, ratings against ms_marketplace; gated on accepted Forum terms; online-only — an offline banner says so on Forum and Profile |
+| Authentication | ✅ | Keycloak OAuth PKCE (AppAuth), login wall, JWT `sub` as row owner, guest data migrated at first login; logout in Options |
+| Profile | ✅ | ms_user profile and Forum membership (Options → Profile); online-only |
 | Word suggestions (Autofil) | 🔲 | Backend V2 feature |
 
 **Dictionary languages currently selectable (10):** en, de, fr, es, it, pt, nl, lt, tr, az.
