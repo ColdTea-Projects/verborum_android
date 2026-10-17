@@ -28,7 +28,7 @@ object PushNetworkModule {
     @Singleton
     @Named("notificationRetrofit")
     fun provideNotificationRetrofit(okHttpClient: OkHttpClient): Retrofit = Retrofit.Builder()
-        .baseUrl(BuildConfig.ROOT_URL_VERBORUM_NOTIFICATION_API)
+        .baseUrl(BuildConfig.ROOT_URL_VERBORUM_API)
         .client(okHttpClient)
         .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
         .build()

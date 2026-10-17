@@ -19,6 +19,7 @@ class DeviceIdInterceptorTest : BaseTest() {
     @MockK
     private lateinit var deviceIdStore: DeviceIdStore
 
+    /** The single gateway origin (P5-09): every backend call starts with it. */
     private val dictionaryApi = BuildConfig.ROOT_URL_VERBORUM_API
 
     private lateinit var interceptor: DeviceIdInterceptor
@@ -43,7 +44,7 @@ class DeviceIdInterceptorTest : BaseTest() {
         Request.Builder().url(url).method(method, "{}".toRequestBody()).build()
 
     @Test
-    fun `a write to ms_dictionary carries the device id`() {
+    fun `a write to dictionaries carries the device id`() {
         val sent = proceeded(write("${dictionaryApi}dictionaries/"))
 
         assertEquals(DEVICE_ID, sent.header("X-Device-Id"))
@@ -67,8 +68,8 @@ class DeviceIdInterceptorTest : BaseTest() {
 
     @Test
     fun `a Forum download carries the device id`() {
-        // ms_marketplace turns an import into a vault change the other devices must hear about
-        val sent = proceeded(write("${BuildConfig.ROOT_URL_VERBORUM_MARKETPLACE_API}marketplace/dictionaries/d1/import"))
+        // the marketplace turns an import into a vault change the other devices must hear about
+        val sent = proceeded(write("${dictionaryApi}marketplace/dictionaries/d1/import"))
 
         assertEquals(DEVICE_ID, sent.header("X-Device-Id"))
     }
@@ -76,7 +77,7 @@ class DeviceIdInterceptorTest : BaseTest() {
     @Test
     fun `removing a download from the vault carries the device id`() {
         val request = Request.Builder()
-            .url("${BuildConfig.ROOT_URL_VERBORUM_USER_API}users/u1/vault/d1").delete().build()
+            .url("${dictionaryApi}users/u1/vault/d1").delete().build()
 
         assertEquals(DEVICE_ID, proceeded(request).header("X-Device-Id"))
     }
@@ -84,18 +85,18 @@ class DeviceIdInterceptorTest : BaseTest() {
     @Test
     fun `a read from the marketplace or the vault carries no device id`() {
         val browse = Request.Builder()
-            .url("${BuildConfig.ROOT_URL_VERBORUM_MARKETPLACE_API}marketplace/dictionaries").get().build()
+            .url("${dictionaryApi}marketplace/dictionaries").get().build()
         val vault = Request.Builder()
-            .url("${BuildConfig.ROOT_URL_VERBORUM_USER_API}users/u1/vault").get().build()
+            .url("${dictionaryApi}users/u1/vault").get().build()
 
         assertNull(proceeded(browse).header("X-Device-Id"))
         assertNull(proceeded(vault).header("X-Device-Id"))
     }
 
     @Test
-    fun `a write to ms_notification carries no device id`() {
+    fun `a write to notifications carries no device id`() {
         // Registration names the device in its body, so the header would only repeat it
-        val sent = proceeded(write("${BuildConfig.ROOT_URL_VERBORUM_NOTIFICATION_API}notifications/devices", "PUT"))
+        val sent = proceeded(write("${dictionaryApi}notifications/devices", "PUT"))
 
         assertNull(sent.header("X-Device-Id"))
     }

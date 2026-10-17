@@ -31,7 +31,7 @@ object NetworkModule {
     @Singleton
     @Named("marketplaceRetrofit")
     fun provideMarketplaceRetrofit(okHttpClient: OkHttpClient): Retrofit = Retrofit.Builder()
-        .baseUrl(BuildConfig.ROOT_URL_VERBORUM_MARKETPLACE_API)
+        .baseUrl(BuildConfig.ROOT_URL_VERBORUM_API)
         .client(okHttpClient)
         .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
         .build()

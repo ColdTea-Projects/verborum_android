@@ -6,6 +6,11 @@ plugins {
     kotlin("plugin.serialization")
 }
 
+// Release gateway origin (P5-09). ".invalid" is reserved (RFC 2606): it never resolves.
+val releaseApiUrl: String = (findProperty("verborumApiUrl") as String?)?.trim()
+    ?.let { if (it.endsWith("/")) it else "$it/" }
+    ?: "https://api.verborum.invalid/"
+
 android {
     namespace = "de.coldtea.verborum.core"
     compileSdk = Configuration.compileSdk
@@ -35,14 +40,9 @@ android {
     buildTypes {
 
         debug {
-            // ms_dictionary
-            buildConfigField("String", "ROOT_URL_VERBORUM_API", "\"http://10.0.2.2:8085/\"")
-            // ms_user
-            buildConfigField("String", "ROOT_URL_VERBORUM_USER_API", "\"http://10.0.2.2:8086/\"")
-            // ms_marketplace — the Forum
-            buildConfigField("String", "ROOT_URL_VERBORUM_MARKETPLACE_API", "\"http://10.0.2.2:8087/\"")
-            // ms_notification — device registration for silent push
-            buildConfigField("String", "ROOT_URL_VERBORUM_NOTIFICATION_API", "\"http://10.0.2.2:8088/\"")
+            // ms_gateway (P5-09) — the one origin for every backend call. It routes /dictionaries, /words,
+            // /users, /marketplace and /notifications to the services; the emulator reaches the host as 10.0.2.2.
+            buildConfigField("String", "ROOT_URL_VERBORUM_API", "\"http://10.0.2.2:8080/\"")
             // Keycloak is pinned to localhost:8180 on the backend (KC_HOSTNAME_URL default), so it
             // renders/redirects the browser to localhost — 10.0.2.2 would break the browser flow.
             // Reach it via `adb reverse tcp:8180 tcp:8180` so the emulator's localhost hits the host.
@@ -63,10 +63,10 @@ android {
         }
 
         release {
-            buildConfigField("String", "ROOT_URL_VERBORUM_API", "\"http://192.168.0.241:8085/\"")
-            buildConfigField("String", "ROOT_URL_VERBORUM_USER_API", "\"http://192.168.0.241:8086/\"")
-            buildConfigField("String", "ROOT_URL_VERBORUM_MARKETPLACE_API", "\"http://192.168.0.241:8087/\"")
-            buildConfigField("String", "ROOT_URL_VERBORUM_NOTIFICATION_API", "\"http://192.168.0.241:8088/\"")
+            // The gateway origin comes from a build property, never a literal address: set verborumApiUrl in
+            // ~/.gradle/gradle.properties or pass -PverborumApiUrl=https://api.<domain>/ (docs/production-cutover.md §1).
+            // Unset, it is a name that cannot resolve, so a release built without it fails loudly at the first call.
+            buildConfigField("String", "ROOT_URL_VERBORUM_API", "\"$releaseApiUrl\"")
             buildConfigField(
                 "String",
                 "KEYCLOAK_ISSUER",

@@ -30,7 +30,7 @@ object UserNetworkModule {
     @Singleton
     @Named("userRetrofit")
     fun provideUserRetrofit(okHttpClient: OkHttpClient): Retrofit = Retrofit.Builder()
-        .baseUrl(BuildConfig.ROOT_URL_VERBORUM_USER_API)
+        .baseUrl(BuildConfig.ROOT_URL_VERBORUM_API)
         .client(okHttpClient)
         .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
         .build()

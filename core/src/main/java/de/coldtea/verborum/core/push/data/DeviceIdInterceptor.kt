@@ -8,12 +8,11 @@ import javax.inject.Inject
 /**
  * Adds `X-Device-Id` to every **write** the backend turns into a sync nudge, so it can skip this install
  * when it sends the account's other devices a silent `SYNC` (docs/push-notifications-client-guide.md §3):
- * ms_dictionary (dictionaries, words, tags), ms_marketplace (a Forum download) and ms_user (removing a
- * download from the vault).
+ * dictionaries, words, tags, a Forum download, removing a download from the vault.
  *
- * Scoped to those origins and to non-GET methods on purpose: that is the contract, and ms_notification
- * carries the id in its own body. Without the header nothing breaks — this device just syncs once more
- * after its own change.
+ * Every call goes to one gateway origin (P5-09), so the scope is the method and the path: non-GET writes to
+ * the API, except `notifications/` — device registration carries the id in its own body. Without the header
+ * nothing breaks — this device just syncs once more after its own change.
  */
 class DeviceIdInterceptor @Inject constructor(
     private val deviceIdStore: DeviceIdStore,
@@ -22,8 +21,8 @@ class DeviceIdInterceptor @Inject constructor(
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request()
         val isWrite = request.method != "GET" && request.method != "HEAD"
-        val url = request.url.toString()
-        val isNudgingApi = NUDGING_ORIGINS.any { url.startsWith(it) }
+        val isNudgingApi = request.url.toString().startsWith(API_ORIGIN) &&
+            request.url.encodedPath.removePrefix("/").startsWith(NOTIFICATIONS_PATH).not()
 
         if (!isWrite || !isNudgingApi || request.header(HEADER) != null) {
             return chain.proceed(request)
@@ -34,11 +33,9 @@ class DeviceIdInterceptor @Inject constructor(
     companion object {
         const val HEADER = "X-Device-Id"
 
-        /** The services whose writes become a sync nudge for the account's other devices. */
-        private val NUDGING_ORIGINS = listOf(
-            BuildConfig.ROOT_URL_VERBORUM_API,
-            BuildConfig.ROOT_URL_VERBORUM_MARKETPLACE_API,
-            BuildConfig.ROOT_URL_VERBORUM_USER_API,
-        )
+        private val API_ORIGIN = BuildConfig.ROOT_URL_VERBORUM_API
+
+        /** Device registration names the device in its body, so the header would only repeat it. */
+        private const val NOTIFICATIONS_PATH = "notifications/"
     }
 }

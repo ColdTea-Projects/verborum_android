@@ -15,17 +15,31 @@ contract is `frontend-backend-integration.md` §6 + `client-login-guide.md`.
 
 ## 1. Endpoints & HTTPS — `core/build.gradle.kts`
 
-Five `buildConfigField`s per build type drive every network + auth call. Today **both** debug and
-release point at dev hosts over **http**. For production, the `release` block must name the real
-**https** origins:
+Three `buildConfigField`s per build type drive every network + auth call. Since the API gateway (P5-09) there is **one
+API origin** for dictionaries, users, the Forum and device registration; Keycloak stays its own origin. The `debug`
+block names the local gateway; the `release` block reads the gateway origin from a **build property**, never a literal
+address:
 
 | Field | Dev value (now) | Production value |
 |---|---|---|
-| `ROOT_URL_VERBORUM_API` (ms_dictionary) | `http://10.0.2.2:8085/` (debug) / `http://192.168.0.241:8085/` (release) | `https://<dictionary-host>/` |
-| `ROOT_URL_VERBORUM_USER_API` (ms_user) | `:8086` | `https://<user-host>/` |
-| `KEYCLOAK_ISSUER` | `http://localhost:8180/realms/verborum` (debug) | `https://<keycloak-host>/realms/verborum` |
+| `ROOT_URL_VERBORUM_API` (ms_gateway) | `http://10.0.2.2:8080/` (debug) / the `verborumApiUrl` property (release) | `https://api.<domain>/` |
+| `KEYCLOAK_ISSUER` | `http://localhost:8180/realms/verborum` (debug) / `http://192.168.0.241:8180/...` (release) | `https://auth.<domain>/realms/verborum` |
 | `OAUTH_CLIENT_ID` | `verborum-app` | usually unchanged (confirm the prod realm uses the same client id) |
 | `OAUTH_REDIRECT_URI` | `de.coldtea.verborum://oauth2redirect/cb` | **unchanged** — a custom scheme, not host-dependent |
+
+Set the release origin in `~/.gradle/gradle.properties` (not in the repo) or pass it on the command line:
+
+```
+verborumApiUrl=https://api.<domain>/            # or: ./gradlew assembleRelease -PverborumApiUrl=https://api.<domain>/
+```
+
+A missing trailing slash is added. Unset, the value is `https://api.verborum.invalid/` — a name that never resolves — so
+a release built without the property fails at its first call instead of silently talking to a development host. To test
+a release build against a gateway on your LAN, set `verborumApiUrl=http://<lan-ip>:8080/`.
+
+The paths the app calls (`users/...`, `dictionaries/...`, `words/...`, `marketplace/...`, `notifications/...`) are unchanged:
+the gateway routes by that first segment. `DeviceIdInterceptor` adds `X-Device-Id` to every non-GET call to the API
+except `notifications/`, because one origin can no longer tell the services apart.
 
 Notes:
 - **`KEYCLOAK_ISSUER` must exactly equal the issuer the services validate.** A mismatch is the
@@ -33,8 +47,6 @@ Notes:
   origin everywhere (no more `localhost`-vs-`10.0.2.2` juggling).
 - Once **HTTPS is in place, the AppAuth http shim (§3) and the cleartext allowance (§2) become
   dead/undesirable** — see those sections.
-- **When the backend API gateway lands** (backend Phase 5, `client-login-guide.md` §9.4), the two
-  per-service base URLs collapse into one gateway origin. Until then, keep both.
 
 ## 2. Network security config — `app/src/main/res/xml/network_security_config.xml`
 
