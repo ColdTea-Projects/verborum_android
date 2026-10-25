@@ -145,4 +145,5 @@
     <string name="unshareDialogMessage">Es verschwindet aus dem Forum, und wer es heruntergeladen hat, verliert den Zugriff.</string>
     <string name="unshareDialogConfirm">Nicht mehr teilen</string>
     <string name="errorSharingFailed">Teilen konnte nicht geändert werden. Prüfe deine Verbindung und versuche es erneut.</string>
+    <string name="testDirectionDialogTitle">In welcher Richtung möchtest du üben?</string>
 </resources>

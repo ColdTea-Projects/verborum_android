@@ -149,4 +149,5 @@
     <string name="unshareDialogMessage">سيُزال من Forum، وسيفقد من نزّلوه إمكانية الوصول إليه.</string>
     <string name="unshareDialogConfirm">إيقاف المشاركة</string>
     <string name="errorSharingFailed">تعذّر تغيير المشاركة. تحقّق من اتصالك وحاول مرة أخرى.</string>
+    <string name="testDirectionDialogTitle">ما الاتجاه الذي تريد التدرّب عليه؟</string>
 </resources>

@@ -20,6 +20,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import de.coldtea.verborum.bibliotheca.common.utils.ResStrings
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
@@ -89,8 +91,21 @@ fun QuestionCard(
             }
 
             // Question Text
+            val asked = question.question.question
+            val prompt = stringResource(ResStrings.testQuestionPrompt, asked)
+            val askedColor = MaterialTheme.colorScheme.error
+            // The prompt is localized, so the asked word sits at a different spot per language.
+            val promptText = remember(prompt, asked, askedColor) {
+                buildAnnotatedString {
+                    append(prompt)
+                    val start = prompt.indexOf(asked)
+                    if (start >= 0) {
+                        addStyle(SpanStyle(color = askedColor), start, start + asked.length)
+                    }
+                }
+            }
             Text(
-                text = stringResource(ResStrings.testQuestionPrompt, question.question.question),
+                text = promptText,
                 fontSize = 22.sp,
                 fontWeight = FontWeight.SemiBold,
                 color = MaterialTheme.colorScheme.onSurface,

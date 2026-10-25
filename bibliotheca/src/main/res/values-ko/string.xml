@@ -144,4 +144,5 @@
     <string name="unshareDialogMessage">Forum에서 사라지며, 다운로드한 사람은 더 이상 볼 수 없습니다.</string>
     <string name="unshareDialogConfirm">공유 중지</string>
     <string name="errorSharingFailed">공유를 변경하지 못했습니다. 연결을 확인하고 다시 시도하세요.</string>
+    <string name="testDirectionDialogTitle">어느 방향으로 연습하시겠습니까?</string>
 </resources>

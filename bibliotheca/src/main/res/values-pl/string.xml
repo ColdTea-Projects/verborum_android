@@ -147,4 +147,5 @@
     <string name="unshareDialogMessage">Zniknie z Forum, a osoby, które go pobrały, stracą dostęp.</string>
     <string name="unshareDialogConfirm">Przestań udostępniać</string>
     <string name="errorSharingFailed">Nie udało się zmienić udostępniania. Sprawdź połączenie i spróbuj ponownie.</string>
+    <string name="testDirectionDialogTitle">W którym kierunku chcesz ćwiczyć?</string>
 </resources>

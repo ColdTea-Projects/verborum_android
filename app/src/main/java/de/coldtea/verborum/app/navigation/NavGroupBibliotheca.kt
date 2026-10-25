@@ -110,8 +110,8 @@ fun NavGraphBuilder.insertDictionariesDetails(navController: NavHostController) 
 
     DictionaryDetailsScreen(
         viewModel = viewModel,
-        onTestClicked = {
-            navController.navigate("$SCREEN_MULTIPLE_CHOCIE/$dictionaryId")
+        onTestClicked = { reversed ->
+            navController.navigate("$SCREEN_MULTIPLE_CHOCIE/$dictionaryId?reversed=$reversed")
         },
         onSelfPracticeClicked = {
             navController.navigate("$SCREEN_SELF_PRACTICE/$dictionaryId")
@@ -140,12 +140,15 @@ fun NavGraphBuilder.insertSelfPractice(navController: NavHostController) = compo
 }
 
 fun NavGraphBuilder.insertMultipleChoiceScreen(navController: NavHostController) = composable(
-    "$SCREEN_MULTIPLE_CHOCIE/{dictionaryId}"
+    "$SCREEN_MULTIPLE_CHOCIE/{dictionaryId}?reversed={reversed}",
+    arguments = listOf(navArgument("reversed") { type = NavType.BoolType; defaultValue = false }),
 ){ navBackStackEntry ->
     val viewModel = hiltViewModel<MultipleChoiceViewModel>()
     val dictionaryId: String = navBackStackEntry.arguments?.getString("dictionaryId").orEmpty()
 
-    LaunchedEffect(dictionaryId) { viewModel.init(dictionaryId) }
+    val reversed = navBackStackEntry.arguments?.getBoolean("reversed") ?: false
+
+    LaunchedEffect(dictionaryId, reversed) { viewModel.init(dictionaryId, reversed) }
 
     MultipleChoiceQuestionScreen(viewModel){
         navController.popBackStack()

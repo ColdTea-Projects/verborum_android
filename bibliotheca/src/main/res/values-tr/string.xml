@@ -145,4 +145,5 @@
     <string name="unshareDialogMessage">Forum’dan kalkar ve indirenler erişimini kaybeder.</string>
     <string name="unshareDialogConfirm">Paylaşımı durdur</string>
     <string name="errorSharingFailed">Paylaşım değiştirilemedi. Bağlantını kontrol edip tekrar dene.</string>
+    <string name="testDirectionDialogTitle">Hangi yönde pratik yapmak istersiniz?</string>
 </resources>

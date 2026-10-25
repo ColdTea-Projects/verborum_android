@@ -147,4 +147,5 @@
     <string name="unshareDialogMessage">Он исчезнет из Forum, а скачавшие его потеряют доступ.</string>
     <string name="unshareDialogConfirm">Перестать делиться</string>
     <string name="errorSharingFailed">Не удалось изменить общий доступ. Проверьте подключение и попробуйте ещё раз.</string>
+    <string name="testDirectionDialogTitle">В каком направлении вы хотите тренироваться?</string>
 </resources>

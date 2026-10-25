@@ -145,4 +145,5 @@
     <string name="unshareDialogMessage">Il quitte le Forum, et les personnes qui l’ont téléchargé n’y ont plus accès.</string>
     <string name="unshareDialogConfirm">Arrêter le partage</string>
     <string name="errorSharingFailed">Impossible de modifier le partage. Vérifiez votre connexion et réessayez.</string>
+    <string name="testDirectionDialogTitle">Dans quel sens voulez-vous vous entraîner ?</string>
 </resources>

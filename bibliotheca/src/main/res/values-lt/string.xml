@@ -147,4 +147,5 @@
     <string name="unshareDialogMessage">Jis dings iš Forum, o jį atsisiuntę praras prieigą.</string>
     <string name="unshareDialogConfirm">Nebebendrinti</string>
     <string name="errorSharingFailed">Nepavyko pakeisti bendrinimo. Patikrinkite ryšį ir bandykite dar kartą.</string>
+    <string name="testDirectionDialogTitle">Kuria kryptimi norite praktikuotis?</string>
 </resources>

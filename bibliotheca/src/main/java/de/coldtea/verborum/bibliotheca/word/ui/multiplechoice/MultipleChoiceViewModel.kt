@@ -71,8 +71,12 @@ class MultipleChoiceViewModel @Inject constructor(
     private var loadJob: Job? = null
     private var dictionaryId: String = ""
 
-    fun init(dictionaryId: String) {
+    // false: the dictionary's first language is the question; true: the second one is.
+    private var reversed: Boolean = false
+
+    fun init(dictionaryId: String, reversed: Boolean = false) {
         this.dictionaryId = dictionaryId
+        this.reversed = reversed
         observeWords()
     }
 
@@ -205,18 +209,26 @@ class MultipleChoiceViewModel @Inject constructor(
         val sourceMeta = WordMeta.parse(wordMeta)
         val targetMeta = WordMeta.parse(translationMeta)
 
+        // Reversed tests ask in the translation language and answer in the word language; the
+        // distractor pool is built from the same questions, so it flips with them.
+        val (questionSide, answerSide) =
+            if (reversed) (translation to translationMeta) to (word to wordMeta)
+            else (word to wordMeta) to (translation to translationMeta)
+        val (questionMeta, answerMeta) =
+            if (reversed) targetMeta to sourceMeta else sourceMeta to targetMeta
+
         return buildList {
             // Surfaces are stored as JSON arrays; the question/answer show "kaufen/erwerben".
             add(
                 MultipleChoiceQuestion(
                     wordId,
-                    surfacesDisplay(word, languageCodeOf(wordMeta)),
-                    surfacesDisplay(translation, languageCodeOf(translationMeta)),
+                    surfacesDisplay(questionSide.first, languageCodeOf(questionSide.second)),
+                    surfacesDisplay(answerSide.first, languageCodeOf(answerSide.second)),
                 )
             )
             FieldKey.entries.forEach { key ->
-                val questionForm = sourceMeta?.displayForm(key)
-                val answerForm = targetMeta?.displayForm(key)
+                val questionForm = questionMeta?.displayForm(key)
+                val answerForm = answerMeta?.displayForm(key)
                 if (questionForm != null && answerForm != null) {
                     add(MultipleChoiceQuestion(wordId, questionForm, answerForm, key))
                 }

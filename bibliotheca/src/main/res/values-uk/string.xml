@@ -147,4 +147,5 @@
     <string name="unshareDialogMessage">Він зникне з Forum, а ті, хто його завантажив, втратять доступ.</string>
     <string name="unshareDialogConfirm">Припинити ділитися</string>
     <string name="errorSharingFailed">Не вдалося змінити спільний доступ. Перевірте з’єднання та спробуйте ще раз.</string>
+    <string name="testDirectionDialogTitle">У якому напрямку ви хочете тренуватися?</string>
 </resources>

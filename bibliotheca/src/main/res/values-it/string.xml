@@ -145,4 +145,5 @@
     <string name="unshareDialogMessage">Lascia il Forum e chi l’ha scaricato perde l’accesso.</string>
     <string name="unshareDialogConfirm">Smetti di condividere</string>
     <string name="errorSharingFailed">Impossibile modificare la condivisione. Controlla la connessione e riprova.</string>
+    <string name="testDirectionDialogTitle">In quale direzione vuoi esercitarti?</string>
 </resources>

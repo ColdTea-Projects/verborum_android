@@ -145,4 +145,5 @@
     <string name="unshareDialogMessage">از Forum خارج می‌شود و کسانی که آن را دانلود کرده‌اند دسترسی خود را از دست می‌دهند.</string>
     <string name="unshareDialogConfirm">توقف اشتراک‌گذاری</string>
     <string name="errorSharingFailed">تغییر اشتراک‌گذاری ممکن نشد. اتصال خود را بررسی کنید و دوباره تلاش کنید.</string>
+    <string name="testDirectionDialogTitle">می‌خواهید در کدام جهت تمرین کنید؟</string>
 </resources>

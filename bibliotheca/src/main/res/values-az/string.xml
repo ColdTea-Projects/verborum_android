@@ -145,4 +145,5 @@
     <string name="unshareDialogMessage">O, Forum-dan çıxacaq və onu yükləyənlər girişi itirəcək.</string>
     <string name="unshareDialogConfirm">Paylaşımı dayandır</string>
     <string name="errorSharingFailed">Paylaşımı dəyişmək mümkün olmadı. Bağlantını yoxlayıb yenidən cəhd edin.</string>
+    <string name="testDirectionDialogTitle">Hansı istiqamətdə məşq etmək istəyirsiniz?</string>
 </resources>

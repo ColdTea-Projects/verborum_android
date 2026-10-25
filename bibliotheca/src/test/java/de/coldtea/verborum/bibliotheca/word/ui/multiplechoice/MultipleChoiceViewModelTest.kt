@@ -56,12 +56,13 @@ class MultipleChoiceViewModelTest : BaseTest() {
         words: List<WordUi>,
         languagePairWords: List<WordUi> = words,
         dictionaryId: String = "dict-1",
+        reversed: Boolean = false,
     ) {
         every { wordService.observeWordsByDictionary(dictionaryId) } returns flowOf(words)
         every {
             wordService.observeWordsInLanguagePair(dictionaryId)
         } returns flowOf(languagePairWords)
-        viewModel.init(dictionaryId)
+        viewModel.init(dictionaryId, reversed)
     }
 
     /** Questions are shuffled, so the current question is always read back from the state. */
@@ -74,6 +75,29 @@ class MultipleChoiceViewModelTest : BaseTest() {
         viewModel.onAnswerReceived(answer)
         viewModel.onAnswerGiven()
     }
+
+    // region direction
+
+    @Test
+    fun `reversed test asks in the translation language and answers in the word language`() = runTest {
+        initWith(distinctWords(4), reversed = true)
+
+        val state = currentSuccess().multipleChoiceCurrentQuestion
+        assertTrue(state.question.question.startsWith("translation-"))
+        assertTrue(state.question.answer.startsWith("word-"))
+        assertTrue(state.choices.all { it.startsWith("word-") })
+    }
+
+    @Test
+    fun `default test asks in the word language`() = runTest {
+        initWith(distinctWords(4))
+
+        val state = currentSuccess().multipleChoiceCurrentQuestion
+        assertTrue(state.question.question.startsWith("word-"))
+        assertTrue(state.choices.all { it.startsWith("translation-") })
+    }
+
+    // endregion
 
     // region initial state
 

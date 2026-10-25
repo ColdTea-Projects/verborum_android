@@ -144,4 +144,5 @@
     <string name="unshareDialogMessage">Forum から削除され、ダウンロードした人はアクセスできなくなります。</string>
     <string name="unshareDialogConfirm">共有を停止</string>
     <string name="errorSharingFailed">共有を変更できませんでした。接続を確認して、もう一度お試しください。</string>
+    <string name="testDirectionDialogTitle">どちらの方向で練習しますか？</string>
 </resources>

@@ -145,4 +145,5 @@
     <string name="unshareDialogMessage">Het verdwijnt uit het Forum en wie het heeft gedownload, verliest de toegang.</string>
     <string name="unshareDialogConfirm">Stoppen met delen</string>
     <string name="errorSharingFailed">Delen kon niet worden gewijzigd. Controleer je verbinding en probeer het opnieuw.</string>
+    <string name="testDirectionDialogTitle">In welke richting wil je oefenen?</string>
 </resources>

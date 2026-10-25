@@ -52,6 +52,7 @@ import de.coldtea.verborum.core.ui.components.languagePairLabel
 import de.coldtea.verborum.core.ui.components.DictionaryTagsText
 import de.coldtea.verborum.bibliotheca.word.ui.dictionarydetails.composables.DictionarySharingSwitch
 import de.coldtea.verborum.bibliotheca.word.ui.dictionarydetails.composables.PracticeModeButton
+import de.coldtea.verborum.bibliotheca.word.ui.dictionarydetails.composables.TestDirectionDialog
 import de.coldtea.verborum.bibliotheca.word.ui.dictionarydetails.composables.WordListItem
 import de.coldtea.verborum.bibliotheca.word.ui.dictionarydetails.model.DictionaryDetailState
 import de.coldtea.verborum.core.theme.VerborumTheme
@@ -63,7 +64,7 @@ import de.coldtea.verborum.bibliotheca.common.utils.CoreResDrawables
 @Composable
 fun DictionaryDetailsScreen(
     viewModel: DictionaryDetailsViewModel = hiltViewModel(),
-    onTestClicked: () -> Unit,
+    onTestClicked: (reversed: Boolean) -> Unit,
     onSelfPracticeClicked: () -> Unit,
     onCreateWordClicked: () -> Unit,
     onEditWordClicked: (String) -> Unit = {},
@@ -77,6 +78,7 @@ fun DictionaryDetailsScreen(
 
     var showDeleteDialog by remember { mutableStateOf(false) }
     var showUnsubscribeDialog by remember { mutableStateOf(false) }
+    var showTestDirectionDialog by remember { mutableStateOf(false) }
 
     // Navigation is driven by the observed state, not the delete button: once the dictionary is
     // gone the screen leaves exactly once, so the async delete can't race the back navigation and
@@ -99,6 +101,18 @@ fun DictionaryDetailsScreen(
             val noWordsMessage = stringResource(ResStrings.dictionaryDetailsScreenNoWordsToPractice)
             val notEnoughForTestMessage =
                 stringResource(ResStrings.dictionaryDetailsScreenNotEnoughWordsForTest)
+
+            if (showTestDirectionDialog) {
+                TestDirectionDialog(
+                    fromLang = dictionary.fromLang,
+                    toLang = dictionary.toLang,
+                    onDirectionSelected = { reversed ->
+                        showTestDirectionDialog = false
+                        onTestClicked(reversed)
+                    },
+                    onDismiss = { showTestDirectionDialog = false },
+                )
+            }
 
             val languagePair = languagePairLabel(dictionary.fromLang, dictionary.toLang)
             val wordCount = pluralStringResource(
@@ -140,7 +154,7 @@ fun DictionaryDetailsScreen(
                                 val message = if (words.isEmpty()) noWordsMessage else notEnoughForTestMessage
                                 Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
                             },
-                            onClick = onTestClicked
+                            onClick = { showTestDirectionDialog = true }
                         )
 
                         PracticeModeButton(

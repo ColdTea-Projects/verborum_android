@@ -145,4 +145,5 @@
     <string name="unshareDialogMessage">It leaves the Forum, and people who downloaded it lose access.</string>
     <string name="unshareDialogConfirm">Stop sharing</string>
     <string name="errorSharingFailed">Couldn’t change sharing. Check your connection and try again.</string>
+    <string name="testDirectionDialogTitle">Which direction do you want to practice?</string>
 </resources>
