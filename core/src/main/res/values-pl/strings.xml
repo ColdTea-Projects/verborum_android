@@ -116,4 +116,32 @@
     <string name="leaveForumDialogMessage">Wszystkie Twoje słowniki staną się prywatne, a osoby, które je pobrały, stracą dostęp. Możesz dołączyć ponownie w dowolnej chwili.</string>
     <string name="leaveForumDialogConfirm">Opuść Forum</string>
     <string name="leaveForumDialogCancel">Zostań</string>
+
+    <string name="profileDeleteAccount">Usuń konto</string>
+    <string name="profileDeleteAccountHint">Trwale usuń swoje konto i wszystkie swoje dane.</string>
+    <string name="deleteAccountTitle">Usuń swoje konto</string>
+    <string name="deleteAccountIntro">Za chwilę usuniesz swoje konto Verborum.</string>
+    <string name="deleteAccountDeletesHeader">Usuwamy:</string>
+    <string name="deleteAccountItemProfile">Twój profil i nazwę wyświetlaną</string>
+    <string name="deleteAccountItemDictionaries">Wszystkie Twoje słowniki, słowa i tagi</string>
+    <string name="deleteAccountItemVault">Twoje pobrane słowniki i statystyki nauki</string>
+    <string name="deleteAccountItemRatings">Twoje oceny</string>
+    <string name="deleteAccountItemDevices">Urządzenia, które otrzymują od nas powiadomienia</string>
+    <string name="deleteAccountItemSignIn">Twoje konto logowania</string>
+    <string name="deleteAccountIrreversible">Tego nie można cofnąć. Nie możemy odzyskać Twoich danych, a Ty też nie.</string>
+    <string name="deleteAccountOthers">Inne osoby: jeśli Twoje słowniki są udostępnione na Forum, znikną u wszystkich, którzy je dodali. Te osoby zobaczą „Już niedostępne”.</string>
+    <string name="deleteAccountSignInNotice">Zanim przejdziesz dalej: prosimy o ponowne zalogowanie się. To chroni Twoje konto.</string>
+    <string name="deleteAccountNewAccount">Jeśli zarejestrujesz się ponownie później, otrzymasz nowe, puste konto.</string>
+    <string name="deleteAccountAcknowledge">Rozumiem, że tego nie można cofnąć.</string>
+    <string name="deleteAccountContinue">Dalej</string>
+    <string name="deleteAccountCancel">Anuluj</string>
+    <string name="deleteAccountConfirmTitle">Trwale usunąć swoje konto?</string>
+    <string name="deleteAccountConfirmMessage">Wszystkie Twoje dane zostaną teraz usunięte.</string>
+    <string name="deleteAccountConfirmDelete">Usuń</string>
+    <string name="deleteAccountProgress">Usuwanie konta…</string>
+    <string name="deleteAccountDone">Twoje konto zostało usunięte.</string>
+    <string name="deleteAccountErrorReauth">Zaloguj się ponownie, aby kontynuować.</string>
+    <string name="deleteAccountErrorDifferentAccount">To inne konto. Nic nie zostało usunięte.</string>
+    <string name="deleteAccountErrorUnknown">Nie udało się potwierdzić usunięcia. Sprawdź połączenie i spróbuj ponownie.</string>
+    <string name="deleteAccountErrorSignIn">Nie udało się Cię zalogować. Nic nie zostało usunięte.</string>
 </resources>

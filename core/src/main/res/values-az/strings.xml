@@ -114,4 +114,32 @@
     <string name="leaveForumDialogMessage">Bütün lüğətləriniz gizli olacaq və onları yükləyənlər girişi itirəcək. İstədiyiniz vaxt yenidən qoşula bilərsiniz.</string>
     <string name="leaveForumDialogConfirm">Forum-dan çıx</string>
     <string name="leaveForumDialogCancel">Qal</string>
+
+    <string name="profileDeleteAccount">Hesabı sil</string>
+    <string name="profileDeleteAccountHint">Hesabınızı və bütün məlumatlarınızı həmişəlik silin.</string>
+    <string name="deleteAccountTitle">Hesabınızı silin</string>
+    <string name="deleteAccountIntro">Verborum hesabınızı silmək üzrəsiniz.</string>
+    <string name="deleteAccountDeletesHeader">Bunları silirik:</string>
+    <string name="deleteAccountItemProfile">Profiliniz və göstərilən adınız</string>
+    <string name="deleteAccountItemDictionaries">Bütün lüğətləriniz, sözləriniz və etiketləriniz</string>
+    <string name="deleteAccountItemVault">Yüklədiyiniz lüğətlər və öyrənmə statistikanız</string>
+    <string name="deleteAccountItemRatings">Qiymətləndirmələriniz</string>
+    <string name="deleteAccountItemDevices">Bizdən bildiriş alan cihazlar</string>
+    <string name="deleteAccountItemSignIn">Giriş hesabınız</string>
+    <string name="deleteAccountIrreversible">Bunu geri qaytarmaq olmaz. Biz məlumatlarınızı bərpa edə bilmərik, siz də edə bilməzsiniz.</string>
+    <string name="deleteAccountOthers">Digər insanlar: Forum-da lüğət paylaşmısınızsa, onları əlavə edən hər kəs üçün yox olurlar. Bu insanlar “Artıq mövcud deyil” görəcək.</string>
+    <string name="deleteAccountSignInNotice">Davam etməzdən əvvəl: sizdən yenidən daxil olmağınızı xahiş edirik. Bu, hesabınızı qoruyur.</string>
+    <string name="deleteAccountNewAccount">Sonra yenidən qeydiyyatdan keçsəniz, yeni, boş hesab alacaqsınız.</string>
+    <string name="deleteAccountAcknowledge">Bunun geri qaytarıla bilməyəcəyini başa düşürəm.</string>
+    <string name="deleteAccountContinue">Davam et</string>
+    <string name="deleteAccountCancel">Ləğv et</string>
+    <string name="deleteAccountConfirmTitle">Hesabınız həmişəlik silinsin?</string>
+    <string name="deleteAccountConfirmMessage">Bütün məlumatlarınız indi silinəcək.</string>
+    <string name="deleteAccountConfirmDelete">Sil</string>
+    <string name="deleteAccountProgress">Hesabınız silinir…</string>
+    <string name="deleteAccountDone">Hesabınız silindi.</string>
+    <string name="deleteAccountErrorReauth">Davam etmək üçün yenidən daxil olun.</string>
+    <string name="deleteAccountErrorDifferentAccount">Bu fərqli hesabdır. Heç nə silinmədi.</string>
+    <string name="deleteAccountErrorUnknown">Silinməni təsdiqləyə bilmədik. Bağlantınızı yoxlayın və yenidən cəhd edin.</string>
+    <string name="deleteAccountErrorSignIn">Daxil ola bilmədik. Heç nə silinmədi.</string>
 </resources>

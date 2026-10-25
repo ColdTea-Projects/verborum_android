@@ -116,4 +116,32 @@
     <string name="leaveForumDialogMessage">Все ваши словари станут приватными, а скачавшие их потеряют доступ. Вы можете вернуться в любой момент.</string>
     <string name="leaveForumDialogConfirm">Выйти из Forum</string>
     <string name="leaveForumDialogCancel">Остаться</string>
+
+    <string name="profileDeleteAccount">Удалить аккаунт</string>
+    <string name="profileDeleteAccountHint">Безвозвратно удалите свой аккаунт и все ваши данные.</string>
+    <string name="deleteAccountTitle">Удаление аккаунта</string>
+    <string name="deleteAccountIntro">Вы собираетесь удалить свой аккаунт Verborum.</string>
+    <string name="deleteAccountDeletesHeader">Мы удаляем:</string>
+    <string name="deleteAccountItemProfile">Ваш профиль и отображаемое имя</string>
+    <string name="deleteAccountItemDictionaries">Все ваши словари, слова и теги</string>
+    <string name="deleteAccountItemVault">Ваши скачанные словари и статистику обучения</string>
+    <string name="deleteAccountItemRatings">Ваши оценки</string>
+    <string name="deleteAccountItemDevices">Устройства, на которые мы отправляем уведомления</string>
+    <string name="deleteAccountItemSignIn">Ваш аккаунт для входа</string>
+    <string name="deleteAccountIrreversible">Это нельзя отменить. Мы не сможем вернуть ваши данные, и вы тоже.</string>
+    <string name="deleteAccountOthers">Другие люди: если вы поделились словарями на Forum, они исчезнут у всех, кто их добавил. Эти люди увидят «Больше недоступно».</string>
+    <string name="deleteAccountSignInNotice">Прежде чем продолжить: мы просим вас войти снова. Это защищает ваш аккаунт.</string>
+    <string name="deleteAccountNewAccount">Если вы зарегистрируетесь снова позже, вы получите новый пустой аккаунт.</string>
+    <string name="deleteAccountAcknowledge">Я понимаю, что это нельзя отменить.</string>
+    <string name="deleteAccountContinue">Продолжить</string>
+    <string name="deleteAccountCancel">Отмена</string>
+    <string name="deleteAccountConfirmTitle">Удалить аккаунт безвозвратно?</string>
+    <string name="deleteAccountConfirmMessage">Все ваши данные будут удалены сейчас.</string>
+    <string name="deleteAccountConfirmDelete">Удалить</string>
+    <string name="deleteAccountProgress">Удаление аккаунта…</string>
+    <string name="deleteAccountDone">Ваш аккаунт удалён.</string>
+    <string name="deleteAccountErrorReauth">Войдите снова, чтобы продолжить.</string>
+    <string name="deleteAccountErrorDifferentAccount">Это другой аккаунт. Ничего не удалено.</string>
+    <string name="deleteAccountErrorUnknown">Не удалось подтвердить удаление. Проверьте подключение и повторите попытку.</string>
+    <string name="deleteAccountErrorSignIn">Не удалось выполнить вход. Ничего не удалено.</string>
 </resources>

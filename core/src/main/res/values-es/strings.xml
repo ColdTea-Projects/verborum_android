@@ -114,4 +114,32 @@
     <string name="leaveForumDialogMessage">Todos tus diccionarios pasarán a ser privados y quienes los descargaron perderán el acceso. Puedes volver a unirte cuando quieras.</string>
     <string name="leaveForumDialogConfirm">Salir del Forum</string>
     <string name="leaveForumDialogCancel">Quedarme</string>
+
+    <string name="profileDeleteAccount">Eliminar cuenta</string>
+    <string name="profileDeleteAccountHint">Elimina tu cuenta y todos tus datos de forma permanente.</string>
+    <string name="deleteAccountTitle">Eliminar tu cuenta</string>
+    <string name="deleteAccountIntro">Estás a punto de eliminar tu cuenta de Verborum.</string>
+    <string name="deleteAccountDeletesHeader">Esto es lo que eliminamos:</string>
+    <string name="deleteAccountItemProfile">Tu perfil y tu nombre visible</string>
+    <string name="deleteAccountItemDictionaries">Todos tus diccionarios, palabras y etiquetas</string>
+    <string name="deleteAccountItemVault">Tus diccionarios descargados y tus estadísticas de aprendizaje</string>
+    <string name="deleteAccountItemRatings">Tus valoraciones</string>
+    <string name="deleteAccountItemDevices">Los dispositivos que reciben notificaciones nuestras</string>
+    <string name="deleteAccountItemSignIn">Tu cuenta de inicio de sesión</string>
+    <string name="deleteAccountIrreversible">No se puede deshacer. No podemos recuperar tus datos y tú tampoco.</string>
+    <string name="deleteAccountOthers">Otras personas: si compartiste diccionarios en el Forum, desaparecen para todos los que los añadieron. Esas personas verán «Ya no está disponible».</string>
+    <string name="deleteAccountSignInNotice">Antes de continuar: te pedimos que inicies sesión de nuevo. Esto protege tu cuenta.</string>
+    <string name="deleteAccountNewAccount">Si te registras de nuevo más adelante, tendrás una cuenta nueva y vacía.</string>
+    <string name="deleteAccountAcknowledge">Entiendo que esto no se puede deshacer.</string>
+    <string name="deleteAccountContinue">Continuar</string>
+    <string name="deleteAccountCancel">Cancelar</string>
+    <string name="deleteAccountConfirmTitle">¿Eliminar tu cuenta definitivamente?</string>
+    <string name="deleteAccountConfirmMessage">Todos tus datos se eliminarán ahora.</string>
+    <string name="deleteAccountConfirmDelete">Eliminar</string>
+    <string name="deleteAccountProgress">Eliminando tu cuenta…</string>
+    <string name="deleteAccountDone">Tu cuenta se eliminó.</string>
+    <string name="deleteAccountErrorReauth">Inicia sesión de nuevo para continuar.</string>
+    <string name="deleteAccountErrorDifferentAccount">Esta es otra cuenta. No se eliminó nada.</string>
+    <string name="deleteAccountErrorUnknown">No pudimos confirmar la eliminación. Comprueba tu conexión e inténtalo de nuevo.</string>
+    <string name="deleteAccountErrorSignIn">No pudimos iniciar tu sesión. No se eliminó nada.</string>
 </resources>

@@ -114,4 +114,32 @@
     <string name="leaveForumDialogMessage">Al je woordenboeken worden privé en wie ze heeft gedownload, verliest de toegang. Je kunt op elk moment weer lid worden.</string>
     <string name="leaveForumDialogConfirm">Forum verlaten</string>
     <string name="leaveForumDialogCancel">Blijven</string>
+
+    <string name="profileDeleteAccount">Account verwijderen</string>
+    <string name="profileDeleteAccountHint">Verwijder je account en al je gegevens definitief.</string>
+    <string name="deleteAccountTitle">Je account verwijderen</string>
+    <string name="deleteAccountIntro">Je staat op het punt je Verborum-account te verwijderen.</string>
+    <string name="deleteAccountDeletesHeader">Dit verwijderen we:</string>
+    <string name="deleteAccountItemProfile">Je profiel en je weergavenaam</string>
+    <string name="deleteAccountItemDictionaries">Al je woordenboeken, woorden en tags</string>
+    <string name="deleteAccountItemVault">Je gedownloade woordenboeken en je leerstatistieken</string>
+    <string name="deleteAccountItemRatings">Je beoordelingen</string>
+    <string name="deleteAccountItemDevices">De apparaten die meldingen van ons ontvangen</string>
+    <string name="deleteAccountItemSignIn">Je inlogaccount</string>
+    <string name="deleteAccountIrreversible">Dit kan niet ongedaan worden gemaakt. Wij kunnen je gegevens niet terughalen, en jij ook niet.</string>
+    <string name="deleteAccountOthers">Andere mensen: als je woordenboeken in het Forum hebt gedeeld, verdwijnen ze voor iedereen die ze heeft toegevoegd. Die mensen zien ‘Niet meer beschikbaar’.</string>
+    <string name="deleteAccountSignInNotice">Voordat je doorgaat: we vragen je opnieuw in te loggen. Dat beschermt je account.</string>
+    <string name="deleteAccountNewAccount">Als je je later opnieuw registreert, krijg je een nieuw, leeg account.</string>
+    <string name="deleteAccountAcknowledge">Ik begrijp dat dit niet ongedaan kan worden gemaakt.</string>
+    <string name="deleteAccountContinue">Doorgaan</string>
+    <string name="deleteAccountCancel">Annuleren</string>
+    <string name="deleteAccountConfirmTitle">Je account definitief verwijderen?</string>
+    <string name="deleteAccountConfirmMessage">Al je gegevens worden nu verwijderd.</string>
+    <string name="deleteAccountConfirmDelete">Verwijderen</string>
+    <string name="deleteAccountProgress">Je account wordt verwijderd…</string>
+    <string name="deleteAccountDone">Je account is verwijderd.</string>
+    <string name="deleteAccountErrorReauth">Log opnieuw in om door te gaan.</string>
+    <string name="deleteAccountErrorDifferentAccount">Dit is een ander account. Er is niets verwijderd.</string>
+    <string name="deleteAccountErrorUnknown">We konden de verwijdering niet bevestigen. Controleer je verbinding en probeer het opnieuw.</string>
+    <string name="deleteAccountErrorSignIn">We konden je niet inloggen. Er is niets verwijderd.</string>
 </resources>

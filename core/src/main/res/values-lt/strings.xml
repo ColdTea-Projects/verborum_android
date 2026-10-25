@@ -116,4 +116,32 @@
     <string name="leaveForumDialogMessage">Visi jūsų žodynai taps privatūs, o juos atsisiuntę praras prieigą. Galite vėl prisijungti bet kada.</string>
     <string name="leaveForumDialogConfirm">Palikti Forum</string>
     <string name="leaveForumDialogCancel">Likti</string>
+
+    <string name="profileDeleteAccount">Ištrinti paskyrą</string>
+    <string name="profileDeleteAccountHint">Visam laikui ištrinkite savo paskyrą ir visus savo duomenis.</string>
+    <string name="deleteAccountTitle">Ištrinti paskyrą</string>
+    <string name="deleteAccountIntro">Netrukus ištrinsite savo Verborum paskyrą.</string>
+    <string name="deleteAccountDeletesHeader">Ištriname:</string>
+    <string name="deleteAccountItemProfile">Jūsų profilį ir rodomą vardą</string>
+    <string name="deleteAccountItemDictionaries">Visus jūsų žodynus, žodžius ir žymas</string>
+    <string name="deleteAccountItemVault">Jūsų atsisiųstus žodynus ir mokymosi statistiką</string>
+    <string name="deleteAccountItemRatings">Jūsų įvertinimus</string>
+    <string name="deleteAccountItemDevices">Įrenginius, kurie gauna mūsų pranešimus</string>
+    <string name="deleteAccountItemSignIn">Jūsų prisijungimo paskyrą</string>
+    <string name="deleteAccountIrreversible">To atšaukti negalima. Mes negalime atkurti jūsų duomenų, ir jūs taip pat.</string>
+    <string name="deleteAccountOthers">Kiti žmonės: jei bendrinote žodynus Forum, jie dings visiems, kurie juos pridėjo. Šie žmonės matys „Nebepasiekiama“.</string>
+    <string name="deleteAccountSignInNotice">Prieš tęsdami: prašome prisijungti iš naujo. Tai apsaugo jūsų paskyrą.</string>
+    <string name="deleteAccountNewAccount">Jei vėliau užsiregistruosite iš naujo, gausite naują, tuščią paskyrą.</string>
+    <string name="deleteAccountAcknowledge">Suprantu, kad to atšaukti negalima.</string>
+    <string name="deleteAccountContinue">Tęsti</string>
+    <string name="deleteAccountCancel">Atšaukti</string>
+    <string name="deleteAccountConfirmTitle">Visam laikui ištrinti paskyrą?</string>
+    <string name="deleteAccountConfirmMessage">Visi jūsų duomenys bus ištrinti dabar.</string>
+    <string name="deleteAccountConfirmDelete">Ištrinti</string>
+    <string name="deleteAccountProgress">Paskyra ištrinama…</string>
+    <string name="deleteAccountDone">Jūsų paskyra ištrinta.</string>
+    <string name="deleteAccountErrorReauth">Prisijunkite iš naujo, kad tęstumėte.</string>
+    <string name="deleteAccountErrorDifferentAccount">Tai kita paskyra. Niekas neištrinta.</string>
+    <string name="deleteAccountErrorUnknown">Nepavyko patvirtinti ištrynimo. Patikrinkite ryšį ir bandykite dar kartą.</string>
+    <string name="deleteAccountErrorSignIn">Nepavyko jūsų prijungti. Niekas neištrinta.</string>
 </resources>

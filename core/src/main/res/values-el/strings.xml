@@ -114,4 +114,32 @@
     <string name="leaveForumDialogMessage">Όλα τα λεξικά σας θα γίνουν ιδιωτικά και όσοι τα κατέβασαν θα χάσουν την πρόσβαση. Μπορείτε να εγγραφείτε ξανά οποτεδήποτε.</string>
     <string name="leaveForumDialogConfirm">Αποχώρηση</string>
     <string name="leaveForumDialogCancel">Παραμονή</string>
+
+    <string name="profileDeleteAccount">Διαγραφή λογαριασμού</string>
+    <string name="profileDeleteAccountHint">Διαγράψτε οριστικά τον λογαριασμό σας και όλα τα δεδομένα σας.</string>
+    <string name="deleteAccountTitle">Διαγραφή του λογαριασμού σας</string>
+    <string name="deleteAccountIntro">Πρόκειται να διαγράψετε τον λογαριασμό σας στο Verborum.</string>
+    <string name="deleteAccountDeletesHeader">Διαγράφουμε τα εξής:</string>
+    <string name="deleteAccountItemProfile">Το προφίλ σας και το εμφανιζόμενο όνομά σας</string>
+    <string name="deleteAccountItemDictionaries">Όλα τα λεξικά, τις λέξεις και τις ετικέτες σας</string>
+    <string name="deleteAccountItemVault">Τα λεξικά που κατεβάσατε και τα στατιστικά εκμάθησής σας</string>
+    <string name="deleteAccountItemRatings">Τις αξιολογήσεις σας</string>
+    <string name="deleteAccountItemDevices">Τις συσκευές που λαμβάνουν ειδοποιήσεις από εμάς</string>
+    <string name="deleteAccountItemSignIn">Τον λογαριασμό σύνδεσής σας</string>
+    <string name="deleteAccountIrreversible">Αυτό δεν μπορεί να αναιρεθεί. Δεν μπορούμε να ανακτήσουμε τα δεδομένα σας, ούτε εσείς.</string>
+    <string name="deleteAccountOthers">Άλλα άτομα: αν μοιραστήκατε λεξικά στο Forum, εξαφανίζονται για όλους όσοι τα πρόσθεσαν. Αυτά τα άτομα βλέπουν «Δεν είναι πλέον διαθέσιμο».</string>
+    <string name="deleteAccountSignInNotice">Πριν συνεχίσετε: σας ζητάμε να συνδεθείτε ξανά. Αυτό προστατεύει τον λογαριασμό σας.</string>
+    <string name="deleteAccountNewAccount">Αν εγγραφείτε ξανά αργότερα, θα έχετε έναν νέο, κενό λογαριασμό.</string>
+    <string name="deleteAccountAcknowledge">Καταλαβαίνω ότι αυτό δεν μπορεί να αναιρεθεί.</string>
+    <string name="deleteAccountContinue">Συνέχεια</string>
+    <string name="deleteAccountCancel">Άκυρο</string>
+    <string name="deleteAccountConfirmTitle">Να διαγραφεί οριστικά ο λογαριασμός σας;</string>
+    <string name="deleteAccountConfirmMessage">Όλα τα δεδομένα σας θα διαγραφούν τώρα.</string>
+    <string name="deleteAccountConfirmDelete">Διαγραφή</string>
+    <string name="deleteAccountProgress">Διαγραφή του λογαριασμού σας…</string>
+    <string name="deleteAccountDone">Ο λογαριασμός σας διαγράφηκε.</string>
+    <string name="deleteAccountErrorReauth">Συνδεθείτε ξανά για να συνεχίσετε.</string>
+    <string name="deleteAccountErrorDifferentAccount">Αυτός είναι διαφορετικός λογαριασμός. Δεν διαγράφηκε τίποτα.</string>
+    <string name="deleteAccountErrorUnknown">Δεν μπορέσαμε να επιβεβαιώσουμε τη διαγραφή. Ελέγξτε τη σύνδεσή σας και δοκιμάστε ξανά.</string>
+    <string name="deleteAccountErrorSignIn">Δεν μπορέσαμε να σας συνδέσουμε. Δεν διαγράφηκε τίποτα.</string>
 </resources>

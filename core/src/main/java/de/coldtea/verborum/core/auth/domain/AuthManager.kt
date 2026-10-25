@@ -50,7 +50,19 @@ class AuthManager @Inject constructor(
     /** Launches Keycloak's hosted account-creation form — no native registration screen. */
     fun signUpIntent(): Intent = authRequestIntent(config.registrationEndpoint)
 
-    private fun authRequestIntent(authEndpoint: String): Intent {
+    /**
+     * The login page again, with `max_age=0`, so the user must enter the password or code once more
+     * (account deletion needs a login under 5 minutes old — `docs/account-deletion-guide.md` §4).
+     */
+    fun reauthenticationIntent(): Intent = authRequestIntent(
+        config.authorizationEndpoint,
+        AuthConfig.REAUTHENTICATION_PARAMETERS,
+    )
+
+    private fun authRequestIntent(
+        authEndpoint: String,
+        additionalParameters: Map<String, String> = emptyMap(),
+    ): Intent {
         val serviceConfig = AuthorizationServiceConfiguration(
             Uri.parse(authEndpoint),
             Uri.parse(config.tokenEndpoint),
@@ -62,7 +74,9 @@ class AuthManager @Inject constructor(
             config.clientId,
             ResponseTypeValues.CODE,
             Uri.parse(config.redirectUri),
-        ).setScope(config.scope).build()
+        ).setScope(config.scope)
+            .setAdditionalParameters(additionalParameters)
+            .build()
 
         return authService.getAuthorizationRequestIntent(request)
     }

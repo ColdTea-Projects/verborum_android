@@ -18,6 +18,9 @@ class LoginViewModel @Inject constructor(
     private val authService: AuthService,
 ) : BaseViewModel() {
 
+    /** `true` after the account was deleted, until the next sign-in starts (the screen says so). */
+    val accountDeleted: StateFlow<Boolean> get() = authService.accountDeleted
+
     private val _loginState = MutableStateFlow<LoginState>(LoginState.Idle)
     val loginState: StateFlow<LoginState> = _loginState.asStateFlow()
 

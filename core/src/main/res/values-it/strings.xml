@@ -114,4 +114,32 @@
     <string name="leaveForumDialogMessage">Tutti i tuoi dizionari diventeranno privati e chi li ha scaricati perderà l’accesso. Puoi unirti di nuovo in qualsiasi momento.</string>
     <string name="leaveForumDialogConfirm">Lascia il Forum</string>
     <string name="leaveForumDialogCancel">Resta</string>
+
+    <string name="profileDeleteAccount">Elimina account</string>
+    <string name="profileDeleteAccountHint">Elimina definitivamente il tuo account e tutti i tuoi dati.</string>
+    <string name="deleteAccountTitle">Elimina il tuo account</string>
+    <string name="deleteAccountIntro">Stai per eliminare il tuo account Verborum.</string>
+    <string name="deleteAccountDeletesHeader">Questo è ciò che eliminiamo:</string>
+    <string name="deleteAccountItemProfile">Il tuo profilo e il tuo nome visualizzato</string>
+    <string name="deleteAccountItemDictionaries">Tutti i tuoi dizionari, parole e tag</string>
+    <string name="deleteAccountItemVault">I tuoi dizionari scaricati e le tue statistiche di apprendimento</string>
+    <string name="deleteAccountItemRatings">Le tue valutazioni</string>
+    <string name="deleteAccountItemDevices">I dispositivi che ricevono le nostre notifiche</string>
+    <string name="deleteAccountItemSignIn">Il tuo account di accesso</string>
+    <string name="deleteAccountIrreversible">L’operazione non può essere annullata. Noi non possiamo recuperare i tuoi dati e nemmeno tu.</string>
+    <string name="deleteAccountOthers">Altre persone: se hai condiviso dizionari nel Forum, scompaiono per tutti quelli che li hanno aggiunti. Queste persone vedono «Non più disponibile».</string>
+    <string name="deleteAccountSignInNotice">Prima di continuare: ti chiediamo di accedere di nuovo. Questo protegge il tuo account.</string>
+    <string name="deleteAccountNewAccount">Se ti registri di nuovo più avanti, avrai un account nuovo e vuoto.</string>
+    <string name="deleteAccountAcknowledge">Capisco che l’operazione non può essere annullata.</string>
+    <string name="deleteAccountContinue">Continua</string>
+    <string name="deleteAccountCancel">Annulla</string>
+    <string name="deleteAccountConfirmTitle">Eliminare definitivamente il tuo account?</string>
+    <string name="deleteAccountConfirmMessage">Tutti i tuoi dati verranno eliminati ora.</string>
+    <string name="deleteAccountConfirmDelete">Elimina</string>
+    <string name="deleteAccountProgress">Eliminazione dell’account in corso…</string>
+    <string name="deleteAccountDone">Il tuo account è stato eliminato.</string>
+    <string name="deleteAccountErrorReauth">Accedi di nuovo per continuare.</string>
+    <string name="deleteAccountErrorDifferentAccount">Questo è un altro account. Non è stato eliminato nulla.</string>
+    <string name="deleteAccountErrorUnknown">Non siamo riusciti a confermare l’eliminazione. Controlla la connessione e riprova.</string>
+    <string name="deleteAccountErrorSignIn">Non siamo riusciti a farti accedere. Non è stato eliminato nulla.</string>
 </resources>

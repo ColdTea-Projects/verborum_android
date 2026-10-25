@@ -33,6 +33,7 @@ import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import de.coldtea.verborum.core.profile.ui.deleteaccount.composables.DeleteAccountSection
 import de.coldtea.verborum.core.profile.ui.profile.composables.LeaveForumDialog
 import de.coldtea.verborum.core.profile.ui.profile.composables.MarketplaceTermsSection
 import de.coldtea.verborum.core.profile.ui.profile.model.ProfileForm
@@ -86,6 +87,7 @@ fun ProfileScreen(viewModel: ProfileViewModel = hiltViewModel()) {
             onUpdate = viewModel::update,
             onConfirmLeave = viewModel::confirmLeaveForum,
             onDismissLeave = viewModel::dismissLeaveConfirmation,
+            deleteAccountSection = { DeleteAccountSection(isOnline = isOnline) },
         )
 
         ProfileState.Failed -> ScreenError(onRetry = viewModel::refresh)
@@ -101,6 +103,8 @@ private fun ProfileContent(
     onUpdate: () -> Unit,
     onConfirmLeave: () -> Unit,
     onDismissLeave: () -> Unit,
+    // A slot, so the preview does not need Hilt for the delete-account view model.
+    deleteAccountSection: @Composable () -> Unit,
 ) {
     if (form.isLeaveConfirmationShown) {
         LeaveForumDialog(onConfirm = onConfirmLeave, onDismiss = onDismissLeave)
@@ -159,6 +163,10 @@ private fun ProfileContent(
                 enabled = isOnline && !form.isSaving,
             )
 
+            Spacer(modifier = Modifier.height(32.dp))
+
+            deleteAccountSection()
+
             Spacer(modifier = Modifier.height(16.dp))
         }
 
@@ -214,6 +222,7 @@ private fun ProfileContentPreview() {
             onUpdate = {},
             onConfirmLeave = {},
             onDismissLeave = {},
+            deleteAccountSection = {},
         )
     }
 }

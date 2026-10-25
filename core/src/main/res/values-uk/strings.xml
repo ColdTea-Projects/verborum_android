@@ -116,4 +116,32 @@
     <string name="leaveForumDialogMessage">Усі ваші словники стануть приватними, а ті, хто їх завантажив, втратять доступ. Ви можете повернутися будь-коли.</string>
     <string name="leaveForumDialogConfirm">Вийти з Forum</string>
     <string name="leaveForumDialogCancel">Залишитися</string>
+
+    <string name="profileDeleteAccount">Видалити обліковий запис</string>
+    <string name="profileDeleteAccountHint">Безповоротно видаліть свій обліковий запис і всі ваші дані.</string>
+    <string name="deleteAccountTitle">Видалення облікового запису</string>
+    <string name="deleteAccountIntro">Ви збираєтеся видалити свій обліковий запис Verborum.</string>
+    <string name="deleteAccountDeletesHeader">Ми видаляємо:</string>
+    <string name="deleteAccountItemProfile">Ваш профіль і відображуване ім’я</string>
+    <string name="deleteAccountItemDictionaries">Усі ваші словники, слова й теги</string>
+    <string name="deleteAccountItemVault">Ваші завантажені словники та статистику навчання</string>
+    <string name="deleteAccountItemRatings">Ваші оцінки</string>
+    <string name="deleteAccountItemDevices">Пристрої, на які ми надсилаємо сповіщення</string>
+    <string name="deleteAccountItemSignIn">Ваш обліковий запис для входу</string>
+    <string name="deleteAccountIrreversible">Це неможливо скасувати. Ми не зможемо повернути ваші дані, і ви також.</string>
+    <string name="deleteAccountOthers">Інші люди: якщо ви поділилися словниками на Forum, вони зникнуть у всіх, хто їх додав. Ці люди побачать «Більше недоступно».</string>
+    <string name="deleteAccountSignInNotice">Перш ніж продовжити: ми просимо вас увійти знову. Це захищає ваш обліковий запис.</string>
+    <string name="deleteAccountNewAccount">Якщо ви зареєструєтеся знову пізніше, ви отримаєте новий порожній обліковий запис.</string>
+    <string name="deleteAccountAcknowledge">Я розумію, що це неможливо скасувати.</string>
+    <string name="deleteAccountContinue">Продовжити</string>
+    <string name="deleteAccountCancel">Скасувати</string>
+    <string name="deleteAccountConfirmTitle">Видалити обліковий запис безповоротно?</string>
+    <string name="deleteAccountConfirmMessage">Усі ваші дані буде видалено зараз.</string>
+    <string name="deleteAccountConfirmDelete">Видалити</string>
+    <string name="deleteAccountProgress">Видалення облікового запису…</string>
+    <string name="deleteAccountDone">Ваш обліковий запис видалено.</string>
+    <string name="deleteAccountErrorReauth">Увійдіть знову, щоб продовжити.</string>
+    <string name="deleteAccountErrorDifferentAccount">Це інший обліковий запис. Нічого не видалено.</string>
+    <string name="deleteAccountErrorUnknown">Не вдалося підтвердити видалення. Перевірте підключення та спробуйте ще раз.</string>
+    <string name="deleteAccountErrorSignIn">Не вдалося виконати вхід. Нічого не видалено.</string>
 </resources>

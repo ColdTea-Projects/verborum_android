@@ -48,6 +48,7 @@ import de.coldtea.verborum.core.theme.VerborumTheme
 @Composable
 fun LoginScreen(viewModel: LoginViewModel = hiltViewModel()) {
     val state by viewModel.loginState.collectAsState()
+    val accountDeleted by viewModel.accountDeleted.collectAsState()
 
     val launcher = rememberLauncherForActivityResult(
         ActivityResultContracts.StartActivityForResult(),
@@ -57,6 +58,7 @@ fun LoginScreen(viewModel: LoginViewModel = hiltViewModel()) {
 
     LoginContent(
         state = state,
+        accountDeleted = accountDeleted,
         onSignIn = { launcher.launch(viewModel.loginIntent()) },
         onCreateAccount = { launcher.launch(viewModel.signUpIntent()) },
     )
@@ -65,6 +67,7 @@ fun LoginScreen(viewModel: LoginViewModel = hiltViewModel()) {
 @Composable
 private fun LoginContent(
     state: LoginState,
+    accountDeleted: Boolean,
     onSignIn: () -> Unit,
     onCreateAccount: () -> Unit,
 ) {
@@ -114,6 +117,18 @@ private fun LoginContent(
             )
 
             Spacer(modifier = Modifier.height(48.dp))
+
+            // After "Delete account" (docs/account-deletion-guide.md §6): said once, until the next sign-in.
+            if (accountDeleted) {
+                Text(
+                    text = stringResource(ResStrings.deleteAccountDone),
+                    fontSize = 15.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    color = MaterialTheme.colorScheme.onBackground,
+                    textAlign = TextAlign.Center,
+                )
+                Spacer(modifier = Modifier.height(24.dp))
+            }
 
             // Hosted sign-up cannot hand out tokens before the address is confirmed, so the user
             // is sent back here with instructions rather than an error.
@@ -214,7 +229,7 @@ private fun LoginContent(
 @Composable
 private fun PreviewLoginScreen() {
     VerborumTheme {
-        LoginContent(state = LoginState.Idle, onSignIn = {}, onCreateAccount = {})
+        LoginContent(state = LoginState.Idle, accountDeleted = false, onSignIn = {}, onCreateAccount = {})
     }
 }
 
@@ -224,6 +239,7 @@ private fun PreviewLoginScreenAwaitingVerification() {
     VerborumTheme {
         LoginContent(
             state = LoginState.AwaitingEmailVerification,
+            accountDeleted = false,
             onSignIn = {},
             onCreateAccount = {},
         )

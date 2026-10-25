@@ -118,4 +118,32 @@
     <string name="leaveForumDialogMessage">ستصبح جميع قواميسك خاصة، وسيفقد من نزّلوها إمكانية الوصول إليها. يمكنك الانضمام مرة أخرى في أي وقت.</string>
     <string name="leaveForumDialogConfirm">مغادرة Forum</string>
     <string name="leaveForumDialogCancel">البقاء</string>
+
+    <string name="profileDeleteAccount">حذف الحساب</string>
+    <string name="profileDeleteAccountHint">احذف حسابك وجميع بياناتك نهائيًا.</string>
+    <string name="deleteAccountTitle">حذف حسابك</string>
+    <string name="deleteAccountIntro">أنت على وشك حذف حسابك في Verborum.</string>
+    <string name="deleteAccountDeletesHeader">نحذف ما يلي:</string>
+    <string name="deleteAccountItemProfile">ملفك الشخصي واسم العرض</string>
+    <string name="deleteAccountItemDictionaries">جميع قواميسك وكلماتك وعلاماتك</string>
+    <string name="deleteAccountItemVault">القواميس التي نزّلتها وإحصاءات التعلم الخاصة بك</string>
+    <string name="deleteAccountItemRatings">تقييماتك</string>
+    <string name="deleteAccountItemDevices">الأجهزة التي تتلقى إشعارات منا</string>
+    <string name="deleteAccountItemSignIn">حساب تسجيل الدخول الخاص بك</string>
+    <string name="deleteAccountIrreversible">لا يمكن التراجع عن هذا. لا يمكننا استعادة بياناتك، ولا يمكنك أنت ذلك أيضًا.</string>
+    <string name="deleteAccountOthers">أشخاص آخرون: إذا شاركت قواميس في Forum، فستختفي لدى كل من أضافها. سيرى هؤلاء الأشخاص «لم يعد متاحًا».</string>
+    <string name="deleteAccountSignInNotice">قبل أن تتابع: نطلب منك تسجيل الدخول مرة أخرى. هذا يحمي حسابك.</string>
+    <string name="deleteAccountNewAccount">إذا سجّلت مرة أخرى لاحقًا، فستحصل على حساب جديد وفارغ.</string>
+    <string name="deleteAccountAcknowledge">أفهم أنه لا يمكن التراجع عن هذا.</string>
+    <string name="deleteAccountContinue">متابعة</string>
+    <string name="deleteAccountCancel">إلغاء</string>
+    <string name="deleteAccountConfirmTitle">هل تريد حذف حسابك نهائيًا؟</string>
+    <string name="deleteAccountConfirmMessage">سيتم حذف جميع بياناتك الآن.</string>
+    <string name="deleteAccountConfirmDelete">حذف</string>
+    <string name="deleteAccountProgress">جارٍ حذف حسابك…</string>
+    <string name="deleteAccountDone">تم حذف حسابك.</string>
+    <string name="deleteAccountErrorReauth">سجّل الدخول مرة أخرى للمتابعة.</string>
+    <string name="deleteAccountErrorDifferentAccount">هذا حساب مختلف. لم يتم حذف أي شيء.</string>
+    <string name="deleteAccountErrorUnknown">تعذّر تأكيد الحذف. تحقّق من اتصالك وحاول مرة أخرى.</string>
+    <string name="deleteAccountErrorSignIn">تعذّر تسجيل دخولك. لم يتم حذف أي شيء.</string>
 </resources>

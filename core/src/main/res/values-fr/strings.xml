@@ -114,4 +114,32 @@
     <string name="leaveForumDialogMessage">Tous vos dictionnaires deviendront privés et les personnes qui les ont téléchargés n’y auront plus accès. Vous pouvez rejoindre le Forum à tout moment.</string>
     <string name="leaveForumDialogConfirm">Quitter le Forum</string>
     <string name="leaveForumDialogCancel">Rester</string>
+
+    <string name="profileDeleteAccount">Supprimer le compte</string>
+    <string name="profileDeleteAccountHint">Supprimez définitivement votre compte et toutes vos données.</string>
+    <string name="deleteAccountTitle">Supprimer votre compte</string>
+    <string name="deleteAccountIntro">Vous êtes sur le point de supprimer votre compte Verborum.</string>
+    <string name="deleteAccountDeletesHeader">Voici ce que nous supprimons :</string>
+    <string name="deleteAccountItemProfile">Votre profil et votre nom affiché</string>
+    <string name="deleteAccountItemDictionaries">Tous vos dictionnaires, mots et étiquettes</string>
+    <string name="deleteAccountItemVault">Vos dictionnaires téléchargés et vos statistiques d’apprentissage</string>
+    <string name="deleteAccountItemRatings">Vos notes</string>
+    <string name="deleteAccountItemDevices">Les appareils qui reçoivent nos notifications</string>
+    <string name="deleteAccountItemSignIn">Votre compte de connexion</string>
+    <string name="deleteAccountIrreversible">Cette action est irréversible. Nous ne pouvons pas récupérer vos données, et vous non plus.</string>
+    <string name="deleteAccountOthers">Les autres personnes : si vous avez partagé des dictionnaires dans le Forum, ils disparaissent pour tous ceux qui les ont ajoutés. Ces personnes voient « N’est plus disponible ».</string>
+    <string name="deleteAccountSignInNotice">Avant de continuer : nous vous demandons de vous reconnecter. Cela protège votre compte.</string>
+    <string name="deleteAccountNewAccount">Si vous vous réinscrivez plus tard, vous obtenez un nouveau compte vide.</string>
+    <string name="deleteAccountAcknowledge">Je comprends que cette action est irréversible.</string>
+    <string name="deleteAccountContinue">Continuer</string>
+    <string name="deleteAccountCancel">Annuler</string>
+    <string name="deleteAccountConfirmTitle">Supprimer définitivement votre compte ?</string>
+    <string name="deleteAccountConfirmMessage">Toutes vos données seront supprimées maintenant.</string>
+    <string name="deleteAccountConfirmDelete">Supprimer</string>
+    <string name="deleteAccountProgress">Suppression de votre compte…</string>
+    <string name="deleteAccountDone">Votre compte a été supprimé.</string>
+    <string name="deleteAccountErrorReauth">Reconnectez-vous pour continuer.</string>
+    <string name="deleteAccountErrorDifferentAccount">Il s’agit d’un autre compte. Rien n’a été supprimé.</string>
+    <string name="deleteAccountErrorUnknown">Nous n’avons pas pu confirmer la suppression. Vérifiez votre connexion et réessayez.</string>
+    <string name="deleteAccountErrorSignIn">Nous n’avons pas pu vous connecter. Rien n’a été supprimé.</string>
 </resources>

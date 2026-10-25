@@ -114,4 +114,32 @@
     <string name="leaveForumDialogMessage">Tüm sözlüklerin gizli olacak ve onları indirenler erişimini kaybedecek. İstediğin zaman yeniden katılabilirsin.</string>
     <string name="leaveForumDialogConfirm">Forum’dan ayrıl</string>
     <string name="leaveForumDialogCancel">Kal</string>
+
+    <string name="profileDeleteAccount">Hesabı sil</string>
+    <string name="profileDeleteAccountHint">Hesabını ve tüm verilerini kalıcı olarak sil.</string>
+    <string name="deleteAccountTitle">Hesabını sil</string>
+    <string name="deleteAccountIntro">Verborum hesabını silmek üzeresin.</string>
+    <string name="deleteAccountDeletesHeader">Şunları siliyoruz:</string>
+    <string name="deleteAccountItemProfile">Profilin ve görünen adın</string>
+    <string name="deleteAccountItemDictionaries">Tüm sözlüklerin, kelimelerin ve etiketlerin</string>
+    <string name="deleteAccountItemVault">İndirdiğin sözlükler ve öğrenme istatistiklerin</string>
+    <string name="deleteAccountItemRatings">Puanların</string>
+    <string name="deleteAccountItemDevices">Bizden bildirim alan cihazlar</string>
+    <string name="deleteAccountItemSignIn">Giriş hesabın</string>
+    <string name="deleteAccountIrreversible">Bu işlem geri alınamaz. Verilerini geri getiremeyiz, sen de getiremezsin.</string>
+    <string name="deleteAccountOthers">Diğer kişiler: Forum’da sözlük paylaştıysan, onları ekleyen herkes için kaybolurlar. Bu kişiler “Artık mevcut değil” görür.</string>
+    <string name="deleteAccountSignInNotice">Devam etmeden önce: Senden yeniden giriş yapmanı isteriz. Bu, hesabını korur.</string>
+    <string name="deleteAccountNewAccount">Daha sonra tekrar kaydolursan yeni, boş bir hesap alırsın.</string>
+    <string name="deleteAccountAcknowledge">Bunun geri alınamayacağını anlıyorum.</string>
+    <string name="deleteAccountContinue">Devam</string>
+    <string name="deleteAccountCancel">İptal</string>
+    <string name="deleteAccountConfirmTitle">Hesabın kalıcı olarak silinsin mi?</string>
+    <string name="deleteAccountConfirmMessage">Tüm verilerin şimdi silinecek.</string>
+    <string name="deleteAccountConfirmDelete">Sil</string>
+    <string name="deleteAccountProgress">Hesabın siliniyor…</string>
+    <string name="deleteAccountDone">Hesabın silindi.</string>
+    <string name="deleteAccountErrorReauth">Devam etmek için yeniden giriş yap.</string>
+    <string name="deleteAccountErrorDifferentAccount">Bu farklı bir hesap. Hiçbir şey silinmedi.</string>
+    <string name="deleteAccountErrorUnknown">Silme işlemini doğrulayamadık. Bağlantını kontrol edip tekrar dene.</string>
+    <string name="deleteAccountErrorSignIn">Giriş yapamadık. Hiçbir şey silinmedi.</string>
 </resources>

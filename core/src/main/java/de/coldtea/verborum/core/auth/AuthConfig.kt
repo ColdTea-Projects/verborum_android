@@ -25,4 +25,13 @@ class AuthConfig @Inject constructor() {
     // Hosted sign-up reuses the login flow against the registrations endpoint (guide §3).
     val registrationEndpoint: String = "$issuer/protocol/openid-connect/registrations"
     val endSessionEndpoint: String = "$issuer/protocol/openid-connect/logout"
+
+    companion object {
+        /**
+         * Forces a real sign-in even though a Keycloak session exists. Deleting the account needs a login
+         * under 5 minutes old (SEC-13), and a refresh never makes one. Sent only on that flow —
+         * `docs/account-deletion-guide.md` §4.
+         */
+        val REAUTHENTICATION_PARAMETERS: Map<String, String> = mapOf("max_age" to "0")
+    }
 }

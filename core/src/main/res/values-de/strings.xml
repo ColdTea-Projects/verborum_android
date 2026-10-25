@@ -114,4 +114,32 @@
     <string name="leaveForumDialogMessage">Alle deine Wörterbücher werden privat, und wer sie heruntergeladen hat, verliert den Zugriff. Du kannst jederzeit wieder beitreten.</string>
     <string name="leaveForumDialogConfirm">Forum verlassen</string>
     <string name="leaveForumDialogCancel">Bleiben</string>
+
+    <string name="profileDeleteAccount">Konto löschen</string>
+    <string name="profileDeleteAccountHint">Lösche dein Konto und alle deine Daten dauerhaft.</string>
+    <string name="deleteAccountTitle">Dein Konto löschen</string>
+    <string name="deleteAccountIntro">Du bist dabei, dein Verborum-Konto zu löschen.</string>
+    <string name="deleteAccountDeletesHeader">Das löschen wir:</string>
+    <string name="deleteAccountItemProfile">Dein Profil und dein Anzeigename</string>
+    <string name="deleteAccountItemDictionaries">Alle deine Wörterbücher, Wörter und Tags</string>
+    <string name="deleteAccountItemVault">Deine heruntergeladenen Wörterbücher und deine Lernstatistik</string>
+    <string name="deleteAccountItemRatings">Deine Bewertungen</string>
+    <string name="deleteAccountItemDevices">Die Geräte, die Benachrichtigungen von uns erhalten</string>
+    <string name="deleteAccountItemSignIn">Dein Anmeldekonto</string>
+    <string name="deleteAccountIrreversible">Das kann nicht rückgängig gemacht werden. Wir können deine Daten nicht wiederherstellen, und du auch nicht.</string>
+    <string name="deleteAccountOthers">Andere Personen: Wenn du Wörterbücher im Forum geteilt hast, verschwinden sie für alle, die sie hinzugefügt haben. Diese Personen sehen „Nicht mehr verfügbar“.</string>
+    <string name="deleteAccountSignInNotice">Bevor du fortfährst: Wir bitten dich, dich erneut anzumelden. Das schützt dein Konto.</string>
+    <string name="deleteAccountNewAccount">Wenn du dich später wieder registrierst, erhältst du ein neues, leeres Konto.</string>
+    <string name="deleteAccountAcknowledge">Ich verstehe, dass das nicht rückgängig gemacht werden kann.</string>
+    <string name="deleteAccountContinue">Weiter</string>
+    <string name="deleteAccountCancel">Abbrechen</string>
+    <string name="deleteAccountConfirmTitle">Konto endgültig löschen?</string>
+    <string name="deleteAccountConfirmMessage">Alle deine Daten werden jetzt gelöscht.</string>
+    <string name="deleteAccountConfirmDelete">Löschen</string>
+    <string name="deleteAccountProgress">Dein Konto wird gelöscht …</string>
+    <string name="deleteAccountDone">Dein Konto wurde gelöscht.</string>
+    <string name="deleteAccountErrorReauth">Melde dich erneut an, um fortzufahren.</string>
+    <string name="deleteAccountErrorDifferentAccount">Das ist ein anderes Konto. Es wurde nichts gelöscht.</string>
+    <string name="deleteAccountErrorUnknown">Wir konnten das Löschen nicht bestätigen. Prüfe deine Verbindung und versuche es erneut.</string>
+    <string name="deleteAccountErrorSignIn">Wir konnten dich nicht anmelden. Es wurde nichts gelöscht.</string>
 </resources>

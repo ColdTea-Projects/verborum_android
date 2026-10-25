@@ -114,4 +114,32 @@
     <string name="leaveForumDialogMessage">Todos os seus dicionários ficarão privados e quem os baixou perderá o acesso. Você pode entrar de novo quando quiser.</string>
     <string name="leaveForumDialogConfirm">Sair do Forum</string>
     <string name="leaveForumDialogCancel">Ficar</string>
+
+    <string name="profileDeleteAccount">Excluir conta</string>
+    <string name="profileDeleteAccountHint">Exclua permanentemente sua conta e todos os seus dados.</string>
+    <string name="deleteAccountTitle">Excluir sua conta</string>
+    <string name="deleteAccountIntro">Você está prestes a excluir sua conta do Verborum.</string>
+    <string name="deleteAccountDeletesHeader">Isto é o que excluímos:</string>
+    <string name="deleteAccountItemProfile">Seu perfil e seu nome de exibição</string>
+    <string name="deleteAccountItemDictionaries">Todos os seus dicionários, palavras e tags</string>
+    <string name="deleteAccountItemVault">Seus dicionários baixados e suas estatísticas de aprendizado</string>
+    <string name="deleteAccountItemRatings">Suas avaliações</string>
+    <string name="deleteAccountItemDevices">Os dispositivos que recebem notificações nossas</string>
+    <string name="deleteAccountItemSignIn">Sua conta de login</string>
+    <string name="deleteAccountIrreversible">Isso não pode ser desfeito. Não podemos recuperar seus dados, e você também não.</string>
+    <string name="deleteAccountOthers">Outras pessoas: se você compartilhou dicionários no Forum, eles desaparecem para todos que os adicionaram. Essas pessoas veem “Não está mais disponível”.</string>
+    <string name="deleteAccountSignInNotice">Antes de continuar: pedimos que você entre novamente. Isso protege sua conta.</string>
+    <string name="deleteAccountNewAccount">Se você se cadastrar de novo mais tarde, terá uma conta nova e vazia.</string>
+    <string name="deleteAccountAcknowledge">Entendo que isso não pode ser desfeito.</string>
+    <string name="deleteAccountContinue">Continuar</string>
+    <string name="deleteAccountCancel">Cancelar</string>
+    <string name="deleteAccountConfirmTitle">Excluir sua conta permanentemente?</string>
+    <string name="deleteAccountConfirmMessage">Todos os seus dados serão excluídos agora.</string>
+    <string name="deleteAccountConfirmDelete">Excluir</string>
+    <string name="deleteAccountProgress">Excluindo sua conta…</string>
+    <string name="deleteAccountDone">Sua conta foi excluída.</string>
+    <string name="deleteAccountErrorReauth">Entre novamente para continuar.</string>
+    <string name="deleteAccountErrorDifferentAccount">Esta é outra conta. Nada foi excluído.</string>
+    <string name="deleteAccountErrorUnknown">Não foi possível confirmar a exclusão. Verifique sua conexão e tente novamente.</string>
+    <string name="deleteAccountErrorSignIn">Não foi possível fazer seu login. Nada foi excluído.</string>
 </resources>

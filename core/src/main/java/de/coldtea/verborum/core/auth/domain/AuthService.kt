@@ -5,10 +5,15 @@ import de.coldtea.verborum.core.profile.domain.usecase.api.EnsureUserProfileUseC
 import de.coldtea.verborum.core.auth.AuthTokenStore
 import de.coldtea.verborum.core.auth.JwtDecoder
 import de.coldtea.verborum.core.auth.domain.model.LoginOutcome
+import de.coldtea.verborum.core.auth.domain.model.ReauthenticationOutcome
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeoutOrNull
 import javax.inject.Inject
+import javax.inject.Singleton
 
 /**
  * Orchestrates the login lifecycle — the only auth entry point the UI talks to.
@@ -18,7 +23,11 @@ import javax.inject.Inject
  * data migration, kicking a full sync). Profile creation and the hooks are best-effort: a
  * validly-authenticated user must not be stranded on the login screen because a follow-up call
  * hiccuped — all of it is idempotent and retries on the next sync.
+ *
+ * A singleton because [accountDeleted] is shared state: the profile screen sets it, and the login
+ * screen that replaces the whole graph afterwards must read the same value.
  */
+@Singleton
 class AuthService @Inject constructor(
     private val authManager: AuthManager,
     private val tokenStore: AuthTokenStore,
@@ -27,8 +36,26 @@ class AuthService @Inject constructor(
     private val preLogoutHooks: Set<@JvmSuppressWildcards PreLogoutHook>,
     private val postLogoutHooks: Set<@JvmSuppressWildcards PostLogoutHook>,
 ) {
-    fun loginIntent(): Intent = authManager.loginIntent()
-    fun signUpIntent(): Intent = authManager.signUpIntent()
+    private val _accountDeleted = MutableStateFlow(false)
+
+    /**
+     * `true` from the moment the account was deleted until the person starts the next sign-in. The
+     * login wall reads it to say "Your account was deleted" (`docs/account-deletion-guide.md` §6).
+     */
+    val accountDeleted: StateFlow<Boolean> = _accountDeleted.asStateFlow()
+
+    fun loginIntent(): Intent {
+        _accountDeleted.value = false
+        return authManager.loginIntent()
+    }
+
+    fun signUpIntent(): Intent {
+        _accountDeleted.value = false
+        return authManager.signUpIntent()
+    }
+
+    /** The login page again with `max_age=0` — the step before deleting the account. */
+    fun reauthenticationIntent(): Intent = authManager.reauthenticationIntent()
 
     /** Handles the AppAuth redirect result. [LoginOutcome.Success] once the session is established. */
     suspend fun completeLogin(responseData: Intent): LoginOutcome {
@@ -61,6 +88,37 @@ class AuthService @Inject constructor(
         // Each hook is isolated: one feature's failure must not skip another's.
         postLoginHooks.forEach { hook -> runCatching { hook.onLoginCompleted(subject) } }
         return LoginOutcome.Success
+    }
+
+    /**
+     * Handles the redirect of the sign-in that account deletion asks for. Only a sign-in as the **same**
+     * account replaces the stored tokens; the delete call then carries the new, recent access token. A
+     * different account stores nothing, and its fresh Keycloak session is ended again.
+     */
+    suspend fun completeReauthentication(responseData: Intent): ReauthenticationOutcome {
+        val tokens = authManager.exchangeCode(responseData) ?: return ReauthenticationOutcome.Failed
+        val subject = JwtDecoder.subject(tokens.accessToken) ?: return ReauthenticationOutcome.Failed
+        val refreshToken = tokens.refreshToken ?: return ReauthenticationOutcome.Failed
+
+        if (subject != tokenStore.currentUserId()) {
+            // Best-effort and off the main thread: the session of the other account must not stay behind.
+            withContext(Dispatchers.IO) { runCatching { authManager.endSession(refreshToken) } }
+            return ReauthenticationOutcome.DifferentAccount
+        }
+        tokenStore.saveTokens(accessToken = tokens.accessToken, refreshToken = refreshToken, subject = subject)
+        return ReauthenticationOutcome.Success
+    }
+
+    /**
+     * Runs after the server confirmed the deletion: clears the tokens and lets the feature modules wipe
+     * their local data (`docs/account-deletion-guide.md` §7). Unlike [logout] it makes no call to the
+     * server — the account, its devices and its Keycloak session are already gone, so the
+     * [PreLogoutHook]s and the end-session call have nothing left to do.
+     */
+    suspend fun completeAccountDeletion() = withContext(Dispatchers.IO) {
+        _accountDeleted.value = true
+        tokenStore.clear()
+        postLogoutHooks.forEach { hook -> runCatching { hook.onLoggedOut() } }
     }
 
     /**

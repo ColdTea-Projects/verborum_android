@@ -5,6 +5,7 @@ import de.coldtea.verborum.core.BaseTest
 import de.coldtea.verborum.core.auth.AuthTokenStore
 import de.coldtea.verborum.core.auth.JwtDecoder
 import de.coldtea.verborum.core.auth.domain.model.LoginOutcome
+import de.coldtea.verborum.core.auth.domain.model.ReauthenticationOutcome
 import de.coldtea.verborum.core.auth.domain.model.TokenBundle
 import de.coldtea.verborum.core.profile.domain.model.UserProfile
 import de.coldtea.verborum.core.profile.domain.usecase.api.EnsureUserProfileUseCase
@@ -18,6 +19,8 @@ import io.mockk.mockkObject
 import io.mockk.verify
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class AuthServiceTest : BaseTest() {
@@ -250,6 +253,101 @@ class AuthServiceTest : BaseTest() {
         authService.logout()
 
         coVerify(exactly = 1) { secondLogoutHook.onLoggedOut() }
+    }
+    // endregion
+
+    // region re-authentication for account deletion
+    @Test
+    fun `completeReauthentication stores the new tokens when the same account signed in`() = runTest {
+        every { tokenStore.currentUserId() } returns SUBJECT
+
+        assertEquals(ReauthenticationOutcome.Success, authService.completeReauthentication(redirectData))
+
+        verify(exactly = 1) {
+            tokenStore.saveTokens(accessToken = ACCESS_TOKEN, refreshToken = REFRESH_TOKEN, subject = SUBJECT)
+        }
+    }
+
+    @Test
+    fun `completeReauthentication stores nothing and ends the new session for a different account`() = runTest {
+        every { tokenStore.currentUserId() } returns "somebody-else"
+
+        assertEquals(ReauthenticationOutcome.DifferentAccount, authService.completeReauthentication(redirectData))
+
+        verify(exactly = 0) { tokenStore.saveTokens(any(), any(), any()) }
+        verify(exactly = 1) { authManager.endSession(REFRESH_TOKEN) }
+    }
+
+    @Test
+    fun `completeReauthentication fails when the code exchange fails`() = runTest {
+        coEvery { authManager.exchangeCode(redirectData) } returns null
+
+        assertEquals(ReauthenticationOutcome.Failed, authService.completeReauthentication(redirectData))
+
+        verify(exactly = 0) { tokenStore.saveTokens(any(), any(), any()) }
+    }
+
+    @Test
+    fun `completeReauthentication fails when no refresh token is returned`() = runTest {
+        every { tokenStore.currentUserId() } returns SUBJECT
+        coEvery { authManager.exchangeCode(redirectData) } returns tokenBundle.copy(refreshToken = null)
+
+        assertEquals(ReauthenticationOutcome.Failed, authService.completeReauthentication(redirectData))
+
+        verify(exactly = 0) { tokenStore.saveTokens(any(), any(), any()) }
+    }
+
+    @Test
+    fun `reauthenticationIntent comes from the manager and does not touch the session`() {
+        val intent = mockk<Intent>()
+        every { authManager.reauthenticationIntent() } returns intent
+
+        assertEquals(intent, authService.reauthenticationIntent())
+
+        verify(exactly = 0) { tokenStore.clear() }
+    }
+    // endregion
+
+    // region completeAccountDeletion
+    @Test
+    fun `completeAccountDeletion clears the tokens then runs every post-logout hook`() = runTest {
+        authService.completeAccountDeletion()
+
+        coVerifyOrder {
+            tokenStore.clear()
+            firstLogoutHook.onLoggedOut()
+            secondLogoutHook.onLoggedOut()
+        }
+    }
+
+    @Test
+    fun `completeAccountDeletion makes no call to the server`() = runTest {
+        authService.completeAccountDeletion()
+
+        // The account, its devices and its Keycloak session are already gone on the server
+        coVerify(exactly = 0) { preLogoutHook.onLoggingOut() }
+        verify(exactly = 0) { authManager.endSession(any()) }
+    }
+
+    @Test
+    fun `completeAccountDeletion runs the remaining hooks when one throws`() = runTest {
+        coEvery { firstLogoutHook.onLoggedOut() } throws RuntimeException("wipe blew up")
+
+        authService.completeAccountDeletion()
+
+        coVerify(exactly = 1) { secondLogoutHook.onLoggedOut() }
+    }
+
+    @Test
+    fun `accountDeleted is set by the deletion and cleared when the next sign-in starts`() = runTest {
+        assertFalse(authService.accountDeleted.value)
+
+        authService.completeAccountDeletion()
+        assertTrue(authService.accountDeleted.value)
+
+        every { authManager.loginIntent() } returns mockk()
+        authService.loginIntent()
+        assertFalse(authService.accountDeleted.value)
     }
     // endregion
 

@@ -113,4 +113,32 @@
     <string name="leaveForumDialogMessage">すべての辞書が非公開になり、ダウンロードした人はアクセスできなくなります。いつでも再度参加できます。</string>
     <string name="leaveForumDialogConfirm">Forum から退出</string>
     <string name="leaveForumDialogCancel">とどまる</string>
+
+    <string name="profileDeleteAccount">アカウントを削除</string>
+    <string name="profileDeleteAccountHint">アカウントとすべてのデータを完全に削除します。</string>
+    <string name="deleteAccountTitle">アカウントを削除</string>
+    <string name="deleteAccountIntro">Verborumのアカウントを削除しようとしています。</string>
+    <string name="deleteAccountDeletesHeader">削除されるもの：</string>
+    <string name="deleteAccountItemProfile">プロフィールと表示名</string>
+    <string name="deleteAccountItemDictionaries">すべての辞書、単語、タグ</string>
+    <string name="deleteAccountItemVault">ダウンロードした辞書と学習統計</string>
+    <string name="deleteAccountItemRatings">評価</string>
+    <string name="deleteAccountItemDevices">当社から通知を受け取るデバイス</string>
+    <string name="deleteAccountItemSignIn">ログイン用アカウント</string>
+    <string name="deleteAccountIrreversible">この操作は元に戻せません。当社もあなたも、データを復元することはできません。</string>
+    <string name="deleteAccountOthers">他のユーザー：Forumで辞書を共有している場合、その辞書を追加したすべての人から見えなくなります。それらのユーザーには「利用できなくなりました」と表示されます。</string>
+    <string name="deleteAccountSignInNotice">続行する前に：再度ログインしていただきます。これはアカウントを守るためです。</string>
+    <string name="deleteAccountNewAccount">後で再登録すると、新しい空のアカウントになります。</string>
+    <string name="deleteAccountAcknowledge">元に戻せないことを理解しました。</string>
+    <string name="deleteAccountContinue">続行</string>
+    <string name="deleteAccountCancel">キャンセル</string>
+    <string name="deleteAccountConfirmTitle">アカウントを完全に削除しますか？</string>
+    <string name="deleteAccountConfirmMessage">すべてのデータが今すぐ削除されます。</string>
+    <string name="deleteAccountConfirmDelete">削除</string>
+    <string name="deleteAccountProgress">アカウントを削除しています…</string>
+    <string name="deleteAccountDone">アカウントを削除しました。</string>
+    <string name="deleteAccountErrorReauth">続行するには、もう一度ログインしてください。</string>
+    <string name="deleteAccountErrorDifferentAccount">別のアカウントです。何も削除されていません。</string>
+    <string name="deleteAccountErrorUnknown">削除を確認できませんでした。接続を確認して、もう一度お試しください。</string>
+    <string name="deleteAccountErrorSignIn">ログインできませんでした。何も削除されていません。</string>
 </resources>

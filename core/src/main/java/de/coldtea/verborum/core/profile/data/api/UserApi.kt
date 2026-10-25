@@ -5,8 +5,10 @@ import de.coldtea.verborum.core.profile.data.api.model.UserProfileRequest
 import de.coldtea.verborum.core.profile.data.api.model.UserProfileResponse
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.Path
 import retrofit2.http.PUT
 
 /**
@@ -26,4 +28,11 @@ interface UserApi {
     /** Partial update: an omitted field is left unchanged (guide §4.4). */
     @PUT("users/me/profile-info")
     suspend fun updateProfileInfo(@Body body: ProfileInfoRequest): Response<Unit>
+
+    /**
+     * Deletes the account and, through events, the data of every service (`docs/account-deletion-guide.md`).
+     * 403 `ReauthenticationRequiredException` when the login is older than 5 minutes.
+     */
+    @DELETE("users/{userId}")
+    suspend fun deleteUser(@Path("userId") userId: String): Response<Unit>
 }

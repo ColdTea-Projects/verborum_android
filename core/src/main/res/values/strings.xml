@@ -116,4 +116,32 @@
     <string name="leaveForumDialogMessage">All your dictionaries will become private, and people who downloaded them will lose access. You can join again anytime.</string>
     <string name="leaveForumDialogConfirm">Leave the Forum</string>
     <string name="leaveForumDialogCancel">Stay</string>
+
+    <string name="profileDeleteAccount">Delete account</string>
+    <string name="profileDeleteAccountHint">Permanently delete your account and all your data.</string>
+    <string name="deleteAccountTitle">Delete your account</string>
+    <string name="deleteAccountIntro">You are about to delete your Verborum account.</string>
+    <string name="deleteAccountDeletesHeader">We delete this:</string>
+    <string name="deleteAccountItemProfile">Your profile and your display name</string>
+    <string name="deleteAccountItemDictionaries">All your dictionaries, words and tags</string>
+    <string name="deleteAccountItemVault">Your downloaded dictionaries and your learning statistics</string>
+    <string name="deleteAccountItemRatings">Your ratings</string>
+    <string name="deleteAccountItemDevices">The devices that receive notifications from us</string>
+    <string name="deleteAccountItemSignIn">Your sign-in account</string>
+    <string name="deleteAccountIrreversible">This cannot be undone. We cannot get your data back, and you cannot get it back.</string>
+    <string name="deleteAccountOthers">Other people: if you shared dictionaries in the Forum, they disappear for everyone who added them. These people see “No longer available”.</string>
+    <string name="deleteAccountSignInNotice">Before you continue: we ask you to sign in again. This protects your account.</string>
+    <string name="deleteAccountNewAccount">If you sign up again later, you get a new, empty account.</string>
+    <string name="deleteAccountAcknowledge">I understand that this cannot be undone.</string>
+    <string name="deleteAccountContinue">Continue</string>
+    <string name="deleteAccountCancel">Cancel</string>
+    <string name="deleteAccountConfirmTitle">Delete your account permanently?</string>
+    <string name="deleteAccountConfirmMessage">All your data will be deleted now.</string>
+    <string name="deleteAccountConfirmDelete">Delete</string>
+    <string name="deleteAccountProgress">Deleting your account…</string>
+    <string name="deleteAccountDone">Your account was deleted.</string>
+    <string name="deleteAccountErrorReauth">Sign in again to continue.</string>
+    <string name="deleteAccountErrorDifferentAccount">This is a different account. Nothing was deleted.</string>
+    <string name="deleteAccountErrorUnknown">We could not confirm the deletion. Check your connection and try again.</string>
+    <string name="deleteAccountErrorSignIn">We could not sign you in. Nothing was deleted.</string>
 </resources>

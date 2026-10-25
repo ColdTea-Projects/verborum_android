@@ -35,7 +35,7 @@ The Android app is the **first and reference client**. Its goals:
 | Sync engine | ✅ | Offline-first, upload-then-download (see §5) |
 | Marketplace ("Forum" tab) | ✅ live | Browse/filter/search (Paging 3), details, import, ratings against ms_marketplace; gated on accepted Forum terms; online-only — an offline banner says so on Forum and Profile |
 | Authentication | ✅ | Keycloak OAuth PKCE (AppAuth), login wall, JWT `sub` as row owner, guest data migrated at first login; logout in Options |
-| Profile | ✅ | ms_user profile and Forum membership (Options → Profile); online-only |
+| Profile | ✅ | ms_user profile and Forum membership (Options → Profile); online-only. **Delete account** (P5A-02): warning with checkbox → sign-in again with `max_age=0` → same-account check → final dialog → `DELETE /users/{id}` → local wipe → login wall with a notice; contract in `docs/account-deletion-guide.md` |
 | Word suggestions (Autofil) | 🔲 | Backend V2 feature |
 
 **Dictionary languages currently selectable (10):** en, de, fr, es, it, pt, nl, lt, tr, az.
