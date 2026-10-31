@@ -1,6 +1,7 @@
 package de.coldtea.verborum.core.auth
 
 import de.coldtea.verborum.core.BuildConfig
+import de.coldtea.verborum.core.options.ui.model.AppLanguage
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -33,5 +34,14 @@ class AuthConfig @Inject constructor() {
          * `docs/account-deletion-guide.md` §4.
          */
         val REAUTHENTICATION_PARAMETERS: Map<String, String> = mapOf("max_age" to "0")
+
+        /**
+         * The `ui_locales` value: the app's own language, so the hosted pages and the mails follow it
+         * (`docs/client-login-guide.md`, "Login page language"). The picker's override wins; with none the device
+         * language is used; a device language the app lacks falls back to English. The 19 codes are Keycloak's
+         * codes too (Chinese `zh` resolves to `zh-Hans` on the server).
+         */
+        fun uiLocalesFor(selected: AppLanguage?, deviceTag: String?): String =
+            (selected ?: AppLanguage.fromTag(deviceTag) ?: AppLanguage.ENGLISH).code
     }
 }

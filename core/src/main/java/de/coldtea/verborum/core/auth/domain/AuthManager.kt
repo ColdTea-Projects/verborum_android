@@ -8,6 +8,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import de.coldtea.verborum.core.auth.domain.model.TokenBundle
 import de.coldtea.verborum.core.BuildConfig
 import de.coldtea.verborum.core.auth.AuthConfig
+import de.coldtea.verborum.core.options.domain.AppLanguageService
 import kotlinx.coroutines.suspendCancellableCoroutine
 import net.openid.appauth.AppAuthConfiguration
 import net.openid.appauth.AuthorizationException
@@ -20,6 +21,7 @@ import net.openid.appauth.TokenRequest
 import okhttp3.FormBody
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.coroutines.resume
@@ -33,6 +35,7 @@ import kotlin.coroutines.resume
 class AuthManager @Inject constructor(
     @ApplicationContext private val context: Context,
     private val config: AuthConfig,
+    private val appLanguage: AppLanguageService,
 ) {
     private val authService by lazy {
         // In debug the endpoints are plain http (local Keycloak); AppAuth's default builder rejects
@@ -75,6 +78,7 @@ class AuthManager @Inject constructor(
             ResponseTypeValues.CODE,
             Uri.parse(config.redirectUri),
         ).setScope(config.scope)
+            .setUiLocales(AuthConfig.uiLocalesFor(appLanguage.selected(), Locale.getDefault().toLanguageTag()))
             .setAdditionalParameters(additionalParameters)
             .build()
 
